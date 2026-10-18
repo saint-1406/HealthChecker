@@ -1,0 +1,16 @@
+[versions]
+agp = "9.0.1"
+kotlin = "2.2.10"
+ksp = "2.3.4"
+compose = "2025.08.00"
+room = "2.7.2"
+[plugins]
+android = { id = "com.android.application", version.ref = "agp" }
+compose = { id = "org.jetbrains.kotlin.plugin.compose", version.ref = "kotlin" }
+serialization = { id = "org.jetbrains.kotlin.plugin.serialization", version.ref = "kotlin" }
+ksp = { id = "com.google.devtools.ksp", version.ref = "ksp" }
+[libraries]
+compose-bom = { module = "androidx.compose:compose-bom", version.ref = "compose" }
+room-runtime = { module = "androidx.room:room-runtime", version.ref = "room" }
+room-ktx = { module = "androidx.room:room-ktx", version.ref = "room" }
+room-compiler = { module = "androidx.room:room-compiler", version.ref = "room" }

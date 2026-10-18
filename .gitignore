@@ -1,0 +1,12 @@
+.gradle/
+**/build/
+local.properties
+signing.properties
+*.jks
+*.keystore
+.superpowers/
+tools/catalog/raw/
+__pycache__/
+dist/
+.idea/
+.local/

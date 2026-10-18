@@ -1,0 +1,9 @@
+USDA FoodData Central, SR Legacy (April 2018), retrieved October 18, 2026.
+https://fdc.nal.usda.gov/download-datasets/
+https://fdc.nal.usda.gov/api-guide/
+USDA FoodData Central data are in the public domain (CC0).
+Source ids are preserved as usda:<fdcId>. Values describe average foods, not individual samples.
+Russian names and Azerbaijani aliases are editorial translations. Plain yogurt is only an approximate search match for qatıq, not a measured local brand.
+Portion masses are source estimates unless described as a household estimate. A glass of water is an editable 250 ml household estimate.
+Open Food Facts was unavailable (HTTP 503); no OFF records are bundled in this build.
+Regional brands and Azerbaijani recipes are not claimed as covered. Use a custom food from the product label when the precise product is absent.
