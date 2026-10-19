@@ -1,0 +1,4 @@
+Laz/healthchecker/**;
+HSPLaz/healthchecker/**->**(**)**
+Lkotlinx/serialization/**;
+HSPLkotlinx/serialization/**->**(**)**

@@ -13,7 +13,12 @@ android {
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
     }
     signingConfigs { create("localRelease") { if(signing.isNotEmpty()) { storeFile = file(signing.getProperty("storeFile")); storePassword = signing.getProperty("storePassword"); keyAlias = signing.getProperty("keyAlias"); keyPassword = signing.getProperty("keyPassword") } } }
-    buildTypes { release { isMinifyEnabled = false; signingConfig = signingConfigs.getByName("localRelease") } }
+    buildTypes { release {
+        // R8 strips unused code (most of material-icons-extended) and Compose debug paths; keep rules are in proguard-rules.pro.
+        isMinifyEnabled = true; isShrinkResources = true
+        proguardFiles(getDefaultProguardFile("proguard-android-optimize.txt"), "proguard-rules.pro")
+        signingConfig = signingConfigs.getByName("localRelease")
+    } }
     buildFeatures { compose = true }
     compileOptions { sourceCompatibility = JavaVersion.VERSION_17; targetCompatibility = JavaVersion.VERSION_17 }
     testOptions { unitTests.isIncludeAndroidResources = true }
