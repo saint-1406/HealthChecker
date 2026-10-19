@@ -23,6 +23,7 @@ class HealthRepository(context: Context, name: String = "healthchecker.db") {
     private suspend fun changed() { val r=dao.revision()?:Revision();dao.putRevision(r.copy(current=r.current+1)) }
     suspend fun exportSnapshot():UserSnapshot = db.withTransaction{decode(dao.all())}
     suspend fun exportVersioned():Pair<Long,UserSnapshot> = db.withTransaction{Pair((dao.revision()?:Revision()).current,decode(dao.all()))}
+    suspend fun backedUpRevision():Long = (dao.revision()?:Revision()).backedUp
     suspend fun markBackedUp(version:Long) { db.withTransaction{val r=dao.revision()?:Revision();dao.putRevision(r.copy(backedUp=version))} }
     suspend fun upsertEntry(entry:DiaryEntry) { validateSnapshot(UserSnapshot(entries=listOf(entry)));db.withTransaction{dao.put(StoredRecord("entry:${entry.id}","entry",json.encodeToString(entry)));changed()} }
     suspend fun deleteEntry(id:String) { db.withTransaction{dao.delete("entry:$id");changed()} }

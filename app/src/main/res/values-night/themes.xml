@@ -1,0 +1,5 @@
+<resources>
+    <style name="Theme.HealthChecker" parent="android:Theme.Material.NoActionBar">
+        <item name="android:windowBackground">#111B17</item>
+    </style>
+</resources>

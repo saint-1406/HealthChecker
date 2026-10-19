@@ -6,8 +6,15 @@ import kotlinx.serialization.decodeFromString
 class CatalogImporter(context:Context) {
     val foods:List<Food> = context.assets.open("catalog/foods.json").bufferedReader().use{Json.decodeFromString(it.readText())}
     private val index=foods.map{it to normalizeSearch(it.name+" "+it.aliases.joinToString(" "))}
+    private val ids=foods.associateBy{it.id}
+    fun byId(id:String):Food? = ids[id]
     fun search(query:String,custom:List<Food>,limit:Int=50):List<Food> {
         val terms=normalizeSearch(query).split(Regex("\\s+")).filter{it.isNotEmpty()}
         return (custom.map{it to normalizeSearch(it.name+" "+it.aliases.joinToString(" "))}+index).asSequence().filter{(_,text)->terms.all{text.contains(it)}}.take(limit).map{it.first}.toList()
+    }
+    companion object {
+        @Volatile private var loaded:CatalogImporter?=null
+        // The bundled catalog is immutable: parse it once per process instead of on every new screen owner.
+        fun shared(context:Context):CatalogImporter = loaded?:synchronized(this){loaded?:CatalogImporter(context.applicationContext).also{loaded=it}}
     }
 }

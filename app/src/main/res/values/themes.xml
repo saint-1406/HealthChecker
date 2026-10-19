@@ -1,0 +1,6 @@
+<resources>
+    <!-- Window colour shown before Compose draws; matches the app background so dark mode does not flash white. -->
+    <style name="Theme.HealthChecker" parent="android:Theme.Material.Light.NoActionBar">
+        <item name="android:windowBackground">#F6F7F2</item>
+    </style>
+</resources>

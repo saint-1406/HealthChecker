@@ -1,5 +1,5 @@
 """Build a reproducible offline catalog from original public datasets."""
-import json, math, hashlib, datetime
+import json, math, hashlib, datetime, re
 from pathlib import Path
 
 def number(value, maximum=1000):
@@ -54,6 +54,12 @@ def build_catalog(inputs, output):
             if 'portions' in local:f['portions']=local['portions']
             if 'density' in local:f['density']=local['density']
             if 'isWater' in local:f['isWater']=local['isWater']
+    search_path=Path(__file__).with_name('search-aliases.json')
+    search_aliases=json.loads(search_path.read_text(encoding='utf-8')) if search_path.exists() else {}
+    for f in foods.values():
+        original=' '.join([f['name']]+f['aliases']).lower()
+        extra=[value for key,value in search_aliases.items() if re.search(r'\b'+re.escape(key)+r'\b',original)]
+        f['aliases']+=extra
     ordered=sorted(foods.values(),key=lambda f:(f['id'] not in aliases,f['name']))
     output=Path(output);output.parent.mkdir(parents=True,exist_ok=True)
     output.write_text(json.dumps(ordered,ensure_ascii=False,separators=(',',':')),encoding='utf-8')
