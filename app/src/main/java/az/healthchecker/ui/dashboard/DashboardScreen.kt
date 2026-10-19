@@ -26,7 +26,7 @@ import az.healthchecker.ui.*
 import java.time.LocalDate
 import java.time.format.DateTimeFormatter
 
-@Composable fun DashboardScreen(snapshot:UserSnapshot,date:String,backupError:String?,add:()->Unit,water:()->Unit,edit:(DiaryEntry)->Unit,openProfile:()->Unit) {
+@Composable fun DashboardScreen(snapshot:UserSnapshot,date:String,backupError:String?,add:()->Unit,water:()->Unit,edit:(DiaryEntry)->Unit,openProfile:()->Unit,openTraining:()->Unit) {
     val day=snapshot.day(date);val summary=day.summary;val goals=day.goals
     val green=Color(0xFF245C49);val mint=Color(0xFFCDF2CA)
     Column(Modifier.fillMaxSize().verticalScroll(rememberScrollState()).padding(horizontal=20.dp),verticalArrangement=Arrangement.spacedBy(16.dp)) {
@@ -49,6 +49,17 @@ import java.time.format.DateTimeFormatter
         Row(horizontalArrangement=Arrangement.spacedBy(12.dp)) {
             MetricCard("Белок",summary.protein.value,goals?.protein,"г",Icons.Outlined.EggAlt,summary.protein.complete,Modifier.weight(1f))
             MetricCard("Вода",summary.waterMl,goals?.waterMl,"мл",Icons.Outlined.WaterDrop,true,Modifier.weight(1f))
+        }
+        val training=snapshot.training(date)
+        Panel(Modifier.clickable(onClick=openTraining)){
+            Row(verticalAlignment=Alignment.CenterVertically,horizontalArrangement=Arrangement.spacedBy(12.dp)){
+                Icon(Icons.Outlined.FitnessCenter,null,tint=MaterialTheme.colorScheme.primary)
+                Column(Modifier.weight(1f)){
+                    Text(when(training.trained){true->"Тренировка была";false->"День отдыха";null->"Тренировка не отмечена"},style=MaterialTheme.typography.titleMedium)
+                    Text(if(training.workouts.isEmpty())"Откройте «Тренировки»: рекомендации на сегодня" else "${plural(training.workouts.size,"упражнение","упражнения","упражнений")} · ≈ ${number(training.burned.value)}${if(!training.burned.complete)"+" else ""} ккал израсходовано",style=MaterialTheme.typography.bodySmall,color=MaterialTheme.colorScheme.onSurfaceVariant)
+                }
+                Icon(Icons.Outlined.ChevronRight,null)
+            }
         }
         Row(Modifier.fillMaxWidth(),horizontalArrangement=Arrangement.spacedBy(12.dp)){
             Button(onClick=add,modifier=Modifier.weight(1f).heightIn(min=50.dp)){Icon(Icons.Outlined.Add,null);Text("Записать еду")}

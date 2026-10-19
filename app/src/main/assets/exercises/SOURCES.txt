@@ -1,0 +1,6 @@
+Затраты энергии упражнений: 2024 Adult Compendium of Physical Activities.
+Herrmann SD, Willis EA, Ainsworth BE, et al. 2024 Adult Compendium of Physical Activities: A third update of the energy costs of human activities. Journal of Sport and Health Science. 2024;13(1):6-12. https://pacompendium.com
+Каждое упражнение сопоставлено с одним кодом активности Compendium (поле metCode, описание в metSource); MET взят из этого кода без подгонки. Compendium описывает классы активностей, а не отдельные движения, поэтому расход калорий — приблизительная оценка: ккал ≈ MET × масса тела, кг × время, ч.
+Махи гантелью оцениваются по коду махов гирей (02058) как ближайшему аналогу.
+Недельные ориентиры: WHO guidelines on physical activity and sedentary behaviour (2020): взрослым 150–300 минут умеренной или 75–150 минут интенсивной аэробной активности в неделю и силовые упражнения на основные группы мышц не реже 2 дней в неделю.
+Воспроизведение: python tools/exercises/build_exercises.py

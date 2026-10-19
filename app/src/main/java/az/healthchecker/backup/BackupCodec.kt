@@ -6,9 +6,11 @@ import kotlinx.serialization.encodeToString
 import kotlinx.serialization.decodeFromString
 import java.io.InputStream
 import java.io.ByteArrayOutputStream
-@Serializable private data class BackupEnvelope(val format:String="healthchecker-backup",val schemaVersion:Int=1,val snapshot:UserSnapshot)
+// Schema 2 added workouts, training marks, training settings and dish recipes; schema 1 files still decode.
+@Serializable private data class BackupEnvelope(val format:String="healthchecker-backup",val schemaVersion:Int=BackupCodec.SCHEMA_VERSION,val snapshot:UserSnapshot)
 object BackupCodec {
     const val MAX_BYTES=25*1024*1024
+    const val SCHEMA_VERSION=2
     private val json=Json{encodeDefaults=true}
     fun encode(snapshot:UserSnapshot):ByteArray {
         validateSnapshot(snapshot)
@@ -18,7 +20,7 @@ object BackupCodec {
         require(bytes.size<=MAX_BYTES){"Копия превышает 25 МБ"}
         try {
             val e=json.decodeFromString<BackupEnvelope>(bytes.toString(Charsets.UTF_8))
-            require(e.format=="healthchecker-backup" && e.schemaVersion==1){"Неподдерживаемый формат копии"}
+            require(e.format=="healthchecker-backup" && e.schemaVersion in 1..SCHEMA_VERSION){"Неподдерживаемый формат копии"}
             validateSnapshot(e.snapshot)
             return e.snapshot
         } catch(e:Exception){throw IllegalArgumentException("Копия повреждена или имеет неподдерживаемый формат",e)}

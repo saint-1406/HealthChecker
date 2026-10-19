@@ -22,7 +22,7 @@ import az.healthchecker.ui.*
         if(day.entries.isEmpty())item{Panel{Icon(Icons.Outlined.Restaurant,null,Modifier.size(32.dp),tint=MaterialTheme.colorScheme.primary);SectionTitle("Пока ничего не записано","Добавьте то, что съели. Мы посчитаем остальное.")}}
         items(day.entries,key={it.id}) {entry->Panel {
             Row(Modifier.fillMaxWidth().clickable{edit(entry)},verticalAlignment=Alignment.CenterVertically){
-                Column(Modifier.weight(1f)){Text(entry.name,fontWeight=FontWeight.SemiBold);Text("${number(entry.grams,1)} г · белок ${number(entry.nutrients.protein,1)} г",style=MaterialTheme.typography.bodySmall,color=MaterialTheme.colorScheme.onSurfaceVariant)}
+                Column(Modifier.weight(1f)){Text(entry.name,fontWeight=FontWeight.SemiBold);Text("${quantityLabel(entry.quantity,entry.grams)} · белок ${number(entry.nutrients.protein,1)} г",style=MaterialTheme.typography.bodySmall,color=MaterialTheme.colorScheme.onSurfaceVariant)}
                 Text("${number(entry.nutrients.kcal)}\nккал",style=MaterialTheme.typography.titleMedium,color=MaterialTheme.colorScheme.primary)
             }
             Row{TextButton(onClick={edit(entry)}){Text("Изменить")};IconButton(onClick={vm.delete(entry)}){Icon(Icons.Outlined.DeleteOutline,"Удалить ${entry.name}")}}

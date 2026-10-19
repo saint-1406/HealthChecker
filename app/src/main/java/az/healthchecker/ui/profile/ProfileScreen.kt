@@ -14,11 +14,12 @@ import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import az.healthchecker.domain.*
 import az.healthchecker.ui.*
+import az.healthchecker.ui.inventory.InventorySection
 import java.time.*
 import java.time.format.DateTimeFormatter
 
 @OptIn(ExperimentalLayoutApi::class)
-@Composable fun ProfileScreen(vm:AppViewModel,onboarding:Boolean,folder:()->Unit,restore:()->Unit) {
+@Composable fun ProfileScreen(vm:AppViewModel,onboarding:Boolean,folder:()->Unit,restore:()->Unit,date:String="",createDish:()->Unit={},editDish:(Food)->Unit={}) {
     val snapshot by vm.snapshot.collectAsStateWithLifecycle();val settings by vm.settings.collectAsStateWithLifecycle();val revision by vm.revision.collectAsStateWithLifecycle();val backupBusy by vm.backupBusy.collectAsStateWithLifecycle();val busy by vm.busy.collectAsStateWithLifecycle();val count by vm.catalogCount.collectAsStateWithLifecycle();val backupError by vm.backupError.collectAsStateWithLifecycle()
     val profile=snapshot.profile;val goals=snapshot.day(LocalDate.now().toString()).goals
     var sex by rememberSaveable(profile){mutableStateOf(profile?.sex?:"male")};var age by rememberSaveable(profile){mutableStateOf(profile?.age?.toString()?:"")};var height by rememberSaveable(profile){mutableStateOf(profile?.heightCm?.let(::plain)?:"")};var weight by rememberSaveable(profile){mutableStateOf(profile?.currentWeight?.let(::plain)?:"")};var activity by rememberSaveable(profile){mutableDoubleStateOf(profile?.activity?:1.2)}
@@ -29,7 +30,7 @@ import java.time.format.DateTimeFormatter
     fun optional(s:String)=if(s.isBlank())null else parseQuantity(s)
     Column(Modifier.fillMaxSize().verticalScroll(rememberScrollState()).imePadding().padding(24.dp),verticalArrangement=Arrangement.spacedBy(18.dp)) {
         if(onboarding){Icon(Icons.Outlined.Spa,null,Modifier.size(44.dp),tint=MaterialTheme.colorScheme.primary);Text("Питание.\nБез лишнего.",style=MaterialTheme.typography.displaySmall);Text("Ваш дневник еды и воды. Всё хранится на телефоне — без регистрации.",color=MaterialTheme.colorScheme.onSurfaceVariant);OutlinedButton(onClick={vm.skipOnboarding()},modifier=Modifier.fillMaxWidth()){Text("Начать без расчёта")};TextButton(onClick=restore){Text("У меня уже есть резервная копия")}}
-        else SectionTitle("Профиль","Ваши ориентиры, данные и настройки")
+        else {SectionTitle("Профиль","Инвентарь блюд, ориентиры, данные и настройки");InventorySection(vm,date,createDish,editDish)}
         Panel {
             SectionTitle("Параметры тела","Для приблизительной оценки калорий на поддержание веса")
             FlowRow(horizontalArrangement=Arrangement.spacedBy(8.dp)){FilterChip(selected=sex=="male",onClick={sex="male"},label={Text("Мужской")});FilterChip(selected=sex=="female",onClick={sex="female"},label={Text("Женский")})}
@@ -60,9 +61,9 @@ import java.time.format.DateTimeFormatter
                 TextButton(onClick=restore,modifier=Modifier.fillMaxWidth()){Text("Восстановить из файла")}
             }
             Panel{SectionTitle("Оформление");FlowRow(horizontalArrangement=Arrangement.spacedBy(8.dp)){listOf("system" to "Системное","light" to "Светлое","dark" to "Тёмное").forEach{(value,label)->FilterChip(selected=settings.theme==value,onClick={vm.theme(value)},label={Text(label)})}}}
-            Panel {SectionTitle("Каталог продуктов","$count позиций · работает без интернета");Text("102 распространённых продукта переведены на русский и имеют азербайджанские поисковые названия. Расширенный каталог — на английском. Региональные бренды можно добавить по этикетке.",style=MaterialTheme.typography.bodySmall);TextButton(onClick={sources=true}){Text("Источники и точность")}}
+            Panel {SectionTitle("Каталог продуктов","$count позиций · работает без интернета");Text("103 распространённых продукта переведены на русский и имеют азербайджанские поисковые названия. Расширенный каталог — на английском. Региональные бренды можно добавить по этикетке.",style=MaterialTheme.typography.bodySmall);TextButton(onClick={sources=true}){Text("Источники и точность")}}
         }
         Spacer(Modifier.height(16.dp))
     }
-    if(sources)AlertDialog(onDismissRequest={sources=false},title={Text("О данных")},text={Text("USDA FoodData Central · SR Legacy, апрель 2018. Получено 18.10.2026. Данные public domain.\nfdc.nal.usda.gov\n\nПорции и пищевая ценность усреднённые. Qatıq находится через натуральный йогурт как приблизительный аналог, а не конкретный местный бренд.\n\nOpen Food Facts был недоступен; его данные не включены.\n\nПриложение не отправляет дневник на сервер.")},confirmButton={TextButton(onClick={sources=false}){Text("Понятно")}})
+    if(sources)AlertDialog(onDismissRequest={sources=false},title={Text("О данных")},text={Text("USDA FoodData Central · SR Legacy, апрель 2018. Получено 18.10.2026. Данные public domain.\nfdc.nal.usda.gov\n\nПорции и пищевая ценность усреднённые. Qatıq находится через натуральный йогурт как приблизительный аналог, а не конкретный местный бренд.\n\nOpen Food Facts был недоступен; его данные не включены.\n\nУпражнения: 141 домашнее упражнение. Расход энергии — MET из 2024 Adult Compendium of Physical Activities (pacompendium.com): ккал ≈ MET × вес × время. Недельные ориентиры — рекомендации ВОЗ 2020.\n\nПриложение не отправляет дневник на сервер.")},confirmButton={TextButton(onClick={sources=false}){Text("Понятно")}})
 }

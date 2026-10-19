@@ -19,7 +19,10 @@ class HealthRepository(context: Context, name: String = "healthchecker.db") {
         goals=rows.filter{it.kind=="goal"}.map{json.decodeFromString<DailyGoals>(it.payload)},
         entries=rows.filter{it.kind=="entry"}.map{json.decodeFromString<DiaryEntry>(it.payload)},
         customFoods=rows.filter{it.kind=="food"}.map{json.decodeFromString<Food>(it.payload)},
-        completedDays=rows.filter{it.kind=="day"}.map{it.payload}.toSet(),onboarded=rows.any{it.kind=="onboarded"})
+        completedDays=rows.filter{it.kind=="day"}.map{it.payload}.toSet(),onboarded=rows.any{it.kind=="onboarded"},
+        workouts=rows.filter{it.kind=="workout"}.map{json.decodeFromString<WorkoutEntry>(it.payload)},
+        trainingDays=rows.filter{it.kind=="trainday"}.associate{it.key.removePrefix("trainday:") to (it.payload=="true")},
+        trainingPrefs=rows.find{it.kind=="trainprefs"}?.let{json.decodeFromString<TrainingPrefs>(it.payload)})
     private suspend fun changed() { val r=dao.revision()?:Revision();dao.putRevision(r.copy(current=r.current+1)) }
     suspend fun exportSnapshot():UserSnapshot = db.withTransaction{decode(dao.all())}
     suspend fun exportVersioned():Pair<Long,UserSnapshot> = db.withTransaction{Pair((dao.revision()?:Revision()).current,decode(dao.all()))}
@@ -33,7 +36,13 @@ class HealthRepository(context: Context, name: String = "healthchecker.db") {
     } }
     suspend fun saveGoals(goals:DailyGoals) { validateSnapshot(UserSnapshot(goals=listOf(goals)));db.withTransaction{dao.put(StoredRecord("goal:${goals.effectiveFrom}","goal",json.encodeToString(goals)));changed()} }
     suspend fun saveFood(food:Food) { validateSnapshot(UserSnapshot(customFoods=listOf(food)));db.withTransaction{dao.put(StoredRecord("food:${food.id}","food",json.encodeToString(food)));changed()} }
+    suspend fun deleteFood(id:String) { db.withTransaction{dao.delete("food:$id");changed()} }
     suspend fun completeDay(date:String,completed:Boolean) { LocalDate.parse(date);db.withTransaction{if(completed)dao.put(StoredRecord("day:$date","day",date))else dao.delete("day:$date");changed()} }
+    suspend fun upsertWorkout(workout:WorkoutEntry) { validateSnapshot(UserSnapshot(workouts=listOf(workout)));db.withTransaction{dao.put(StoredRecord("workout:${workout.id}","workout",json.encodeToString(workout)));changed()} }
+    suspend fun deleteWorkout(id:String) { db.withTransaction{dao.delete("workout:$id");changed()} }
+    /** true — a training happened, false — an explicit rest day, null — not marked. */
+    suspend fun markTraining(date:String,trained:Boolean?) { LocalDate.parse(date);db.withTransaction{if(trained==null)dao.delete("trainday:$date") else dao.put(StoredRecord("trainday:$date","trainday",trained.toString()));changed()} }
+    suspend fun saveTrainingPrefs(prefs:TrainingPrefs) { validateSnapshot(UserSnapshot(trainingPrefs=prefs));db.withTransaction{dao.put(StoredRecord("trainprefs","trainprefs",json.encodeToString(prefs)));changed()} }
     suspend fun finishOnboarding(){db.withTransaction{dao.put(StoredRecord("onboarded","onboarded","true"));changed()}}
     suspend fun replaceSnapshot(snapshot:UserSnapshot) {
         validateSnapshot(snapshot)
@@ -45,6 +54,9 @@ class HealthRepository(context: Context, name: String = "healthchecker.db") {
             snapshot.customFoods.forEach{dao.put(StoredRecord("food:${it.id}","food",json.encodeToString(it)))}
             snapshot.completedDays.forEach{dao.put(StoredRecord("day:$it","day",it))}
             if(snapshot.onboarded)dao.put(StoredRecord("onboarded","onboarded","true"))
+            snapshot.workouts.forEach{dao.put(StoredRecord("workout:${it.id}","workout",json.encodeToString(it)))}
+            snapshot.trainingDays.forEach{(d,v)->dao.put(StoredRecord("trainday:$d","trainday",v.toString()))}
+            snapshot.trainingPrefs?.let{dao.put(StoredRecord("trainprefs","trainprefs",json.encodeToString(it)))}
             changed()
         }
     }

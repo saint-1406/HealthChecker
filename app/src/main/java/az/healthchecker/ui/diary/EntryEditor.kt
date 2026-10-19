@@ -15,20 +15,26 @@ import androidx.compose.ui.unit.dp
 import az.healthchecker.domain.*
 import az.healthchecker.ui.*
 
-@OptIn(ExperimentalLayoutApi::class)
 @Composable fun EntryEditor(vm:AppViewModel,food:Food,old:DiaryEntry?,template:DiaryEntry?,id:String,date:String,back:()->Unit) {
-    // A repeated product starts from the amount recorded last time; ML needs a density this food may lack.
-    val start=(old?:template)?.quantity?.takeIf{it.unit!=Measure.ML||food.density!=null}
+    val busy by vm.busy.collectAsState()
+    // A repeated product starts from the amount recorded last time.
+    PortionEditor(food,(old?:template)?.quantity,id,if(old==null)"Добавление · $date" else "Редактирование записи",if(old==null)"Добавить в дневник" else "Сохранить изменения",busy,back){vm.saveEntry(id,food,it,date,old,back)}
+}
+
+/** Amount form shared by diary entries and dish ingredients: units, editable piece weight and a live nutrient preview. */
+@OptIn(ExperimentalLayoutApi::class)
+@Composable fun PortionEditor(food:Food,initial:Quantity?,id:String,subtitle:String,confirmLabel:String,busy:Boolean,back:()->Unit,confirm:(Quantity)->Unit) {
+    // ML needs a density this food may lack.
+    val start=initial?.takeIf{it.unit!=Measure.ML||food.density!=null}
     var amount by rememberSaveable(id){mutableStateOf(start?.value?.let(::plain)?:if(food.isWater)"250" else "100")}
     var unitName by rememberSaveable(id){mutableStateOf((start?.unit?:if(food.isWater)Measure.ML else Measure.GRAMS).name)}
     var portion by rememberSaveable(id){mutableStateOf((start?.portionGrams?:food.portions.firstOrNull()?.grams)?.let(::plain)?:"")}
     val unit=Measure.valueOf(unitName)
     val q=runCatching{Quantity(parseQuantity(amount),unit,if(unit==Measure.PIECES)parseQuantity(portion)else null)}
     val result=q.mapCatching{calculate(food,it)}
-    val busy by vm.busy.collectAsState()
     Column(Modifier.fillMaxSize().verticalScroll(rememberScrollState()).imePadding().padding(24.dp),verticalArrangement=Arrangement.spacedBy(18.dp)) {
         IconButton(onClick=back){Icon(Icons.AutoMirrored.Outlined.ArrowBack,"Назад")}
-        SectionTitle(food.name,if(old==null)"Добавление · $date" else "Редактирование записи")
+        SectionTitle(food.name,subtitle)
         FlowRow(horizontalArrangement=Arrangement.spacedBy(8.dp)){
             listOf(Measure.GRAMS to "Граммы",Measure.PIECES to "Штуки").plus(if(food.density!=null)listOf(Measure.ML to "Миллилитры")else emptyList()).forEach{(u,label)->FilterChip(selected=unit==u,onClick={unitName=u.name;amount=if(u==Measure.PIECES)"1" else if(u==Measure.ML)"250" else "100"},label={Text(label)})}
         }
@@ -45,7 +51,7 @@ import az.healthchecker.ui.*
             Text("Вес: ${number(result.getOrNull()?.grams,1)} г",style=MaterialTheme.typography.bodySmall)
         }
         if(result.isFailure)Text(result.exceptionOrNull()?.message?:"Проверьте количество",color=MaterialTheme.colorScheme.error)
-        Button(onClick={vm.saveEntry(id,food,q.getOrThrow(),date,old,back)},enabled=result.isSuccess&&!busy,modifier=Modifier.fillMaxWidth().heightIn(min=54.dp)){Text(if(old==null)"Добавить в дневник" else "Сохранить изменения")}
+        Button(onClick={confirm(q.getOrThrow())},enabled=result.isSuccess&&!busy,modifier=Modifier.fillMaxWidth().heightIn(min=54.dp)){Text(confirmLabel)}
         Text("${food.source}\nНа 100 г: ${number(food.per100g.kcal)} ккал · Б ${number(food.per100g.protein,1)} г. Значения усреднённые; порции в штуках приблизительные.",style=MaterialTheme.typography.bodySmall,color=MaterialTheme.colorScheme.onSurfaceVariant)
     }
 }

@@ -32,7 +32,7 @@
   "potatoes": "картофель картошка kartof",
   "tomatoes": "помидоры томаты pomidor",
   "cucumber": "огурец xiyar",
-  "carrots": "морковь kök",
+  "carrots": "морковь морковка kök",
   "onions": "лук soğan",
   "cabbage": "капуста kələm",
   "eggplant": "баклажан badımcan",
@@ -76,5 +76,12 @@
   "fried": "жареный жареная qızardılmış",
   "roasted": "запечённый запеченная qovrulmuş",
   "dry": "сухой сухая quru",
-  "dried": "сушёный сушеный quru"
+  "dried": "сушёный сушеный quru",
+  "parsley": "петрушка зелень cəfəri",
+  "dill weed": "укроп зелень şüyüd",
+  "cilantro": "кинза зелень kinza",
+  "scallions": "зелёный лук зелень yaşıl soğan",
+  "spearmint": "мята зелень nanə",
+  "peppermint, fresh": "мята зелень nanə",
+  "basil, fresh": "базилик зелень reyhan"
 }

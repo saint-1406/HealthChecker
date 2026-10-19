@@ -1,6 +1,7 @@
 package az.healthchecker.domain
 import kotlinx.serialization.Serializable
-@Serializable data class UserSnapshot(val profile: Profile? = null, val goals: List<DailyGoals> = emptyList(), val entries: List<DiaryEntry> = emptyList(), val customFoods: List<Food> = emptyList(), val completedDays: Set<String> = emptySet(), val onboarded: Boolean = false)
+@Serializable data class UserSnapshot(val profile: Profile? = null, val goals: List<DailyGoals> = emptyList(), val entries: List<DiaryEntry> = emptyList(), val customFoods: List<Food> = emptyList(), val completedDays: Set<String> = emptySet(), val onboarded: Boolean = false,
+    val workouts: List<WorkoutEntry> = emptyList(), val trainingDays: Map<String, Boolean> = emptyMap(), val trainingPrefs: TrainingPrefs? = null)
 data class DayState(val date: String, val entries: List<DiaryEntry>, val summary: DaySummary, val goals: DailyGoals?, val completed: Boolean)
 fun UserSnapshot.day(date: String): DayState {
     java.time.LocalDate.parse(date)
