@@ -15,6 +15,8 @@ class ExerciseCatalogTest(unittest.TestCase):
             self.assertTrue(any(i['equipment']=='DUMBBELLS' for i in strength),group)
     def test_beginner_cardio_and_mobility_exist(self):
         for kind in ('CARDIO','MOBILITY'):self.assertTrue(any(i['kind']==kind and i['level']==1 and i['equipment']=='NONE' for i in self.items))
+    def test_every_exercise_has_english_text(self):
+        for i in self.items:self.assertTrue(i['nameEn'] and i['cueEn'],i['id'])
     def test_repetition_exercises_have_tempo(self):
         for i in self.items:self.assertEqual(i['measure']=='REPS',i['secondsPerRep'] is not None,i['id'])
 

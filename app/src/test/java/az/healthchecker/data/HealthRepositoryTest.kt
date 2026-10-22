@@ -24,5 +24,33 @@ class HealthRepositoryTest {
         r.markTraining("2026-10-19",null);r.deleteWorkout(w.id);assertEquals(mapOf("2026-10-18" to false),r.exportSnapshot().trainingDays);assertTrue(r.exportSnapshot().workouts.isEmpty())
         r.replaceSnapshot(s);assertEquals(s,r.exportSnapshot())
     }
+    @Test fun medicationsIntakesAndStepsPersist()=runTest {
+        val r=repository()
+        val med=Medication("med:1","Омега-3",MedKind.SUPPLEMENT,MedForm.CAPSULE,dose=1.0,timesPerDay=1)
+        r.saveMedication(med);r.saveMedication(med.copy(notes="после завтрака"))
+        val t=makeIntake(med,"2026-10-20",java.time.Instant.parse("2026-10-20T06:00:00Z"),java.time.ZoneId.of("Asia/Baku"));r.upsertIntake(t)
+        r.setManualSteps("2026-10-20",9000)
+        var s=r.exportSnapshot();assertEquals("после завтрака",s.medications.single().notes);assertEquals(listOf(t),s.medicationIntakes);assertEquals(StepDay("2026-10-20",0,9000),s.steps.single())
+        r.setManualSteps("2026-10-20",null);r.deleteIntake(t.id);r.deleteMedication(med.id)
+        s=r.exportSnapshot();assertTrue(s.medications.isEmpty());assertTrue(s.medicationIntakes.isEmpty());assertEquals(StepDay("2026-10-20"),s.steps.single())
+        assertThrows(IllegalArgumentException::class.java){kotlinx.coroutines.runBlocking{r.saveMedication(med.copy(dose=-1.0))}}
+    }
+    @Test fun sensorStepsAddUpAndAskForABackupOncePerDay()=runTest {
+        val r=repository()
+        val start=r.exportVersioned().first
+        assertEquals(StepDay("2026-10-20",0),r.addSensorSteps("2026-10-20",0,true))
+        val afterFirst=r.exportVersioned().first;assertEquals(start+1,afterFirst)
+        r.addSensorSteps("2026-10-20",1200,false);assertEquals(StepDay("2026-10-20",2000),r.addSensorSteps("2026-10-20",800,false))
+        // Frequent counter writes do not each trigger a backup.
+        assertEquals(afterFirst,r.exportVersioned().first)
+        r.setManualSteps("2026-10-20",5000);assertEquals(StepDay("2026-10-20",2000,5000),r.exportSnapshot().steps.single())
+    }
+    @Test fun fiberIsFilledIntoOldCatalogEntriesOnce()=runTest {
+        val r=repository();val old=entry().copy(foodId="usda:1",grams=50.0,quantity=Quantity(50.0,Measure.GRAMS))
+        r.upsertEntry(old)
+        val catalog=mapOf("usda:1" to Food("usda:1","Овсянка",per100g=Nutrients(379.0,fiber=10.0)))
+        assertEquals(1,r.backfillFiber{catalog[it]});assertEquals(5.0,r.exportSnapshot().entries.single().nutrients.fiber!!,1e-9)
+        assertEquals(0,r.backfillFiber{catalog[it]})
+    }
     @Test fun restoredSnapshotsDoNotDuplicate()=runTest { val r=repository();val s=UserSnapshot(entries=listOf(entry()));r.replaceSnapshot(s);r.replaceSnapshot(s);assertEquals(s,r.exportSnapshot()) }
 }

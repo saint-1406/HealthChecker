@@ -9,7 +9,8 @@ import kotlinx.serialization.encodeToString
 import kotlinx.serialization.decodeFromString
 import java.time.LocalDate
 class HealthRepository(context: Context, name: String = "healthchecker.db") {
-    private val db=Room.databaseBuilder(context.applicationContext,HealthDatabase::class.java,name).build()
+    // The step counter service writes through its own instance; invalidation keeps the screens up to date.
+    private val db=Room.databaseBuilder(context.applicationContext,HealthDatabase::class.java,name).enableMultiInstanceInvalidation().build()
     private val dao=db.dao()
     private val json=Json{encodeDefaults=true}
     val snapshots:Flow<UserSnapshot> = dao.observe().map(::decode)
@@ -22,7 +23,10 @@ class HealthRepository(context: Context, name: String = "healthchecker.db") {
         completedDays=rows.filter{it.kind=="day"}.map{it.payload}.toSet(),onboarded=rows.any{it.kind=="onboarded"},
         workouts=rows.filter{it.kind=="workout"}.map{json.decodeFromString<WorkoutEntry>(it.payload)},
         trainingDays=rows.filter{it.kind=="trainday"}.associate{it.key.removePrefix("trainday:") to (it.payload=="true")},
-        trainingPrefs=rows.find{it.kind=="trainprefs"}?.let{json.decodeFromString<TrainingPrefs>(it.payload)})
+        trainingPrefs=rows.find{it.kind=="trainprefs"}?.let{json.decodeFromString<TrainingPrefs>(it.payload)},
+        medications=rows.filter{it.kind=="med"}.map{json.decodeFromString<Medication>(it.payload)},
+        medicationIntakes=rows.filter{it.kind=="medtake"}.map{json.decodeFromString<MedicationIntake>(it.payload)},
+        steps=rows.filter{it.kind=="steps"}.map{json.decodeFromString<StepDay>(it.payload)})
     private suspend fun changed() { val r=dao.revision()?:Revision();dao.putRevision(r.copy(current=r.current+1)) }
     suspend fun exportSnapshot():UserSnapshot = db.withTransaction{decode(dao.all())}
     suspend fun exportVersioned():Pair<Long,UserSnapshot> = db.withTransaction{Pair((dao.revision()?:Revision()).current,decode(dao.all()))}
@@ -43,6 +47,32 @@ class HealthRepository(context: Context, name: String = "healthchecker.db") {
     /** true — a training happened, false — an explicit rest day, null — not marked. */
     suspend fun markTraining(date:String,trained:Boolean?) { LocalDate.parse(date);db.withTransaction{if(trained==null)dao.delete("trainday:$date") else dao.put(StoredRecord("trainday:$date","trainday",trained.toString()));changed()} }
     suspend fun saveTrainingPrefs(prefs:TrainingPrefs) { validateSnapshot(UserSnapshot(trainingPrefs=prefs));db.withTransaction{dao.put(StoredRecord("trainprefs","trainprefs",json.encodeToString(prefs)));changed()} }
+    suspend fun saveMedication(medication:Medication) { validateSnapshot(UserSnapshot(medications=listOf(medication)));db.withTransaction{dao.put(StoredRecord("med:${medication.id}","med",json.encodeToString(medication)));changed()} }
+    suspend fun deleteMedication(id:String) { db.withTransaction{dao.delete("med:$id");changed()} }
+    suspend fun upsertIntake(intake:MedicationIntake) { validateSnapshot(UserSnapshot(medicationIntakes=listOf(intake)));db.withTransaction{dao.put(StoredRecord("medtake:${intake.id}","medtake",json.encodeToString(intake)));changed()} }
+    suspend fun deleteIntake(id:String) { db.withTransaction{dao.delete("medtake:$id");changed()} }
+    /** The user's own number for a day; null returns the day to the phone's count. */
+    suspend fun setManualSteps(date:String,steps:Int?) { db.withTransaction{
+        val day=stepDay(date).copy(manual=steps);validateSteps(day);dao.put(StoredRecord("steps:$date","steps",json.encodeToString(day)));changed()
+    } }
+    /**
+     * Adds counted steps. The counter reports many times a day, so only the first write of a day asks for a backup;
+     * later counts reach the backup together with the next change.
+     */
+    suspend fun addSensorSteps(date:String,delta:Int,backup:Boolean):StepDay = db.withTransaction{
+        val old=stepDay(date);if(delta<=0&&!backup)return@withTransaction old
+        val day=old.copy(sensor=(old.sensor+delta).coerceAtMost(MAX_STEPS_PER_DAY))
+        validateSteps(day);dao.put(StoredRecord("steps:$date","steps",json.encodeToString(day)));if(backup)changed()
+        day
+    }
+    private suspend fun stepDay(date:String):StepDay = dao.get("steps:$date")?.let{json.decodeFromString<StepDay>(it.payload)}?:StepDay(LocalDate.parse(date).toString())
+    /** Fills fibre into entries logged before it was tracked; returns how many changed. */
+    suspend fun backfillFiber(food:(String)->Food?):Int = db.withTransaction {
+        var updated=0
+        decode(dao.all()).entries.forEach{e->val filled=e.withFiberFrom(food(e.foodId));if(filled!==e){dao.put(StoredRecord("entry:${e.id}","entry",json.encodeToString(filled)));updated++}}
+        if(updated>0)changed()
+        updated
+    }
     suspend fun finishOnboarding(){db.withTransaction{dao.put(StoredRecord("onboarded","onboarded","true"));changed()}}
     suspend fun replaceSnapshot(snapshot:UserSnapshot) {
         validateSnapshot(snapshot)
@@ -57,6 +87,9 @@ class HealthRepository(context: Context, name: String = "healthchecker.db") {
             snapshot.workouts.forEach{dao.put(StoredRecord("workout:${it.id}","workout",json.encodeToString(it)))}
             snapshot.trainingDays.forEach{(d,v)->dao.put(StoredRecord("trainday:$d","trainday",v.toString()))}
             snapshot.trainingPrefs?.let{dao.put(StoredRecord("trainprefs","trainprefs",json.encodeToString(it)))}
+            snapshot.medications.forEach{dao.put(StoredRecord("med:${it.id}","med",json.encodeToString(it)))}
+            snapshot.medicationIntakes.forEach{dao.put(StoredRecord("medtake:${it.id}","medtake",json.encodeToString(it)))}
+            snapshot.steps.forEach{dao.put(StoredRecord("steps:${it.date}","steps",json.encodeToString(it)))}
             changed()
         }
     }

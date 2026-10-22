@@ -9,26 +9,63 @@ import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import az.healthchecker.domain.*
 import az.healthchecker.ui.*
+import java.time.Instant
+import java.time.ZoneId
+import java.time.format.DateTimeFormatter
 
-@Composable fun DiaryScreen(vm:AppViewModel,snapshot:UserSnapshot,date:String,add:()->Unit,edit:(DiaryEntry)->Unit,repeat:(DiaryEntry)->Unit) {
+@OptIn(ExperimentalLayoutApi::class)
+@Composable fun DiaryScreen(vm:AppViewModel,snapshot:UserSnapshot,date:String,add:()->Unit,edit:(DiaryEntry)->Unit,repeat:(DiaryEntry)->Unit,editMedication:(Medication?)->Unit) {
     val day=snapshot.day(date)
-    LazyColumn(Modifier.fillMaxSize(),contentPadding=PaddingValues(20.dp),verticalArrangement=Arrangement.spacedBy(14.dp)) {
-        item{Button(onClick=add,modifier=Modifier.fillMaxWidth().heightIn(min=54.dp)){Icon(Icons.Outlined.Add,"Добавить еду");Spacer(Modifier.width(8.dp));Text("Записать еду")}}
-        item{Row(Modifier.fillMaxWidth(),horizontalArrangement=Arrangement.SpaceBetween,verticalAlignment=Alignment.CenterVertically){Text(plural(day.entries.size,"запись","записи","записей"),style=MaterialTheme.typography.titleMedium);TextButton(onClick={vm.water(date)}){Icon(Icons.Outlined.WaterDrop,null);Spacer(Modifier.width(4.dp));Text("+250 мл воды")}}}
-        if(day.entries.isEmpty())item{Panel{Icon(Icons.Outlined.Restaurant,null,Modifier.size(32.dp),tint=MaterialTheme.colorScheme.primary);SectionTitle("Пока ничего не записано","Добавьте то, что съели. Мы посчитаем остальное.")}}
+    val medications=snapshot.medicationDay(date)
+    LazyColumn(Modifier.fillMaxSize().testTag("diaryList"),contentPadding=PaddingValues(20.dp),verticalArrangement=Arrangement.spacedBy(14.dp)) {
+        item{Button(onClick=add,modifier=Modifier.fillMaxWidth().heightIn(min=54.dp)){Icon(Icons.Outlined.Add,tr("Добавить еду","Add food"));Spacer(Modifier.width(8.dp));Text(tr("Записать еду","Log food"))}}
+        item{Row(Modifier.fillMaxWidth(),horizontalArrangement=Arrangement.SpaceBetween,verticalAlignment=Alignment.CenterVertically){Text(count(day.entries.size,"запись","записи","записей","entry","entries"),style=MaterialTheme.typography.titleMedium);TextButton(onClick={vm.water(date)}){Icon(Icons.Outlined.WaterDrop,null);Spacer(Modifier.width(4.dp));Text(tr("+250 мл воды","+250 ml water"))}}}
+        if(day.entries.isEmpty())item{Panel{Icon(Icons.Outlined.Restaurant,null,Modifier.size(32.dp),tint=MaterialTheme.colorScheme.primary);SectionTitle(tr("Пока ничего не записано","Nothing logged yet"),tr("Добавьте то, что съели. Мы посчитаем остальное.","Add what you ate. We'll count the rest."))}}
         items(day.entries,key={it.id}) {entry->Panel {
+            val name=vm.entryName(entry)
             Row(Modifier.fillMaxWidth().clickable{edit(entry)},verticalAlignment=Alignment.CenterVertically){
-                Column(Modifier.weight(1f)){Text(entry.name,fontWeight=FontWeight.SemiBold);Text("${quantityLabel(entry.quantity,entry.grams)} · белок ${number(entry.nutrients.protein,1)} г",style=MaterialTheme.typography.bodySmall,color=MaterialTheme.colorScheme.onSurfaceVariant)}
-                Text("${number(entry.nutrients.kcal)}\nккал",style=MaterialTheme.typography.titleMedium,color=MaterialTheme.colorScheme.primary)
+                Column(Modifier.weight(1f)){
+                    Text(name,fontWeight=FontWeight.SemiBold)
+                    Text(quantityLabel(entry.quantity,entry.grams),style=MaterialTheme.typography.bodySmall,color=MaterialTheme.colorScheme.onSurfaceVariant)
+                    // Every entry shows its own protein, fat, carbohydrate and fibre.
+                    Text(macrosLine(entry.nutrients),style=MaterialTheme.typography.bodySmall,color=MaterialTheme.colorScheme.onSurfaceVariant)
+                }
+                Text("${number(entry.nutrients.kcal)}\n$KCAL",style=MaterialTheme.typography.titleMedium,color=MaterialTheme.colorScheme.primary)
             }
-            Row{TextButton(onClick={edit(entry)}){Text("Изменить")};IconButton(onClick={vm.delete(entry)}){Icon(Icons.Outlined.DeleteOutline,"Удалить ${entry.name}")}}
+            Row{TextButton(onClick={edit(entry)}){Text(tr("Изменить","Edit"))};IconButton(onClick={vm.delete(entry)}){Icon(Icons.Outlined.DeleteOutline,tr("Удалить ","Delete ")+name)}}
         }}
-        item{Panel{Row(verticalAlignment=Alignment.CenterVertically){Checkbox(checked=day.completed,onCheckedChange={vm.completeDay(date,it)});Column{Text("День заполнен",fontWeight=FontWeight.Medium);Text("Учитывать в средней статистике",style=MaterialTheme.typography.bodySmall)}}}}
+        item{Panel{Row(verticalAlignment=Alignment.CenterVertically){Checkbox(checked=day.completed,onCheckedChange={vm.completeDay(date,it)});Column{Text(tr("День заполнен","Day complete"),fontWeight=FontWeight.Medium);Text(tr("Учитывать в средней статистике","Count it in the averages"),style=MaterialTheme.typography.bodySmall)}}}}
+        item{Row(verticalAlignment=Alignment.CenterVertically){
+            Icon(Icons.Outlined.Medication,null,tint=MaterialTheme.colorScheme.primary);Spacer(Modifier.width(10.dp))
+            Column(Modifier.weight(1f)){SectionTitle(tr("Лекарства и витамины","Medicines and vitamins"),if(medications.isEmpty())tr("Препараты с картой: дозировка, расписание, курс","Cards with dose, schedule and course") else tr("Отметьте приём, когда примете","Mark a dose when you take it"))}
+        }}
+        items(medications,key={"med:"+it.medication.id}){m->MedicationRow(vm,m,date){editMedication(m.medication)}}
+        item{OutlinedButton(onClick={editMedication(null)},modifier=Modifier.fillMaxWidth().testTag("addMedication")){Icon(Icons.Outlined.Add,null);Spacer(Modifier.width(8.dp));Text(tr("Добавить препарат","Add a medicine or vitamin"))}}
         val recent=snapshot.entries.sortedByDescending{it.instant}.distinctBy{it.foodId}.take(5)
-        if(recent.isNotEmpty()){item{SectionTitle("Недавние продукты","Быстро повторите запись")};items(recent,key={"recent:${it.foodId}"}){e->TextButton(onClick={repeat(e)},modifier=Modifier.fillMaxWidth()){Text(e.name,modifier=Modifier.weight(1f));Icon(Icons.Outlined.Add,null)}}}
+        if(recent.isNotEmpty()){item{SectionTitle(tr("Недавние продукты","Recent foods"),tr("Быстро повторите запись","Repeat an entry quickly"))};items(recent,key={"recent:${it.foodId}"}){e->TextButton(onClick={repeat(e)},modifier=Modifier.fillMaxWidth()){Text(vm.entryName(e),modifier=Modifier.weight(1f));Icon(Icons.Outlined.Add,null)}}}
+    }
+}
+
+/** One card in course today: what to take and how, the doses already marked, and "Taken". */
+@OptIn(ExperimentalLayoutApi::class)
+@Composable private fun MedicationRow(vm:AppViewModel,m:MedicationDay,date:String,open:()->Unit) {
+    val med=m.medication
+    Panel(Modifier.testTag("medication")) {
+        Row(Modifier.fillMaxWidth().clickable(onClick=open),verticalAlignment=Alignment.CenterVertically){
+            Column(Modifier.weight(1f)){
+                Text(med.name,fontWeight=FontWeight.SemiBold)
+                Text(medicationSummary(med),style=MaterialTheme.typography.bodySmall,color=MaterialTheme.colorScheme.onSurfaceVariant)
+                if(med.substances.isNotEmpty())Text(med.substances.joinToString(", ",transform=::substanceLabel),style=MaterialTheme.typography.bodySmall,color=MaterialTheme.colorScheme.onSurfaceVariant)
+            }
+            Icon(if(m.done)Icons.Outlined.CheckCircle else Icons.Outlined.RadioButtonUnchecked,null,tint=if(m.done)MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.outline)
+        }
+        Text("${tr("Принято","Taken")}: ${m.intakes.size} ${tr("из","of")} ${med.timesPerDay}",style=MaterialTheme.typography.titleSmall,color=MaterialTheme.colorScheme.primary)
+        if(m.intakes.isNotEmpty())FlowRow(horizontalArrangement=Arrangement.spacedBy(6.dp)){m.intakes.forEach{t->InputChip(selected=false,onClick={vm.deleteIntake(t)},label={Text(Instant.parse(t.instant).atZone(ZoneId.of(t.zoneId)).format(DateTimeFormatter.ofPattern("HH:mm")))},trailingIcon={Icon(Icons.Outlined.Close,tr("Убрать отметку","Remove the mark"),Modifier.size(16.dp))})}}
+        FilledTonalButton(onClick={vm.takeMedication(med,date)},modifier=Modifier.fillMaxWidth().testTag("takeMedication")){Icon(Icons.Outlined.Check,null);Spacer(Modifier.width(8.dp));Text(tr("Принял","Taken")+" · "+doseLabel(med.form,med.dose))}
     }
 }

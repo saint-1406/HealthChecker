@@ -20,6 +20,8 @@ android {
         signingConfig = signingConfigs.getByName("localRelease")
     } }
     buildFeatures { compose = true }
+    // The language is switched inside the app, so every bundle must carry both Russian and English resources.
+    bundle { language { enableSplit = false } }
     compileOptions { sourceCompatibility = JavaVersion.VERSION_17; targetCompatibility = JavaVersion.VERSION_17 }
     testOptions { unitTests.isIncludeAndroidResources = true }
 }

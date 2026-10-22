@@ -10,7 +10,7 @@ import kotlin.random.Random
 @Serializable enum class ExerciseKind { STRENGTH, CARDIO, MOBILITY }
 @Serializable enum class ExerciseMeasure { REPS, SECONDS, MINUTES }
 /** Home exercise; [met] comes from the Compendium activity [metCode], so energy cost is an estimate for the class of activity. */
-@Serializable data class Exercise(val id:String,val name:String,val aliases:List<String> = emptyList(),val muscles:List<Muscle>,val equipment:Equipment,val kind:ExerciseKind,val level:Int,val met:Double,val metCode:String,val metSource:String="",val measure:ExerciseMeasure,val secondsPerRep:Double?=null,val cue:String="")
+@Serializable data class Exercise(val id:String,val name:String,val nameEn:String?=null,val cueEn:String?=null,val aliases:List<String> = emptyList(),val muscles:List<Muscle>,val equipment:Equipment,val kind:ExerciseKind,val level:Int,val met:Double,val metCode:String,val metSource:String="",val measure:ExerciseMeasure,val secondsPerRep:Double?=null,val cue:String="")
 /** Snapshot of a performed exercise: later catalog or body-weight changes do not rewrite history. */
 @Serializable data class WorkoutEntry(
     val id:String,val exerciseId:String,val name:String,val kind:ExerciseKind,val muscles:List<Muscle>,
@@ -35,11 +35,11 @@ fun estimateMinutes(exercise:Exercise,sets:Int?,reps:Int?,seconds:Int?):Double? 
 fun burnedKcal(met:Double,bodyWeightKg:Double?,minutes:Double):Double? = bodyWeightKg?.let{met*it*minutes/60}
 
 fun makeWorkout(id:String,exercise:Exercise,sets:Int?,reps:Int?,seconds:Int?,loadKg:Double?,minutes:Double,date:String,old:WorkoutEntry?,now:Instant,zone:ZoneId,bodyWeightKg:Double?):WorkoutEntry {
-    require(minutes.isFinite()&&minutes>0&&minutes<=600){"Укажите время от 1 до 600 минут"}
-    require(sets==null||sets in 1..50){"Подходов может быть от 1 до 50"}
-    require(reps==null||reps in 1..1000){"Проверьте число повторений"}
-    require(seconds==null||seconds in 1..3600){"Проверьте время в секундах"}
-    require(loadKg==null||loadKg.isFinite()&&loadKg>0&&loadKg<=200){"Проверьте вес гантелей"}
+    require(minutes.isFinite()&&minutes>0&&minutes<=600){tr("Укажите время от 1 до 600 минут","Enter a time from 1 to 600 minutes")}
+    require(sets==null||sets in 1..50){tr("Подходов может быть от 1 до 50","Sets must be 1 to 50")}
+    require(reps==null||reps in 1..1000){tr("Проверьте число повторений","Check the number of reps")}
+    require(seconds==null||seconds in 1..3600){tr("Проверьте время в секундах","Check the time in seconds")}
+    require(loadKg==null||loadKg.isFinite()&&loadKg>0&&loadKg<=200){tr("Проверьте вес гантелей","Check the dumbbell weight")}
     // Like food entries, an edit keeps its day and the body weight it was calculated with.
     val weight=old?.bodyWeightKg?:bodyWeightKg
     return WorkoutEntry(id,exercise.id,exercise.name,exercise.kind,exercise.muscles,sets,reps,seconds,loadKg,minutes,exercise.met,weight,burnedKcal(exercise.met,weight,minutes),

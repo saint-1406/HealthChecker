@@ -203,13 +203,16 @@ EXERCISES = [
 def build(output):
     ids=[e[0] for e in EXERCISES]
     assert len(ids)==len(set(ids)), 'duplicate exercise id'
+    # English names and cues are reviewed translations of the Russian ones, kept beside this script.
+    english_text=json.loads(Path(__file__).with_name('en.json').read_text(encoding='utf-8'))
+    assert set(english_text)==set(ids), 'every exercise needs an English name and cue'
     items=[]
     for ident,name,english,muscles,equipment,kind,level,code,measure,spr,cue in EXERCISES:
         assert code in COMPENDIUM, ident
         assert level in (1,2,3) and muscles and cue.endswith('.'), ident
         assert (spr is not None)==(measure=='REPS'), ident
         met,description=COMPENDIUM[code]
-        items.append({'id':ident,'name':name,'aliases':[english],'muscles':muscles,'equipment':equipment,'kind':kind,'level':level,
+        items.append({'id':ident,'name':name,'nameEn':english_text[ident]['name'],'cueEn':english_text[ident]['cue'],'aliases':[english],'muscles':muscles,'equipment':equipment,'kind':kind,'level':level,
                       'met':met,'metCode':code,'metSource':description,'measure':measure,'secondsPerRep':spr,'cue':cue})
     output=Path(output);output.parent.mkdir(parents=True,exist_ok=True)
     output.write_text(json.dumps(items,ensure_ascii=False,separators=(',',':')),encoding='utf-8')

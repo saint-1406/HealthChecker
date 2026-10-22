@@ -5,13 +5,11 @@ import kotlinx.serialization.json.Json
 import kotlinx.serialization.decodeFromString
 class CatalogImporter(context:Context) {
     val foods:List<Food> = context.assets.open("catalog/foods.json").bufferedReader().use{Json.decodeFromString(it.readText())}
-    private val index=foods.map{it to normalizeSearch(it.name+" "+it.aliases.joinToString(" "))}
+    private val index=foods.mapIndexed{i,f->SearchEntry(f,i,f.common)}
     private val ids=foods.associateBy{it.id}
     fun byId(id:String):Food? = ids[id]
-    fun search(query:String,custom:List<Food>,limit:Int=50):List<Food> {
-        val terms=normalizeSearch(query).split(Regex("\\s+")).filter{it.isNotEmpty()}
-        return (custom.map{it to normalizeSearch(it.name+" "+it.aliases.joinToString(" "))}+index).asSequence().filter{(_,text)->terms.all{text.contains(it)}}.take(limit).map{it.first}.toList()
-    }
+    /** The user's own foods come first for an empty query and rank with everyday foods otherwise. */
+    fun search(query:String,custom:List<Food>,limit:Int=50):List<Food> = rankSearch(query,custom.mapIndexed{i,f->SearchEntry(f,i-custom.size,true)}+index,limit)
     companion object {
         @Volatile private var loaded:CatalogImporter?=null
         // The bundled catalog is immutable: parse it once per process instead of on every new screen owner.

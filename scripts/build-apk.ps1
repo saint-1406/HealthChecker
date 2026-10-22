@@ -23,10 +23,15 @@ try {
     Invoke-Native 'APK signature verification failed' { & (Join-Path $buildTools 'apksigner.bat') verify --verbose --print-certs $apk }
     $badging=Invoke-Native 'APK metadata could not be read' { & (Join-Path $buildTools 'aapt2.exe') dump badging $apk }
     if(-not ($badging -match "package: name='az.healthchecker.app' versionCode='$VersionCode'")){throw 'APK has an unexpected applicationId or versionCode'}
+    # The first delivered build stays as HealthChecker-base-v3.apk; every later build is a separate, numbered update
+    # that installs over whatever version the phone already has.
     New-Item -ItemType Directory -Force dist | Out-Null
-    Copy-Item -LiteralPath $apk -Destination dist/HealthChecker.apk -Force
-    $hash=(Get-FileHash -LiteralPath dist/HealthChecker.apk -Algorithm SHA256).Hash
-    Set-Content -LiteralPath dist/HealthChecker.apk.sha256 -Value "$hash  HealthChecker.apk"
+    $name="HealthChecker-update-v$VersionCode.apk"
+    Copy-Item -LiteralPath $apk -Destination "dist/$name" -Force
+    $hash=(Get-FileHash -LiteralPath "dist/$name" -Algorithm SHA256).Hash
+    $sums='dist/SHA256SUMS.txt'
+    $lines=@(if(Test-Path -LiteralPath $sums){Get-Content -LiteralPath $sums | Where-Object {$_ -and -not $_.EndsWith("  $name")}})+"$hash  $name"
+    Set-Content -LiteralPath $sums -Value $lines
     Set-Content -LiteralPath $versionFile -Value $VersionCode
-    Write-Output "Ready: $projectRoot\dist\HealthChecker.apk (versionCode $VersionCode, SHA-256 $hash)"
+    Write-Output "Ready: $projectRoot\dist\$name (versionCode $VersionCode, SHA-256 $hash)"
 } finally {Pop-Location}

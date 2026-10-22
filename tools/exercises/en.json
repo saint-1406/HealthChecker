@@ -1,0 +1,566 @@
+{
+  "squat": {
+    "name": "Squat",
+    "cue": "Feet shoulder-width apart, knees tracking over your toes, back straight; lower until your thighs are parallel to the floor."
+  },
+  "sumo_squat": {
+    "name": "Sumo squat",
+    "cue": "Feet wider than shoulders, toes turned out; lower straight down and push your knees out to the sides."
+  },
+  "sit_to_stand": {
+    "name": "Chair sit-to-stand",
+    "cue": "Sit on the edge of a stable chair and stand up without using your hands; sit back down slowly."
+  },
+  "wall_sit": {
+    "name": "Wall sit",
+    "cue": "Back pressed against the wall, knees over your feet at about 90°; breathe steadily."
+  },
+  "forward_lunge": {
+    "name": "Forward lunge",
+    "cue": "Step forward and bend both knees to about 90°, keeping the front knee from caving inward; push back off the front foot to return."
+  },
+  "reverse_lunge": {
+    "name": "Reverse lunge",
+    "cue": "Step back and lower the back knee toward the floor; keep your weight on the front leg. A knee-friendly option."
+  },
+  "split_squat": {
+    "name": "Split squat",
+    "cue": "Stand in a long stride and squat in place without moving your feet; keep your torso upright."
+  },
+  "side_lunge": {
+    "name": "Side lunge",
+    "cue": "Take a wide step to the side and sit into the working leg while the other leg stays straight; push your hips back."
+  },
+  "curtsy_lunge": {
+    "name": "Curtsy lunge",
+    "cue": "Step one leg back diagonally behind the standing leg, as in a curtsy; keep the standing knee over your foot."
+  },
+  "walking_lunge": {
+    "name": "Walking lunge",
+    "cue": "Forward lunges, alternating legs as you move forward; you need a clear path."
+  },
+  "step_up": {
+    "name": "Step-up",
+    "cue": "Step up onto a stable step or low bench with your whole foot, pushing through the top leg."
+  },
+  "bulgarian_split_squat": {
+    "name": "Bulgarian split squat",
+    "cue": "Rear foot on a sofa or chair, squat on the front leg; hold on to a wall if needed."
+  },
+  "pistol_assisted": {
+    "name": "Assisted pistol squat",
+    "cue": "Squat on one leg with the other leg extended forward, holding a door frame with one hand."
+  },
+  "glute_bridge": {
+    "name": "Glute bridge",
+    "cue": "Lying on your back with your feet close to your hips; raise your hips until your shoulders, hips and knees form a straight line, squeezing your glutes."
+  },
+  "single_leg_bridge": {
+    "name": "Single-leg glute bridge",
+    "cue": "Like the regular bridge, but with one leg extended; do not let your hips tilt to one side."
+  },
+  "hip_thrust_sofa": {
+    "name": "Sofa hip thrust",
+    "cue": "Shoulder blades on the edge of the sofa, feet on the floor; raise your hips until your torso is level with the floor, chin toward your chest."
+  },
+  "donkey_kick": {
+    "name": "Donkey kick",
+    "cue": "On all fours, lift your bent leg with the heel toward the ceiling; do not let your lower back arch."
+  },
+  "fire_hydrant": {
+    "name": "Fire hydrant",
+    "cue": "On all fours, lift your bent leg out to the side; keep your torso still."
+  },
+  "side_leg_raise": {
+    "name": "Side-lying leg raise",
+    "cue": "Lying on your side, raise the straight top leg with your toes pointing forward, without rolling your hips back."
+  },
+  "calf_raise": {
+    "name": "Calf raise",
+    "cue": "Rise onto your toes and lower slowly; you can hold on to a wall."
+  },
+  "single_calf_raise": {
+    "name": "Single-leg calf raise",
+    "cue": "The same on one leg, from the edge of a step if possible for a full range of motion."
+  },
+  "good_morning": {
+    "name": "Bodyweight good morning",
+    "cue": "Hands behind your head, knees slightly bent; bend forward with a straight back by pushing your hips back."
+  },
+  "single_leg_rdl": {
+    "name": "Bodyweight single-leg deadlift",
+    "cue": "Standing on one leg, lean forward with a straight back while the other leg goes back; balance matters more than depth."
+  },
+  "jump_squat": {
+    "name": "Jump squat",
+    "cue": "Squat down, then jump powerfully upward; land softly on your toes and move straight into the next squat."
+  },
+  "jump_lunge": {
+    "name": "Jumping lunge",
+    "cue": "From a lunge, switch legs with a jump; land softly and keep your knees from caving inward."
+  },
+  "wall_pushup": {
+    "name": "Wall push-up",
+    "cue": "Palms on the wall at chest height, body straight; bend your arms until your chest touches the wall."
+  },
+  "incline_pushup": {
+    "name": "Incline push-up",
+    "cue": "Hands on a stable surface (table or sofa), body in a straight line; the lower the surface, the harder it is."
+  },
+  "knee_pushup": {
+    "name": "Push-up on knees",
+    "cue": "Support yourself on your knees and palms, with a straight line from knees to shoulders; lower your chest toward the floor."
+  },
+  "pushup": {
+    "name": "Push-up",
+    "cue": "Palms slightly wider than shoulders, body straight, elbows at about 45° to your torso."
+  },
+  "wide_pushup": {
+    "name": "Wide push-up",
+    "cue": "Hands wider than usual, emphasizing the chest; do not let your hips sag."
+  },
+  "diamond_pushup": {
+    "name": "Diamond push-up",
+    "cue": "Palms together under your chest, thumbs and index fingers forming a diamond; elbows close to your body."
+  },
+  "decline_pushup": {
+    "name": "Decline push-up",
+    "cue": "Feet on the sofa, hands on the floor; keep your torso straight and do not arch your lower back."
+  },
+  "pike_pushup": {
+    "name": "Pike push-up",
+    "cue": "Hips high, body in an inverted V; lower the top of your head toward the floor between your palms."
+  },
+  "hindu_pushup": {
+    "name": "Hindu push-up",
+    "cue": "From the pike position, dive your chest forward along the floor into an upward arch, then return back."
+  },
+  "chair_dip": {
+    "name": "Chair dip",
+    "cue": "Palms on the edge of a stable chair behind you; bend your elbows back to 90° and do not raise your shoulders toward your ears."
+  },
+  "plank_updown": {
+    "name": "Plank up-down",
+    "cue": "From a forearm plank, move one hand at a time up into a high plank and back down; do not let your hips rock."
+  },
+  "plank_shoulder_tap": {
+    "name": "Plank shoulder tap",
+    "cue": "In a high plank, tap the opposite shoulder; keep your feet wider so your hips do not sway."
+  },
+  "wall_slide": {
+    "name": "Wall slide",
+    "cue": "Back and forearms pressed against the wall; slide your arms up and down without lifting them off the wall."
+  },
+  "incline_pike_pushup": {
+    "name": "Incline pike push-up",
+    "cue": "Palms on the edge of the sofa, hips high; lower your head toward the edge by bending your elbows."
+  },
+  "bear_crawl": {
+    "name": "Bear crawl",
+    "cue": "On all fours with your knees a few centimeters off the floor, move forward and backward in short steps."
+  },
+  "superman": {
+    "name": "Superman",
+    "cue": "Lying face down, raise your arms and legs a few centimeters at the same time, eyes on the floor."
+  },
+  "ytw_raise": {
+    "name": "Prone Y-T-W raise",
+    "cue": "Lying face down, raise your arms into the letters Y, T and W, squeezing your shoulder blades together; keep your neck neutral."
+  },
+  "snow_angel": {
+    "name": "Reverse snow angel",
+    "cue": "Lying face down, sweep your arms, held just above the floor, in an arc from your hips to your head and back."
+  },
+  "swimmer": {
+    "name": "Prone swimmer",
+    "cue": "Lying face down, alternately raise the opposite arm and leg at a fast pace."
+  },
+  "cobra_hold": {
+    "name": "Prone cobra hold",
+    "cue": "Lying face down, lift your chest, squeeze your shoulder blades together and turn your palms outward; hold."
+  },
+  "doorframe_row": {
+    "name": "Doorframe row",
+    "cue": "Grip a sturdy door frame, lean back and pull your chest toward the frame. Use only a secure support."
+  },
+  "bird_dog": {
+    "name": "Bird dog",
+    "cue": "On all fours, extend the opposite arm and leg into one line; keep your hips still."
+  },
+  "crunch": {
+    "name": "Crunch",
+    "cue": "Lying on your back with your knees bent; lift your shoulder blades off the floor without pulling your head with your hands."
+  },
+  "reverse_crunch": {
+    "name": "Reverse crunch",
+    "cue": "Lying on your back, pull your knees toward your chest, lifting your hips slightly off the floor."
+  },
+  "heel_touch": {
+    "name": "Heel touch",
+    "cue": "With your shoulder blades lifted, reach alternately toward the heel on the same side."
+  },
+  "dead_bug": {
+    "name": "Dead bug",
+    "cue": "Lying on your back with your lower back pressed down; lower the opposite arm and leg toward the floor."
+  },
+  "plank": {
+    "name": "Forearm plank",
+    "cue": "Elbows under your shoulders, body straight from heels to head, glutes and abs tight."
+  },
+  "side_plank": {
+    "name": "Side plank",
+    "cue": "Support yourself on one elbow and your feet, hips lifted, body in one line; an easier version is from the knees."
+  },
+  "hollow_hold": {
+    "name": "Hollow body hold",
+    "cue": "Lying on your back with your lower back pressed down, lift your shoulders and straight legs off the floor."
+  },
+  "leg_raise": {
+    "name": "Lying leg raise",
+    "cue": "Lying on your back, raise your straight legs to vertical; keep your lower back pressed down and lower slowly."
+  },
+  "flutter_kick": {
+    "name": "Flutter kick",
+    "cue": "Lying on your back, keep your legs low above the floor and make quick up-and-down kicks, lower back pressed down."
+  },
+  "bicycle_crunch": {
+    "name": "Bicycle crunch",
+    "cue": "Alternately bring an elbow toward the opposite knee while the other leg straightens."
+  },
+  "situp": {
+    "name": "Sit-up",
+    "cue": "From lying down, come up to sitting with your feet on the floor; do not jerk."
+  },
+  "russian_twist": {
+    "name": "Russian twist",
+    "cue": "Sitting and leaning back, rotate your torso from side to side, keeping your back straight."
+  },
+  "v_up": {
+    "name": "V-up",
+    "cue": "Lying on your back, raise your straight arms and legs at the same time and touch your feet."
+  },
+  "side_plank_dip": {
+    "name": "Side plank hip dip",
+    "cue": "In a side plank, lower your hips toward the floor and raise them above the line of your body."
+  },
+  "jumping_jacks": {
+    "name": "Jumping jacks",
+    "cue": "Jump your feet out to the sides with your arms overhead, then back; land on your toes."
+  },
+  "step_jacks": {
+    "name": "Step jacks",
+    "cue": "Like jumping jacks, but step out to each side in turn instead of jumping; quiet and easy on the joints."
+  },
+  "jog_in_place": {
+    "name": "Jogging in place",
+    "cue": "Light jog in place on your toes, arms moving as when running."
+  },
+  "butt_kicks": {
+    "name": "Butt kicks",
+    "cue": "Jog in place, with your heels touching your glutes."
+  },
+  "high_knees": {
+    "name": "High knees",
+    "cue": "Fast running in place, knees up to hip level, torso upright."
+  },
+  "skip_imitation": {
+    "name": "Air jump rope",
+    "cue": "Low jumps on your toes with your wrists turning, as if using a jump rope."
+  },
+  "lateral_shuffle": {
+    "name": "Lateral shuffle",
+    "cue": "In a half squat, quickly move from side to side with shuffle steps."
+  },
+  "skater_jump": {
+    "name": "Skater jump",
+    "cue": "Jump from foot to foot sideways like a speed skater; land softly."
+  },
+  "mountain_climber": {
+    "name": "Mountain climber",
+    "cue": "In a high plank, quickly drive your knees toward your chest in turn; do not raise your hips."
+  },
+  "plank_jack": {
+    "name": "Plank jack",
+    "cue": "In a high plank, jump your feet apart and together; keep your torso still."
+  },
+  "half_burpee": {
+    "name": "Half burpee",
+    "cue": "Squat down, step or jump back into a plank, return, and stand up with no jump and no push-up."
+  },
+  "squat_thrust": {
+    "name": "Squat thrust",
+    "cue": "From a crouch with your hands on the floor, jump back into a plank and return, then stand up."
+  },
+  "inchworm": {
+    "name": "Inchworm",
+    "cue": "Bend forward, walk your hands out to a plank and back to your feet."
+  },
+  "burpee": {
+    "name": "Burpee",
+    "cue": "Squat down, drop into a plank, do a push-up, return, and jump up with a clap overhead."
+  },
+  "star_jump": {
+    "name": "Star jump",
+    "cue": "From a squat, jump powerfully, spreading your arms and legs out to the sides."
+  },
+  "tuck_jump": {
+    "name": "Tuck jump",
+    "cue": "Jump up, pulling your knees toward your chest; land softly."
+  },
+  "stairs": {
+    "name": "Stair climbing",
+    "cue": "Climb the stairs of your building at a steady pace and come down calmly; hold the handrail."
+  },
+  "stairs_fast": {
+    "name": "Fast stair climbing",
+    "cue": "Climb the steps quickly, one at a time, and walk down to recover."
+  },
+  "step_aerobics": {
+    "name": "Step aerobics",
+    "cue": "Rhythmic steps up onto a low step (about 10 cm) and back down, switching the leading leg."
+  },
+  "dance_low": {
+    "name": "Low-impact aerobics or dance",
+    "cue": "Rhythmic movement to music without jumping."
+  },
+  "dance_high": {
+    "name": "High-impact aerobics or dance",
+    "cue": "Energetic movement to music with jumps and quick changes of steps."
+  },
+  "zumba_video": {
+    "name": "Zumba video workout",
+    "cue": "A workout following a Zumba video lesson at home."
+  },
+  "video_cardio": {
+    "name": "Cardio video workout, moderate",
+    "cue": "A video workout combining cardio and strength exercises at a moderate pace."
+  },
+  "video_cardio_hard": {
+    "name": "Cardio video workout, vigorous",
+    "cue": "An intense video workout; your breathing speeds up noticeably."
+  },
+  "circuit_bw": {
+    "name": "Bodyweight circuit",
+    "cue": "Alternate 5–8 exercises of 30–40 s each with almost no rest, for 2–4 rounds."
+  },
+  "hiit_moderate": {
+    "name": "Interval training (HIIT), moderate",
+    "cue": "Intervals of 20–40 s of work with equal rest; the pace is high but under control."
+  },
+  "tabata": {
+    "name": "Tabata (high-intensity HIIT)",
+    "cue": "20 s of all-out work (burpees, mountain climbers, jumps) and 10 s of rest, 8 rounds per block."
+  },
+  "walk_moderate": {
+    "name": "Moderate-pace walking",
+    "cue": "Walking at about 4.5–5.5 km/h on a flat surface."
+  },
+  "walk_brisk": {
+    "name": "Brisk walking",
+    "cue": "Walking at about 5.6–6.3 km/h; you can talk, but it takes effort."
+  },
+  "arm_circles": {
+    "name": "Arm circles",
+    "cue": "Rotate your straight arms forward and backward, gradually increasing the range."
+  },
+  "hip_circles": {
+    "name": "Hip circles",
+    "cue": "Hands on your waist, make smooth circles with your hips in both directions."
+  },
+  "cat_cow": {
+    "name": "Cat-cow",
+    "cue": "On all fours, smoothly alternate between arching and rounding your back in time with your breathing."
+  },
+  "worlds_greatest": {
+    "name": "World's greatest stretch",
+    "cue": "In a deep lunge, place one hand on the floor and rotate your torso, reaching the other arm toward the ceiling."
+  },
+  "hamstring_stretch": {
+    "name": "Hamstring stretch",
+    "cue": "Sitting or standing, reach toward your foot with a straight back until you feel a light stretch; no bouncing."
+  },
+  "quad_stretch": {
+    "name": "Quad stretch",
+    "cue": "Standing next to a wall, pull your heel toward your glute, knees together, pelvis tucked under."
+  },
+  "chest_stretch": {
+    "name": "Doorway chest stretch",
+    "cue": "Forearm on the door frame at shoulder height; step forward until you feel a light stretch in your chest."
+  },
+  "childs_pose": {
+    "name": "Child's pose",
+    "cue": "Sit back on your heels and reach your arms forward along the floor; relax your back and breathe deeply."
+  },
+  "stretch_session": {
+    "name": "Full stretching session",
+    "cue": "Gentle stretching of the main muscles, 20–30 s for each position."
+  },
+  "pilates": {
+    "name": "Mat Pilates",
+    "cue": "Controlled exercises for the core muscles and posture, following a program or video."
+  },
+  "yoga_hatha": {
+    "name": "Hatha yoga",
+    "cue": "Calm practice of poses with holds and attention to your breathing."
+  },
+  "sun_salutation": {
+    "name": "Sun salutation (Surya Namaskar)",
+    "cue": "A sequence of 12 positions, repeated continuously at your own pace."
+  },
+  "yoga_vinyasa": {
+    "name": "Vinyasa yoga",
+    "cue": "Smooth transitions between poses, synchronized with your breathing."
+  },
+  "yoga_power": {
+    "name": "Power yoga",
+    "cue": "Dynamic yoga with strength holds."
+  },
+  "db_goblet_squat": {
+    "name": "Dumbbell goblet squat",
+    "cue": "Hold a dumbbell vertically at your chest and squat so that your elbows pass between your knees."
+  },
+  "db_squat": {
+    "name": "Dumbbell squat",
+    "cue": "Dumbbells in your hanging hands or on your shoulders; technique as in a regular squat."
+  },
+  "db_sumo_squat": {
+    "name": "Dumbbell sumo squat",
+    "cue": "Wide stance, dumbbell hanging between your legs; squat with a straight back."
+  },
+  "db_rdl": {
+    "name": "Dumbbell Romanian deadlift",
+    "cue": "Dumbbells slide along your legs, knees slightly bent, back straight; bend forward by pushing your hips back."
+  },
+  "db_deadlift": {
+    "name": "Dumbbell deadlift",
+    "cue": "Squat down to the dumbbells with a straight back and stand up, extending your legs and hips at the same time."
+  },
+  "db_lunge": {
+    "name": "Dumbbell lunge",
+    "cue": "Dumbbells in your hanging hands; lunge forward or in place, torso upright."
+  },
+  "db_reverse_lunge": {
+    "name": "Dumbbell reverse lunge",
+    "cue": "Step back holding dumbbells, with the back knee going toward the floor."
+  },
+  "db_step_up": {
+    "name": "Dumbbell step-up",
+    "cue": "Step up onto a stable step with dumbbells in your hanging hands."
+  },
+  "db_bulgarian": {
+    "name": "Dumbbell Bulgarian split squat",
+    "cue": "Rear foot on a sofa, dumbbells in your hands; squat on the front leg."
+  },
+  "db_glute_bridge": {
+    "name": "Dumbbell glute bridge",
+    "cue": "Dumbbell resting on your hips, steady it with your hands; raise your hips, squeezing your glutes."
+  },
+  "db_calf_raise": {
+    "name": "Dumbbell calf raise",
+    "cue": "Dumbbells in your hands, rise onto your toes with a pause at the top."
+  },
+  "db_swing": {
+    "name": "Dumbbell swing",
+    "cue": "Hold the dumbbell with both hands and swing it up to chest level with a powerful hip extension. The estimate is based on kettlebell swings."
+  },
+  "db_floor_press": {
+    "name": "Dumbbell floor press",
+    "cue": "Lying on the floor, press the dumbbells up; your elbows touch the floor at the bottom."
+  },
+  "db_floor_fly": {
+    "name": "Dumbbell floor fly",
+    "cue": "Arms slightly bent, open the dumbbells in an arc until your elbows touch the floor."
+  },
+  "db_shoulder_press": {
+    "name": "Dumbbell shoulder press",
+    "cue": "Seated or standing, press the dumbbells up from shoulder level; do not arch your lower back."
+  },
+  "db_arnold_press": {
+    "name": "Arnold press",
+    "cue": "Start with your palms facing you at shoulder level and rotate them forward as you press up."
+  },
+  "db_lateral_raise": {
+    "name": "Dumbbell lateral raise",
+    "cue": "Raise the dumbbells out to the sides to shoulder level, elbows slightly bent, light weight."
+  },
+  "db_front_raise": {
+    "name": "Dumbbell front raise",
+    "cue": "Raise the dumbbells forward to shoulder level, alternating or together."
+  },
+  "db_rear_fly": {
+    "name": "Dumbbell rear delt fly",
+    "cue": "Bent over with a straight back, raise the dumbbells out to the sides, squeezing your shoulder blades together."
+  },
+  "db_bent_row": {
+    "name": "Dumbbell bent-over row",
+    "cue": "Bend forward with a straight back and pull the dumbbells to your waist, squeezing your shoulder blades together."
+  },
+  "db_one_arm_row": {
+    "name": "One-arm dumbbell row",
+    "cue": "One hand and knee on the sofa, pull the dumbbell to your waist with the other hand."
+  },
+  "db_renegade_row": {
+    "name": "Renegade row",
+    "cue": "In a plank position on the dumbbells, pull them to your waist one at a time, keeping your hips level."
+  },
+  "db_pullover": {
+    "name": "Dumbbell pullover",
+    "cue": "Lying on the floor, lower the dumbbell behind your head with straight arms and bring it back over your chest."
+  },
+  "db_shrug": {
+    "name": "Dumbbell shrug",
+    "cue": "Raise your shoulders toward your ears without rolling them and lower them slowly."
+  },
+  "db_biceps_curl": {
+    "name": "Dumbbell biceps curl",
+    "cue": "Elbows pinned to your sides, curl the dumbbells without swinging."
+  },
+  "db_hammer_curl": {
+    "name": "Hammer curl",
+    "cue": "Palms facing each other, curl the dumbbells with your elbows still."
+  },
+  "db_overhead_triceps": {
+    "name": "Overhead triceps extension",
+    "cue": "Hold one dumbbell with both hands behind your head and extend your elbows upward, with your elbows pointing forward."
+  },
+  "db_kickback": {
+    "name": "Triceps kickback",
+    "cue": "Bent over with your upper arm pinned to your side, extend your elbow back until your arm is straight."
+  },
+  "db_skull_crusher": {
+    "name": "Dumbbell skull crusher",
+    "cue": "Lying down, lower the dumbbells toward your temples by bending your elbows and extend them back up."
+  },
+  "db_side_bend": {
+    "name": "Dumbbell side bend",
+    "cue": "Dumbbell in one hand, bend to the side and return using your oblique muscles."
+  },
+  "db_russian_twist": {
+    "name": "Dumbbell Russian twist",
+    "cue": "Sitting and leaning back, pass the dumbbell from side to side by turning your torso."
+  },
+  "db_woodchop": {
+    "name": "Dumbbell woodchop",
+    "cue": "Diagonal movement of the dumbbell from your hip to the opposite shoulder, rotating your torso."
+  },
+  "db_farmer_hold": {
+    "name": "Farmer's hold",
+    "cue": "Stand or walk with heavy dumbbells in your hanging hands, shoulders down, torso upright."
+  },
+  "db_thruster": {
+    "name": "Dumbbell thruster",
+    "cue": "Squat with the dumbbells at your shoulders and, as you rise, press them overhead in one movement."
+  },
+  "db_clean_press": {
+    "name": "Dumbbell clean and press",
+    "cue": "From a hanging position, pop the dumbbells up to your shoulders by extending your hips, then press them overhead."
+  },
+  "db_strength_session": {
+    "name": "Dumbbell strength workout",
+    "cue": "Several exercises of 8–15 reps with rest between sets."
+  },
+  "db_circuit": {
+    "name": "Dumbbell circuit",
+    "cue": "Alternate upper-body and lower-body exercises with almost no rest, 3–4 rounds."
+  }
+}

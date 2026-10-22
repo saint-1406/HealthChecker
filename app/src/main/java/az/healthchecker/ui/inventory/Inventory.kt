@@ -28,10 +28,10 @@ import java.time.LocalDate
 import java.time.format.DateTimeFormatter
 
 /** Minimal outline pictures a dish can carry in the inventory; the key is stored in the recipe. */
-val DISH_ICONS:List<Triple<String,ImageVector,String>> = listOf(
-    Triple("plate",Icons.Outlined.DinnerDining,"Блюдо"),Triple("soup",Icons.Outlined.SoupKitchen,"Суп"),Triple("bowl",Icons.Outlined.RiceBowl,"Гарнир, каша"),
-    Triple("meat",Icons.Outlined.KebabDining,"Мясо"),Triple("salad",Icons.Outlined.Eco,"Салат"),Triple("bakery",Icons.Outlined.BakeryDining,"Выпечка"),
-    Triple("breakfast",Icons.Outlined.EggAlt,"Завтрак"),Triple("dessert",Icons.Outlined.Cake,"Десерт"),Triple("drink",Icons.Outlined.LocalCafe,"Напиток"))
+val DISH_ICONS:List<Triple<String,ImageVector,String>> get() = listOf(
+    Triple("plate",Icons.Outlined.DinnerDining,tr("Блюдо","Dish")),Triple("soup",Icons.Outlined.SoupKitchen,tr("Суп","Soup")),Triple("bowl",Icons.Outlined.RiceBowl,tr("Гарнир, каша","Side, porridge")),
+    Triple("meat",Icons.Outlined.KebabDining,tr("Мясо","Meat")),Triple("salad",Icons.Outlined.Eco,tr("Салат","Salad")),Triple("bakery",Icons.Outlined.BakeryDining,tr("Выпечка","Baking")),
+    Triple("breakfast",Icons.Outlined.EggAlt,tr("Завтрак","Breakfast")),Triple("dessert",Icons.Outlined.Cake,tr("Десерт","Dessert")),Triple("drink",Icons.Outlined.LocalCafe,tr("Напиток","Drink")))
 fun dishIcon(key:String?):ImageVector = DISH_ICONS.find{it.first==key}?.second?:Icons.Outlined.DinnerDining
 
 /** Profile → Inventory: every cooked dish as a cell; tapping opens the dish sheet. */
@@ -43,11 +43,11 @@ fun dishIcon(key:String?):ImageVector = DISH_ICONS.find{it.first==key}?.second?:
     Panel {
         Row(verticalAlignment=Alignment.CenterVertically,horizontalArrangement=Arrangement.spacedBy(10.dp)){
             Icon(Icons.Outlined.Inventory2,null,tint=MaterialTheme.colorScheme.primary)
-            Column(Modifier.weight(1f)){Text("Инвентарь",style=MaterialTheme.typography.headlineSmall,fontWeight=FontWeight.SemiBold);Text(if(dishes.isEmpty())"Здесь хранятся приготовленные вами блюда" else plural(dishes.size,"блюдо","блюда","блюд"),style=MaterialTheme.typography.bodyMedium,color=MaterialTheme.colorScheme.onSurfaceVariant)}
+            Column(Modifier.weight(1f)){Text(tr("Инвентарь","Inventory"),style=MaterialTheme.typography.headlineSmall,fontWeight=FontWeight.SemiBold);Text(if(dishes.isEmpty())tr("Здесь хранятся приготовленные вами блюда","Dishes you cook are kept here") else count(dishes.size,"блюдо","блюда","блюд","dish","dishes"),style=MaterialTheme.typography.bodyMedium,color=MaterialTheme.colorScheme.onSurfaceVariant)}
         }
         FlowRow(horizontalArrangement=Arrangement.spacedBy(10.dp),verticalArrangement=Arrangement.spacedBy(10.dp),maxItemsInEachRow=3){
-            dishes.forEach{d->InventoryCell(dishIcon(d.recipe?.icon),d.name,"${number(d.per100g.kcal)} ккал/100 г",Modifier.weight(1f)){openId=d.id}}
-            InventoryCell(Icons.Outlined.Add,"Новое блюдо","из ингредиентов",Modifier.weight(1f).testTag("newDishCell"),accent=true,onClick=create)
+            dishes.forEach{d->InventoryCell(dishIcon(d.recipe?.icon),d.name,"${number(d.per100g.kcal)} $KCAL/100 $G",Modifier.weight(1f)){openId=d.id}}
+            InventoryCell(Icons.Outlined.Add,tr("Новое блюдо","New dish"),tr("из ингредиентов","from ingredients"),Modifier.weight(1f).testTag("newDishCell"),accent=true,onClick=create)
             // Keeps the last row's cells the same width as full rows.
             repeat((3-(dishes.size+1)%3)%3){Spacer(Modifier.weight(1f))}
         }
@@ -79,31 +79,31 @@ fun dishIcon(key:String?):ImageVector = DISH_ICONS.find{it.first==key}?.second?:
         Column(Modifier.verticalScroll(rememberScrollState()).imePadding().padding(horizontal=24.dp).padding(bottom=32.dp),verticalArrangement=Arrangement.spacedBy(14.dp)) {
             Row(verticalAlignment=Alignment.CenterVertically,horizontalArrangement=Arrangement.spacedBy(14.dp)){
                 Surface(shape=RoundedCornerShape(16.dp),color=MaterialTheme.colorScheme.secondaryContainer){Icon(dishIcon(recipe.icon),null,Modifier.padding(12.dp).size(32.dp),tint=MaterialTheme.colorScheme.primary)}
-                Column(Modifier.weight(1f)){Text(dish.name,style=MaterialTheme.typography.headlineSmall,fontWeight=FontWeight.SemiBold);Text("Своё блюдо · ${plural(recipe.ingredients.size,"ингредиент","ингредиента","ингредиентов")}",color=MaterialTheme.colorScheme.onSurfaceVariant)}
-                IconButton(onClick=edit){Icon(Icons.Outlined.Edit,"Изменить блюдо")}
+                Column(Modifier.weight(1f)){Text(dish.name,style=MaterialTheme.typography.headlineSmall,fontWeight=FontWeight.SemiBold);Text(tr("Своё блюдо · ","Your dish · ")+count(recipe.ingredients.size,"ингредиент","ингредиента","ингредиентов","ingredient","ingredients"),color=MaterialTheme.colorScheme.onSurfaceVariant)}
+                IconButton(onClick=edit){Icon(Icons.Outlined.Edit,tr("Изменить блюдо","Edit dish"))}
             }
             Panel {
-                Text("НА 100 г",style=MaterialTheme.typography.labelMedium)
-                Text("${number(dish.per100g.kcal)} ккал",style=MaterialTheme.typography.headlineSmall,color=MaterialTheme.colorScheme.primary)
-                Text("Б ${number(dish.per100g.protein,1)} г · Ж ${number(dish.per100g.fat,1)} г · У ${number(dish.per100g.carbs,1)} г")
-                total?.let{Text("Всё блюдо: ${number(it)} г ≈ ${number(dish.per100g.kcal!!*it/100)} ккал${if(recipe.cookedGrams==null)" (по весу сырых ингредиентов)" else ""}",style=MaterialTheme.typography.bodySmall)}
+                Text(tr("НА 100 г","PER 100 g"),style=MaterialTheme.typography.labelMedium)
+                Text("${number(dish.per100g.kcal)} $KCAL",style=MaterialTheme.typography.headlineSmall,color=MaterialTheme.colorScheme.primary)
+                Text(macrosLine(dish.per100g))
+                total?.let{Text(tr("Всё блюдо: ","Whole dish: ")+"${number(it)} $G ≈ ${number(dish.per100g.kcal!!*it/100)} $KCAL${if(recipe.cookedGrams==null)tr(" (по весу сырых ингредиентов)"," (by raw ingredient weight)") else ""}",style=MaterialTheme.typography.bodySmall)}
             }
-            Text("Ингредиенты",style=MaterialTheme.typography.titleSmall)
-            recipe.ingredients.forEach{i->Text("• ${i.name} — ${quantityLabel(i.quantity,i.grams)}",style=MaterialTheme.typography.bodySmall)}
+            Text(tr("Ингредиенты","Ingredients"),style=MaterialTheme.typography.titleSmall)
+            recipe.ingredients.forEach{i->Text("• ${vm.food(i.foodId)?.takeIf{!it.id.startsWith("custom:")}?.displayName?:i.name} — ${quantityLabel(i.quantity,i.grams)}",style=MaterialTheme.typography.bodySmall)}
             HorizontalDivider()
-            Text("Сколько съели",style=MaterialTheme.typography.titleMedium)
-            OutlinedTextField(amount,{amount=it.take(12)},label={Text("Граммы")},keyboardOptions=KeyboardOptions(keyboardType=KeyboardType.Decimal),singleLine=true,modifier=Modifier.fillMaxWidth().testTag("eatGrams"))
+            Text(tr("Сколько съели","How much you ate"),style=MaterialTheme.typography.titleMedium)
+            OutlinedTextField(amount,{amount=it.take(12)},label={Text(tr("Граммы","Grams"))},keyboardOptions=KeyboardOptions(keyboardType=KeyboardType.Decimal),singleLine=true,modifier=Modifier.fillMaxWidth().testTag("eatGrams"))
             FlowRow(horizontalArrangement=Arrangement.spacedBy(8.dp)){
-                dish.portions.drop(1).forEach{p->SuggestionChip(onClick={amount=plain(p.grams)},label={Text("${p.name}: ${number(p.grams)} г")})}
-                listOf(150.0,250.0,350.0).forEach{g->SuggestionChip(onClick={amount=plain(g)},label={Text("${number(g)} г")})}
+                dish.portions.drop(1).forEach{p->SuggestionChip(onClick={amount=plain(p.grams)},label={Text("${p.displayName}: ${number(p.grams)} $G")})}
+                listOf(150.0,250.0,350.0).forEach{g->SuggestionChip(onClick={amount=plain(g)},label={Text("${number(g)} $G")})}
             }
-            Text(eaten.getOrNull()?.let{"≈ ${number(it.nutrients.kcal)} ккал · Б ${number(it.nutrients.protein,1)} г"}?:"Введите вес съеденной порции",style=MaterialTheme.typography.titleMedium,color=MaterialTheme.colorScheme.primary,modifier=Modifier.testTag("eatPreview"))
-            Text("Запись в дневник за ${if(date==LocalDate.now().toString())"сегодня" else LocalDate.parse(date).format(DateTimeFormatter.ofPattern("d MMMM",RU))}",style=MaterialTheme.typography.bodySmall,color=MaterialTheme.colorScheme.onSurfaceVariant)
-            Button(onClick={vm.eat(dish,Quantity(grams.getOrThrow(),Measure.GRAMS),date,close)},enabled=eaten.isSuccess&&!busy,modifier=Modifier.fillMaxWidth().heightIn(min=52.dp).testTag("eatDish")){Icon(Icons.Outlined.Restaurant,null);Spacer(Modifier.width(8.dp));Text("Съесть")}
-            OutlinedButton(onClick={confirmDelete=true},enabled=!busy,modifier=Modifier.fillMaxWidth().testTag("deleteDish"),colors=ButtonDefaults.outlinedButtonColors(contentColor=MaterialTheme.colorScheme.error)){Icon(Icons.Outlined.DeleteOutline,null);Spacer(Modifier.width(8.dp));Text("Удалить блюдо")}
+            Text(eaten.getOrNull()?.let{"≈ ${number(it.nutrients.kcal)} $KCAL · ${tr("Б","P")} ${number(it.nutrients.protein,1)} $G"}?:tr("Введите вес съеденной порции","Enter the weight you ate"),style=MaterialTheme.typography.titleMedium,color=MaterialTheme.colorScheme.primary,modifier=Modifier.testTag("eatPreview"))
+            Text(tr("Запись в дневник за ","Logged to the diary for ")+if(date==LocalDate.now().toString())tr("сегодня","today") else dayMonth(date),style=MaterialTheme.typography.bodySmall,color=MaterialTheme.colorScheme.onSurfaceVariant)
+            Button(onClick={vm.eat(dish,Quantity(grams.getOrThrow(),Measure.GRAMS),date,close)},enabled=eaten.isSuccess&&!busy,modifier=Modifier.fillMaxWidth().heightIn(min=52.dp).testTag("eatDish")){Icon(Icons.Outlined.Restaurant,null);Spacer(Modifier.width(8.dp));Text(tr("Съесть","Eat"))}
+            OutlinedButton(onClick={confirmDelete=true},enabled=!busy,modifier=Modifier.fillMaxWidth().testTag("deleteDish"),colors=ButtonDefaults.outlinedButtonColors(contentColor=MaterialTheme.colorScheme.error)){Icon(Icons.Outlined.DeleteOutline,null);Spacer(Modifier.width(8.dp));Text(tr("Удалить блюдо","Delete dish"))}
         }
     }
-    if(confirmDelete)AlertDialog(onDismissRequest={confirmDelete=false},icon={Icon(Icons.Outlined.DeleteOutline,null)},title={Text("Удалить «${dish.name}»?")},
-        text={Text("Блюдо исчезнет из инвентаря и поиска. Уже записанная еда в дневнике сохранится.")},
-        confirmButton={TextButton(onClick={confirmDelete=false;close();vm.deleteDish(dish)}){Text("Удалить")}},dismissButton={TextButton(onClick={confirmDelete=false}){Text("Отмена")}})
+    if(confirmDelete)AlertDialog(onDismissRequest={confirmDelete=false},icon={Icon(Icons.Outlined.DeleteOutline,null)},title={Text(tr("Удалить «${dish.name}»?","Delete “${dish.name}”?"))},
+        text={Text(tr("Блюдо исчезнет из инвентаря и поиска. Уже записанная еда в дневнике сохранится.","The dish leaves the inventory and search. Food already logged stays in the diary."))},
+        confirmButton={TextButton(onClick={confirmDelete=false;close();vm.deleteDish(dish)}){Text(tr("Удалить","Delete"))}},dismissButton={TextButton(onClick={confirmDelete=false}){Text(tr("Отмена","Cancel"))}})
 }

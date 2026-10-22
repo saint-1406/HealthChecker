@@ -16,13 +16,13 @@ class RecipeTest {
         assertEquals(1249.8*100/1300,dish.per100g.kcal!!,1e-9)
         // Eating 300 g of the finished dish takes 300/1300 of everything that went in.
         assertEquals(1249.8*300/1300,calculate(dish,Quantity(300.0,Measure.GRAMS)).nutrients.kcal!!,1e-9)
-        assertEquals(listOf(Portion("Всё блюдо",1300.0)),dish.portions)
+        assertEquals(listOf(Portion("Всё блюдо",1300.0,"Whole dish")),dish.portions)
     }
     @Test fun rawWeightIsUsedWithoutCookedWeight() { assertEquals(1249.8*100/1430,buildDish("custom:dish:1","Блюдо",recipe()).per100g.kcal!!,1e-9) }
     @Test fun unknownIngredientValueMakesDishValueUnknown() { val d=buildDish("custom:dish:1","Блюдо",recipe());assertNull(d.per100g.protein);assertNotNull(d.per100g.fat) }
     @Test fun servingsBecomeAPiecePortion() {
         val d=buildDish("custom:dish:1","Блюдо",recipe(cooked=1200.0,servings=4))
-        assertEquals(Portion("Порция (1/4)",300.0),d.portions[1])
+        assertEquals(Portion("Порция (1/4)",300.0,"Serving (1/4)"),d.portions[1])
         assertEquals(1249.8/4,calculate(d,Quantity(1.0,Measure.PIECES,300.0)).nutrients.kcal!!,1e-9)
     }
     @Test fun invalidDishesAreRejected() {

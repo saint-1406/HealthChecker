@@ -1,5 +1,5 @@
 import unittest
-from build_catalog import normalize_record
+from build_catalog import normalize_record, extra_food
 
 class CatalogTest(unittest.TestCase):
     def test_off_missing_is_not_zero(self):
@@ -15,5 +15,26 @@ class CatalogTest(unittest.TestCase):
         r=normalize_record({'fdcId':1,'description':'Egg, raw','foodNutrients':[{'nutrient':{'id':1008},'amount':143},{'nutrient':{'id':1003},'amount':12.56}]},'usda')
         self.assertEqual(r['id'],'usda:1');self.assertEqual(r['per100g']['protein'],12.56)
         self.assertIsNone(r['density'])
+    def test_fiber_kept_and_zero_only_without_carbs(self):
+        def usda(carbs,fiber):
+            n=[{'nutrient':{'id':1008},'amount':100},{'nutrient':{'id':1005},'amount':carbs}]+([{'nutrient':{'id':1079},'amount':fiber}] if fiber is not None else [])
+            return normalize_record({'fdcId':1,'description':'X','foodNutrients':n},'usda')['per100g']['fiber']
+        self.assertEqual(usda(20,2.5),2.5)
+        self.assertEqual(usda(0,None),0.0)
+        self.assertIsNone(usda(20,None))
+    def test_extra_food_from_ingredients(self):
+        foods={'usda:1':{'per100g':{'carbs':10.0,'fiber':2.0}},'usda:2':{'per100g':{'carbs':0.0,'fiber':0.0}}}
+        f=extra_food({'id':'local:x','name':'Х','nameEn':'X','source':'s','basis':{'grams':200,'kcal':400,'protein':20,'fat':10,'carbs':{'ingredients':[['usda:1',100],['usda:2',100]]}}},foods)
+        self.assertEqual(f['per100g'],{'kcal':200.0,'protein':10.0,'fat':5.0,'carbs':5.0,'fiber':1.0})
+        self.assertTrue(f['common'])
+    def test_extra_food_atwater_remainder(self):
+        foods={'usda:flour':{'per100g':{'carbs':76.3,'fiber':2.7}}}
+        f=extra_food({'id':'local:p','name':'П','nameEn':'P','source':'s','basis':{'grams':100,'kcal':280,'protein':18,'fat':16,'carbs':{'atwater':True,'fiberRatioOf':'usda:flour'}}},foods)
+        # 280 − 4·18 − 9·16 = 64 kcal → 16 g available carbohydrate, plus fibre in flour's proportion.
+        self.assertAlmostEqual(f['per100g']['fiber'],16*2.7/73.6,places=2)
+        self.assertAlmostEqual(f['per100g']['carbs'],16+16*2.7/73.6,places=2)
+    def test_extra_food_rejects_impossible_energy(self):
+        with self.assertRaises(ValueError):
+            extra_food({'id':'local:z','name':'З','nameEn':'Z','source':'s','basis':{'grams':100,'kcal':100,'protein':20,'fat':10,'carbs':{'atwater':True,'fiber':0}}},{})
 
 if __name__=='__main__': unittest.main()

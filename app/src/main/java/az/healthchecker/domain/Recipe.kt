@@ -14,20 +14,20 @@ fun dishTotals(recipe:Recipe):DishTotals {
     // One unknown ingredient value makes the dish value unknown rather than silently low.
     fun sum(select:(Nutrients)->Double?):Double? = if(list.any{select(it.nutrients)==null})null else list.sumOf{select(it.nutrients)!!}
     val raw=list.sumOf{it.grams}
-    return DishTotals(raw,recipe.cookedGrams?:raw,Nutrients(sum{it.kcal},sum{it.protein},sum{it.fat},sum{it.carbs}))
+    return DishTotals(raw,recipe.cookedGrams?:raw,Nutrients(sum{it.kcal},sum{it.protein},sum{it.fat},sum{it.carbs},sum{it.fiber}))
 }
 
 fun buildDish(id:String,name:String,recipe:Recipe):Food {
-    require(name.isNotBlank()&&name.length<=200){"Введите название блюда"}
-    require(recipe.ingredients.isNotEmpty()){"Добавьте хотя бы один ингредиент"}
-    require(recipe.ingredients.size<=100){"Не больше 100 ингредиентов"}
-    require(recipe.cookedGrams==null||recipe.cookedGrams.isFinite()&&recipe.cookedGrams>0&&recipe.cookedGrams<=200000){"Проверьте вес готового блюда"}
-    require(recipe.servings==null||recipe.servings in 1..100){"Порций может быть от 1 до 100"}
+    require(name.isNotBlank()&&name.length<=200){tr("Введите название блюда","Enter the dish name")}
+    require(recipe.ingredients.isNotEmpty()){tr("Добавьте хотя бы один ингредиент","Add at least one ingredient")}
+    require(recipe.ingredients.size<=100){tr("Не больше 100 ингредиентов","No more than 100 ingredients")}
+    require(recipe.cookedGrams==null||recipe.cookedGrams.isFinite()&&recipe.cookedGrams>0&&recipe.cookedGrams<=200000){tr("Проверьте вес готового блюда","Check the cooked weight")}
+    require(recipe.servings==null||recipe.servings in 1..100){tr("Порций может быть от 1 до 100","Servings must be 1 to 100")}
     val t=dishTotals(recipe)
-    require(t.nutrients.kcal!=null){"У одного из ингредиентов неизвестна калорийность"}
-    fun per100(v:Double?)=v?.times(100/t.totalGrams)
-    val per100g=Nutrients(per100(t.nutrients.kcal),per100(t.nutrients.protein),per100(t.nutrients.fat),per100(t.nutrients.carbs))
-    require(per100g.kcal!!<=1000){"Слишком калорийно на 100 г — проверьте вес готового блюда"}
-    val portions=listOf(Portion("Всё блюдо",t.totalGrams))+(recipe.servings?.takeIf{it>1}?.let{listOf(Portion("Порция (1/$it)",t.totalGrams/it))}?:emptyList())
-    return Food(id,name.trim(),aliases=listOf("блюдо рецепт"),per100g=per100g,portions=portions,source="Своё блюдо · ингредиентов: ${recipe.ingredients.size}",recipe=recipe)
+    require(t.nutrients.kcal!=null){tr("У одного из ингредиентов неизвестна калорийность","One of the ingredients has unknown calories")}
+    val per100g=t.nutrients.times(100/t.totalGrams)
+    require(per100g.kcal!!<=1000){tr("Слишком калорийно на 100 г — проверьте вес готового блюда","Too many calories per 100 g — check the cooked weight")}
+    // Portion labels are stored in both languages, like catalog portions.
+    val portions=listOf(Portion("Всё блюдо",t.totalGrams,"Whole dish"))+(recipe.servings?.takeIf{it>1}?.let{listOf(Portion("Порция (1/$it)",t.totalGrams/it,"Serving (1/$it)"))}?:emptyList())
+    return Food(id,name.trim(),aliases=listOf("блюдо рецепт dish recipe"),per100g=per100g,portions=portions,source="Своё блюдо · ингредиентов: ${recipe.ingredients.size}",recipe=recipe)
 }

@@ -1,0 +1,98 @@
+[
+  {
+    "id": "local:espresso-double",
+    "base": "usda:171891",
+    "name": "Кофе эспрессо двойной (×2)",
+    "nameEn": "Double espresso (×2)",
+    "aliases": ["эспрессо двойной доппио espresso doppio double ikiqat qəhvə"],
+    "density": 1.0,
+    "portions": [{"name": "Двойной эспрессо (60 мл)", "nameEn": "Double espresso (60 ml)", "grams": 60}],
+    "source": "USDA FoodData Central · 171891 · двойная порция эспрессо",
+    "sourceEn": "USDA FoodData Central · 171891 · double espresso shot"
+  },
+  {
+    "id": "local:can-eti-nar-qovurma",
+    "name": "Вырезка с гранатом (Can əti nar qovurma)",
+    "nameEn": "Beef tenderloin with pomegranate (Can əti nar qovurma)",
+    "aliases": ["can əti nar qovurma can eti нар говурма говурма наргоурма вырезка гранат dukkan qovurma"],
+    "basis": {"grams": 325, "kcal": 550, "protein": 48, "fat": 30,
+      "carbs": {"ingredients": [["usda:174762", 220], ["usda:170000", 100], ["usda:169134", 60], ["usda:173410", 15], ["usda:171025", 5]]}},
+    "portions": [{"name": "Порция (≈325 г)", "nameEn": "Portion (~325 g)", "grams": 325}],
+    "source": "Расчётная модель ресторанной порции (Dukkan, Баку): ≈325 г готового блюда — 550 ккал, Б 48 г, Ж 30 г. Углеводы и клетчатка — по ингредиентам USDA: вырезка 220 г, лук 100 г, зёрна граната 60 г, сливочное масло 15 г, растительное 5 г. Наршараб и каштаны не учтены.",
+    "sourceEn": "Estimated restaurant portion (Dukkan, Baku): ~325 g cooked — 550 kcal, protein 48 g, fat 30 g. Carbs and fibre from USDA ingredients: tenderloin 220 g, onion 100 g, pomegranate seeds 60 g, butter 15 g, vegetable oil 5 g. Narsharab and chestnuts not included."
+  },
+  {
+    "id": "local:can-eti-nar-qovurma-chestnuts",
+    "name": "Вырезка с гранатом и каштанами (Can əti nar qovurma)",
+    "nameEn": "Beef tenderloin with pomegranate and chestnuts (Can əti nar qovurma)",
+    "aliases": ["can əti nar qovurma can eti нар говурма говурма каштаны şabalıd вырезка гранат qovurma"],
+    "basis": {"grams": 375, "kcal": 650, "protein": 49, "fat": 31,
+      "carbs": {"ingredients": [["usda:174762", 220], ["usda:170000", 100], ["usda:169134", 60], ["usda:173410", 15], ["usda:171025", 5], ["usda:170190", 50]]}},
+    "portions": [{"name": "Порция с каштанами (≈375 г)", "nameEn": "Portion with chestnuts (~375 g)", "grams": 375}],
+    "source": "Расчётная модель ресторанной порции: базовая вырезка с гранатом ≈325 г и 50 г готовых каштанов — 650 ккал, Б 49 г, Ж 31 г. Углеводы и клетчатка — по ингредиентам USDA. Наршараб не учтён.",
+    "sourceEn": "Estimated restaurant portion: the basic dish (~325 g) plus 50 g of cooked chestnuts — 650 kcal, protein 49 g, fat 31 g. Carbs and fibre from USDA ingredients. Narsharab not included."
+  },
+  {
+    "id": "local:xengel-soyutma",
+    "name": "Хинкали отварные с мясом (Xəngəl soyutma)",
+    "nameEn": "Boiled khinkali with meat (Xəngəl soyutma)",
+    "aliases": ["xəngəl soyutma xengel хингал хинкал хинкали khinkali dumplings пельмени"],
+    "basis": {"grams": 340, "kcal": 680, "protein": 31.2, "fat": 25.2,
+      "carbs": {"ingredients": [["usda:168894", 100], ["usda:170000", 30], ["usda:174036", 120]]}},
+    "portions": [
+      {"name": "1 средний хинкали (≈85 г)", "nameEn": "1 medium khinkali (~85 g)", "grams": 85},
+      {"name": "Порция 4 шт. (≈340 г)", "nameEn": "Portion of 4 (~340 g)", "grams": 340},
+      {"name": "5 шт. (≈425 г)", "nameEn": "5 pieces (~425 g)", "grams": 425}
+    ],
+    "source": "Расчётная модель: 1 средний хинкали ≈85 г — 170 ккал, Б 7,8 г, Ж 6,3 г. Углеводы и клетчатка — по ингредиентам USDA на 4 шт.: мука 100 г, лук 30 г, фарш средней жирности 120 г. Маленькие хинкали весят меньше — уточните вес штуки.",
+    "sourceEn": "Estimate: 1 medium khinkali ~85 g — 170 kcal, protein 7.8 g, fat 6.3 g. Carbs and fibre from USDA ingredients for 4 pieces: flour 100 g, onion 30 g, medium-fat mince 120 g. Small khinkali weigh less — adjust the piece weight."
+  },
+  {
+    "id": "local:toyuq-popkorn",
+    "name": "Куриный попкорн (Toyuq popkorn)",
+    "nameEn": "Popcorn chicken (Toyuq popkorn)",
+    "aliases": ["toyuq popkorn popcorn chicken попкорн курица курицы наггетсы панировка"],
+    "basis": {"grams": 100, "kcal": 280, "protein": 18, "fat": 16, "carbs": {"atwater": true, "fiberRatioOf": "usda:168894"}},
+    "source": "Оценка ресторанной порции по готовому весу: на 100 г 280 ккал, Б 18 г, Ж 16 г (для сравнения Tyson — 244 ккал, Б 16 г, Ж 13 г). Углеводы — остаток энергии по Этуотеру (4/4/9), клетчатка — в той же доле, что в пшеничной муке.",
+    "sourceEn": "Estimated restaurant serving by cooked weight: per 100 g 280 kcal, protein 18 g, fat 16 g (Tyson for comparison: 244 kcal, 16 g, 13 g). Carbs are the Atwater energy remainder (4/4/9); fibre in the same share as in wheat flour."
+  },
+  {
+    "id": "local:dusbere-qizardilmis",
+    "name": "Дюшбара жареная (Düşbərə qızardılmış)",
+    "nameEn": "Fried dushbara dumplings (Düşbərə qızardılmış)",
+    "aliases": ["düşbərə qızardılmış dushbara düşbərə дюшбара душбара пельмени жареные"],
+    "basis": {"grams": 100, "kcal": 330, "protein": 12, "fat": 18, "carbs": {"atwater": true, "fiberRatioOf": "usda:168894"}},
+    "source": "Оценка по готовому весу: на 100 г 330 ккал, Б 12 г, Ж 18 г; сколько масла впиталось при жарке, точно неизвестно. Углеводы — остаток энергии по Этуотеру (4/4/9), клетчатка — в той же доле, что в пшеничной муке.",
+    "sourceEn": "Estimate by cooked weight: per 100 g 330 kcal, protein 12 g, fat 18 g; the amount of frying oil absorbed is unknown. Carbs are the Atwater energy remainder (4/4/9); fibre in the same share as in wheat flour."
+  },
+  {
+    "id": "local:tempura-krevetka",
+    "name": "Креветки в темпуре (Tempura krevetka)",
+    "nameEn": "Tempura shrimp (Tempura krevetka)",
+    "aliases": ["tempura krevetka krevet креветка креветки темпура кляр shrimp prawn"],
+    "basis": {"grams": 25, "kcal": 60, "protein": 3, "fat": 3.5, "carbs": {"atwater": true, "fiberRatioOf": "usda:168894"}},
+    "portions": [{"name": "1 креветка в кляре (≈25 г)", "nameEn": "1 shrimp in batter (~25 g)", "grams": 25}],
+    "source": "Оценка: ресторанная креветка ≈25 г вместе с кляром — 60 ккал, Б 3 г, Ж 3,5 г (для сравнения SeaPak — 190 ккал на 4 шт. по 85 г). Крупная креветка с толстым кляром может быть калорийнее. Углеводы — остаток по Этуотеру, клетчатка — как в пшеничной муке.",
+    "sourceEn": "Estimate: a restaurant shrimp ~25 g with batter — 60 kcal, protein 3 g, fat 3.5 g (SeaPak for comparison: 190 kcal per 4 pieces, 85 g). A large shrimp with thick batter can be higher. Carbs are the Atwater remainder; fibre as in wheat flour."
+  },
+  {
+    "id": "local:sosiska-assorti",
+    "name": "Сосиски обычные (Sosiska assorti)",
+    "nameEn": "Regular sausages / frankfurters (Sosiska assorti)",
+    "aliases": ["sosiska assorti sosiska сосиска сосиски молочные frankfurter hot dog"],
+    "basis": {"grams": 100, "kcal": 280, "protein": 11, "fat": 25, "carbs": {"atwater": true, "fiber": 0}},
+    "portions": [{"name": "1 обычная сосиска (≈50 г)", "nameEn": "1 regular sausage (~50 g)", "grams": 50}],
+    "source": "Усреднённый ориентир для обычных сосисок без сыра: на 100 г 280 ккал, Б 11 г, Ж 25 г (для сравнения «Ремит» молочные — 296 ккал, Б 11 г, Ж 28 г). Если жарили, каждые 5 г масла в порции добавляют ≈45 ккал и 5 г жира. Углеводы — остаток по Этуотеру.",
+    "sourceEn": "Average for regular sausages without cheese: per 100 g 280 kcal, protein 11 g, fat 25 g (Remit milk sausages for comparison: 296 kcal, 11 g, 28 g). If fried, every 5 g of oil left in the portion adds ~45 kcal and 5 g fat. Carbs are the Atwater remainder."
+  },
+  {
+    "id": "local:puste-antep",
+    "name": "Фисташки Антеп, ядра без скорлупы (Püstə Antep)",
+    "nameEn": "Antep pistachios, shelled kernels (Püstə Antep)",
+    "aliases": ["püstə antep puste pustə фисташка фисташки антеп pistachio orehi орехи"],
+    "basis": {"grams": 100, "kcal": 570, "protein": 21, "fat": 46, "carbs": {"atwater": true, "fiberPer100Of": "usda:170184"}},
+    "portions": [{"name": "Горсть ядер (≈28 г)", "nameEn": "Handful of kernels (~28 g)", "grams": 28}],
+    "source": "Вес ядер без скорлупы: на 100 г 570 ккал, Б 21 г, Ж 46 г (близко к American Pistachio Growers: 160 ккал, 6 г белка и 13 г жира на 28 г). Удобно взвесить порцию со скорлупой и вычесть вес оставшейся скорлупы. Клетчатка — USDA (фисташки сырые), углеводы — остаток по Этуотеру плюс клетчатка.",
+    "sourceEn": "Weight of shelled kernels: per 100 g 570 kcal, protein 21 g, fat 46 g (close to American Pistachio Growers: 160 kcal, 6 g protein, 13 g fat per 28 g). Weigh with shells, then subtract the leftover shells. Fibre from USDA (raw pistachios); carbs are the Atwater remainder plus fibre."
+  }
+]

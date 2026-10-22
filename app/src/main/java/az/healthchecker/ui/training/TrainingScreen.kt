@@ -27,69 +27,70 @@ import az.healthchecker.ui.*
     val plan=remember(exercises,snapshot.workouts,date,prefs,variant){if(exercises.isEmpty())null else recommend(exercises,snapshot,date,prefs,variant)}
     LazyColumn(Modifier.fillMaxSize().testTag("trainingList"),contentPadding=PaddingValues(20.dp),verticalArrangement=Arrangement.spacedBy(14.dp)) {
         item{Panel {
-            Text("Тренировка за день",style=MaterialTheme.typography.titleMedium)
+            Text(tr("Тренировка за день","Today's training"),style=MaterialTheme.typography.titleMedium)
             FlowRow(horizontalArrangement=Arrangement.spacedBy(8.dp)){
-                FilterChip(selected=day.trained==true,onClick={vm.markTraining(date,if(day.mark==true)null else true)},label={Text("Была тренировка")},leadingIcon={Icon(Icons.Outlined.FitnessCenter,null)})
-                FilterChip(selected=day.trained==false,enabled=day.workouts.isEmpty(),onClick={vm.markTraining(date,if(day.mark==false)null else false)},label={Text("Не было")},leadingIcon={Icon(Icons.Outlined.Bedtime,null)})
+                FilterChip(selected=day.trained==true,onClick={vm.markTraining(date,if(day.mark==true)null else true)},label={Text(tr("Была тренировка","Trained"))},leadingIcon={Icon(Icons.Outlined.FitnessCenter,null)})
+                FilterChip(selected=day.trained==false,enabled=day.workouts.isEmpty(),onClick={vm.markTraining(date,if(day.mark==false)null else false)},label={Text(tr("Не было","Rest day"))},leadingIcon={Icon(Icons.Outlined.Bedtime,null)})
             }
-            if(day.workouts.isNotEmpty())Text("Отмечено по выполненным упражнениям",style=MaterialTheme.typography.bodySmall,color=MaterialTheme.colorScheme.onSurfaceVariant)
-            Text("Израсходовано ≈ ${number(day.burned.value)}${if(!day.burned.complete)"+" else ""} ккал",style=MaterialTheme.typography.headlineSmall,fontWeight=FontWeight.SemiBold,color=MaterialTheme.colorScheme.primary)
-            if(weight==null)Text("Укажите вес в профиле, чтобы считать калории упражнений",color=MaterialTheme.colorScheme.error,style=MaterialTheme.typography.bodySmall,modifier=Modifier.clickable(onClick=openProfile))
+            if(day.workouts.isNotEmpty())Text(tr("Отмечено по выполненным упражнениям","Marked from the logged exercises"),style=MaterialTheme.typography.bodySmall,color=MaterialTheme.colorScheme.onSurfaceVariant)
+            Text("${tr("Израсходовано","Burned")} ≈ ${number(day.burned.value)}${if(!day.burned.complete)"+" else ""} $KCAL",style=MaterialTheme.typography.headlineSmall,fontWeight=FontWeight.SemiBold,color=MaterialTheme.colorScheme.primary)
+            if(weight==null)Text(tr("Укажите вес в профиле, чтобы считать калории упражнений","Enter your weight in the profile to estimate exercise calories"),color=MaterialTheme.colorScheme.error,style=MaterialTheme.typography.bodySmall,modifier=Modifier.clickable(onClick=openProfile))
         }}
-        item{Button(onClick=add,modifier=Modifier.fillMaxWidth().heightIn(min=54.dp).testTag("addExercise")){Icon(Icons.Outlined.Add,null);Spacer(Modifier.width(8.dp));Text("Добавить упражнение")}}
+        item{Button(onClick=add,modifier=Modifier.fillMaxWidth().heightIn(min=54.dp).testTag("addExercise")){Icon(Icons.Outlined.Add,null);Spacer(Modifier.width(8.dp));Text(tr("Добавить упражнение","Add exercise"))}}
         if(day.workouts.isNotEmpty()){
-            item{SectionTitle("Выполненные упражнения",plural(day.workouts.size,"упражнение","упражнения","упражнений"))}
+            item{SectionTitle(tr("Выполненные упражнения","Completed exercises"),count(day.workouts.size,"упражнение","упражнения","упражнений","exercise","exercises"))}
             items(day.workouts,key={it.id}){w->Panel {
                 Row(Modifier.fillMaxWidth().clickable{edit(w)},verticalAlignment=Alignment.CenterVertically){
-                    Column(Modifier.weight(1f)){Text(w.name,fontWeight=FontWeight.SemiBold);Text(workoutLabel(w),style=MaterialTheme.typography.bodySmall,color=MaterialTheme.colorScheme.onSurfaceVariant)}
-                    IconButton(onClick={vm.deleteWorkout(w)}){Icon(Icons.Outlined.DeleteOutline,"Удалить ${w.name}")}
+                    Column(Modifier.weight(1f)){Text(vm.workoutName(w),fontWeight=FontWeight.SemiBold);Text(workoutLabel(w),style=MaterialTheme.typography.bodySmall,color=MaterialTheme.colorScheme.onSurfaceVariant)}
+                    IconButton(onClick={vm.deleteWorkout(w)}){Icon(Icons.Outlined.DeleteOutline,tr("Удалить ","Delete ")+vm.workoutName(w))}
                 }
             }}
         }
         plan?.let{p->
             item{Panel {
-                SectionTitle("Рекомендации на сегодня",if(p.recovery)"Мышцы ещё восстанавливаются после последних тренировок — лёгкий день" else "Акцент: "+p.focus.distinct().joinToString(", "){muscleLabel(it).lowercase()})
-                Text("Дома, ${if(prefs.dumbbells)"с гантелями и без" else "без инвентаря"} · уровень: ${levelLabel(prefs.level).lowercase()}",style=MaterialTheme.typography.bodySmall,color=MaterialTheme.colorScheme.onSurfaceVariant)
+                SectionTitle(tr("Рекомендации на сегодня","Today's suggestions"),if(p.recovery)tr("Мышцы ещё восстанавливаются после последних тренировок — лёгкий день","Muscles are still recovering from recent training — an easy day") else tr("Акцент: ","Focus: ")+p.focus.distinct().joinToString(", "){muscleLabel(it).lowercase(Lang.locale)})
+                Text("${tr("Дома","At home")}, ${if(prefs.dumbbells)tr("с гантелями и без","with and without dumbbells") else tr("без инвентаря","no equipment")} · ${tr("уровень","level")}: ${levelLabel(prefs.level).lowercase(Lang.locale)}",style=MaterialTheme.typography.bodySmall,color=MaterialTheme.colorScheme.onSurfaceVariant)
                 p.items.forEach{r->RecommendedRow(r,weight){log(r.exercise,r.prescription)}}
-                TextButton(onClick={variant++}){Icon(Icons.Outlined.Refresh,null);Spacer(Modifier.width(6.dp));Text("Другая подборка")}
+                TextButton(onClick={variant++}){Icon(Icons.Outlined.Refresh,null);Spacer(Modifier.width(6.dp));Text(tr("Другая подборка","Another set"))}
             }}
             item{Panel {
-                SectionTitle("За 7 дней","Ориентир ВОЗ для взрослых")
+                SectionTitle(tr("За 7 дней","Last 7 days"),tr("Ориентир ВОЗ для взрослых","WHO guideline for adults"))
                 val aerobic=p.weekly.aerobicMinutes
-                Text("Аэробная нагрузка: ${number(aerobic)} из ${number(WHO_AEROBIC_MINUTES)} мин")
+                Text("${tr("Аэробная нагрузка","Aerobic activity")}: ${number(aerobic)} ${tr("из","of")} ${number(WHO_AEROBIC_MINUTES)} ${tr("мин","min")}")
                 LinearProgressIndicator(progress={(aerobic/WHO_AEROBIC_MINUTES).coerceIn(0.0,1.0).toFloat()},modifier=Modifier.fillMaxWidth())
-                Text("Силовые дни: ${p.weekly.strengthDays} из $WHO_STRENGTH_DAYS")
+                Text("${tr("Силовые дни","Strength days")}: ${p.weekly.strengthDays} ${tr("из","of")} $WHO_STRENGTH_DAYS")
                 LinearProgressIndicator(progress={(p.weekly.strengthDays.toFloat()/WHO_STRENGTH_DAYS).coerceIn(0f,1f)},modifier=Modifier.fillMaxWidth())
-                Text(if(aerobic>=WHO_AEROBIC_MINUTES&&p.weekly.strengthDays>=WHO_STRENGTH_DAYS)"Недельный ориентир выполнен — дальше можно поддерживать нагрузку." else "Интенсивные минуты (MET 6 и выше) считаются вдвойне. Учитываются кардио-упражнения.",style=MaterialTheme.typography.bodySmall,color=MaterialTheme.colorScheme.onSurfaceVariant)
+                Text(if(aerobic>=WHO_AEROBIC_MINUTES&&p.weekly.strengthDays>=WHO_STRENGTH_DAYS)tr("Недельный ориентир выполнен — дальше можно поддерживать нагрузку.","The weekly guideline is met — keep the activity up.") else tr("Интенсивные минуты (MET 6 и выше) считаются вдвойне. Учитываются кардио-упражнения.","Vigorous minutes (MET 6 and above) count double. Cardio exercises count."),style=MaterialTheme.typography.bodySmall,color=MaterialTheme.colorScheme.onSurfaceVariant)
             }}
         }
         item{Panel {
-            SectionTitle("Настройки тренировок")
-            Text("Инвентарь",style=MaterialTheme.typography.titleSmall)
+            SectionTitle(tr("Настройки тренировок","Training settings"))
+            Text(tr("Инвентарь","Equipment"),style=MaterialTheme.typography.titleSmall)
             FlowRow(horizontalArrangement=Arrangement.spacedBy(8.dp)){
-                FilterChip(selected=!prefs.dumbbells,onClick={vm.trainingPrefs(prefs.copy(dumbbells=false))},label={Text("Без инвентаря")})
-                FilterChip(selected=prefs.dumbbells,onClick={vm.trainingPrefs(prefs.copy(dumbbells=true))},label={Text("Есть гантели")})
+                FilterChip(selected=!prefs.dumbbells,onClick={vm.trainingPrefs(prefs.copy(dumbbells=false))},label={Text(tr("Без инвентаря","No equipment"))})
+                FilterChip(selected=prefs.dumbbells,onClick={vm.trainingPrefs(prefs.copy(dumbbells=true))},label={Text(tr("Есть гантели","I have dumbbells"))})
             }
-            Text("Уровень",style=MaterialTheme.typography.titleSmall)
+            Text(tr("Уровень","Level"),style=MaterialTheme.typography.titleSmall)
             FlowRow(horizontalArrangement=Arrangement.spacedBy(8.dp)){(1..3).forEach{l->FilterChip(selected=prefs.level==l,onClick={vm.trainingPrefs(prefs.copy(level=l))},label={Text(levelLabel(l))})}}
         }}
-        item{Text("Калории упражнений — оценка: MET из Compendium of Physical Activities 2024 × вес тела × время. Включает расход в покое и не прибавляется к цели по еде. При боли, заболеваниях сердца, суставов или беременности посоветуйтесь с врачом.",style=MaterialTheme.typography.bodySmall,color=MaterialTheme.colorScheme.onSurfaceVariant)}
+        item{Text(tr("Калории упражнений — оценка: MET из Compendium of Physical Activities 2024 × вес тела × время. Включает расход в покое и не прибавляется к цели по еде. Шаги считаются отдельно на обзоре. При боли, заболеваниях сердца, суставов или беременности посоветуйтесь с врачом.",
+            "Exercise calories are an estimate: MET from the 2024 Compendium of Physical Activities × body weight × time. They include resting energy and are not added to the food goal. Steps are counted separately on the overview. With pain, heart or joint conditions, or pregnancy, ask a doctor first."),style=MaterialTheme.typography.bodySmall,color=MaterialTheme.colorScheme.onSurfaceVariant)}
     }
 }
 
 @Composable private fun RecommendedRow(r:RecommendedExercise,weight:Double?,done:()->Unit) {
     val e=r.exercise;val p=r.prescription
     Column(Modifier.fillMaxWidth().padding(vertical=4.dp),verticalArrangement=Arrangement.spacedBy(2.dp)) {
-        Text(when(r.role){Role.WARMUP->"РАЗМИНКА";Role.MAIN->"ОСНОВНАЯ ЧАСТЬ · ${muscleLabel(e.muscles.first()).uppercase()}";Role.CARDIO->"КАРДИО";Role.COOLDOWN->"ЗАМИНКА"},style=MaterialTheme.typography.labelSmall,color=MaterialTheme.colorScheme.primary)
+        Text(when(r.role){Role.WARMUP->tr("РАЗМИНКА","WARM-UP");Role.MAIN->tr("ОСНОВНАЯ ЧАСТЬ","MAIN PART")+" · ${muscleLabel(e.muscles.first()).uppercase(Lang.locale)}";Role.CARDIO->tr("КАРДИО","CARDIO");Role.COOLDOWN->tr("ЗАМИНКА","COOL-DOWN")},style=MaterialTheme.typography.labelSmall,color=MaterialTheme.colorScheme.primary)
         Row(verticalAlignment=Alignment.CenterVertically){
             Column(Modifier.weight(1f)){
-                Text(e.name,fontWeight=FontWeight.SemiBold)
+                Text(e.displayName,fontWeight=FontWeight.SemiBold)
                 val minutes=p.minutesFor(e)
-                Text(listOfNotNull(prescriptionLabel(p),if(e.equipment==Equipment.DUMBBELLS)"гантели" else null,minutes?.let{m->burnedKcal(e.met,weight,m)?.let{"≈ ${number(it)} ккал"}}).joinToString(" · "),style=MaterialTheme.typography.bodyMedium)
+                Text(listOfNotNull(prescriptionLabel(p),if(e.equipment==Equipment.DUMBBELLS)tr("гантели","dumbbells") else null,minutes?.let{m->burnedKcal(e.met,weight,m)?.let{"≈ ${number(it)} $KCAL"}}).joinToString(" · "),style=MaterialTheme.typography.bodyMedium)
             }
-            FilledTonalButton(onClick=done){Text("Выполнено")}
+            FilledTonalButton(onClick=done){Text(tr("Выполнено","Done"))}
         }
-        Text(e.cue,style=MaterialTheme.typography.bodySmall,color=MaterialTheme.colorScheme.onSurfaceVariant)
+        Text(e.displayCue,style=MaterialTheme.typography.bodySmall,color=MaterialTheme.colorScheme.onSurfaceVariant)
     }
 }
-fun prescriptionLabel(p:Prescription):String = p.minutes?.let{"${number(it)} мин"}?:p.sets?.let{s->p.reps?.let{"$s × $it"}?:p.seconds?.let{"$s × $it с"}}?:""
+fun prescriptionLabel(p:Prescription):String = p.minutes?.let{"${number(it)} ${tr("мин","min")}"}?:p.sets?.let{s->p.reps?.let{"$s × $it"}?:p.seconds?.let{"$s × $it ${tr("с","s")}"}}?:""

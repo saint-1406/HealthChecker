@@ -31,21 +31,21 @@ import kotlinx.coroutines.delay
     val muscle=Muscle.entries.find{it.name==muscleName};val kind=ExerciseKind.entries.find{it.name==kindName}
     LaunchedEffect(query,muscle,kind,dumbbells){delay(150);results=vm.searchExercises(query,muscle,kind,dumbbells)}
     Column(Modifier.fillMaxSize().padding(20.dp),verticalArrangement=Arrangement.spacedBy(8.dp)) {
-        Row{IconButton(onClick=back){Icon(Icons.AutoMirrored.Outlined.ArrowBack,"Назад")};Text("Какое упражнение?",style=MaterialTheme.typography.headlineSmall,modifier=Modifier.padding(top=8.dp))}
-        OutlinedTextField(query,{query=it.take(60)},label={Text("Название упражнения")},leadingIcon={Icon(Icons.Outlined.Search,null)},singleLine=true,modifier=Modifier.fillMaxWidth().testTag("exerciseSearch"))
+        Row{IconButton(onClick=back){Icon(Icons.AutoMirrored.Outlined.ArrowBack,tr("Назад","Back"))};Text(tr("Какое упражнение?","Which exercise?"),style=MaterialTheme.typography.headlineSmall,modifier=Modifier.padding(top=8.dp))}
+        OutlinedTextField(query,{query=it.take(60)},label={Text(tr("Название упражнения","Exercise name"))},leadingIcon={Icon(Icons.Outlined.Search,null)},singleLine=true,modifier=Modifier.fillMaxWidth().testTag("exerciseSearch"))
         Row(Modifier.horizontalScroll(rememberScrollState()),horizontalArrangement=Arrangement.spacedBy(6.dp)){
-            FilterChip(selected=muscle==null,onClick={muscleName=""},label={Text("Все мышцы")})
+            FilterChip(selected=muscle==null,onClick={muscleName=""},label={Text(tr("Все мышцы","All muscles"))})
             Muscle.entries.forEach{m->FilterChip(selected=muscle==m,onClick={muscleName=if(muscle==m)"" else m.name},label={Text(muscleLabel(m))})}
         }
         Row(Modifier.horizontalScroll(rememberScrollState()),horizontalArrangement=Arrangement.spacedBy(6.dp)){
-            FilterChip(selected=kind==null,onClick={kindName=""},label={Text("Любые")})
+            FilterChip(selected=kind==null,onClick={kindName=""},label={Text(tr("Любые","Any"))})
             ExerciseKind.entries.forEach{k->FilterChip(selected=kind==k,onClick={kindName=if(kind==k)"" else k.name},label={Text(kindLabel(k))})}
-            FilterChip(selected=dumbbells,onClick={dumbbells=!dumbbells},label={Text("С гантелями")})
+            FilterChip(selected=dumbbells,onClick={dumbbells=!dumbbells},label={Text(tr("С гантелями","With dumbbells"))})
         }
-        if(results.isEmpty())Text("Ничего не найдено. Измените фильтры или название.",Modifier.padding(vertical=16.dp))
+        if(results.isEmpty())Text(tr("Ничего не найдено. Измените фильтры или название.","Nothing found. Change the filters or the name."),Modifier.padding(vertical=16.dp))
         LazyColumn(verticalArrangement=Arrangement.spacedBy(10.dp)){items(results,key={it.id}){e->Panel(Modifier.clickable{select(e)}){
-            Text(e.name,style=MaterialTheme.typography.titleMedium)
-            Text("${e.muscles.joinToString(", "){muscleLabel(it)}} · ${if(e.equipment==Equipment.DUMBBELLS)"гантели" else "без инвентаря"} · ${levelLabel(e.level).lowercase()}",style=MaterialTheme.typography.bodySmall,color=MaterialTheme.colorScheme.onSurfaceVariant)
+            Text(e.displayName,style=MaterialTheme.typography.titleMedium)
+            Text("${e.muscles.joinToString(", "){muscleLabel(it)}} · ${if(e.equipment==Equipment.DUMBBELLS)tr("гантели","dumbbells") else tr("без инвентаря","no equipment")} · ${levelLabel(e.level).lowercase(Lang.locale)}",style=MaterialTheme.typography.bodySmall,color=MaterialTheme.colorScheme.onSurfaceVariant)
             Text("${kindLabel(e.kind)} · ≈ ${number(e.met,1)} MET",style=MaterialTheme.typography.bodySmall,color=MaterialTheme.colorScheme.primary)
         }}}
     }
@@ -66,29 +66,29 @@ import kotlinx.coroutines.delay
     val minutes=if(minutesEdited)runCatching{parseQuantity(minutesText)}.getOrNull() else estimate
     val kcal=minutes?.let{burnedKcal(exercise.met,old?.bodyWeightKg?:bodyWeightKg,it)}
     val result=runCatching{
-        require(minutes!=null){"Укажите время выполнения"}
-        makeWorkout(id,exercise,if(exercise.measure==ExerciseMeasure.MINUTES)null else int(sets)?:throw IllegalArgumentException("Укажите подходы"),
-            if(exercise.measure==ExerciseMeasure.REPS)int(reps)?:throw IllegalArgumentException("Укажите повторения") else null,
-            if(exercise.measure==ExerciseMeasure.SECONDS)int(seconds)?:throw IllegalArgumentException("Укажите секунды") else null,
+        require(minutes!=null){tr("Укажите время выполнения","Enter the duration")}
+        makeWorkout(id,exercise,if(exercise.measure==ExerciseMeasure.MINUTES)null else int(sets)?:throw IllegalArgumentException(tr("Укажите подходы","Enter the sets")),
+            if(exercise.measure==ExerciseMeasure.REPS)int(reps)?:throw IllegalArgumentException(tr("Укажите повторения","Enter the reps")) else null,
+            if(exercise.measure==ExerciseMeasure.SECONDS)int(seconds)?:throw IllegalArgumentException(tr("Укажите секунды","Enter the seconds")) else null,
             load.takeIf{it.isNotBlank()&&exercise.equipment==Equipment.DUMBBELLS}?.let(::parseQuantity),minutes,date,old,java.time.Instant.now(),java.time.ZoneId.systemDefault(),bodyWeightKg)
     }
     Column(Modifier.fillMaxSize().verticalScroll(rememberScrollState()).imePadding().padding(24.dp),verticalArrangement=Arrangement.spacedBy(14.dp)) {
-        IconButton(onClick=back){Icon(Icons.AutoMirrored.Outlined.ArrowBack,"Назад")}
-        SectionTitle(exercise.name,if(old==null)"Выполнено · $date" else "Редактирование")
-        Text(exercise.cue,style=MaterialTheme.typography.bodyMedium,color=MaterialTheme.colorScheme.onSurfaceVariant)
-        if(exercise.measure!=ExerciseMeasure.MINUTES)CountField("Подходы",sets,"sets"){sets=it}
-        if(exercise.measure==ExerciseMeasure.REPS)CountField("Повторений в подходе",reps,"reps"){reps=it}
-        if(exercise.measure==ExerciseMeasure.SECONDS)CountField("Секунд в подходе",seconds,"seconds"){seconds=it}
-        if(exercise.equipment==Equipment.DUMBBELLS)OutlinedTextField(load,{load=it.take(6)},label={Text("Вес гантели, кг (необязательно)")},keyboardOptions=KeyboardOptions(keyboardType=KeyboardType.Decimal),singleLine=true,modifier=Modifier.fillMaxWidth())
-        OutlinedTextField(if(minutesEdited)minutesText else estimate?.let{number(it,1)}?:"",{minutesEdited=true;minutesText=it.take(6)},label={Text("Время, мин")},keyboardOptions=KeyboardOptions(keyboardType=KeyboardType.Decimal),singleLine=true,modifier=Modifier.fillMaxWidth().testTag("minutes"))
-        if(!minutesEdited)Text("Оценка по темпу упражнения и отдыху ${number(restSeconds(exercise))} с между подходами — можно исправить.",style=MaterialTheme.typography.bodySmall,color=MaterialTheme.colorScheme.onSurfaceVariant)
+        IconButton(onClick=back){Icon(Icons.AutoMirrored.Outlined.ArrowBack,tr("Назад","Back"))}
+        SectionTitle(exercise.displayName,if(old==null)tr("Выполнено · ","Done · ")+dayMonth(date) else tr("Редактирование","Editing"))
+        Text(exercise.displayCue,style=MaterialTheme.typography.bodyMedium,color=MaterialTheme.colorScheme.onSurfaceVariant)
+        if(exercise.measure!=ExerciseMeasure.MINUTES)CountField(tr("Подходы","Sets"),sets,"sets"){sets=it}
+        if(exercise.measure==ExerciseMeasure.REPS)CountField(tr("Повторений в подходе","Reps per set"),reps,"reps"){reps=it}
+        if(exercise.measure==ExerciseMeasure.SECONDS)CountField(tr("Секунд в подходе","Seconds per set"),seconds,"seconds"){seconds=it}
+        if(exercise.equipment==Equipment.DUMBBELLS)OutlinedTextField(load,{load=it.take(6)},label={Text(tr("Вес гантели, кг (необязательно)","Dumbbell weight, kg (optional)"))},keyboardOptions=KeyboardOptions(keyboardType=KeyboardType.Decimal),singleLine=true,modifier=Modifier.fillMaxWidth())
+        OutlinedTextField(if(minutesEdited)minutesText else estimate?.let{number(it,1)}?:"",{minutesEdited=true;minutesText=it.take(6)},label={Text(tr("Время, мин","Time, min"))},keyboardOptions=KeyboardOptions(keyboardType=KeyboardType.Decimal),singleLine=true,modifier=Modifier.fillMaxWidth().testTag("minutes"))
+        if(!minutesEdited)Text(tr("Оценка по темпу упражнения и отдыху ${number(restSeconds(exercise))} с между подходами — можно исправить.","Estimated from the exercise tempo and ${number(restSeconds(exercise))} s rest between sets — you can change it."),style=MaterialTheme.typography.bodySmall,color=MaterialTheme.colorScheme.onSurfaceVariant)
         Panel {
-            Text("РАСХОД ЭНЕРГИИ",style=MaterialTheme.typography.labelMedium)
-            Text(kcal?.let{"≈ ${number(it)} ккал"}?:if(bodyWeightKg==null&&old?.bodyWeightKg==null)"Укажите вес в профиле" else "—",style=MaterialTheme.typography.headlineSmall,color=MaterialTheme.colorScheme.primary,modifier=Modifier.testTag("workoutKcal"))
-            Text("${number(exercise.met,1)} MET · Compendium 2024, код ${exercise.metCode}. Это средняя оценка для класса активности, не измерение.",style=MaterialTheme.typography.bodySmall,color=MaterialTheme.colorScheme.onSurfaceVariant)
+            Text(tr("РАСХОД ЭНЕРГИИ","ENERGY BURNED"),style=MaterialTheme.typography.labelMedium)
+            Text(kcal?.let{"≈ ${number(it)} $KCAL"}?:if(bodyWeightKg==null&&old?.bodyWeightKg==null)tr("Укажите вес в профиле","Enter your weight in the profile") else "—",style=MaterialTheme.typography.headlineSmall,color=MaterialTheme.colorScheme.primary,modifier=Modifier.testTag("workoutKcal"))
+            Text(tr("${number(exercise.met,1)} MET · Compendium 2024, код ${exercise.metCode}. Это средняя оценка для класса активности, не измерение.","${number(exercise.met,1)} MET · Compendium 2024, code ${exercise.metCode}. An average for the class of activity, not a measurement."),style=MaterialTheme.typography.bodySmall,color=MaterialTheme.colorScheme.onSurfaceVariant)
         }
-        result.exceptionOrNull()?.let{Text(it.message?:"Проверьте данные",color=MaterialTheme.colorScheme.error)}
-        Button(onClick={vm.saveWorkout(id,exercise,result.getOrThrow().sets,result.getOrThrow().reps,result.getOrThrow().seconds,result.getOrThrow().loadKg,result.getOrThrow().minutes,date,old,back)},enabled=result.isSuccess&&!busy,modifier=Modifier.fillMaxWidth().heightIn(min=54.dp).testTag("saveWorkout")){Text(if(old==null)"Сохранить упражнение" else "Сохранить изменения")}
+        result.exceptionOrNull()?.let{Text(it.message?:tr("Проверьте данные","Check the values"),color=MaterialTheme.colorScheme.error)}
+        Button(onClick={vm.saveWorkout(id,exercise,result.getOrThrow().sets,result.getOrThrow().reps,result.getOrThrow().seconds,result.getOrThrow().loadKg,result.getOrThrow().minutes,date,old,back)},enabled=result.isSuccess&&!busy,modifier=Modifier.fillMaxWidth().heightIn(min=54.dp).testTag("saveWorkout")){Text(if(old==null)tr("Сохранить упражнение","Save exercise") else tr("Сохранить изменения","Save changes"))}
     }
 }
 
