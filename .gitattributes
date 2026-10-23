@@ -1,0 +1,2 @@
+# Signed installers are published as-is; never convert line endings inside them.
+*.apk binary

@@ -33,5 +33,11 @@ try {
     $lines=@(if(Test-Path -LiteralPath $sums){Get-Content -LiteralPath $sums | Where-Object {$_ -and -not $_.EndsWith("  $name")}})+"$hash  $name"
     Set-Content -LiteralPath $sums -Value $lines
     Set-Content -LiteralPath $versionFile -Value $VersionCode
-    Write-Output "Ready: $projectRoot\dist\$name (versionCode $VersionCode, SHA-256 $hash)"
+    # releases/ is committed for download from GitHub: the base installer plus only the newest update.
+    New-Item -ItemType Directory -Force releases | Out-Null
+    Get-ChildItem -LiteralPath releases -Filter 'HealthChecker-update-v*.apk' | Where-Object {$_.Name -ne $name} | Remove-Item
+    Copy-Item -LiteralPath "dist/$name" -Destination "releases/$name" -Force
+    if(Test-Path -LiteralPath 'dist/HealthChecker-base-v3.apk'){Copy-Item -LiteralPath 'dist/HealthChecker-base-v3.apk' -Destination 'releases/HealthChecker-base-v3.apk' -Force}
+    Set-Content -LiteralPath releases/SHA256SUMS.txt -Value (Get-ChildItem -LiteralPath releases -Filter '*.apk' | Sort-Object Name | ForEach-Object {"$((Get-FileHash -LiteralPath $_.FullName -Algorithm SHA256).Hash)  $($_.Name)"})
+    Write-Output "Ready: $projectRoot\dist\$name (versionCode $VersionCode, SHA-256 $hash); releases/ refreshed for GitHub"
 } finally {Pop-Location}
