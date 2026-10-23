@@ -5,11 +5,11 @@ import java.time.Instant
 import java.time.ZoneId
 import java.util.UUID
 class TrainingTest {
-    private fun ex(id:String,muscle:Muscle,equipment:Equipment=Equipment.NONE,kind:ExerciseKind=ExerciseKind.STRENGTH,level:Int=1,met:Double=3.0,measure:ExerciseMeasure=ExerciseMeasure.REPS)=
-        Exercise(id,id,muscles=listOf(muscle),equipment=equipment,kind=kind,level=level,met=met,metCode="02056",measure=measure,secondsPerRep=if(measure==ExerciseMeasure.REPS)2.0 else null)
+    private fun ex(id:String,muscle:Muscle,equipment:Equipment=Equipment.NONE,kind:ExerciseKind=ExerciseKind.STRENGTH,level:Int=1,met:Double=3.0,measure:ExerciseMeasure=ExerciseMeasure.REPS,category:ExerciseCategory=ExerciseCategory.STRENGTH)=
+        Exercise(id,id,muscles=listOf(muscle),equipment=equipment,kind=kind,level=level,met=met,metCode="02056",measure=measure,secondsPerRep=if(measure==ExerciseMeasure.REPS)2.0 else null,category=category)
     private val catalog=Muscle.entries.flatMap{m->listOf(ex("bw_$m",m),ex("bw2_$m",m),ex("db_$m",m,Equipment.DUMBBELLS),ex("hard_$m",m,level=3))}+
         listOf(ex("jog",Muscle.LEGS,kind=ExerciseKind.CARDIO,met=4.8,measure=ExerciseMeasure.MINUTES),ex("tabata",Muscle.LEGS,kind=ExerciseKind.CARDIO,met=11.0,level=3,measure=ExerciseMeasure.MINUTES),
-            ex("arm_circles",Muscle.SHOULDERS,kind=ExerciseKind.MOBILITY,met=2.3,measure=ExerciseMeasure.SECONDS),ex("hamstring",Muscle.LEGS,kind=ExerciseKind.MOBILITY,met=2.3,measure=ExerciseMeasure.SECONDS),
+            ex("arm_circles",Muscle.SHOULDERS,kind=ExerciseKind.MOBILITY,met=2.3,measure=ExerciseMeasure.SECONDS,category=ExerciseCategory.WARMUP),ex("hamstring",Muscle.LEGS,kind=ExerciseKind.MOBILITY,met=2.3,measure=ExerciseMeasure.SECONDS,category=ExerciseCategory.STRETCH),
             ex("yoga",Muscle.BACK,kind=ExerciseKind.MOBILITY,met=2.3,measure=ExerciseMeasure.MINUTES))
     private val zone=ZoneId.of("Asia/Baku");private val now=Instant.parse("2026-10-19T08:00:00Z")
     private fun done(exercise:Exercise,date:String,minutes:Double=10.0)=makeWorkout(UUID.randomUUID().toString(),exercise,null,null,null,null,minutes,date,null,now,zone,70.0)

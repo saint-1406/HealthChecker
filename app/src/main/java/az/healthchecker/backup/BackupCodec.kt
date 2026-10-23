@@ -7,11 +7,11 @@ import kotlinx.serialization.decodeFromString
 import java.io.InputStream
 import java.io.ByteArrayOutputStream
 // Schema 2 added workouts, training marks, training settings and dish recipes; schema 3 added fibre, English names,
-// medications with their intakes and steps. Older files still decode.
+// medications with their intakes and steps; schema 4 added the weight log and exercise pictures. Older files still decode.
 @Serializable private data class BackupEnvelope(val format:String="healthchecker-backup",val schemaVersion:Int=BackupCodec.SCHEMA_VERSION,val snapshot:UserSnapshot)
 object BackupCodec {
     const val MAX_BYTES=25*1024*1024
-    const val SCHEMA_VERSION=3
+    const val SCHEMA_VERSION=4
     private val json=Json{encodeDefaults=true}
     fun encode(snapshot:UserSnapshot):ByteArray {
         validateSnapshot(snapshot)

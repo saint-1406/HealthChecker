@@ -38,4 +38,16 @@ fun validateSnapshot(s:UserSnapshot) {
     s.medications.forEach{require(it.id.startsWith("med:") && it.id.length<=100);validateMedication(it)}
     s.medicationIntakes.forEach(::validateIntake)
     s.steps.forEach(::validateSteps)
+    require(s.weights.size<=50000 && s.exerciseImages.size<=MAX_EXERCISE_IMAGES) { tr("Слишком много записей","Too many records") }
+    unique(s.weights.map{it.date})
+    s.weights.forEach(::validateWeight)
+    s.exerciseImages.forEach{(id,data)->
+        require(EXERCISE_ID.matches(id) && data.length<=MAX_IMAGE_BASE64)
+        val bytes=java.util.Base64.getDecoder().decode(data)
+        require(bytes.size>=4 && bytes[0]==0xFF.toByte() && bytes[1]==0xD8.toByte()) { tr("Картинка упражнения повреждена","An exercise picture is damaged") }
+    }
 }
+const val MAX_EXERCISE_IMAGES=300
+/** About 1 MB of JPEG; pictures are stored at most 1280 px on the long side, which is far below this. */
+const val MAX_IMAGE_BASE64=1_400_000
+val EXERCISE_ID=Regex("[a-z0-9_]{1,100}")

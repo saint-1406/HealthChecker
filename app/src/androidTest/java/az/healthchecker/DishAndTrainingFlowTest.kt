@@ -23,6 +23,12 @@ class DishAndTrainingFlowTest {
         app.onNodeWithText("Добавить в блюдо").performScrollTo().performClick()
         waitText("Ингредиенты")
     }
+    /** The suggestions appear once the exercise catalog is loaded and may sit below the first screen. */
+    private fun openTraining() {
+        app.onNodeWithText("Тренировки").performClick()
+        app.waitUntil(90000){runCatching{app.onNodeWithTag("trainingList").performScrollToNode(hasText("Рекомендации на сегодня"))}.isSuccess}
+        app.onNodeWithTag("trainingList").performScrollToNode(hasTestTag("addExercise"))
+    }
     @Test fun dishFromIngredientsThenEatenPortion() {
         launch();waitText("Начать без расчёта");app.onNodeWithText("Начать без расчёта").performClick();waitText("Обзор")
         app.onNodeWithText("Дневник").performClick()
@@ -74,8 +80,7 @@ class DishAndTrainingFlowTest {
         app.onNodeWithText("Текущий вес, кг").performScrollTo().performTextInput("80")
         app.onNodeWithText("Сохранить и начать").performScrollTo().performClick()
         waitText("Обзор")
-        app.onNodeWithText("Тренировки").performClick()
-        waitText("Рекомендации на сегодня")
+        openTraining()
         app.onNodeWithTag("addExercise").performClick()
         app.onNodeWithTag("exerciseSearch").performTextInput("отжимания от пола")
         waitText("Отжимания от пола",30000);app.onNodeWithText("Отжимания от пола").performClick()

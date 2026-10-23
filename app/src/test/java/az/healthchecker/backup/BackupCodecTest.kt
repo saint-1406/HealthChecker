@@ -7,6 +7,17 @@ class BackupCodecTest {
     private fun snapshot()=UserSnapshot(profile=Profile(initialWeight=80.0,currentWeight=77.0),goals=listOf(DailyGoals("2026-10-18",2200.0)),entries=listOf(DiaryEntry(UUID.randomUUID().toString(),"missing-catalog-food","Яйцо",Quantity(2.0,Measure.PIECES,50.0),100.0,Nutrients(143.0,12.56),instant="2026-10-18T08:00:00Z",zoneId="Asia/Baku",localDate="2026-10-18")),onboarded=true)
     @Test fun preservesAllPersonalDataAndMissingCatalogReference() { val s=snapshot();assertEquals(s,BackupCodec.decode(BackupCodec.encode(s))) }
     @Test fun duplicateIdsRejected() { val s=snapshot();assertThrows(IllegalArgumentException::class.java){BackupCodec.encode(s.copy(entries=s.entries+s.entries))} }
+    @Test fun schemaFourKeepsWeightsAndExercisePictures() {
+        val jpeg=byteArrayOf(0xFF.toByte(),0xD8.toByte(),0xFF.toByte(),0xE0.toByte(),1,2,3,4,0xFF.toByte(),0xD9.toByte())
+        val picture=java.util.Base64.getEncoder().encodeToString(jpeg)
+        val weights=listOf(makeWeight("2026-10-20",80.4,java.time.Instant.parse("2026-10-20T04:30:00Z"),java.time.ZoneId.of("Asia/Baku")),makeWeight("2026-10-21",80.1,java.time.Instant.parse("2026-10-21T04:30:00Z"),java.time.ZoneId.of("Asia/Baku")))
+        val s=snapshot().copy(weights=weights,exerciseImages=mapOf("prisoner_squat" to picture))
+        val bytes=BackupCodec.encode(s);assertTrue(bytes.toString(Charsets.UTF_8).contains("\"schemaVersion\":4"));assertEquals(s,BackupCodec.decode(bytes))
+        assertThrows(IllegalArgumentException::class.java){BackupCodec.encode(s.copy(exerciseImages=mapOf("prisoner_squat" to java.util.Base64.getEncoder().encodeToString("not a jpeg".toByteArray()))))}
+        assertThrows(IllegalArgumentException::class.java){BackupCodec.encode(s.copy(exerciseImages=mapOf("../evil" to picture)))}
+        assertThrows(IllegalArgumentException::class.java){BackupCodec.encode(s.copy(weights=weights+weights.first()))}
+        assertThrows(IllegalArgumentException::class.java){BackupCodec.encode(s.copy(weights=listOf(weights.first().copy(kg=Double.NaN))))}
+    }
     @Test fun futureSchemaAndBrokenJsonRejected() { val b=BackupCodec.encode(snapshot()).toString(Charsets.UTF_8);assertThrows(IllegalArgumentException::class.java){BackupCodec.decode(b.replace("\"schemaVersion\":${BackupCodec.SCHEMA_VERSION}","\"schemaVersion\":${BackupCodec.SCHEMA_VERSION+1}").toByteArray())};assertThrows(IllegalArgumentException::class.java){BackupCodec.decode(b.dropLast(8).toByteArray())} }
     @Test fun schemaOneFileFromVersionThreeStillRestores() {
         val v1="""{"format":"healthchecker-backup","schemaVersion":1,"snapshot":{"profile":null,"goals":[],"entries":[{"id":"b2e46cd0-e9e3-4516-83cd-3393fa23c6bd","foodId":"usda:173647","name":"Вода питьевая","quantity":{"value":250.0,"unit":"ML","portionGrams":null},"grams":250.0,"nutrients":{"kcal":0.0,"protein":0.0,"fat":0.0,"carbs":0.0},"waterMl":250.0,"instant":"2026-10-19T05:42:33.583184Z","zoneId":"Asia/Baku","localDate":"2026-10-19"}],"customFoods":[{"id":"custom:1","name":"Лаваш","aliases":[],"per100g":{"kcal":250.0,"protein":null,"fat":null,"carbs":null},"portions":[],"density":null,"source":"Пользователь","isWater":false}],"completedDays":["2026-10-18"],"onboarded":true}}"""
@@ -26,7 +37,7 @@ class BackupCodecTest {
         val intake=makeIntake(med,"2026-10-18",java.time.Instant.parse("2026-10-18T05:00:00Z"),java.time.ZoneId.of("Asia/Baku"))
         val s=snapshot().let{it.copy(entries=it.entries.map{e->e.copy(nutrients=e.nutrients.copy(fiber=1.5))},medications=listOf(med),medicationIntakes=listOf(intake),steps=listOf(StepDay("2026-10-18",8000,null),StepDay("2026-10-17",0,12000)))}
         val text=BackupCodec.encode(s).toString(Charsets.UTF_8)
-        assertTrue(text.contains("\"schemaVersion\":3"));assertTrue(text.contains("\"fiber\":1.5"));assertEquals(s,BackupCodec.decode(text.toByteArray()))
+        assertTrue(text.contains("\"schemaVersion\":${BackupCodec.SCHEMA_VERSION}"));assertTrue(text.contains("\"fiber\":1.5"));assertEquals(s,BackupCodec.decode(text.toByteArray()))
         // Unknown fibre is left out, so an entry without it keeps the shape it had in schema 2.
         assertFalse(BackupCodec.encode(snapshot()).toString(Charsets.UTF_8).contains("fiber"))
         assertThrows(IllegalArgumentException::class.java){BackupCodec.encode(s.copy(medications=listOf(med.copy(timesPerDay=0))))}

@@ -27,3 +27,5 @@ val Food.displaySource:String get() = when {
 val Portion.displayName:String get() = if(Lang.en)nameEn?:name else name
 val Exercise.displayName:String get() = if(Lang.en)nameEn?:name else name
 val Exercise.displayCue:String get() = if(Lang.en)cueEn?:cue else cue
+/** The name in the other language plus the titles used in workout videos, so a card shows how to find it anywhere. */
+val Exercise.alsoKnownAs:List<String> get() = (listOfNotNull(if(Lang.en)name else nameEn)+videoNames).distinctBy{it.lowercase()}.filter{!it.equals(displayName,ignoreCase=true)}

@@ -33,6 +33,10 @@ class AppViewModel(application:Application):AndroidViewModel(application) {
     val ready=MutableStateFlow(false)
     val error=MutableStateFlow<String?>(null)
     val notice=MutableStateFlow<Notice?>(null)
+    /** Exercise id → picture file version, so cards know which exercises have a picture and reload a replaced one. */
+    val imageVersions=MutableStateFlow<Map<String,Long>>(emptyMap())
+    /** One stopwatch for the whole app: it keeps running while the user moves between the exercise list and a video. */
+    val stopwatch=MutableStateFlow(Stopwatch())
     val busy=MutableStateFlow(false)
     val backupBusy=MutableStateFlow(false)
     val backupError=MutableStateFlow<String?>(null)
@@ -63,6 +67,7 @@ class AppViewModel(application:Application):AndroidViewModel(application) {
         override fun store(folder:String)=SafBackupStore(context,Uri.parse(folder))
     })
     init {
+        viewModelScope.launch(Dispatchers.IO){imageVersions.value=repository.imageVersions()}
         viewModelScope.launch(Dispatchers.IO) {
             try { snapshot.value=repository.exportSnapshot();ready.value=true }
             catch(e:Exception){error.value=tr("Не удалось открыть данные: ","Could not open your data: ")+e.message}
@@ -116,13 +121,29 @@ class AppViewModel(application:Application):AndroidViewModel(application) {
     fun dismissNotice(){notice.value=null}
     fun completeDay(date:String,value:Boolean)=action { repository.completeDay(date,value) }
     fun exercise(id:String):Exercise? = exerciseCatalog?.byId(id)
-    suspend fun searchExercises(query:String,muscle:Muscle?,kind:ExerciseKind?,dumbbells:Boolean):List<Exercise> {
+    suspend fun searchExercises(query:String,muscle:Muscle?,category:ExerciseCategory?,dumbbells:Boolean):List<Exercise> {
         val loaded=try{exerciseLoad.await()}catch(e:CancellationException){throw e}catch(e:Exception){null}
-        return withContext(Dispatchers.Default){loaded?.search(query,muscle,kind,dumbbells)?:emptyList()}
+        return withContext(Dispatchers.Default){loaded?.search(query,muscle,category,dumbbells)?:emptyList()}
     }
     fun saveWorkout(id:String,exercise:Exercise,sets:Int?,reps:Int?,seconds:Int?,loadKg:Double?,minutes:Double,date:String,old:WorkoutEntry?,done:()->kotlin.Unit)=action(done) {
-        repository.upsertWorkout(makeWorkout(id,exercise,sets,reps,seconds,loadKg,minutes,date,old,Instant.now(),ZoneId.systemDefault(),snapshot.value.profile?.currentWeight))
+        repository.upsertWorkout(makeWorkout(id,exercise,sets,reps,seconds,loadKg,minutes,date,old,Instant.now(),ZoneId.systemDefault(),snapshot.value.bodyWeight(date)))
     }
+    fun imageFile(id:String):java.io.File = repository.imageFile(id)
+    fun setExerciseImage(id:String,uri:Uri)=action {
+        repository.saveExerciseImage(id,encodeExerciseImage(context,uri));imageVersions.value=repository.imageVersions()
+    }
+    fun removeExerciseImage(id:String)=action {
+        val old=repository.imageFile(id).takeIf{it.isFile}?.readBytes()
+        repository.deleteExerciseImage(id);imageVersions.value=repository.imageVersions()
+        old?.let{bytes->offerUndo(tr("Картинка удалена","Picture removed")){repository.saveExerciseImage(id,bytes);imageVersions.value=repository.imageVersions()}}
+    }
+    private fun clock()=android.os.SystemClock.elapsedRealtime()
+    fun startStopwatch(){stopwatch.value=stopwatch.value.start(clock())}
+    fun pauseStopwatch(){stopwatch.value=stopwatch.value.pause(clock())}
+    fun resetStopwatch(){stopwatch.value=stopwatch.value.reset()}
+    fun stopwatchMs():Long = stopwatch.value.elapsed(clock())
+    fun saveWeight(date:String,kg:Double,done:()->kotlin.Unit)=action(done) { repository.saveWeight(makeWeight(date,kg,Instant.now(),ZoneId.systemDefault())) }
+    fun deleteWeight(entry:WeightEntry)=action { repository.deleteWeight(entry.date);offerUndo(tr("Вес удалён","Weight deleted")){repository.saveWeight(entry)} }
     fun deleteWorkout(workout:WorkoutEntry)=action { repository.deleteWorkout(workout.id);offerUndo(tr("Упражнение удалено","Exercise deleted")){repository.upsertWorkout(workout)} }
     fun markTraining(date:String,trained:Boolean?)=action { repository.markTraining(date,trained) }
     fun trainingPrefs(prefs:TrainingPrefs)=action { repository.saveTrainingPrefs(prefs) }
@@ -174,7 +195,7 @@ class AppViewModel(application:Application):AndroidViewModel(application) {
     }
     fun confirmRestore()=action {
         val s=restorePreview.value?:return@action
-        repository.replaceSnapshot(s);restorePreview.value=null;undo=null
+        repository.replaceSnapshot(s);restorePreview.value=null;undo=null;imageVersions.value=repository.imageVersions()
         notice.value=Notice(if(settings.value.folder.isEmpty())tr("Данные восстановлены. Выберите папку для новых копий в профиле.","Data restored. Choose a folder for new backups in the profile.") else tr("Данные восстановлены","Data restored"))
     }
     fun saveMedication(medication:Medication,done:()->kotlin.Unit)=action(done){repository.saveMedication(medication)}

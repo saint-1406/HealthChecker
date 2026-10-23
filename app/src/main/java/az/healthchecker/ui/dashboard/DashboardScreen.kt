@@ -55,6 +55,7 @@ import az.healthchecker.ui.steps.stepsText
             MetricCard(tr("Белок","Protein"),summary.protein.value,goals?.protein,G,Icons.Outlined.EggAlt,summary.protein.complete,Modifier.weight(1f))
             MetricCard(tr("Вода","Water"),summary.waterMl,goals?.waterMl,ML,Icons.Outlined.WaterDrop,true,Modifier.weight(1f))
         }
+        WeightCard(vm,snapshot,date)
         val steps=snapshot.stepsOn(date)
         Panel(Modifier.clickable(onClick=openSteps).testTag("stepsCard")){
             Row(verticalAlignment=Alignment.CenterVertically,horizontalArrangement=Arrangement.spacedBy(12.dp)){

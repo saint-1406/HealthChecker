@@ -22,7 +22,7 @@ import az.healthchecker.ui.*
     val exercises by vm.exercises.collectAsStateWithLifecycle()
     val prefs=snapshot.trainingPrefs?:TrainingPrefs()
     val day=snapshot.training(date)
-    val weight=snapshot.profile?.currentWeight
+    val weight=snapshot.bodyWeight(date)
     var variant by rememberSaveable(date){mutableIntStateOf(0)}
     val plan=remember(exercises,snapshot.workouts,date,prefs,variant){if(exercises.isEmpty())null else recommend(exercises,snapshot,date,prefs,variant)}
     LazyColumn(Modifier.fillMaxSize().testTag("trainingList"),contentPadding=PaddingValues(20.dp),verticalArrangement=Arrangement.spacedBy(14.dp)) {
@@ -36,6 +36,7 @@ import az.healthchecker.ui.*
             Text("${tr("Израсходовано","Burned")} ≈ ${number(day.burned.value)}${if(!day.burned.complete)"+" else ""} $KCAL",style=MaterialTheme.typography.headlineSmall,fontWeight=FontWeight.SemiBold,color=MaterialTheme.colorScheme.primary)
             if(weight==null)Text(tr("Укажите вес в профиле, чтобы считать калории упражнений","Enter your weight in the profile to estimate exercise calories"),color=MaterialTheme.colorScheme.error,style=MaterialTheme.typography.bodySmall,modifier=Modifier.clickable(onClick=openProfile))
         }}
+        item{StopwatchPanel(vm,compact=true)}
         item{Button(onClick=add,modifier=Modifier.fillMaxWidth().heightIn(min=54.dp).testTag("addExercise")){Icon(Icons.Outlined.Add,null);Spacer(Modifier.width(8.dp));Text(tr("Добавить упражнение","Add exercise"))}}
         if(day.workouts.isNotEmpty()){
             item{SectionTitle(tr("Выполненные упражнения","Completed exercises"),count(day.workouts.size,"упражнение","упражнения","упражнений","exercise","exercises"))}
@@ -50,7 +51,7 @@ import az.healthchecker.ui.*
             item{Panel {
                 SectionTitle(tr("Рекомендации на сегодня","Today's suggestions"),if(p.recovery)tr("Мышцы ещё восстанавливаются после последних тренировок — лёгкий день","Muscles are still recovering from recent training — an easy day") else tr("Акцент: ","Focus: ")+p.focus.distinct().joinToString(", "){muscleLabel(it).lowercase(Lang.locale)})
                 Text("${tr("Дома","At home")}, ${if(prefs.dumbbells)tr("с гантелями и без","with and without dumbbells") else tr("без инвентаря","no equipment")} · ${tr("уровень","level")}: ${levelLabel(prefs.level).lowercase(Lang.locale)}",style=MaterialTheme.typography.bodySmall,color=MaterialTheme.colorScheme.onSurfaceVariant)
-                p.items.forEach{r->RecommendedRow(r,weight){log(r.exercise,r.prescription)}}
+                p.items.forEach{r->RecommendedRow(vm,r,weight){log(r.exercise,r.prescription)}}
                 TextButton(onClick={variant++}){Icon(Icons.Outlined.Refresh,null);Spacer(Modifier.width(6.dp));Text(tr("Другая подборка","Another set"))}
             }}
             item{Panel {
@@ -78,13 +79,15 @@ import az.healthchecker.ui.*
     }
 }
 
-@Composable private fun RecommendedRow(r:RecommendedExercise,weight:Double?,done:()->Unit) {
+@Composable private fun RecommendedRow(vm:AppViewModel,r:RecommendedExercise,weight:Double?,done:()->Unit) {
     val e=r.exercise;val p=r.prescription
     Column(Modifier.fillMaxWidth().padding(vertical=4.dp),verticalArrangement=Arrangement.spacedBy(2.dp)) {
         Text(when(r.role){Role.WARMUP->tr("РАЗМИНКА","WARM-UP");Role.MAIN->tr("ОСНОВНАЯ ЧАСТЬ","MAIN PART")+" · ${muscleLabel(e.muscles.first()).uppercase(Lang.locale)}";Role.CARDIO->tr("КАРДИО","CARDIO");Role.COOLDOWN->tr("ЗАМИНКА","COOL-DOWN")},style=MaterialTheme.typography.labelSmall,color=MaterialTheme.colorScheme.primary)
-        Row(verticalAlignment=Alignment.CenterVertically){
+        Row(verticalAlignment=Alignment.CenterVertically,horizontalArrangement=Arrangement.spacedBy(10.dp)){
+            ExerciseThumb(vm,e.id,44.dp)
             Column(Modifier.weight(1f)){
                 Text(e.displayName,fontWeight=FontWeight.SemiBold)
+                if(e.alsoKnownAs.isNotEmpty())Text(e.alsoKnownAs.joinToString(" · "),style=MaterialTheme.typography.bodySmall,color=MaterialTheme.colorScheme.onSurfaceVariant)
                 val minutes=p.minutesFor(e)
                 Text(listOfNotNull(prescriptionLabel(p),if(e.equipment==Equipment.DUMBBELLS)tr("гантели","dumbbells") else null,minutes?.let{m->burnedKcal(e.met,weight,m)?.let{"≈ ${number(it)} $KCAL"}}).joinToString(" · "),style=MaterialTheme.typography.bodyMedium)
             }

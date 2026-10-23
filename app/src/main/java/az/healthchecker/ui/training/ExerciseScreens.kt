@@ -13,6 +13,7 @@ import androidx.compose.material.icons.outlined.Search
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.runtime.saveable.rememberSaveable
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.text.input.KeyboardType
@@ -25,28 +26,35 @@ import kotlinx.coroutines.delay
 @Composable fun ExerciseSearchScreen(vm:AppViewModel,dumbbellsByDefault:Boolean,back:()->Unit,select:(Exercise)->Unit) {
     var query by rememberSaveable{mutableStateOf("")}
     var muscleName by rememberSaveable{mutableStateOf("")}
-    var kindName by rememberSaveable{mutableStateOf("")}
+    var categoryName by rememberSaveable{mutableStateOf("")}
     var dumbbells by rememberSaveable{mutableStateOf(dumbbellsByDefault)}
     var results by remember{mutableStateOf(emptyList<Exercise>())}
-    val muscle=Muscle.entries.find{it.name==muscleName};val kind=ExerciseKind.entries.find{it.name==kindName}
-    LaunchedEffect(query,muscle,kind,dumbbells){delay(150);results=vm.searchExercises(query,muscle,kind,dumbbells)}
+    val muscle=Muscle.entries.find{it.name==muscleName};val category=ExerciseCategory.entries.find{it.name==categoryName}
+    LaunchedEffect(query,muscle,category,dumbbells){delay(150);results=vm.searchExercises(query,muscle,category,dumbbells)}
     Column(Modifier.fillMaxSize().padding(20.dp),verticalArrangement=Arrangement.spacedBy(8.dp)) {
         Row{IconButton(onClick=back){Icon(Icons.AutoMirrored.Outlined.ArrowBack,tr("Назад","Back"))};Text(tr("Какое упражнение?","Which exercise?"),style=MaterialTheme.typography.headlineSmall,modifier=Modifier.padding(top=8.dp))}
-        OutlinedTextField(query,{query=it.take(60)},label={Text(tr("Название упражнения","Exercise name"))},leadingIcon={Icon(Icons.Outlined.Search,null)},singleLine=true,modifier=Modifier.fillMaxWidth().testTag("exerciseSearch"))
+        OutlinedTextField(query,{query=it.take(60)},label={Text(tr("Название по-русски, по-английски или из видео","Name in Russian, English or from a video"))},leadingIcon={Icon(Icons.Outlined.Search,null)},singleLine=true,modifier=Modifier.fillMaxWidth().testTag("exerciseSearch"))
         Row(Modifier.horizontalScroll(rememberScrollState()),horizontalArrangement=Arrangement.spacedBy(6.dp)){
             FilterChip(selected=muscle==null,onClick={muscleName=""},label={Text(tr("Все мышцы","All muscles"))})
             Muscle.entries.forEach{m->FilterChip(selected=muscle==m,onClick={muscleName=if(muscle==m)"" else m.name},label={Text(muscleLabel(m))})}
         }
         Row(Modifier.horizontalScroll(rememberScrollState()),horizontalArrangement=Arrangement.spacedBy(6.dp)){
-            FilterChip(selected=kind==null,onClick={kindName=""},label={Text(tr("Любые","Any"))})
-            ExerciseKind.entries.forEach{k->FilterChip(selected=kind==k,onClick={kindName=if(kind==k)"" else k.name},label={Text(kindLabel(k))})}
+            FilterChip(selected=category==null,onClick={categoryName=""},label={Text(tr("Все направления","All types"))})
+            ExerciseCategory.entries.forEach{c->FilterChip(selected=category==c,onClick={categoryName=if(category==c)"" else c.name},label={Text(categoryLabel(c))})}
             FilterChip(selected=dumbbells,onClick={dumbbells=!dumbbells},label={Text(tr("С гантелями","With dumbbells"))})
         }
         if(results.isEmpty())Text(tr("Ничего не найдено. Измените фильтры или название.","Nothing found. Change the filters or the name."),Modifier.padding(vertical=16.dp))
-        LazyColumn(verticalArrangement=Arrangement.spacedBy(10.dp)){items(results,key={it.id}){e->Panel(Modifier.clickable{select(e)}){
-            Text(e.displayName,style=MaterialTheme.typography.titleMedium)
-            Text("${e.muscles.joinToString(", "){muscleLabel(it)}} · ${if(e.equipment==Equipment.DUMBBELLS)tr("гантели","dumbbells") else tr("без инвентаря","no equipment")} · ${levelLabel(e.level).lowercase(Lang.locale)}",style=MaterialTheme.typography.bodySmall,color=MaterialTheme.colorScheme.onSurfaceVariant)
-            Text("${kindLabel(e.kind)} · ≈ ${number(e.met,1)} MET",style=MaterialTheme.typography.bodySmall,color=MaterialTheme.colorScheme.primary)
+        Text(count(results.size,"упражнение","упражнения","упражнений","exercise","exercises"),style=MaterialTheme.typography.bodySmall,color=MaterialTheme.colorScheme.onSurfaceVariant)
+        LazyColumn(verticalArrangement=Arrangement.spacedBy(10.dp),modifier=Modifier.testTag("exerciseResults")){items(results,key={it.id}){e->Panel(Modifier.clickable{select(e)}){
+            Row(horizontalArrangement=Arrangement.spacedBy(12.dp),verticalAlignment=Alignment.CenterVertically){
+                ExerciseThumb(vm,e.id)
+                Column(Modifier.weight(1f)){
+                    Text(e.displayName,style=MaterialTheme.typography.titleMedium)
+                    if(e.alsoKnownAs.isNotEmpty())Text(e.alsoKnownAs.joinToString(" · "),style=MaterialTheme.typography.bodyMedium,color=MaterialTheme.colorScheme.onSurfaceVariant)
+                }
+            }
+            Text("${categoryLabel(e.category)} · ${e.muscles.joinToString(", "){muscleLabel(it)}} · ${if(e.equipment==Equipment.DUMBBELLS)tr("гантели","dumbbells") else tr("без инвентаря","no equipment")} · ${levelLabel(e.level).lowercase(Lang.locale)}",style=MaterialTheme.typography.bodySmall,color=MaterialTheme.colorScheme.onSurfaceVariant)
+            Text("≈ ${number(e.met,1)} MET",style=MaterialTheme.typography.bodySmall,color=MaterialTheme.colorScheme.primary)
         }}}
     }
 }
@@ -75,7 +83,12 @@ import kotlinx.coroutines.delay
     Column(Modifier.fillMaxSize().verticalScroll(rememberScrollState()).imePadding().padding(24.dp),verticalArrangement=Arrangement.spacedBy(14.dp)) {
         IconButton(onClick=back){Icon(Icons.AutoMirrored.Outlined.ArrowBack,tr("Назад","Back"))}
         SectionTitle(exercise.displayName,if(old==null)tr("Выполнено · ","Done · ")+dayMonth(date) else tr("Редактирование","Editing"))
+        if(exercise.alsoKnownAs.isNotEmpty())Text(tr("Также: ","Also: ")+exercise.alsoKnownAs.joinToString(" · "),style=MaterialTheme.typography.titleSmall,color=MaterialTheme.colorScheme.primary)
+        ExercisePicture(vm,exercise)
         Text(exercise.displayCue,style=MaterialTheme.typography.bodyMedium,color=MaterialTheme.colorScheme.onSurfaceVariant)
+        // Seconds-per-set exercises take the measured time as one set; the others as the whole duration.
+        StopwatchPanel(vm,{ms->if(exercise.measure==ExerciseMeasure.SECONDS)seconds=(ms/1000).coerceIn(1,3600).toString() else {minutesEdited=true;minutesText=plain((Math.round(ms/6000.0)/10.0).coerceAtLeast(0.1))}},
+            if(exercise.measure==ExerciseMeasure.SECONDS)tr("Подставить в секунды подхода","Use as seconds per set") else tr("Подставить во время","Use as the duration"))
         if(exercise.measure!=ExerciseMeasure.MINUTES)CountField(tr("Подходы","Sets"),sets,"sets"){sets=it}
         if(exercise.measure==ExerciseMeasure.REPS)CountField(tr("Повторений в подходе","Reps per set"),reps,"reps"){reps=it}
         if(exercise.measure==ExerciseMeasure.SECONDS)CountField(tr("Секунд в подходе","Seconds per set"),seconds,"seconds"){seconds=it}

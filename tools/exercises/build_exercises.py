@@ -6,6 +6,7 @@ app shows as "≈". Values retrieved from https://pacompendium.com on 2026-10-19
 """
 import json
 from pathlib import Path
+import additions
 
 # code: (MET, Compendium description)
 COMPENDIUM = {
@@ -201,22 +202,32 @@ EXERCISES = [
 ]
 
 def build(output):
-    ids=[e[0] for e in EXERCISES]
-    assert len(ids)==len(set(ids)), 'duplicate exercise id'
+    compendium={**COMPENDIUM,**additions.COMPENDIUM_EXTRA}
     # English names and cues are reviewed translations of the Russian ones, kept beside this script.
     english_text=json.loads(Path(__file__).with_name('en.json').read_text(encoding='utf-8'))
-    assert set(english_text)==set(ids), 'every exercise needs an English name and cue'
+    assert set(english_text)==set(e[0] for e in EXERCISES), 'every exercise needs an English name and cue'
+    rows=[(i,n,english_text[i]['name'],[alias],m,eq,k,lv,c,ms,spr,cue,english_text[i]['cue']) for i,n,alias,m,eq,k,lv,c,ms,spr,cue in EXERCISES]
+    rows+=[(i,n,en,[en.lower()],m,eq,k,lv,c,ms,spr,cue,cue_en) for i,n,en,m,eq,k,lv,c,ms,spr,cue,cue_en in additions.NEW]
+    ids=[r[0] for r in rows]
+    assert len(ids)==len(set(ids)), 'duplicate exercise id'
+    category={i:cat for cat,members in additions.CATEGORY.items() for i in members}
+    for table in (category,additions.VIDEO,additions.KEYWORDS,additions.RENAME):
+        assert set(table)<=set(ids), set(table)-set(ids)
+    by_kind={'STRENGTH':'STRENGTH','CARDIO':'AEROBIC','MOBILITY':'STRETCH'}
     items=[]
-    for ident,name,english,muscles,equipment,kind,level,code,measure,spr,cue in EXERCISES:
-        assert code in COMPENDIUM, ident
-        assert level in (1,2,3) and muscles and cue.endswith('.'), ident
+    for ident,name,name_en,aliases,muscles,equipment,kind,level,code,measure,spr,cue,cue_en in rows:
+        assert code in compendium, ident
+        assert level in (1,2,3) and muscles and cue.endswith('.') and cue_en.endswith('.'), ident
         assert (spr is not None)==(measure=='REPS'), ident
-        met,description=COMPENDIUM[code]
-        items.append({'id':ident,'name':name,'nameEn':english_text[ident]['name'],'cueEn':english_text[ident]['cue'],'aliases':[english],'muscles':muscles,'equipment':equipment,'kind':kind,'level':level,
-                      'met':met,'metCode':code,'metSource':description,'measure':measure,'secondsPerRep':spr,'cue':cue})
+        name,name_en=additions.RENAME.get(ident,(name,name_en))
+        met,description=compendium[code]
+        items.append({'id':ident,'name':name,'nameEn':name_en,'cueEn':cue_en,'aliases':aliases,'muscles':muscles,'equipment':equipment,'kind':kind,'level':level,
+                      'met':met,'metCode':code,'metSource':description,'measure':measure,'secondsPerRep':spr,'cue':cue,
+                      'category':category.get(ident,by_kind[kind]),'videoNames':additions.VIDEO.get(ident,[]),'keywords':additions.KEYWORDS.get(ident,'').split()})
     output=Path(output);output.parent.mkdir(parents=True,exist_ok=True)
     output.write_text(json.dumps(items,ensure_ascii=False,separators=(',',':')),encoding='utf-8')
-    return {'count':len(items),'bodyweight':sum(i['equipment']=='NONE' for i in items),'dumbbells':sum(i['equipment']=='DUMBBELLS' for i in items)}
+    return {'count':len(items),'bodyweight':sum(i['equipment']=='NONE' for i in items),'dumbbells':sum(i['equipment']=='DUMBBELLS' for i in items),
+            'categories':{c:sum(i['category']==c for i in items) for c in sorted(set(i['category'] for i in items))}}
 
 if __name__=='__main__':
     print(build(Path('app/src/main/assets/exercises/exercises.json')))

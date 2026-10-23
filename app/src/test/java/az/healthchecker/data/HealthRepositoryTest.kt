@@ -52,5 +52,19 @@ class HealthRepositoryTest {
         assertEquals(1,r.backfillFiber{catalog[it]});assertEquals(5.0,r.exportSnapshot().entries.single().nutrients.fiber!!,1e-9)
         assertEquals(0,r.backfillFiber{catalog[it]})
     }
+    @Test fun newestWeighInUpdatesCurrentWeightOnlyAndPicturesTravelWithBackups()=runTest {
+        val r=repository();val zone=java.time.ZoneId.of("Asia/Baku");fun w(d:String,kg:Double)=makeWeight(d,kg,java.time.Instant.parse("${d}T04:00:00Z"),zone)
+        r.saveProfile(Profile(initialWeight=82.0,currentWeight=82.0))
+        r.saveWeight(w("2026-10-21",80.5));r.saveWeight(w("2026-10-15",81.5))
+        var s=r.exportSnapshot();assertEquals(80.5,s.profile!!.currentWeight,0.0);assertEquals(82.0,s.profile!!.initialWeight,0.0);assertEquals(2,s.weights.size)
+        r.saveWeight(w("2026-10-21",80.2));s=r.exportSnapshot();assertEquals(80.2,s.weights.single{it.date=="2026-10-21"}.kg,0.0);assertEquals(80.2,s.profile!!.currentWeight,0.0)
+        val jpeg=byteArrayOf(0xFF.toByte(),0xD8.toByte(),0xFF.toByte(),0xE0.toByte(),9,9,0xFF.toByte(),0xD9.toByte())
+        val before=r.exportVersioned().first;r.saveExerciseImage("prisoner_squat",jpeg);assertEquals(before+1,r.exportVersioned().first)
+        assertEquals(setOf("prisoner_squat"),r.imageVersions().keys);assertTrue(r.exportSnapshot().exerciseImages.isEmpty())
+        val backup=r.exportVersioned().second;assertEquals(1,backup.exerciseImages.size)
+        r.deleteExerciseImage("prisoner_squat");r.deleteWeight("2026-10-15");assertTrue(r.imageVersions().isEmpty())
+        r.replaceSnapshot(backup);assertArrayEquals(jpeg,r.imageFile("prisoner_squat").readBytes());assertEquals(2,r.exportSnapshot().weights.size)
+        r.replaceSnapshot(backup.copy(exerciseImages=emptyMap()));assertTrue(r.imageVersions().isEmpty())
+    }
     @Test fun restoredSnapshotsDoNotDuplicate()=runTest { val r=repository();val s=UserSnapshot(entries=listOf(entry()));r.replaceSnapshot(s);r.replaceSnapshot(s);assertEquals(s,r.exportSnapshot()) }
 }

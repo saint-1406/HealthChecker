@@ -13,6 +13,7 @@ class HealthRepository(context: Context, name: String = "healthchecker.db") {
     private val db=Room.databaseBuilder(context.applicationContext,HealthDatabase::class.java,name).enableMultiInstanceInvalidation().build()
     private val dao=db.dao()
     private val json=Json{encodeDefaults=true}
+    private val images=ExerciseImageStore(context)
     val snapshots:Flow<UserSnapshot> = dao.observe().map(::decode)
     val revisions:Flow<Revision> = dao.observeRevision().map{it?:Revision()}
     private fun decode(rows:List<StoredRecord>):UserSnapshot = UserSnapshot(
@@ -26,10 +27,29 @@ class HealthRepository(context: Context, name: String = "healthchecker.db") {
         trainingPrefs=rows.find{it.kind=="trainprefs"}?.let{json.decodeFromString<TrainingPrefs>(it.payload)},
         medications=rows.filter{it.kind=="med"}.map{json.decodeFromString<Medication>(it.payload)},
         medicationIntakes=rows.filter{it.kind=="medtake"}.map{json.decodeFromString<MedicationIntake>(it.payload)},
-        steps=rows.filter{it.kind=="steps"}.map{json.decodeFromString<StepDay>(it.payload)})
+        steps=rows.filter{it.kind=="steps"}.map{json.decodeFromString<StepDay>(it.payload)},
+        weights=rows.filter{it.kind=="weight"}.map{json.decodeFromString<WeightEntry>(it.payload)})
     private suspend fun changed() { val r=dao.revision()?:Revision();dao.putRevision(r.copy(current=r.current+1)) }
     suspend fun exportSnapshot():UserSnapshot = db.withTransaction{decode(dao.all())}
-    suspend fun exportVersioned():Pair<Long,UserSnapshot> = db.withTransaction{Pair((dao.revision()?:Revision()).current,decode(dao.all()))}
+    /** For backups: the data plus the exercise pictures, which live as files rather than in the database. */
+    suspend fun exportVersioned():Pair<Long,UserSnapshot> {
+        val (revision,snapshot)=db.withTransaction{Pair((dao.revision()?:Revision()).current,decode(dao.all()))}
+        val encoder=java.util.Base64.getEncoder()
+        return revision to snapshot.copy(exerciseImages=images.all().mapValues{encoder.encodeToString(it.value)})
+    }
+    fun imageVersions():Map<String,Long> = images.versions()
+    fun imageFile(id:String):java.io.File = images.file(id)
+    suspend fun saveExerciseImage(id:String,jpeg:ByteArray) { images.write(id,jpeg);db.withTransaction{changed()} }
+    suspend fun deleteExerciseImage(id:String) { images.delete(id);db.withTransaction{changed()} }
+    /** A newer weigh-in also becomes the profile's current weight; the initial weight never changes. */
+    suspend fun saveWeight(entry:WeightEntry) { validateSnapshot(UserSnapshot(weights=listOf(entry)));db.withTransaction{
+        dao.put(StoredRecord("weight:${entry.date}","weight",json.encodeToString(entry)))
+        val newest=dao.all().filter{it.kind=="weight"}.maxOf{it.key.removePrefix("weight:")}==entry.date
+        val profile=dao.get("profile")?.let{json.decodeFromString<Profile>(it.payload)}
+        if(newest&&profile!=null)dao.put(StoredRecord("profile","profile",json.encodeToString(profile.copy(currentWeight=entry.kg))))
+        changed()
+    } }
+    suspend fun deleteWeight(date:String) { db.withTransaction{dao.delete("weight:$date");changed()} }
     suspend fun backedUpRevision():Long = (dao.revision()?:Revision()).backedUp
     suspend fun markBackedUp(version:Long) { db.withTransaction{val r=dao.revision()?:Revision();dao.putRevision(r.copy(backedUp=version))} }
     suspend fun upsertEntry(entry:DiaryEntry) { validateSnapshot(UserSnapshot(entries=listOf(entry)));db.withTransaction{dao.put(StoredRecord("entry:${entry.id}","entry",json.encodeToString(entry)));changed()} }
@@ -90,8 +110,11 @@ class HealthRepository(context: Context, name: String = "healthchecker.db") {
             snapshot.medications.forEach{dao.put(StoredRecord("med:${it.id}","med",json.encodeToString(it)))}
             snapshot.medicationIntakes.forEach{dao.put(StoredRecord("medtake:${it.id}","medtake",json.encodeToString(it)))}
             snapshot.steps.forEach{dao.put(StoredRecord("steps:${it.date}","steps",json.encodeToString(it)))}
+            snapshot.weights.forEach{dao.put(StoredRecord("weight:${it.date}","weight",json.encodeToString(it)))}
             changed()
         }
+        val decoder=java.util.Base64.getDecoder()
+        images.replaceAll(snapshot.exerciseImages.mapValues{decoder.decode(it.value)})
     }
     fun observeDay(date:LocalDate):Flow<DayState> = snapshots.map{it.day(date.toString())}
     fun observeWeek(endDate:LocalDate):Flow<List<DayState>> = snapshots.map{it.week(endDate.toString())}

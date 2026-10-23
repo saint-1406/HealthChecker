@@ -9,8 +9,11 @@ import kotlin.random.Random
 @Serializable enum class Equipment { NONE, DUMBBELLS }
 @Serializable enum class ExerciseKind { STRENGTH, CARDIO, MOBILITY }
 @Serializable enum class ExerciseMeasure { REPS, SECONDS, MINUTES }
+/** Training direction for browsing; [ExerciseKind] still decides how the WHO weekly minutes are counted. */
+@Serializable enum class ExerciseCategory { WARMUP, STRENGTH, AEROBIC, ENDURANCE, HIIT, STRETCH, YOGA, BALANCE }
 /** Home exercise; [met] comes from the Compendium activity [metCode], so energy cost is an estimate for the class of activity. */
-@Serializable data class Exercise(val id:String,val name:String,val nameEn:String?=null,val cueEn:String?=null,val aliases:List<String> = emptyList(),val muscles:List<Muscle>,val equipment:Equipment,val kind:ExerciseKind,val level:Int,val met:Double,val metCode:String,val metSource:String="",val measure:ExerciseMeasure,val secondsPerRep:Double?=null,val cue:String="")
+@Serializable data class Exercise(val id:String,val name:String,val nameEn:String?=null,val cueEn:String?=null,val aliases:List<String> = emptyList(),val muscles:List<Muscle>,val equipment:Equipment,val kind:ExerciseKind,val level:Int,val met:Double,val metCode:String,val metSource:String="",val measure:ExerciseMeasure,val secondsPerRep:Double?=null,val cue:String="",
+    val category:ExerciseCategory=ExerciseCategory.STRENGTH,val videoNames:List<String> = emptyList(),val keywords:List<String> = emptyList())
 /** Snapshot of a performed exercise: later catalog or body-weight changes do not rewrite history. */
 @Serializable data class WorkoutEntry(
     val id:String,val exerciseId:String,val name:String,val kind:ExerciseKind,val muscles:List<Muscle>,
@@ -105,8 +108,8 @@ fun recommend(catalog:List<Exercise>,snapshot:UserSnapshot,date:String,prefs:Tra
     }
     val items=mutableListOf<RecommendedExercise>()
     fun add(e:Exercise?,role:Role){if(e!=null&&items.none{it.exercise.id==e.id})items+=RecommendedExercise(e,prescribe(e,level),role)}
-    val warmups=usable.filter{it.kind==ExerciseKind.MOBILITY&&it.measure==ExerciseMeasure.SECONDS&&it.id in WARMUP_IDS}
-    val stretches=usable.filter{it.kind==ExerciseKind.MOBILITY&&it.measure==ExerciseMeasure.SECONDS&&it.id !in WARMUP_IDS}
+    val warmups=usable.filter{it.kind==ExerciseKind.MOBILITY&&it.measure==ExerciseMeasure.SECONDS&&it.category==ExerciseCategory.WARMUP}
+    val stretches=usable.filter{it.kind==ExerciseKind.MOBILITY&&it.measure==ExerciseMeasure.SECONDS&&it.category==ExerciseCategory.STRETCH}
     val recovery=fresh.size<2
     add(pick(warmups),Role.WARMUP)
     if(recovery){
@@ -124,4 +127,3 @@ fun recommend(catalog:List<Exercise>,snapshot:UserSnapshot,date:String,prefs:Tra
     val focus=if(recovery)emptyList() else items.filter{it.role==Role.MAIN}.map{it.exercise.muscles.first()}
     return Recommendation(items,focus,recovery,weekly)
 }
-private val WARMUP_IDS=setOf("arm_circles","hip_circles","cat_cow","worlds_greatest")

@@ -102,7 +102,7 @@ import kotlinx.coroutines.delay
                         val old=snapshot.workouts.find{it.id==workoutId}
                         val exercise=vm.exercise(exerciseId)
                         val p=preset.split("|").takeIf{it.size==4}?.let{v->Prescription(v[0].toIntOrNull(),v[1].toIntOrNull(),v[2].toIntOrNull(),v[3].toDoubleOrNull())}
-                        if(exercise!=null)WorkoutEditor(vm,exercise,old,p,draftId,date,snapshot.profile?.currentWeight,{route="main"})else TextButton(onClick={route="main"}){Text(tr("Упражнение недоступно. Вернуться","The exercise is unavailable. Go back"))}
+                        if(exercise!=null)WorkoutEditor(vm,exercise,old,p,draftId,date,snapshot.bodyWeight(date),{route="main"})else TextButton(onClick={route="main"}){Text(tr("Упражнение недоступно. Вернуться","The exercise is unavailable. Go back"))}
                     }
                     "custom" -> CustomFoodEditor(vm,{route="search"})
                     "medication" -> MedicationEditor(vm,snapshot.medications.find{it.id==medicationId},date,{route="main"})
