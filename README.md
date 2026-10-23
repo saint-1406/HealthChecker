@@ -97,10 +97,10 @@ Open Food Facts при подготовке отвечал HTTP 503, поэто�
 python -m unittest discover -s tools/catalog
 python -m unittest discover -s tools/exercises
 .\gradlew.bat :app:connectedDebugAndroidTest
-.\scripts\build-apk.ps1 -VersionCode 5
+.\scripts\build-apk.ps1 -VersionCode 7
 ```
 
-Последняя команда проверяет unit-тесты, lint, подпись, applicationId и versionCode release-сборки, затем кладёт новый файл `dist/HealthChecker-update-v<номер>.apk` рядом с прежними (базовая версия и старые обновления не трогаются), дописывает его SHA-256 в `dist/SHA256SUMS.txt` и номер в `dist/HealthChecker.version`. Номер должен быть больше выданного (сейчас выдан **4**, следующий — 5), иначе Android не поставит обновление поверх; скрипт это проверяет. При ошибке предыдущий APK в `dist` не заменяется.
+Последняя команда проверяет unit-тесты, lint, подпись, applicationId и versionCode release-сборки, затем кладёт новый файл `dist/HealthChecker-update-v<номер>.apk` рядом с прежними (базовая версия и старые обновления не трогаются), дописывает его SHA-256 в `dist/SHA256SUMS.txt` и номер в `dist/HealthChecker.version`. Номер должен быть больше выданного (сейчас выдан **6**, следующий — 7), иначе Android не поставит обновление поверх; скрипт это проверяет. При ошибке предыдущий APK в `dist` не заменяется.
 
 Локальный постоянный ключ текущей установки находится в `.local/signing/healthchecker.jks`; пароль — в `.local/signing/password.txt`, конфигурация сборки — в `signing.properties`. Эти файлы исключены из Git. **Сохраните ключ и пароль отдельно:** без прежнего ключа обновить уже установленный APK нельзя. Не публикуйте их вместе с исходниками.
 
