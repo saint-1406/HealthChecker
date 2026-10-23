@@ -1,4 +1,6 @@
-param([ValidateRange(1,2147483647)][int]$VersionCode=1)
+﻿param([ValidateRange(1,2147483647)][int]$VersionCode=1,[switch]$Publish,[string]$Notes='')
+# -Publish also creates the GitHub release v<VersionCode> with the update APK; needs the GitHub CLI logged in (gh auth login)
+# and the commit to release already pushed to main.
 $ErrorActionPreference='Stop'
 $projectRoot=Split-Path $PSScriptRoot -Parent
 # Windows PowerShell turns any stderr line of a native tool (Gradle prints warnings there) into a terminating
@@ -33,11 +35,15 @@ try {
     $lines=@(if(Test-Path -LiteralPath $sums){Get-Content -LiteralPath $sums | Where-Object {$_ -and -not $_.EndsWith("  $name")}})+"$hash  $name"
     Set-Content -LiteralPath $sums -Value $lines
     Set-Content -LiteralPath $versionFile -Value $VersionCode
-    # releases/ is committed for download from GitHub: the base installer plus only the newest update.
-    New-Item -ItemType Directory -Force releases | Out-Null
-    Get-ChildItem -LiteralPath releases -Filter 'HealthChecker-update-v*.apk' | Where-Object {$_.Name -ne $name} | Remove-Item
-    Copy-Item -LiteralPath "dist/$name" -Destination "releases/$name" -Force
-    if(Test-Path -LiteralPath 'dist/HealthChecker-base-v3.apk'){Copy-Item -LiteralPath 'dist/HealthChecker-base-v3.apk' -Destination 'releases/HealthChecker-base-v3.apk' -Force}
-    Set-Content -LiteralPath releases/SHA256SUMS.txt -Value (Get-ChildItem -LiteralPath releases -Filter '*.apk' | Sort-Object Name | ForEach-Object {"$((Get-FileHash -LiteralPath $_.FullName -Algorithm SHA256).Hash)  $($_.Name)"})
-    Write-Output "Ready: $projectRoot\dist\$name (versionCode $VersionCode, SHA-256 $hash); releases/ refreshed for GitHub"
+    Set-Content -LiteralPath "dist/$name.sha256" -Value "$hash  $name"
+    # Updates are delivered as GitHub Releases; releases/ in the repository keeps only the base installer for new users.
+    if($Publish) {
+        $gh=(Get-Command gh -ErrorAction SilentlyContinue).Source
+        if(-not $gh){$gh=Join-Path $env:ProgramFiles 'GitHub CLI/gh.exe'}
+        if(-not (Test-Path -LiteralPath $gh)){throw 'GitHub CLI is required for -Publish: install it and run gh auth login.'}
+        if(-not $Notes){$Notes="Обновление HealthChecker v$VersionCode. Скачайте $name и откройте его поверх установленного приложения — дневник сохранится. SHA-256: $hash"}
+        Invoke-Native 'GitHub release failed' { & $gh release create "v$VersionCode" "dist/$name" "dist/$name.sha256" --repo saint-1406/HealthChecker --target main --title "HealthChecker v$VersionCode" --notes $Notes }
+        Write-Output "Published: https://github.com/saint-1406/HealthChecker/releases/tag/v$VersionCode"
+    }
+    Write-Output "Ready: $projectRoot\dist\$name (versionCode $VersionCode, SHA-256 $hash)"
 } finally {Pop-Location}
