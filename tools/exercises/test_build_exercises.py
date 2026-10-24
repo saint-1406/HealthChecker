@@ -22,6 +22,15 @@ class ExerciseCatalogTest(unittest.TestCase):
     def test_repetition_exercises_have_tempo(self):
         for i in self.items:self.assertEqual(i['measure']=='REPS',i['secondsPerRep'] is not None,i['id'])
 
+    def test_exercises_asked_for_after_v7_exist_with_their_titles(self):
+        by={i['id']:i for i in self.items}
+        titles={'oblique_crunch':'Oblique Crunch','inchworm':'Arm Walking','standing_cross_crunch':'Cross Knee to Elbow','cross_toe_touch':'Cross Toe Touches',
+                'front_toe_touch':'Front Toe Touch','squat_negative':'Negative Squat','prone_pullup':'Prone Pull-up','high_plank_toe_in_out':'High Plank Toe In & Out'}
+        for i,t in titles.items():self.assertIn(t,by[i]['videoNames'],i)
+        # Warm-ups are timed mobility moves, so the recommender can pick them for the start of a session.
+        for i in ('cross_toe_touch','front_toe_touch'):self.assertEqual(('WARMUP','MOBILITY','SECONDS'),(by[i]['category'],by[i]['kind'],by[i]['measure']),i)
+        self.assertEqual(202,len(self.items))
+
     def test_user_video_routine_is_findable_by_its_titles(self):
         titles=['OH Squat','High Plank SH Tap','Knee to Elbow Crunch','Jumping Jack','Split Squat','High Plank & Pike','Table Top Crunches',
                 'Jog on the Spot','Squat Knee to Elbow','Back Extension','Bridge Crunches','Heel Touch','Air Squat','Plank T Rotation',

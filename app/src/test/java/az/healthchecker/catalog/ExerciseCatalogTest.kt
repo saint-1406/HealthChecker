@@ -11,7 +11,7 @@ import org.robolectric.annotation.Config
 class ExerciseCatalogTest {
     private val catalog by lazy{ExerciseCatalog(ApplicationProvider.getApplicationContext<Context>())}
     @Test fun bundledHomeExercisesLoad() {
-        val all=catalog.exercises;assertEquals(195,all.size);assertEquals(all.size,all.map{it.id}.toSet().size)
+        val all=catalog.exercises;assertEquals(202,all.size);assertEquals(all.size,all.map{it.id}.toSet().size)
         assertTrue(all.all{it.met in 1.0..15.0&&it.metCode.length==5&&it.cue.isNotBlank()&&it.level in 1..3})
         assertEquals(37,all.count{it.equipment==Equipment.DUMBBELLS})
     }
@@ -26,6 +26,12 @@ class ExerciseCatalogTest {
             "T-Raise" to "prone_t_raise","Plank Pike" to "forearm_plank_pike","High Plank & Pike" to "plank_pike","Air Squat" to "squat","Jump Rope" to "skip_imitation",
             "wide squat" to "sumo_squat","mountain climber toe taps" to "climber_toe_tap").forEach{(q,id)->assertEquals(q,id,catalog.search(q,null,null,true).first().id)}
     }
+    @Test fun titlesTheUserAskedForAfterV7FindTheirExerciseFirst() {
+        // Spelled as the user wrote them, typo in "squad" included.
+        mapOf("oblique crunch" to "oblique_crunch","arm walking" to "inchworm","Table top crunch" to "tabletop_crunch","Cross knee to elbow" to "standing_cross_crunch",
+            "Cross toe touches" to "cross_toe_touch","Negative squad" to "squat_negative","prone pull-up" to "prone_pullup","high plank toe in out" to "high_plank_toe_in_out",
+            "Front toe touch" to "front_toe_touch","пресс с наклоном в разные стороны" to "oblique_crunch").forEach{(q,id)->assertEquals(q,id,catalog.search(q,null,null,true).first().id)}
+    }
     @Test fun keywordsMusclesAndDirectionsNarrowTheSearch() {
         assertTrue(catalog.search("приседания",null,null,false).take(3).all{it.name.startsWith("Присед")})
         assertTrue(catalog.search("пресс",null,null,false).isNotEmpty()&&catalog.search("пресс",null,null,false).all{Muscle.CORE in it.muscles})
@@ -33,7 +39,7 @@ class ExerciseCatalogTest {
         assertTrue(catalog.search("планка таз",null,null,false).map{it.id}.containsAll(listOf("plank_pike","forearm_plank_pike")))
         assertEquals("skip_imitation",catalog.search("скакалка",null,null,false).first().id)
         assertTrue(catalog.search("отжиманий",null,null,false).any{it.id=="pushup"})
-        assertEquals(17,catalog.search("",null,ExerciseCategory.WARMUP,false).size)
+        assertEquals(19,catalog.search("",null,ExerciseCategory.WARMUP,false).size)
     }
     @Test fun everyBeginnerHomePlanCanBeBuilt() {
         val plan=recommend(catalog.exercises,UserSnapshot(),"2026-10-19",TrainingPrefs(false,1))

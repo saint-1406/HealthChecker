@@ -79,6 +79,8 @@ def add(ids, frames, props=(), hold=False):
 
 # ---- Legs and glutes ---------------------------------------------------------------------------------------------
 add('squat bounce_squat db_squat', [STAND_FWD, SQUAT])
+# Two steps down and one up: the slow lowering is the point.
+add('squat_negative', [STAND_FWD, HALF_SQUAT, SQUAT])
 add('prisoner_squat', [STAND_HEAD, P(30, (330, 70), (330, 70), (95, 200), (95, 200))])
 add('sumo_squat db_sumo_squat', [P(0, (180, 180), (180, 180), (200, 180), (160, 180), front=True), P(0, (190, 170), (170, 190), (235, 170), (125, 190), front=True)])
 add('sit_to_stand', [P(15, (90, 90), (90, 90), (90, 180), (90, 180)), STAND_FWD], [box(-0.42, 0.06, 0.40)])
@@ -120,6 +122,8 @@ add('bear_crawl', [P(90, (165, 180), (195, 180), (150, 255), (175, 255)), P(90, 
 
 # ---- Back and posture --------------------------------------------------------------------------------------------
 add('superman back_extension', [PRONE, PRONE_UP])
+# Arms reach past the head, then the elbows pull down beside the ribs as in a pull-up.
+add('prone_pullup', [with_(PRONE_UP, an=(282, 282), af=(282, 282)), with_(PRONE_UP, an=(125, 300), af=(125, 300))])
 add('ytw_raise prone_t_raise', [with_(PRONE, an=(200, 200), af=(200, 200)), with_(PRONE_UP, an=(300, 300), af=(300, 300))])
 add('snow_angel', [with_(PRONE_UP, an=(95, 95), af=(95, 95)), with_(PRONE_UP, an=(190, 190), af=(190, 190)), with_(PRONE_UP, an=(285, 285), af=(285, 285))])
 add('swimmer', [with_(PRONE_UP, an=(300, 300), af=(250, 250), ln=(90, 90), lf=(75, 75)), with_(PRONE_UP, an=(250, 250), af=(300, 300), ln=(75, 75), lf=(90, 90))])
@@ -150,6 +154,9 @@ add('plank_pike', [PLANK, PIKE])
 add('forearm_plank_pike', [FOREARM_PLANK, P(125, (180, 90), (180, 90), (232, 232), (232, 232))])
 add('plank_t_rotation', [PLANK, P(70, (180, 180), (0, 0), (248, 248), (248, 248))])
 add('plank_toe_in_out', [FOREARM_PLANK, with_(FOREARM_PLANK, lf=(245, 245))])
+add('high_plank_toe_in_out', [PLANK, with_(PLANK, lf=(238, 238))])
+# Knees dropped to one side, so the thighs lie lower than in a plain crunch.
+add('oblique_crunch', [with_(CRUNCH_DOWN, ln=(70, 150), lf=(62, 142)), with_(CRUNCH_UP, t=308, ln=(70, 150), lf=(62, 142))])
 add('pilates_hundred', [P(300, (80, 80), (80, 80), (60, 60), (60, 60)), P(300, (95, 95), (95, 95), (60, 60), (60, 60))])
 add('pilates_roll_up', [P(270, (270, 270), (270, 270), (90, 90), (90, 90)), P(10, (60, 60), (60, 60), (90, 90), (90, 90)), P(60, (80, 80), (80, 80), (90, 90), (90, 90))])
 
@@ -174,6 +181,9 @@ add('burpee tabata', [STAND, SQUAT_HANDS_DOWN, PLANK, PUSH_DOWN, SQUAT_HANDS_DOW
 add('inchworm', [STAND, P(125), PIKE, PLANK])
 add('star_jump', [P(0, (200, 160), (160, 200), (215, 165), (145, 195), front=True), P(0, (320, 320), (40, 40), (210, 210), (150, 150), lift=0.25, front=True)])
 add('tuck_jump', [STAND, P(0, (120, 60), (120, 60), (40, 170), (40, 170), lift=0.3)])
+add('standing_cross_crunch', [STAND_HEAD, P(12, (300, 105), (300, 60), (35, 180), (180, 180)), STAND_HEAD, P(12, (300, 60), (300, 105), (180, 180), (35, 180))])
+# Leaning in, the opposite hand meets the toes of the leg swung up to hip height.
+add('front_toe_touch', [STAND, P(35, (200, 200), (115, 115), (80, 80), (180, 180)), STAND, P(35, (115, 115), (200, 200), (180, 180), (80, 80))])
 add('squat_knee_elbow', [STAND_HEAD, P(30, (330, 70), (330, 70), (95, 200), (95, 200)), P(25, (300, 100), (300, 60), (40, 180), (180, 180))])
 add('standing_heel_touch', [P(0, (215, 175), (180, 180), (185, 300), (180, 180), front=True), P(0, (180, 180), (145, 185), (180, 180), (175, 60), front=True)])
 add('step_touch grapevine v_step box_step dance_low zumba_video video_cardio', [P(0, (200, 120), (160, 240), (195, 195), (180, 180), front=True), P(0, (160, 60), (200, 300), (180, 180), (165, 165), front=True)])
@@ -201,6 +211,10 @@ add('single_leg_stand', [P(0, (90, 90), (270, 270), (180, 180), (95, 180))], hol
 add('neck_mobility neck_stretch', [P(0, h=335, front=True), P(0, h=25, front=True)])
 add('shoulder_rolls', [P(0, (172, 180), (172, 180)), P(0, (188, 180), (188, 180))])
 add('wrist_ankle_circles', [P(0, (90, 70), (90, 70), (180, 180), (180, 240)), P(0, (90, 110), (90, 110), (180, 180), (180, 210))])
+# Wide stance, arms out; folding down to one side, a hand reaches the opposite foot and the other points up.
+WIDE_ARMS_OUT = with_(F_WIDE, an=(270, 270), af=(90, 90))
+TOE_TOUCH = P(140, (175, 175), (330, 330), (205, 205), (155, 155), front=True)
+add('cross_toe_touch', [WIDE_ARMS_OUT, TOE_TOUCH, WIDE_ARMS_OUT, mirror(TOE_TOUCH)])
 add('torso_twist', [P(0, (230, 100), (150, 100), front=True), P(0, (210, 260), (130, 260), front=True)])
 add('standing_side_bend side_stretch', [P(15, (30, 60), (160, 170), (185, 185), (175, 175), front=True), P(345, (200, 190), (330, 300), (185, 185), (175, 175), front=True)])
 add('leg_swings', [P(0, ln=(125, 125)), P(0, ln=(230, 230))])
