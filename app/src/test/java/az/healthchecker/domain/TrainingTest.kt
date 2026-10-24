@@ -62,8 +62,14 @@ class TrainingTest {
     }
     @Test fun cardioOnlyWhileWeeklyTargetIsMissing() {
         val jog=catalog.single{it.id=="jog"}
-        val met=UserSnapshot(workouts=listOf(done(jog,"2026-10-19",160.0)))
+        val met=UserSnapshot(workouts=listOf(done(jog,"2026-10-18",160.0)))
         assertTrue(recommend(catalog,met,"2026-10-19",TrainingPrefs()).items.none{it.role==Role.CARDIO})
+    }
+    @Test fun loggingTodaysExercisesKeepsTodaysPlan() {
+        val plan=recommend(catalog,UserSnapshot(),"2026-10-19",TrainingPrefs())
+        val logged=UserSnapshot(workouts=plan.items.map{done(it.exercise,"2026-10-19",160.0)})
+        val again=recommend(catalog,logged,"2026-10-19",TrainingPrefs())
+        assertEquals(plan.items,again.items);assertTrue(again.weekly.aerobicMinutes>0)
     }
     @Test fun prescriptionGrowsWithLevel() {
         val squat=ex("squat",Muscle.LEGS)

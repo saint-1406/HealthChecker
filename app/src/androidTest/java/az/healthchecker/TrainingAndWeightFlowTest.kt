@@ -50,10 +50,37 @@ class TrainingAndWeightFlowTest {
         app.onNodeWithTag("stopwatchPause").performScrollTo().performClick()
         app.onNodeWithTag("stopwatchUse").performScrollTo().performClick()
         app.onNodeWithTag("minutes").performScrollTo().assert(hasText("0,1"))
-        // The same stopwatch is on the training tab after leaving the form.
-        app.onNodeWithContentDescription("Назад").performClick()
-        app.onNodeWithTag("trainingList").performScrollToNode(hasTestTag("stopwatchTime"))
+        // The same stopwatch is on the workout screen after leaving the form (the picture pushed the header up).
+        app.onNodeWithContentDescription("Назад").performScrollTo().performClick()
+        openWorkout()
         app.onNodeWithTag("stopwatchTime").assert(!hasText("0:00.0"))
+    }
+    private fun openWorkout() {
+        app.onNodeWithTag("trainingList").performScrollToNode(hasTestTag("startWorkout"))
+        app.onNodeWithTag("startWorkout").performClick()
+        app.onNodeWithTag("workoutProgress").assertExists()
+    }
+    @Test fun workoutScreenShowsMovementsLogsInOneTapAndTimesTheRest() {
+        skipOnboarding()
+        openTraining()
+        openWorkout()
+        app.onNodeWithTag("workoutProgress").assert(hasText("Выполнено 0 из",substring=true))
+        // Without the user's own pictures every card shows the app's motion scheme.
+        app.onAllNodesWithTag("exerciseFigure").onFirst().assert(hasContentDescription("Схема движения: ",substring=true))
+        app.onNodeWithTag("workoutNowList").performScrollToNode(hasTestTag("logPrescribed"))
+        app.onAllNodesWithTag("logPrescribed").onFirst().performClick()
+        app.waitUntil(10000){app.onAllNodesWithText("Выполнено 1 из",substring=true).fetchSemanticsNodes().isNotEmpty()}
+        app.onAllNodesWithText("Записано").onFirst().assertExists()
+        // The rest timer sits under the list and counts down on its own.
+        app.onNodeWithTag("rest30").performClick()
+        app.onNodeWithTag("countdownTime").assertExists()
+        Thread.sleep(1500)
+        app.onNodeWithTag("countdownPause").performClick()
+        app.onNodeWithTag("countdownTime").assert(hasText("0:2",substring=true))
+        app.onNodeWithTag("countdownClose").performClick()
+        app.onNodeWithTag("rest30").assertExists()
+        app.onNodeWithContentDescription("Назад").performClick()
+        waitText("Отмечено по выполненным упражнениям")
     }
     @Test fun morningWeightsShowTheDirection() {
         skipOnboarding()

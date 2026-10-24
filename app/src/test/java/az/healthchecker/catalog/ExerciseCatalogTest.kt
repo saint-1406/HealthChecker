@@ -41,4 +41,15 @@ class ExerciseCatalogTest {
         val strong=recommend(catalog.exercises,UserSnapshot(),"2026-10-19",TrainingPrefs(true,3))
         assertEquals(6,strong.items.count{it.role==Role.MAIN})
     }
+    @Test fun everyExerciseHasAGroundedMotionScheme() {
+        catalog.exercises.forEach{e->
+            val m=catalog.figure(e.id);assertNotNull(e.id,m)
+            assertTrue(e.id,m!!.frames.size in 1..6);assertEquals(e.id,m.frames.size==1,m.hold)
+            m.frames.forEach{f->
+                val points=groundedJoints(f).points
+                val bottom=maxOf(points.filterKeys{it!="head"}.values.maxOf{it.y},points.getValue("head").y+Body.HEAD)
+                assertEquals(e.id,-f.lift,bottom,1e-4f)
+            }
+        }
+    }
 }

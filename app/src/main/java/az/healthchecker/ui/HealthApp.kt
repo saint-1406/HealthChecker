@@ -53,17 +53,23 @@ import kotlinx.coroutines.delay
     var ingredientFood by rememberSaveable{mutableStateOf("")}
     var dishFromInventory by rememberSaveable{mutableStateOf(false)}
     var medicationId by rememberSaveable{mutableStateOf("")}
+    // Exercise search and the exercise form go back to where they were opened: the training tab or the workout screen.
+    var returnTo by rememberSaveable{mutableStateOf("main")}
+    var planVariant by rememberSaveable{mutableIntStateOf(0)}
+    var planDate by rememberSaveable{mutableStateOf("")}
+    val variant=if(planDate==date)planVariant else 0
     val folderPicker=rememberLauncherForActivityResult(ActivityResultContracts.OpenDocumentTree()){it?.let(vm::selectFolder)}
     val restorePicker=rememberLauncherForActivityResult(ActivityResultContracts.OpenDocument()){it?.let(vm::previewRestore)}
     LifecycleResumeEffect(Unit){val today=LocalDate.now().toString();date=advanceSelectedDate(date,lastToday,today);lastToday=today;onPauseOrDispose{}}
     fun edit(e:DiaryEntry){selectedEntry=e.id;selectedFood=e.foodId;templateEntry="";draftId=e.id;route="editor"}
     fun add(food:String,template:String=""){selectedFood=food;selectedEntry="";templateEntry=template;draftId=UUID.randomUUID().toString();route="editor"}
-    fun logExercise(e:Exercise,p:Prescription?){exerciseId=e.id;workoutId="";preset=p?.let{listOf(it.sets,it.reps,it.seconds,it.minutes).joinToString("|"){v->v?.toString()?:""}}?:"";draftId=UUID.randomUUID().toString();route="workout"}
-    fun editWorkout(w:WorkoutEntry){exerciseId=w.exerciseId;workoutId=w.id;preset="";draftId=w.id;route="workout"}
+    fun leaveFor(next:String){if(route=="main"||route=="workout-now")returnTo=route;route=next}
+    fun logExercise(e:Exercise,p:Prescription?){exerciseId=e.id;workoutId="";preset=p?.let{listOf(it.sets,it.reps,it.seconds,it.minutes).joinToString("|"){v->v?.toString()?:""}}?:"";draftId=UUID.randomUUID().toString();leaveFor("workout")}
+    fun editWorkout(w:WorkoutEntry){exerciseId=w.exerciseId;workoutId=w.id;preset="";draftId=w.id;leaveFor("workout")}
     fun openDish(existing:Food?,fromInventory:Boolean=false){if(existing!=null||vm.dish.value==null)vm.startDish(existing);dishFromInventory=fromInventory;route="dish"}
     fun editMedication(m:Medication?){medicationId=m?.id?:"";route="medication"}
     fun editIngredient(index:Int){ingredientIndex=index;ingredientFood=vm.dish.value?.ingredients?.getOrNull(index)?.foodId?:"";route="dish-ingredient"}
-    BackHandler(route!="main"){route=when(route){"custom"->"search";"dish"->if(dishFromInventory)"main" else "search";"dish-search","dish-ingredient"->"dish";else->"main"}}
+    BackHandler(route!="main"){route=when(route){"custom"->"search";"dish"->if(dishFromInventory)"main" else "search";"dish-search","dish-ingredient"->"dish";"workout","exercise-search"->returnTo;else->"main"}}
     LaunchedEffect(notice){if(notice!=null){delay(8000);vm.dismissNotice()}}
     HealthTheme(settings.theme) {
         Scaffold(containerColor=MaterialTheme.colorScheme.background,
@@ -97,12 +103,13 @@ import kotlinx.coroutines.delay
                         if(food!=null)PortionEditor(food,existing?.quantity,"ingredient:$ingredientIndex:${food.id}",tr("Ингредиент блюда","Dish ingredient"),if(existing==null)tr("Добавить в блюдо","Add to the dish") else tr("Сохранить ингредиент","Save ingredient"),busy,{route="dish"}){vm.putIngredient(existing?.let{ingredientIndex},food,it);route="dish"}
                         else TextButton(onClick={route="dish"}){Text(tr("Продукт недоступен. Вернуться","The food is unavailable. Go back"))}
                     }
-                    "exercise-search" -> ExerciseSearchScreen(vm,snapshot.trainingPrefs?.dumbbells==true,{route="main"}){logExercise(it,null)}
+                    "exercise-search" -> ExerciseSearchScreen(vm,snapshot.trainingPrefs?.dumbbells==true,{route=returnTo}){logExercise(it,null)}
+                    "workout-now" -> WorkoutNowScreen(vm,snapshot,date,rememberTodayPlan(vm,snapshot,date,variant),{route="main"},{planVariant=variant+1;planDate=date},::logExercise,::editWorkout){leaveFor("exercise-search")}
                     "workout" -> {
                         val old=snapshot.workouts.find{it.id==workoutId}
                         val exercise=vm.exercise(exerciseId)
                         val p=preset.split("|").takeIf{it.size==4}?.let{v->Prescription(v[0].toIntOrNull(),v[1].toIntOrNull(),v[2].toIntOrNull(),v[3].toDoubleOrNull())}
-                        if(exercise!=null)WorkoutEditor(vm,exercise,old,p,draftId,date,snapshot.bodyWeight(date),{route="main"})else TextButton(onClick={route="main"}){Text(tr("Упражнение недоступно. Вернуться","The exercise is unavailable. Go back"))}
+                        if(exercise!=null)WorkoutEditor(vm,exercise,old,p,draftId,date,snapshot.bodyWeight(date),{route=returnTo})else TextButton(onClick={route=returnTo}){Text(tr("Упражнение недоступно. Вернуться","The exercise is unavailable. Go back"))}
                     }
                     "custom" -> CustomFoodEditor(vm,{route="search"})
                     "medication" -> MedicationEditor(vm,snapshot.medications.find{it.id==medicationId},date,{route="main"})
@@ -117,7 +124,7 @@ import kotlinx.coroutines.delay
                     else -> when(tab) {
                         0 -> DashboardScreen(vm,snapshot,date,backupError,{tab=1;route="search"},{vm.water(date)},::edit,{tab=3},{tab=2},{route="steps"})
                         1 -> DiaryScreen(vm,snapshot,date,{route="search"},::edit,{e->add(e.foodId,e.id)},::editMedication)
-                        2 -> TrainingScreen(vm,snapshot,date,{route="exercise-search"},::logExercise,::editWorkout,{tab=3})
+                        2 -> TrainingScreen(vm,snapshot,date,rememberTodayPlan(vm,snapshot,date,variant),{leaveFor("exercise-search")},{route="workout-now"},::editWorkout,{tab=3})
                         else -> ProfileScreen(vm,false,{folderPicker.launch(null)},{restorePicker.launch(arrayOf("application/json","text/plain"))},date,{openDish(null,true)},{openDish(it,true)})
                     }
                 }

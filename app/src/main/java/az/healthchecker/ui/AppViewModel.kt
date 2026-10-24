@@ -8,6 +8,7 @@ import androidx.lifecycle.viewModelScope
 import az.healthchecker.backup.*
 import az.healthchecker.catalog.CatalogImporter
 import az.healthchecker.catalog.ExerciseCatalog
+import az.healthchecker.catalog.FigureMotion
 import az.healthchecker.data.*
 import az.healthchecker.steps.StepTracking
 import az.healthchecker.domain.*
@@ -37,6 +38,10 @@ class AppViewModel(application:Application):AndroidViewModel(application) {
     val imageVersions=MutableStateFlow<Map<String,Long>>(emptyMap())
     /** One stopwatch for the whole app: it keeps running while the user moves between the exercise list and a video. */
     val stopwatch=MutableStateFlow(Stopwatch())
+    /** Rest or hold timer of the workout screen: a short beep for each of the last three seconds, then a long one and vibration. */
+    val countdown=MutableStateFlow<Countdown?>(null)
+    private var countdownWatch:Job?=null
+    private val signal by lazy{TimerSignal(context)}
     val busy=MutableStateFlow(false)
     val backupBusy=MutableStateFlow(false)
     val backupError=MutableStateFlow<String?>(null)
@@ -121,12 +126,20 @@ class AppViewModel(application:Application):AndroidViewModel(application) {
     fun dismissNotice(){notice.value=null}
     fun completeDay(date:String,value:Boolean)=action { repository.completeDay(date,value) }
     fun exercise(id:String):Exercise? = exerciseCatalog?.byId(id)
+    fun figure(id:String):FigureMotion? = exerciseCatalog?.figure(id)
     suspend fun searchExercises(query:String,muscle:Muscle?,category:ExerciseCategory?,dumbbells:Boolean):List<Exercise> {
         val loaded=try{exerciseLoad.await()}catch(e:CancellationException){throw e}catch(e:Exception){null}
         return withContext(Dispatchers.Default){loaded?.search(query,muscle,category,dumbbells)?:emptyList()}
     }
     fun saveWorkout(id:String,exercise:Exercise,sets:Int?,reps:Int?,seconds:Int?,loadKg:Double?,minutes:Double,date:String,old:WorkoutEntry?,done:()->kotlin.Unit)=action(done) {
         repository.upsertWorkout(makeWorkout(id,exercise,sets,reps,seconds,loadKg,minutes,date,old,Instant.now(),ZoneId.systemDefault(),snapshot.value.bodyWeight(date)))
+    }
+    /** Logs a suggested exercise exactly as prescribed, straight from the workout screen; undo removes it again. */
+    fun logPrescribed(exercise:Exercise,p:Prescription,date:String)=action {
+        val minutes=p.minutesFor(exercise)?:error(tr("Укажите время упражнения","Enter the exercise time"))
+        val w=makeWorkout(UUID.randomUUID().toString(),exercise,p.sets,p.reps,p.seconds,null,minutes,date,null,Instant.now(),ZoneId.systemDefault(),snapshot.value.bodyWeight(date))
+        repository.upsertWorkout(w)
+        offerUndo(tr("Записано: ","Logged: ")+exercise.displayName){repository.deleteWorkout(w.id)}
     }
     fun imageFile(id:String):java.io.File = repository.imageFile(id)
     fun setExerciseImage(id:String,uri:Uri)=action {
@@ -142,6 +155,28 @@ class AppViewModel(application:Application):AndroidViewModel(application) {
     fun pauseStopwatch(){stopwatch.value=stopwatch.value.pause(clock())}
     fun resetStopwatch(){stopwatch.value=stopwatch.value.reset()}
     fun stopwatchMs():Long = stopwatch.value.elapsed(clock())
+    fun startCountdown(seconds:Int,label:String){countdown.value=Countdown.start(clock(),seconds*1000L,label);watchCountdown()}
+    fun pauseCountdown(){countdownWatch?.cancel();countdown.value=countdown.value?.pause(clock())}
+    fun resumeCountdown(){countdown.value=countdown.value?.resume(clock());watchCountdown()}
+    fun addCountdown(seconds:Int){countdown.value=countdown.value?.plus(clock(),seconds*1000L);watchCountdown()}
+    fun cancelCountdown(){countdownWatch?.cancel();countdown.value=null}
+    fun countdownMs():Long = countdown.value?.remaining(clock())?:0
+    // The signal comes from here rather than from the screen, so it sounds while the user is looking at another one.
+    private fun watchCountdown() {
+        countdownWatch?.cancel()
+        if(countdown.value?.running!=true)return
+        countdownWatch=viewModelScope.launch {
+            var ticked=minOf(4L,(countdownMs()+999)/1000+1)
+            while(true){
+                val c=countdown.value?:break
+                val left=c.remaining(clock())
+                if(left==0L){countdown.value=c.pause(clock());signal.done();break}
+                val s=(left+999)/1000
+                if(s<=3&&s<ticked){ticked=s;signal.tick()}
+                delay(minOf(left,50))
+            }
+        }
+    }
     fun saveWeight(date:String,kg:Double,done:()->kotlin.Unit)=action(done) { repository.saveWeight(makeWeight(date,kg,Instant.now(),ZoneId.systemDefault())) }
     fun deleteWeight(entry:WeightEntry)=action { repository.deleteWeight(entry.date);offerUndo(tr("Вес удалён","Weight deleted")){repository.saveWeight(entry)} }
     fun deleteWorkout(workout:WorkoutEntry)=action { repository.deleteWorkout(workout.id);offerUndo(tr("Упражнение удалено","Exercise deleted")){repository.upsertWorkout(workout)} }

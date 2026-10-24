@@ -5,6 +5,8 @@
     <uses-permission android:name="android.permission.FOREGROUND_SERVICE_HEALTH"/>
     <uses-permission android:name="android.permission.POST_NOTIFICATIONS"/>
     <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED"/>
+    <!-- Workout timers vibrate when the rest or hold time is over. -->
+    <uses-permission android:name="android.permission.VIBRATE"/>
     <uses-feature android:name="android.hardware.sensor.stepcounter" android:required="false"/>
     <application android:label="HealthChecker" android:icon="@drawable/ic_launcher" android:allowBackup="false" android:supportsRtl="true" android:theme="@style/Theme.HealthChecker">
         <activity android:name=".MainActivity" android:exported="true">

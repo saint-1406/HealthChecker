@@ -58,8 +58,11 @@ fun rankExercises(query:String,entries:List<ExerciseSearchEntry>):List<Exercise>
 class ExerciseCatalog(context:Context) {
     val exercises:List<Exercise> = context.assets.open("exercises/exercises.json").bufferedReader().use{Json.decodeFromString(it.readText())}
     private val ids=exercises.associateBy{it.id}
+    /** Original motion schemes drawn by the app (tools/exercises/figures.py), one per exercise. */
+    private val figures:Map<String,FigureMotion> = context.assets.open("exercises/figures.json").bufferedReader().use{Json.decodeFromString<List<FigureMotion>>(it.readText())}.associateBy{it.id}
     private val index=exercises.map(::ExerciseSearchEntry)
     fun byId(id:String):Exercise? = ids[id]
+    fun figure(id:String):FigureMotion? = figures[id]
     fun search(query:String,muscle:Muscle?,category:ExerciseCategory?,dumbbells:Boolean):List<Exercise> =
         rankExercises(query,index.filter{e->(muscle==null||muscle in e.exercise.muscles)&&(category==null||e.exercise.category==category)&&(dumbbells||e.exercise.equipment==Equipment.NONE)})
     companion object {

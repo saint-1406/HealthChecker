@@ -87,19 +87,22 @@ data class RecommendedExercise(val exercise:Exercise,val prescription:Prescripti
 data class Recommendation(val items:List<RecommendedExercise>,val focus:List<Muscle>,val recovery:Boolean,val weekly:WeeklyActivity)
 
 /**
- * Today's home session: muscle groups not trained today or yesterday, least recently trained first; a warm-up and a
- * stretch; cardio while the weekly aerobic target is not met. The same date and [variant] always give the same plan.
+ * Today's home session: muscle groups not trained yesterday, least recently trained first; a warm-up and a stretch;
+ * cardio while the weekly aerobic target is not met. It is built from the days before [date], so logging the suggested
+ * exercises during the workout does not reshuffle it; the same date and [variant] always give the same plan.
  */
 fun recommend(catalog:List<Exercise>,snapshot:UserSnapshot,date:String,prefs:TrainingPrefs,variant:Int=0):Recommendation {
     val day=LocalDate.parse(date);val level=prefs.level.coerceIn(1,3)
     val random=Random(day.toEpochDay()*7919+variant)
     val usable=catalog.filter{it.level<=level&&(it.equipment==Equipment.NONE||prefs.dumbbells)}
-    val strength=snapshot.workouts.filter{it.kind==ExerciseKind.STRENGTH&&it.localDate<=date}
+    val before=snapshot.copy(workouts=snapshot.workouts.filter{it.localDate<date})
+    val strength=before.workouts.filter{it.kind==ExerciseKind.STRENGTH}
     val last=Muscle.entries.associateWith{m->strength.filter{m in it.muscles}.maxOfOrNull{it.localDate}}
     val yesterday=day.minusDays(1).toString()
     val fresh=Muscle.entries.filter{m->last[m].let{it==null||it<yesterday}}.sortedBy{last[it]?:""}
-    val recent=snapshot.workouts.filter{it.localDate>=day.minusDays(6).toString()}.map{it.exerciseId}.toSet()
+    val recent=before.workouts.filter{it.localDate>=day.minusDays(6).toString()}.map{it.exerciseId}.toSet()
     val weekly=weeklyActivity(snapshot,date)
+    val aerobicBefore=weeklyActivity(before,date).aerobicMinutes
     fun pick(candidates:List<Exercise>):Exercise? {
         val varied=candidates.filter{it.id !in recent}.ifEmpty{candidates}
         // With dumbbells at hand, prefer loaded variants but keep body-weight ones in the mix.
@@ -121,7 +124,7 @@ fun recommend(catalog:List<Exercise>,snapshot:UserSnapshot,date:String,prefs:Tra
             if(items.count{it.role==Role.MAIN}>=3+level)break
             add(pick(usable.filter{e->e.kind==ExerciseKind.STRENGTH&&e.measure!=ExerciseMeasure.MINUTES&&e.muscles.first()==m&&items.none{it.exercise.id==e.id}}),Role.MAIN)
         }
-        if(weekly.aerobicMinutes<WHO_AEROBIC_MINUTES)add(pick(usable.filter{it.kind==ExerciseKind.CARDIO&&(level>1||it.met<6)}),Role.CARDIO)
+        if(aerobicBefore<WHO_AEROBIC_MINUTES)add(pick(usable.filter{it.kind==ExerciseKind.CARDIO&&(level>1||it.met<6)}),Role.CARDIO)
     }
     add(pick(stretches),Role.COOLDOWN)
     val focus=if(recovery)emptyList() else items.filter{it.role==Role.MAIN}.map{it.exercise.muscles.first()}

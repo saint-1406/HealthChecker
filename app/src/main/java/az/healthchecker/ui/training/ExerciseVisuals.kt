@@ -5,6 +5,7 @@ import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.PickVisualMediaRequest
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -53,9 +54,24 @@ private object ExerciseImageCache {
     return image
 }
 
-/** Small square picture for lists; nothing when the user has not added one. */
+/** Small square picture for lists: the user's own picture, otherwise a still of the app's motion scheme. */
 @Composable fun ExerciseThumb(vm:AppViewModel,id:String,size:Dp=52.dp) {
-    rememberExerciseImage(vm,id,size)?.let{Image(it,null,Modifier.size(size).clip(RoundedCornerShape(12.dp)),contentScale=ContentScale.Crop)}
+    val image=rememberExerciseImage(vm,id,size)
+    if(image!=null)Image(image,null,Modifier.size(size).clip(RoundedCornerShape(12.dp)),contentScale=ContentScale.Crop)
+    else vm.figure(id)?.let{m->ExerciseFigure(m,vm.exercise(id)?.equipment==Equipment.DUMBBELLS,null,Modifier.size(size).clip(RoundedCornerShape(12.dp)).background(MaterialTheme.colorScheme.surfaceContainerHighest).padding(3.dp),animate=false)}
+}
+
+/** Large picture of an exercise: the user's own picture (tap for full screen) or else the animated motion scheme. */
+@Composable fun ExerciseIllustration(vm:AppViewModel,exercise:Exercise,modifier:Modifier=Modifier,height:Dp=200.dp) {
+    val image=rememberExerciseImage(vm,exercise.id,360.dp)
+    var full by remember{mutableStateOf(false)}
+    if(image!=null){
+        Image(image,tr("Картинка к упражнению ","Picture for ")+exercise.displayName,modifier.fillMaxWidth().height(height).clip(RoundedCornerShape(18.dp)).clickable{full=true},contentScale=ContentScale.Crop)
+        if(full)Dialog(onDismissRequest={full=false}){Image(image,null,Modifier.fillMaxWidth().clip(RoundedCornerShape(18.dp)).clickable{full=false},contentScale=ContentScale.Fit)}
+    } else vm.figure(exercise.id)?.let{m->
+        ExerciseFigure(m,exercise.equipment==Equipment.DUMBBELLS,tr("Схема движения: ","Movement: ")+exercise.displayName,
+            modifier.fillMaxWidth().height(height).clip(RoundedCornerShape(18.dp)).background(MaterialTheme.colorScheme.surfaceContainerHighest).padding(12.dp).testTag("exerciseFigure"))
+    }
 }
 
 /** The user's own picture for an exercise: add from the gallery, view full screen, replace or remove. */
@@ -72,10 +88,14 @@ private object ExerciseImageCache {
             OutlinedButton(onClick=::pick,enabled=!busy){Icon(Icons.Outlined.AddPhotoAlternate,null);Spacer(Modifier.width(6.dp));Text(tr("Заменить","Replace"))}
             TextButton(onClick={vm.removeExerciseImage(exercise.id)},enabled=!busy){Icon(Icons.Outlined.DeleteOutline,null);Spacer(Modifier.width(6.dp));Text(tr("Убрать картинку","Remove picture"))}
         }
-    } else Surface(onClick=::pick,enabled=!busy,shape=RoundedCornerShape(18.dp),color=MaterialTheme.colorScheme.surfaceContainer,modifier=Modifier.fillMaxWidth().testTag("addExercisePicture")) {
-        Row(Modifier.padding(16.dp),verticalAlignment=Alignment.CenterVertically,horizontalArrangement=Arrangement.spacedBy(14.dp)){
-            Icon(Icons.Outlined.AddPhotoAlternate,null,Modifier.size(32.dp),tint=MaterialTheme.colorScheme.primary)
-            Column{Text(tr("Добавить картинку","Add a picture"),fontWeight=FontWeight.SemiBold);Text(tr("Скриншот из видео или фото, по которому легко вспомнить технику","A video screenshot or photo that reminds you of the technique"),style=MaterialTheme.typography.bodySmall,color=MaterialTheme.colorScheme.onSurfaceVariant)}
+    } else {
+        // Without the user's picture the app's own motion scheme shows the movement.
+        ExerciseIllustration(vm,exercise)
+        Surface(onClick=::pick,enabled=!busy,shape=RoundedCornerShape(18.dp),color=MaterialTheme.colorScheme.surfaceContainer,modifier=Modifier.fillMaxWidth().testTag("addExercisePicture")) {
+            Row(Modifier.padding(16.dp),verticalAlignment=Alignment.CenterVertically,horizontalArrangement=Arrangement.spacedBy(14.dp)){
+                Icon(Icons.Outlined.AddPhotoAlternate,null,Modifier.size(32.dp),tint=MaterialTheme.colorScheme.primary)
+                Column{Text(tr("Добавить свою картинку","Add your own picture"),fontWeight=FontWeight.SemiBold);Text(tr("Скриншот из видео или фото — заменит схему","A video screenshot or photo — replaces the scheme"),style=MaterialTheme.typography.bodySmall,color=MaterialTheme.colorScheme.onSurfaceVariant)}
+            }
         }
     }
     if(full&&image!=null)Dialog(onDismissRequest={full=false}){Image(image,null,Modifier.fillMaxWidth().clip(RoundedCornerShape(18.dp)).clickable{full=false},contentScale=ContentScale.Fit)}
@@ -85,22 +105,12 @@ private object ExerciseImageCache {
  * The app's stopwatch. It keeps the screen on while running, survives moving between screens, and [use] puts the
  * measured time into the exercise form.
  */
-@Composable fun StopwatchPanel(vm:AppViewModel,use:((Long)->Unit)?=null,useLabel:String="",compact:Boolean=false) {
+@Composable fun StopwatchPanel(vm:AppViewModel,use:((Long)->Unit)?=null,useLabel:String="") {
     val sw by vm.stopwatch.collectAsStateWithLifecycle()
     var now by remember{mutableLongStateOf(vm.stopwatchMs())}
     LaunchedEffect(sw){now=vm.stopwatchMs();while(sw.running){delay(100);now=vm.stopwatchMs()}}
     val view=LocalView.current
     DisposableEffect(sw.running){view.keepScreenOn=sw.running;onDispose{view.keepScreenOn=false}}
-    // One row on the training tab, so today's suggestions stay on the first screen.
-    if(compact)return Panel {
-        Row(verticalAlignment=Alignment.CenterVertically,horizontalArrangement=Arrangement.spacedBy(8.dp)){
-            Icon(Icons.Outlined.Timer,tr("Секундомер","Stopwatch"),tint=MaterialTheme.colorScheme.primary)
-            Text(formatStopwatch(now),style=MaterialTheme.typography.headlineSmall,fontWeight=FontWeight.SemiBold,modifier=Modifier.weight(1f).testTag("stopwatchTime"))
-            if(sw.running)FilledTonalIconButton(onClick=vm::pauseStopwatch,modifier=Modifier.testTag("stopwatchPause")){Icon(Icons.Outlined.Pause,tr("Пауза","Pause"))}
-            else FilledIconButton(onClick=vm::startStopwatch,modifier=Modifier.testTag("stopwatchStart")){Icon(Icons.Outlined.PlayArrow,if(now>0)tr("Продолжить","Resume") else tr("Старт","Start"))}
-            IconButton(onClick=vm::resetStopwatch,enabled=now>0&&!sw.running){Icon(Icons.Outlined.RestartAlt,tr("Сброс","Reset"))}
-        }
-    }
     Panel {
         Row(verticalAlignment=Alignment.CenterVertically,horizontalArrangement=Arrangement.spacedBy(8.dp)){
             Icon(Icons.Outlined.Timer,null,tint=MaterialTheme.colorScheme.primary);Text(tr("Секундомер","Stopwatch"),style=MaterialTheme.typography.titleMedium)

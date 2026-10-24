@@ -89,10 +89,13 @@ class DishAndTrainingFlowTest {
         app.onNodeWithTag("workoutKcal").performScrollTo().assertTextEquals("≈ 16 ккал")
         app.onNodeWithTag("saveWorkout").performScrollTo().performClick()
         waitText("Отмечено по выполненным упражнениям")
-        // Recommendations sit further down a lazy list: scroll there before the buttons exist.
-        app.onNodeWithTag("trainingList").performScrollToNode(hasText("Выполнено"))
-        app.onAllNodesWithText("Выполнено").onFirst().performClick()
-        app.onNodeWithTag("saveWorkout").performScrollTo().performClick()
+        // A suggested exercise is logged as prescribed in one tap on the workout screen.
+        app.onNodeWithTag("trainingList").performScrollToNode(hasTestTag("startWorkout"))
+        app.onNodeWithTag("startWorkout").performClick()
+        app.onNodeWithTag("workoutNowList").performScrollToNode(hasTestTag("logPrescribed"))
+        app.onAllNodesWithTag("logPrescribed").onFirst().performClick()
+        app.waitUntil(10000){app.onAllNodesWithText("Выполнено 1 из",substring=true).fetchSemanticsNodes().isNotEmpty()}
+        app.onNodeWithContentDescription("Назад").performClick()
         waitText("2 упражнения")
         app.onNodeWithText("Обзор").performClick()
         waitText("Тренировка была")
