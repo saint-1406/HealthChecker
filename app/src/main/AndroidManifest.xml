@@ -12,6 +12,10 @@
         <activity android:name=".MainActivity" android:exported="true">
             <intent-filter><action android:name="android.intent.action.MAIN"/><category android:name="android.intent.category.LAUNCHER"/></intent-filter>
         </activity>
+        <!-- Hands the camera app a file to write a "photo for later" into; no camera permission is needed. -->
+        <provider android:name="androidx.core.content.FileProvider" android:authorities="${applicationId}.photos" android:exported="false" android:grantUriPermissions="true">
+            <meta-data android:name="android.support.FILE_PROVIDER_PATHS" android:resource="@xml/photo_paths"/>
+        </provider>
         <service android:name=".steps.StepCounterService" android:exported="false" android:foregroundServiceType="health"/>
         <receiver android:name=".steps.StepBootReceiver" android:exported="false">
             <intent-filter>

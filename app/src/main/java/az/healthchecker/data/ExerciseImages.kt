@@ -28,21 +28,25 @@ class ExerciseImageStore(context:Context) {
 }
 
 const val EXERCISE_IMAGE_MAX_PX=1280
+/** Photos for later keep more detail, so the small print of a label stays readable when zoomed. */
+const val PHOTO_MAX_PX=2048
 
-/** Reads a picked photo, turns it upright by its EXIF tag and stores it as JPEG at most [EXERCISE_IMAGE_MAX_PX] on the long side. */
-fun encodeExerciseImage(context:Context,uri:Uri):ByteArray {
+fun encodeExerciseImage(context:Context,uri:Uri):ByteArray = encodeImage(context,uri,EXERCISE_IMAGE_MAX_PX,85)
+
+/** Reads a picked photo, turns it upright by its EXIF tag and stores it as JPEG at most [maxPx] on the long side. */
+fun encodeImage(context:Context,uri:Uri,maxPx:Int,quality:Int):ByteArray {
     val resolver=context.contentResolver
     val bounds=BitmapFactory.Options().apply{inJustDecodeBounds=true}
     resolver.openInputStream(uri)?.use{BitmapFactory.decodeStream(it,null,bounds)}
     require(bounds.outWidth>0&&bounds.outHeight>0){tr("Это не картинка или файл недоступен","This is not a picture or the file is unavailable")}
     var sample=1
-    while(maxOf(bounds.outWidth,bounds.outHeight)/(sample*2)>=EXERCISE_IMAGE_MAX_PX)sample*=2
+    while(maxOf(bounds.outWidth,bounds.outHeight)/(sample*2)>=maxPx)sample*=2
     val decoded=resolver.openInputStream(uri)?.use{BitmapFactory.decodeStream(it,null,BitmapFactory.Options().apply{inSampleSize=sample})}
         ?:throw IllegalArgumentException(tr("Не удалось прочитать картинку","Could not read the picture"))
     val rotation=runCatching{resolver.openInputStream(uri)?.use{ExifInterface(it).getAttributeInt(ExifInterface.TAG_ORIENTATION,ExifInterface.ORIENTATION_NORMAL)}}.getOrNull()
     val degrees=when(rotation){ExifInterface.ORIENTATION_ROTATE_90->90f;ExifInterface.ORIENTATION_ROTATE_180->180f;ExifInterface.ORIENTATION_ROTATE_270->270f;else->0f}
-    val scale=minOf(1f,EXERCISE_IMAGE_MAX_PX.toFloat()/maxOf(decoded.width,decoded.height))
+    val scale=minOf(1f,maxPx.toFloat()/maxOf(decoded.width,decoded.height))
     val matrix=Matrix().apply{postScale(scale,scale);postRotate(degrees)}
     val upright=if(scale<1f||degrees!=0f)Bitmap.createBitmap(decoded,0,0,decoded.width,decoded.height,matrix,true) else decoded
-    return ByteArrayOutputStream().use{out->upright.compress(Bitmap.CompressFormat.JPEG,85,out);out.toByteArray()}
+    return ByteArrayOutputStream().use{out->upright.compress(Bitmap.CompressFormat.JPEG,quality,out);out.toByteArray()}
 }

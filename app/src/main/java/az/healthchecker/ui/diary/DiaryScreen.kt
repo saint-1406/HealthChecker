@@ -19,11 +19,13 @@ import java.time.ZoneId
 import java.time.format.DateTimeFormatter
 
 @OptIn(ExperimentalLayoutApi::class)
-@Composable fun DiaryScreen(vm:AppViewModel,snapshot:UserSnapshot,date:String,add:()->Unit,edit:(DiaryEntry)->Unit,repeat:(DiaryEntry)->Unit,editMedication:(Medication?)->Unit) {
+@Composable fun DiaryScreen(vm:AppViewModel,snapshot:UserSnapshot,date:String,add:()->Unit,edit:(DiaryEntry)->Unit,repeat:(DiaryEntry)->Unit,editMedication:(Medication?)->Unit,openPhoto:(InboxPhoto)->Unit) {
     val day=snapshot.day(date)
+    val capture=rememberPhotoCapture(vm)
     val medications=snapshot.medicationDay(date)
     LazyColumn(Modifier.fillMaxSize().testTag("diaryList"),contentPadding=PaddingValues(20.dp),verticalArrangement=Arrangement.spacedBy(14.dp)) {
         item{Button(onClick=add,modifier=Modifier.fillMaxWidth().heightIn(min=54.dp)){Icon(Icons.Outlined.Add,tr("Добавить еду","Add food"));Spacer(Modifier.width(8.dp));Text(tr("Записать еду","Log food"))}}
+        item{PhotoInboxCard(vm,capture,openPhoto)}
         item{Row(Modifier.fillMaxWidth(),horizontalArrangement=Arrangement.SpaceBetween,verticalAlignment=Alignment.CenterVertically){Text(count(day.entries.size,"запись","записи","записей","entry","entries"),style=MaterialTheme.typography.titleMedium);TextButton(onClick={vm.water(date)}){Icon(Icons.Outlined.WaterDrop,null);Spacer(Modifier.width(4.dp));Text(tr("+250 мл воды","+250 ml water"))}}}
         if(day.entries.isEmpty())item{Panel{Icon(Icons.Outlined.Restaurant,null,Modifier.size(32.dp),tint=MaterialTheme.colorScheme.primary);SectionTitle(tr("Пока ничего не записано","Nothing logged yet"),tr("Добавьте то, что съели. Мы посчитаем остальное.","Add what you ate. We'll count the rest."))}}
         items(day.entries,key={it.id}) {entry->Panel {

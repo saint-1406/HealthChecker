@@ -24,12 +24,13 @@ import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import az.healthchecker.domain.*
 import az.healthchecker.ui.*
 import az.healthchecker.ui.steps.stepsEnergy
 import az.healthchecker.ui.steps.stepsText
 
-@Composable fun DashboardScreen(vm:AppViewModel,snapshot:UserSnapshot,date:String,backupError:String?,add:()->Unit,water:()->Unit,edit:(DiaryEntry)->Unit,openProfile:()->Unit,openTraining:()->Unit,openSteps:()->Unit,openProtein:()->Unit) {
+@Composable fun DashboardScreen(vm:AppViewModel,snapshot:UserSnapshot,date:String,backupError:String?,add:()->Unit,water:()->Unit,edit:(DiaryEntry)->Unit,openProfile:()->Unit,openTraining:()->Unit,openSteps:()->Unit,openProtein:()->Unit,openDiary:()->Unit) {
     val day=snapshot.day(date);val summary=day.summary;val goals=day.goals
     val green=Color(0xFF245C49);val mint=Color(0xFFCDF2CA)
     var details by rememberSaveable{mutableStateOf(false)}
@@ -54,6 +55,14 @@ import az.healthchecker.ui.steps.stepsText
         Row(horizontalArrangement=Arrangement.spacedBy(12.dp)) {
             MetricCard(tr("Белок","Protein"),summary.protein.value,goals?.protein,G,Icons.Outlined.EggAlt,summary.protein.complete,Modifier.weight(1f).testTag("proteinCard"),openProtein)
             MetricCard(tr("Вода","Water"),summary.waterMl,goals?.waterMl,ML,Icons.Outlined.WaterDrop,true,Modifier.weight(1f))
+        }
+        val photos by vm.photos.collectAsStateWithLifecycle()
+        if(photos.isNotEmpty())Panel(Modifier.clickable(onClick=openDiary).testTag("photosWaiting")){
+            Row(verticalAlignment=Alignment.CenterVertically,horizontalArrangement=Arrangement.spacedBy(12.dp)){
+                Icon(Icons.Outlined.PhotoCamera,null,tint=MaterialTheme.colorScheme.primary)
+                Column(Modifier.weight(1f)){Text(count(photos.size,"фото ждёт внесения","фото ждут внесения","фото ждут внесения","photo to log","photos to log"),style=MaterialTheme.typography.titleMedium);Text(tr("Откройте «Дневник» → «Фото на потом»","Open Diary → Photos for later"),style=MaterialTheme.typography.bodySmall,color=MaterialTheme.colorScheme.onSurfaceVariant)}
+                Icon(Icons.Outlined.ChevronRight,null)
+            }
         }
         WeightCard(vm,snapshot,date)
         val steps=snapshot.stepsOn(date)

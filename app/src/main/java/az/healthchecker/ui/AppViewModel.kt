@@ -36,6 +36,9 @@ class AppViewModel(application:Application):AndroidViewModel(application) {
     val notice=MutableStateFlow<Notice?>(null)
     /** Exercise id → picture file version, so cards know which exercises have a picture and reload a replaced one. */
     val imageVersions=MutableStateFlow<Map<String,Long>>(emptyMap())
+    /** Photos for later, newest first. */
+    val photos=MutableStateFlow<List<InboxPhoto>>(emptyList())
+    private val inbox=PhotoInbox(context)
     /** One stopwatch for the whole app: it keeps running while the user moves between the exercise list and a video. */
     val stopwatch=MutableStateFlow(Stopwatch())
     /** Rest or hold timer of the workout screen: a short beep for each of the last three seconds, then a long one and vibration. */
@@ -72,7 +75,7 @@ class AppViewModel(application:Application):AndroidViewModel(application) {
         override fun store(folder:String)=SafBackupStore(context,Uri.parse(folder))
     })
     init {
-        viewModelScope.launch(Dispatchers.IO){imageVersions.value=repository.imageVersions()}
+        viewModelScope.launch(Dispatchers.IO){imageVersions.value=repository.imageVersions();photos.value=inbox.list()}
         viewModelScope.launch(Dispatchers.IO) {
             try { snapshot.value=repository.exportSnapshot();ready.value=true }
             catch(e:Exception){error.value=tr("Не удалось открыть данные: ","Could not open your data: ")+e.message}
@@ -159,6 +162,26 @@ class AppViewModel(application:Application):AndroidViewModel(application) {
         val old=repository.imageFile(id).takeIf{it.isFile}?.readBytes()
         repository.deleteExerciseImage(id);imageVersions.value=repository.imageVersions()
         old?.let{bytes->offerUndo(tr("Картинка удалена","Picture removed")){repository.saveExerciseImage(id,bytes);imageVersions.value=repository.imageVersions()}}
+    }
+    fun photoFile(photo:InboxPhoto):java.io.File = inbox.file(photo)
+    /** The file the camera app writes the next shot into; it is the same path every time, so it survives the app being stopped meanwhile. */
+    fun cameraTarget():Uri {
+        val file=java.io.File(context.cacheDir,"camera/shot.jpg");file.parentFile?.mkdirs()
+        return androidx.core.content.FileProvider.getUriForFile(context,"${context.packageName}.photos",file)
+    }
+    /** Keeps a photo from the camera or the gallery for later; a camera shot's temporary file is removed afterwards. */
+    fun keepPhoto(uri:Uri,kind:PhotoKind)=action {
+        try{inbox.add(kind,System.currentTimeMillis(),encodeImage(context,uri,PHOTO_MAX_PX,88))}
+        finally{if(uri.authority=="${context.packageName}.photos")java.io.File(context.cacheDir,"camera/shot.jpg").delete()}
+        photos.value=inbox.list()
+        notice.value=Notice(tr("Фото сохранено. Внесите его, когда будет время: «Дневник» → «Фото на потом»","Photo kept. Log it when you have time: Diary → Photos for later"))
+    }
+    fun setPhotoKind(photo:InboxPhoto,kind:PhotoKind,done:(InboxPhoto)->kotlin.Unit)=action {
+        val moved=inbox.setKind(photo,kind);photos.value=inbox.list();withContext(Dispatchers.Main){done(moved)}
+    }
+    fun deletePhoto(photo:InboxPhoto,done:()->kotlin.Unit={})=action(done) {
+        val bytes=inbox.read(photo);inbox.delete(photo);photos.value=inbox.list()
+        bytes?.let{b->offerUndo(tr("Фото удалено","Photo deleted")){inbox.write(photo,b);photos.value=inbox.list()}}
     }
     private fun clock()=android.os.SystemClock.elapsedRealtime()
     fun startStopwatch(){stopwatch.value=stopwatch.value.start(clock())}

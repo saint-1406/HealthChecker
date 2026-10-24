@@ -1,6 +1,4 @@
 package az.healthchecker.ui.training
-import android.graphics.BitmapFactory
-import android.util.LruCache
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.PickVisualMediaRequest
 import androidx.activity.result.contract.ActivityResultContracts
@@ -17,9 +15,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.ImageBitmap
-import androidx.compose.ui.graphics.asImageBitmap
 import androidx.compose.ui.layout.ContentScale
-import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.platform.LocalView
 import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.text.font.FontWeight
@@ -29,29 +25,12 @@ import androidx.compose.ui.window.Dialog
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import az.healthchecker.domain.*
 import az.healthchecker.ui.*
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
-import kotlinx.coroutines.withContext
-import java.io.File
-
-/** Decoded pictures by file, version and size, so scrolling lists do not decode the same JPEG again. */
-private object ExerciseImageCache {
-    private val cache=LruCache<String,ImageBitmap>(32)
-    fun load(file:File,version:Long,maxPx:Int):ImageBitmap? {
-        val key="${file.path}:$version:$maxPx";cache.get(key)?.let{return it}
-        val bounds=BitmapFactory.Options().apply{inJustDecodeBounds=true};BitmapFactory.decodeFile(file.path,bounds)
-        if(bounds.outWidth<=0)return null
-        var sample=1;while(maxOf(bounds.outWidth,bounds.outHeight)/(sample*2)>=maxPx)sample*=2
-        return BitmapFactory.decodeFile(file.path,BitmapFactory.Options().apply{inSampleSize=sample})?.asImageBitmap()?.also{cache.put(key,it)}
-    }
-}
 
 @Composable private fun rememberExerciseImage(vm:AppViewModel,id:String,maxSize:Dp):ImageBitmap? {
     val versions by vm.imageVersions.collectAsStateWithLifecycle()
     val version=versions[id]?:return null
-    val px=with(LocalDensity.current){maxSize.roundToPx()}
-    val image by produceState<ImageBitmap?>(null,id,version,px){value=withContext(Dispatchers.IO){ExerciseImageCache.load(vm.imageFile(id),version,px)}}
-    return image
+    return rememberPicture(vm.imageFile(id),version,maxSize)
 }
 
 /** Small square picture for lists: the user's own picture, otherwise a still of the app's motion scheme. */

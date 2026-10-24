@@ -58,6 +58,8 @@ import kotlinx.coroutines.delay
     var returnTo by rememberSaveable{mutableStateOf("main")}
     // The food form returns to the protein screen when a food was picked there.
     var entryBack by rememberSaveable{mutableStateOf("main")}
+    var photoName by rememberSaveable{mutableStateOf("")}
+    val photos by vm.photos.collectAsStateWithLifecycle()
     var planVariant by rememberSaveable{mutableIntStateOf(0)}
     var planDate by rememberSaveable{mutableStateOf("")}
     val variant=if(planDate==date)planVariant else 0
@@ -117,6 +119,8 @@ import kotlinx.coroutines.delay
                     "custom" -> CustomFoodEditor(vm,{route="search"})
                     "medication" -> MedicationEditor(vm,snapshot.medications.find{it.id==medicationId},date,{route="main"})
                     "steps" -> StepsScreen(vm,snapshot,date,{route="main"})
+                    "photo" -> photos.find{it.fileName==photoName}?.let{p->PhotoEntryScreen(vm,snapshot,p,{route="main"}){moved->photoName=moved.fileName}}
+                        ?:TextButton(onClick={route="main"}){Text(tr("Фото недоступно. Вернуться","The photo is unavailable. Go back"))}
                     "protein" -> ProteinScreen(vm,snapshot,date,{route="main"}){add(it.id,from="protein")}
                     "editor" -> {
                         val old=snapshot.entries.find{it.id==selectedEntry}
@@ -126,8 +130,8 @@ import kotlinx.coroutines.delay
                         if(food!=null)EntryEditor(vm,food,old,template,draftId,date,{route=entryBack})else TextButton(onClick={route=entryBack}){Text(tr("Продукт недоступен. Вернуться","The food is unavailable. Go back"))}
                     }
                     else -> when(tab) {
-                        0 -> DashboardScreen(vm,snapshot,date,backupError,{tab=1;route="search"},{vm.water(date)},::edit,{tab=3},{tab=2},{route="steps"},{route="protein"})
-                        1 -> DiaryScreen(vm,snapshot,date,{route="search"},::edit,{e->add(e.foodId,e.id)},::editMedication)
+                        0 -> DashboardScreen(vm,snapshot,date,backupError,{tab=1;route="search"},{vm.water(date)},::edit,{tab=3},{tab=2},{route="steps"},{route="protein"},{tab=1})
+                        1 -> DiaryScreen(vm,snapshot,date,{route="search"},::edit,{e->add(e.foodId,e.id)},::editMedication){photoName=it.fileName;route="photo"}
                         2 -> TrainingScreen(vm,snapshot,date,rememberTodayPlan(vm,snapshot,date,variant),{leaveFor("exercise-search")},{route="workout-now"},::editWorkout,{tab=3})
                         else -> ProfileScreen(vm,false,{folderPicker.launch(null)},{restorePicker.launch(arrayOf("application/json","text/plain"))},date,{openDish(null,true)},{openDish(it,true)})
                     }
