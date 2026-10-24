@@ -29,7 +29,7 @@ import az.healthchecker.ui.*
 import az.healthchecker.ui.steps.stepsEnergy
 import az.healthchecker.ui.steps.stepsText
 
-@Composable fun DashboardScreen(vm:AppViewModel,snapshot:UserSnapshot,date:String,backupError:String?,add:()->Unit,water:()->Unit,edit:(DiaryEntry)->Unit,openProfile:()->Unit,openTraining:()->Unit,openSteps:()->Unit) {
+@Composable fun DashboardScreen(vm:AppViewModel,snapshot:UserSnapshot,date:String,backupError:String?,add:()->Unit,water:()->Unit,edit:(DiaryEntry)->Unit,openProfile:()->Unit,openTraining:()->Unit,openSteps:()->Unit,openProtein:()->Unit) {
     val day=snapshot.day(date);val summary=day.summary;val goals=day.goals
     val green=Color(0xFF245C49);val mint=Color(0xFFCDF2CA)
     var details by rememberSaveable{mutableStateOf(false)}
@@ -52,7 +52,7 @@ import az.healthchecker.ui.steps.stepsText
             }
         }
         Row(horizontalArrangement=Arrangement.spacedBy(12.dp)) {
-            MetricCard(tr("Белок","Protein"),summary.protein.value,goals?.protein,G,Icons.Outlined.EggAlt,summary.protein.complete,Modifier.weight(1f))
+            MetricCard(tr("Белок","Protein"),summary.protein.value,goals?.protein,G,Icons.Outlined.EggAlt,summary.protein.complete,Modifier.weight(1f).testTag("proteinCard"),openProtein)
             MetricCard(tr("Вода","Water"),summary.waterMl,goals?.waterMl,ML,Icons.Outlined.WaterDrop,true,Modifier.weight(1f))
         }
         WeightCard(vm,snapshot,date)
@@ -135,6 +135,6 @@ private fun total(t:NutrientTotal):String = "${number(t.value,1)}${if(!t.complet
 @Composable private fun Nutrient(title:String,t:NutrientTotal,modifier:Modifier) {
     Surface(modifier,shape=RoundedCornerShape(16.dp),color=MaterialTheme.colorScheme.surfaceContainer){Column(Modifier.padding(14.dp)){Text(title,color=MaterialTheme.colorScheme.onSurfaceVariant);Text(total(t),style=MaterialTheme.typography.titleLarge,fontWeight=FontWeight.SemiBold)}}
 }
-@Composable private fun MetricCard(title:String,value:Double,target:Double?,unit:String,icon:androidx.compose.ui.graphics.vector.ImageVector,complete:Boolean,modifier:Modifier) {
-    Panel(modifier){Icon(icon,null,tint=MaterialTheme.colorScheme.primary);Text(title,color=MaterialTheme.colorScheme.onSurfaceVariant);Text("${number(value)}${if(!complete)"+" else ""} $unit",style=MaterialTheme.typography.headlineSmall,fontWeight=FontWeight.SemiBold);Text(if(target==null)tr("Цель не задана","No goal set") else "${tr("из","of")} ${number(target)} $unit",style=MaterialTheme.typography.bodySmall,color=MaterialTheme.colorScheme.onSurfaceVariant)}
+@Composable private fun MetricCard(title:String,value:Double,target:Double?,unit:String,icon:androidx.compose.ui.graphics.vector.ImageVector,complete:Boolean,modifier:Modifier,open:(()->Unit)?=null) {
+    Panel(if(open!=null)modifier.clickable(onClick=open) else modifier){Row{Icon(icon,null,tint=MaterialTheme.colorScheme.primary);if(open!=null){Spacer(Modifier.weight(1f));Icon(Icons.Outlined.ChevronRight,tr("Подробнее","Details"),tint=MaterialTheme.colorScheme.onSurfaceVariant)}};Text(title,color=MaterialTheme.colorScheme.onSurfaceVariant);Text("${number(value)}${if(!complete)"+" else ""} $unit",style=MaterialTheme.typography.headlineSmall,fontWeight=FontWeight.SemiBold);Text(if(target==null)tr("Цель не задана","No goal set") else "${tr("из","of")} ${number(target)} $unit",style=MaterialTheme.typography.bodySmall,color=MaterialTheme.colorScheme.onSurfaceVariant)}
 }

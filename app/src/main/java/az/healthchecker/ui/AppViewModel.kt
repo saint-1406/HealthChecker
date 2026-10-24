@@ -97,6 +97,16 @@ class AppViewModel(application:Application):AndroidViewModel(application) {
         return withContext(Dispatchers.Default){loaded?.search(query,snapshot.value.customFoods)?:emptyList()}
     }
     fun food(id:String):Food? = snapshot.value.customFoods.find{it.id==id}?:catalog?.byId(id)
+    /** Foods for the protein list: the user's own and everyday catalog foods, or the whole catalog; a name narrows them. */
+    suspend fun findProteinFoods(query:String,grams:Double?,match:ProteinMatch,sort:ProteinSort,wholeCatalog:Boolean):List<Food> {
+        val loaded=try{catalogLoad.await()}catch(e:CancellationException){throw e}catch(e:Exception){null}
+        val custom=snapshot.value.customFoods;val own=custom.map{it.id}.toSet()
+        return withContext(Dispatchers.Default){
+            val pool=if(query.isBlank())custom+(loaded?.foods?.filter{wholeCatalog||it.common}?:emptyList())
+                else (loaded?.search(query,custom,1000)?:custom).filter{wholeCatalog||it.common||it.id in own}
+            proteinFoods(pool,grams,match,sort)
+        }
+    }
     fun foodFor(entry:DiaryEntry):Food {
         val catalogFood=catalog?.byId(entry.foodId)
         return Food(entry.foodId,entry.name,per100g=entry.nutrients.times(100/entry.grams),portions=entry.quantity.portionGrams?.let{listOf(Portion("Порция записи",it,"Logged portion"))}?:emptyList(),density=if(entry.quantity.unit==Measure.ML)entry.grams/entry.quantity.value else null,source="Сохранённая запись",isWater=entry.waterMl>0,

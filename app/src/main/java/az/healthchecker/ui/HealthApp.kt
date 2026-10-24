@@ -20,6 +20,7 @@ import az.healthchecker.domain.*
 import az.healthchecker.ui.theme.HealthTheme
 import az.healthchecker.ui.diary.*
 import az.healthchecker.ui.dashboard.DashboardScreen
+import az.healthchecker.ui.dashboard.ProteinScreen
 import az.healthchecker.ui.profile.ProfileScreen
 import az.healthchecker.ui.training.*
 import az.healthchecker.ui.steps.StepsScreen
@@ -55,21 +56,23 @@ import kotlinx.coroutines.delay
     var medicationId by rememberSaveable{mutableStateOf("")}
     // Exercise search and the exercise form go back to where they were opened: the training tab or the workout screen.
     var returnTo by rememberSaveable{mutableStateOf("main")}
+    // The food form returns to the protein screen when a food was picked there.
+    var entryBack by rememberSaveable{mutableStateOf("main")}
     var planVariant by rememberSaveable{mutableIntStateOf(0)}
     var planDate by rememberSaveable{mutableStateOf("")}
     val variant=if(planDate==date)planVariant else 0
     val folderPicker=rememberLauncherForActivityResult(ActivityResultContracts.OpenDocumentTree()){it?.let(vm::selectFolder)}
     val restorePicker=rememberLauncherForActivityResult(ActivityResultContracts.OpenDocument()){it?.let(vm::previewRestore)}
     LifecycleResumeEffect(Unit){val today=LocalDate.now().toString();date=advanceSelectedDate(date,lastToday,today);lastToday=today;onPauseOrDispose{}}
-    fun edit(e:DiaryEntry){selectedEntry=e.id;selectedFood=e.foodId;templateEntry="";draftId=e.id;route="editor"}
-    fun add(food:String,template:String=""){selectedFood=food;selectedEntry="";templateEntry=template;draftId=UUID.randomUUID().toString();route="editor"}
+    fun edit(e:DiaryEntry){selectedEntry=e.id;selectedFood=e.foodId;templateEntry="";draftId=e.id;entryBack="main";route="editor"}
+    fun add(food:String,template:String="",from:String="main"){selectedFood=food;selectedEntry="";templateEntry=template;draftId=UUID.randomUUID().toString();entryBack=from;route="editor"}
     fun leaveFor(next:String){if(route=="main"||route=="workout-now")returnTo=route;route=next}
     fun logExercise(e:Exercise,p:Prescription?){exerciseId=e.id;workoutId="";preset=p?.let{listOf(it.sets,it.reps,it.seconds,it.minutes).joinToString("|"){v->v?.toString()?:""}}?:"";draftId=UUID.randomUUID().toString();leaveFor("workout")}
     fun editWorkout(w:WorkoutEntry){exerciseId=w.exerciseId;workoutId=w.id;preset="";draftId=w.id;leaveFor("workout")}
     fun openDish(existing:Food?,fromInventory:Boolean=false){if(existing!=null||vm.dish.value==null)vm.startDish(existing);dishFromInventory=fromInventory;route="dish"}
     fun editMedication(m:Medication?){medicationId=m?.id?:"";route="medication"}
     fun editIngredient(index:Int){ingredientIndex=index;ingredientFood=vm.dish.value?.ingredients?.getOrNull(index)?.foodId?:"";route="dish-ingredient"}
-    BackHandler(route!="main"){route=when(route){"custom"->"search";"dish"->if(dishFromInventory)"main" else "search";"dish-search","dish-ingredient"->"dish";"workout","exercise-search"->returnTo;else->"main"}}
+    BackHandler(route!="main"){route=when(route){"custom"->"search";"dish"->if(dishFromInventory)"main" else "search";"dish-search","dish-ingredient"->"dish";"workout","exercise-search"->returnTo;"editor"->entryBack;else->"main"}}
     LaunchedEffect(notice){if(notice!=null){delay(8000);vm.dismissNotice()}}
     HealthTheme(settings.theme) {
         Scaffold(containerColor=MaterialTheme.colorScheme.background,
@@ -114,15 +117,16 @@ import kotlinx.coroutines.delay
                     "custom" -> CustomFoodEditor(vm,{route="search"})
                     "medication" -> MedicationEditor(vm,snapshot.medications.find{it.id==medicationId},date,{route="main"})
                     "steps" -> StepsScreen(vm,snapshot,date,{route="main"})
+                    "protein" -> ProteinScreen(vm,snapshot,date,{route="main"}){add(it.id,from="protein")}
                     "editor" -> {
                         val old=snapshot.entries.find{it.id==selectedEntry}
                         val template=if(old==null)snapshot.entries.find{it.id==templateEntry}else null
                         // A repeated entry stays usable even when its catalog product is no longer available.
                         val food=if(old!=null)vm.foodFor(old)else vm.food(selectedFood)?:template?.let(vm::foodFor)
-                        if(food!=null)EntryEditor(vm,food,old,template,draftId,date,{route="main"})else TextButton(onClick={route="main"}){Text(tr("Продукт недоступен. Вернуться","The food is unavailable. Go back"))}
+                        if(food!=null)EntryEditor(vm,food,old,template,draftId,date,{route=entryBack})else TextButton(onClick={route=entryBack}){Text(tr("Продукт недоступен. Вернуться","The food is unavailable. Go back"))}
                     }
                     else -> when(tab) {
-                        0 -> DashboardScreen(vm,snapshot,date,backupError,{tab=1;route="search"},{vm.water(date)},::edit,{tab=3},{tab=2},{route="steps"})
+                        0 -> DashboardScreen(vm,snapshot,date,backupError,{tab=1;route="search"},{vm.water(date)},::edit,{tab=3},{tab=2},{route="steps"},{route="protein"})
                         1 -> DiaryScreen(vm,snapshot,date,{route="search"},::edit,{e->add(e.foodId,e.id)},::editMedication)
                         2 -> TrainingScreen(vm,snapshot,date,rememberTodayPlan(vm,snapshot,date,variant),{leaveFor("exercise-search")},{route="workout-now"},::editWorkout,{tab=3})
                         else -> ProfileScreen(vm,false,{folderPicker.launch(null)},{restorePicker.launch(arrayOf("application/json","text/plain"))},date,{openDish(null,true)},{openDish(it,true)})
