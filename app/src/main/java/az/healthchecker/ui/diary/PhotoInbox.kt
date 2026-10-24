@@ -63,7 +63,21 @@ class PhotoCapture(val shoot:(PhotoKind)->Unit,val pick:()->Unit)
         pick={gallery.launch(PickVisualMediaRequest(ActivityResultContracts.PickVisualMedia.ImageOnly))})}
 }
 
-/** Diary card: take a photo of a meal, a label or a vitamin now, and log it from the photo later. */
+/** Camera button beside "Log food": photograph food or a medicine for later, or take a picture from the gallery. */
+@Composable fun PhotoMenuButton(capture:PhotoCapture) {
+    var open by remember{mutableStateOf(false)}
+    Box {
+        FilledTonalIconButton(onClick={open=true},modifier=Modifier.size(54.dp).testTag("photoMenu")){Icon(Icons.Outlined.PhotoCamera,tr("Фото на потом","Photo for later"))}
+        DropdownMenu(open,{open=false}) {
+            Text(tr("Фото на потом — внести позже","Photo for later — log it later"),style=MaterialTheme.typography.labelMedium,color=MaterialTheme.colorScheme.onSurfaceVariant,modifier=Modifier.padding(horizontal=16.dp,vertical=6.dp))
+            DropdownMenuItem(text={Text(tr("Сфотографировать еду","Photograph food"))},leadingIcon={Icon(Icons.Outlined.Restaurant,null)},onClick={open=false;capture.shoot(PhotoKind.FOOD)},modifier=Modifier.testTag("shootFood"))
+            DropdownMenuItem(text={Text(tr("Сфотографировать лекарство","Photograph a medicine"))},leadingIcon={Icon(Icons.Outlined.Medication,null)},onClick={open=false;capture.shoot(PhotoKind.MEDICINE)},modifier=Modifier.testTag("shootMedicine"))
+            DropdownMenuItem(text={Text(tr("Добавить из галереи","Add from the gallery"))},leadingIcon={Icon(Icons.Outlined.AddPhotoAlternate,null)},onClick={open=false;capture.pick()},modifier=Modifier.testTag("photoFromGallery"))
+        }
+    }
+}
+
+/** Diary card while photos wait: their thumbnails, newest first, and buttons for more. */
 @OptIn(ExperimentalLayoutApi::class)
 @Composable fun PhotoInboxCard(vm:AppViewModel,capture:PhotoCapture,open:(InboxPhoto)->Unit) {
     val photos by vm.photos.collectAsStateWithLifecycle()
@@ -72,15 +86,14 @@ class PhotoCapture(val shoot:(PhotoKind)->Unit,val pick:()->Unit)
             Icon(Icons.Outlined.PhotoCamera,null,tint=MaterialTheme.colorScheme.primary);Spacer(Modifier.width(10.dp))
             Column(Modifier.weight(1f)){
                 Text(tr("Фото на потом","Photos for later"),style=MaterialTheme.typography.titleMedium)
-                Text(if(photos.isEmpty())tr("Сфотографируйте еду, этикетку или витамины сейчас — внесите позже","Photograph a meal, a label or vitamins now — log them later")
-                    else tr("Нажмите на фото, чтобы внести его · ","Tap a photo to log it · ")+photos.size,style=MaterialTheme.typography.bodySmall,color=MaterialTheme.colorScheme.onSurfaceVariant)
+                Text(tr("Нажмите на фото, чтобы внести его · ","Tap a photo to log it · ")+photos.size,style=MaterialTheme.typography.bodySmall,color=MaterialTheme.colorScheme.onSurfaceVariant)
             }
         }
         if(photos.isNotEmpty())LazyRow(horizontalArrangement=Arrangement.spacedBy(8.dp)){items(photos,key={it.fileName}){p->InboxThumb(vm,p){open(p)}}}
         FlowRow(horizontalArrangement=Arrangement.spacedBy(8.dp)){
-            FilledTonalButton(onClick={capture.shoot(PhotoKind.FOOD)},modifier=Modifier.testTag("shootFood")){Icon(Icons.Outlined.PhotoCamera,null);Spacer(Modifier.width(6.dp));Text(tr("Еда","Food"))}
-            FilledTonalButton(onClick={capture.shoot(PhotoKind.MEDICINE)},modifier=Modifier.testTag("shootMedicine")){Icon(Icons.Outlined.Medication,null);Spacer(Modifier.width(6.dp));Text(tr("Лекарство","Medicine"))}
-            OutlinedButton(onClick=capture.pick,modifier=Modifier.testTag("photoFromGallery")){Icon(Icons.Outlined.AddPhotoAlternate,null);Spacer(Modifier.width(6.dp));Text(tr("Из галереи","From gallery"))}
+            FilledTonalButton(onClick={capture.shoot(PhotoKind.FOOD)}){Icon(Icons.Outlined.PhotoCamera,null);Spacer(Modifier.width(6.dp));Text(tr("Еда","Food"))}
+            FilledTonalButton(onClick={capture.shoot(PhotoKind.MEDICINE)}){Icon(Icons.Outlined.Medication,null);Spacer(Modifier.width(6.dp));Text(tr("Лекарство","Medicine"))}
+            OutlinedButton(onClick=capture.pick){Icon(Icons.Outlined.AddPhotoAlternate,null);Spacer(Modifier.width(6.dp));Text(tr("Из галереи","From gallery"))}
         }
     }
 }

@@ -20,7 +20,7 @@ import java.time.*
 import java.time.format.DateTimeFormatter
 
 @OptIn(ExperimentalLayoutApi::class)
-@Composable fun ProfileScreen(vm:AppViewModel,onboarding:Boolean,folder:()->Unit,restore:()->Unit,date:String="",createDish:()->Unit={},editDish:(Food)->Unit={}) {
+@Composable fun ProfileScreen(vm:AppViewModel,onboarding:Boolean,folder:()->Unit,restore:()->Unit,date:String="",createDish:()->Unit={},editDish:(Food)->Unit={},openAppearance:()->Unit={}) {
     val snapshot by vm.snapshot.collectAsStateWithLifecycle();val settings by vm.settings.collectAsStateWithLifecycle();val revision by vm.revision.collectAsStateWithLifecycle();val backupBusy by vm.backupBusy.collectAsStateWithLifecycle();val busy by vm.busy.collectAsStateWithLifecycle();val catalogSize by vm.catalogCount.collectAsStateWithLifecycle();val backupError by vm.backupError.collectAsStateWithLifecycle()
     val profile=snapshot.profile;val goals=snapshot.day(LocalDate.now().toString()).goals
     var sex by rememberSaveable(profile){mutableStateOf(profile?.sex?:"male")};var age by rememberSaveable(profile){mutableStateOf(profile?.age?.toString()?:"")};var height by rememberSaveable(profile){mutableStateOf(profile?.heightCm?.let(::plain)?:"")};var weight by rememberSaveable(profile){mutableStateOf(profile?.currentWeight?.let(::plain)?:"")};var activity by rememberSaveable(profile){mutableDoubleStateOf(profile?.activity?:1.2)}
@@ -65,8 +65,8 @@ import java.time.format.DateTimeFormatter
                 TextButton(onClick=restore,modifier=Modifier.fillMaxWidth()){Text(tr("Восстановить из файла","Restore from file"))}
             }
             Panel{
-                SectionTitle(tr("Оформление и язык","Appearance and language"))
-                FlowRow(horizontalArrangement=Arrangement.spacedBy(8.dp)){listOf("system" to tr("Системное","System"),"light" to tr("Светлое","Light"),"dark" to tr("Тёмное","Dark")).forEach{(value,label)->FilterChip(selected=settings.theme==value,onClick={vm.theme(value)},label={Text(label)})}}
+                SectionTitle(tr("Оформление и язык","Appearance and language"),tr("Тема: ","Theme: ")+paletteName(settings.appearance.effectivePalette(LocalDate.now()))+" · "+when(settings.theme){"light"->tr("светлая","light");"dark"->tr("тёмная","dark");else->tr("как в системе","as the system")}+(if(settings.appearance.hasBackground)tr(" · свой фон"," · own background") else ""))
+                Button(onClick=openAppearance,modifier=Modifier.fillMaxWidth().testTag("openAppearance")){Icon(Icons.Outlined.Palette,null);Spacer(Modifier.width(8.dp));Text(tr("Темы, цвета и фон","Themes, colours and background"))}
                 Text(tr("Язык приложения","App language"),style=MaterialTheme.typography.titleSmall)
                 LanguageChips()
             }

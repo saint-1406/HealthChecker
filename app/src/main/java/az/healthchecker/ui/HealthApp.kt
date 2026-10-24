@@ -17,10 +17,13 @@ import androidx.lifecycle.compose.LifecycleResumeEffect
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.viewmodel.compose.viewModel
 import az.healthchecker.domain.*
+import az.healthchecker.ui.theme.AppBackdrop
 import az.healthchecker.ui.theme.HealthTheme
+import androidx.compose.ui.graphics.Color
 import az.healthchecker.ui.diary.*
 import az.healthchecker.ui.dashboard.DashboardScreen
 import az.healthchecker.ui.dashboard.ProteinScreen
+import az.healthchecker.ui.profile.AppearanceScreen
 import az.healthchecker.ui.profile.ProfileScreen
 import az.healthchecker.ui.training.*
 import az.healthchecker.ui.steps.StepsScreen
@@ -76,8 +79,14 @@ import kotlinx.coroutines.delay
     fun editIngredient(index:Int){ingredientIndex=index;ingredientFood=vm.dish.value?.ingredients?.getOrNull(index)?.foodId?:"";route="dish-ingredient"}
     BackHandler(route!="main"){route=when(route){"custom"->"search";"dish"->if(dishFromInventory)"main" else "search";"dish-search","dish-ingredient"->"dish";"workout","exercise-search"->returnTo;"editor"->entryBack;else->"main"}}
     LaunchedEffect(notice){if(notice!=null){delay(8000);vm.dismissNotice()}}
-    HealthTheme(settings.theme) {
-        Scaffold(containerColor=MaterialTheme.colorScheme.background,
+    val today=remember(lastToday){LocalDate.now()}
+    val appearance=settings.appearance
+    HealthTheme(appearance,today) {
+        // The backdrop paints the background (colour, own picture, holiday decorations); the screens lie on top of it.
+        val picture=if(appearance.hasBackground)rememberPicture(vm.backgroundFile(),appearance.background,1200.dp) else null
+        AppBackdrop(picture,appearance.dim,appearance.decorationSeason(today),appearance.decorations)
+        // A transparent container gives no content colour of its own, so text would fall back to black: name it.
+        Scaffold(containerColor=Color.Transparent,contentColor=MaterialTheme.colorScheme.onBackground,
             bottomBar={if(ready && snapshot.onboarded && route=="main")NavigationBar(containerColor=MaterialTheme.colorScheme.surface){
                 listOf(tr("Обзор","Overview") to Icons.Outlined.SpaceDashboard,tr("Дневник","Diary") to Icons.AutoMirrored.Outlined.MenuBook,tr("Тренировки","Training") to Icons.Outlined.FitnessCenter,tr("Профиль","Profile") to Icons.Outlined.PersonOutline).forEachIndexed{i,(label,icon)->NavigationBarItem(selected=tab==i,onClick={tab=i},icon={Icon(icon,label)},label={Text(label)})}
             }},
@@ -121,6 +130,7 @@ import kotlinx.coroutines.delay
                     "steps" -> StepsScreen(vm,snapshot,date,{route="main"})
                     "photo" -> photos.find{it.fileName==photoName}?.let{p->PhotoEntryScreen(vm,snapshot,p,{route="main"}){moved->photoName=moved.fileName}}
                         ?:TextButton(onClick={route="main"}){Text(tr("Фото недоступно. Вернуться","The photo is unavailable. Go back"))}
+                    "appearance" -> AppearanceScreen(vm){route="main"}
                     "protein" -> ProteinScreen(vm,snapshot,date,{route="main"}){add(it.id,from="protein")}
                     "editor" -> {
                         val old=snapshot.entries.find{it.id==selectedEntry}
@@ -133,7 +143,7 @@ import kotlinx.coroutines.delay
                         0 -> DashboardScreen(vm,snapshot,date,backupError,{tab=1;route="search"},{vm.water(date)},::edit,{tab=3},{tab=2},{route="steps"},{route="protein"},{tab=1})
                         1 -> DiaryScreen(vm,snapshot,date,{route="search"},::edit,{e->add(e.foodId,e.id)},::editMedication){photoName=it.fileName;route="photo"}
                         2 -> TrainingScreen(vm,snapshot,date,rememberTodayPlan(vm,snapshot,date,variant),{leaveFor("exercise-search")},{route="workout-now"},::editWorkout,{tab=3})
-                        else -> ProfileScreen(vm,false,{folderPicker.launch(null)},{restorePicker.launch(arrayOf("application/json","text/plain"))},date,{openDish(null,true)},{openDish(it,true)})
+                        else -> ProfileScreen(vm,false,{folderPicker.launch(null)},{restorePicker.launch(arrayOf("application/json","text/plain"))},date,{openDish(null,true)},{openDish(it,true)}){route="appearance"}
                     }
                 }
                 if(busy)LinearProgressIndicator(Modifier.fillMaxWidth().align(Alignment.TopCenter))

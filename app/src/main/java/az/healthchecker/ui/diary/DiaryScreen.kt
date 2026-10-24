@@ -7,6 +7,8 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.*
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.testTag
@@ -22,20 +24,28 @@ import java.time.format.DateTimeFormatter
 @Composable fun DiaryScreen(vm:AppViewModel,snapshot:UserSnapshot,date:String,add:()->Unit,edit:(DiaryEntry)->Unit,repeat:(DiaryEntry)->Unit,editMedication:(Medication?)->Unit,openPhoto:(InboxPhoto)->Unit) {
     val day=snapshot.day(date)
     val capture=rememberPhotoCapture(vm)
+    val photos by vm.photos.collectAsStateWithLifecycle()
     val medications=snapshot.medicationDay(date)
     LazyColumn(Modifier.fillMaxSize().testTag("diaryList"),contentPadding=PaddingValues(20.dp),verticalArrangement=Arrangement.spacedBy(14.dp)) {
-        item{Button(onClick=add,modifier=Modifier.fillMaxWidth().heightIn(min=54.dp)){Icon(Icons.Outlined.Add,tr("Добавить еду","Add food"));Spacer(Modifier.width(8.dp));Text(tr("Записать еду","Log food"))}}
-        item{PhotoInboxCard(vm,capture,openPhoto)}
+        item{DaySummaryCard(day)}
+        // The camera button sits next to "Log food"; the photo card appears only while photos wait, so entries stay near the top.
+        item{Row(verticalAlignment=Alignment.CenterVertically,horizontalArrangement=Arrangement.spacedBy(10.dp)){
+            Button(onClick=add,modifier=Modifier.weight(1f).heightIn(min=54.dp)){Icon(Icons.Outlined.Add,tr("Добавить еду","Add food"));Spacer(Modifier.width(8.dp));Text(tr("Записать еду","Log food"))}
+            PhotoMenuButton(capture)
+        }}
+        if(photos.isNotEmpty())item{PhotoInboxCard(vm,capture,openPhoto)}
         item{Row(Modifier.fillMaxWidth(),horizontalArrangement=Arrangement.SpaceBetween,verticalAlignment=Alignment.CenterVertically){Text(count(day.entries.size,"запись","записи","записей","entry","entries"),style=MaterialTheme.typography.titleMedium);TextButton(onClick={vm.water(date)}){Icon(Icons.Outlined.WaterDrop,null);Spacer(Modifier.width(4.dp));Text(tr("+250 мл воды","+250 ml water"))}}}
         if(day.entries.isEmpty())item{Panel{Icon(Icons.Outlined.Restaurant,null,Modifier.size(32.dp),tint=MaterialTheme.colorScheme.primary);SectionTitle(tr("Пока ничего не записано","Nothing logged yet"),tr("Добавьте то, что съели. Мы посчитаем остальное.","Add what you ate. We'll count the rest."))}}
         items(day.entries,key={it.id}) {entry->Panel {
             val name=vm.entryName(entry)
-            Row(Modifier.fillMaxWidth().clickable{edit(entry)},verticalAlignment=Alignment.CenterVertically){
+            Row(Modifier.fillMaxWidth().clickable{edit(entry)},verticalAlignment=Alignment.CenterVertically,horizontalArrangement=Arrangement.spacedBy(12.dp)){
+                EntryBadge(name,entry.waterMl>0,vm.food(entry.foodId)?.recipe!=null)
                 Column(Modifier.weight(1f)){
                     Text(name,fontWeight=FontWeight.SemiBold)
-                    Text(quantityLabel(entry.quantity,entry.grams),style=MaterialTheme.typography.bodySmall,color=MaterialTheme.colorScheme.onSurfaceVariant)
-                    // Every entry shows its own protein, fat, carbohydrate and fibre.
+                    Text(listOf(entryTime(entry),quantityLabel(entry.quantity,entry.grams)).filter{it.isNotEmpty()}.joinToString(" · "),style=MaterialTheme.typography.bodySmall,color=MaterialTheme.colorScheme.onSurfaceVariant)
+                    // Every entry shows its own protein, fat, carbohydrate and fibre, and how its energy splits.
                     Text(macrosLine(entry.nutrients),style=MaterialTheme.typography.bodySmall,color=MaterialTheme.colorScheme.onSurfaceVariant)
+                    if(entry.waterMl==0.0)MacroBar(entry.nutrients,Modifier.fillMaxWidth(0.7f).padding(top=4.dp),5.dp)
                 }
                 Text("${number(entry.nutrients.kcal)}\n$KCAL",style=MaterialTheme.typography.titleMedium,color=MaterialTheme.colorScheme.primary)
             }

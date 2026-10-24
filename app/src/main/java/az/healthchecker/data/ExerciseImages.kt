@@ -30,6 +30,8 @@ class ExerciseImageStore(context:Context) {
 const val EXERCISE_IMAGE_MAX_PX=1280
 /** Photos for later keep more detail, so the small print of a label stays readable when zoomed. */
 const val PHOTO_MAX_PX=2048
+/** A background fills a phone screen; larger pictures only cost memory. */
+const val BACKGROUND_MAX_PX=1920
 
 fun encodeExerciseImage(context:Context,uri:Uri):ByteArray = encodeImage(context,uri,EXERCISE_IMAGE_MAX_PX,85)
 

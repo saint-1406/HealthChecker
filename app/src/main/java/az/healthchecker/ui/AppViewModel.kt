@@ -235,6 +235,20 @@ class AppViewModel(application:Application):AndroidViewModel(application) {
     fun skipOnboarding()=action { repository.finishOnboarding() }
     fun customFood(food:Food,done:()->kotlin.Unit)=action(done){repository.saveFood(food)}
     fun theme(value:String)=action{preferences.theme(value)}
+    /** Changes the look and saves it; the screen updates at once, without waiting for the settings file. */
+    fun appearance(change:(Appearance)->Appearance) {
+        val next=change(settings.value.appearance);settings.value=settings.value.copy(appearance=next)
+        viewModelScope.launch{preferences.appearance(next)}
+    }
+    fun backgroundFile():java.io.File = java.io.File(context.filesDir,"appearance/background.jpg")
+    /** The user's own background picture, kept in the app's private files like exercise pictures. */
+    fun setBackground(uri:Uri)=action {
+        val bytes=encodeImage(context,uri,BACKGROUND_MAX_PX,85)
+        val file=backgroundFile();file.parentFile?.mkdirs();val tmp=java.io.File(file.path+".tmp")
+        tmp.writeBytes(bytes);if(!tmp.renameTo(file)){file.delete();check(tmp.renameTo(file)){tr("Не удалось сохранить фон","Could not save the background")}}
+        preferences.appearance(settings.value.appearance.copy(background=System.currentTimeMillis()))
+    }
+    fun removeBackground()=action { backgroundFile().delete();preferences.appearance(settings.value.appearance.copy(background=0)) }
     fun selectFolder(uri:Uri)=action {
         val flags=Intent.FLAG_GRANT_READ_URI_PERMISSION or Intent.FLAG_GRANT_WRITE_URI_PERMISSION
         context.contentResolver.takePersistableUriPermission(uri,flags)

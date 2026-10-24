@@ -71,7 +71,8 @@ class DishAndTrainingFlowTest {
         app.onNodeWithText("Удалить").performClick()
         app.waitUntil(30000){app.onAllNodesWithContentDescription("Суп").fetchSemanticsNodes().isEmpty()}
         app.onNodeWithText("Дневник").performClick()
-        waitText("1 запись");app.onAllNodesWithText("Суп").onFirst().assertExists()
+        app.waitUntil(30000){runCatching{app.onNodeWithTag("diaryList").performScrollToNode(hasText("1 запись"))}.isSuccess}
+        app.onNodeWithTag("diaryList").performScrollToNode(hasText("Суп"));app.onAllNodesWithText("Суп").onFirst().assertExists()
     }
     @Test fun loggedExercisesBurnCaloriesFromBodyWeight() {
         launch();waitText("Начать без расчёта")

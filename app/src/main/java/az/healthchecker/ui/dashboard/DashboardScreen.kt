@@ -17,6 +17,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.StrokeCap
+import androidx.compose.ui.graphics.luminance
 import androidx.compose.ui.graphics.drawscope.Stroke
 import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.semantics.contentDescription
@@ -32,19 +33,22 @@ import az.healthchecker.ui.steps.stepsText
 
 @Composable fun DashboardScreen(vm:AppViewModel,snapshot:UserSnapshot,date:String,backupError:String?,add:()->Unit,water:()->Unit,edit:(DiaryEntry)->Unit,openProfile:()->Unit,openTraining:()->Unit,openSteps:()->Unit,openProtein:()->Unit,openDiary:()->Unit) {
     val day=snapshot.day(date);val summary=day.summary;val goals=day.goals
-    val green=Color(0xFF245C49);val mint=Color(0xFFCDF2CA)
+    // The day's energy card takes the theme's main colour: solid by day, its deep container by night.
+    val colors=MaterialTheme.colorScheme;val night=colors.background.luminance()<0.3f
+    val green=if(night)colors.primaryContainer else colors.primary;val onGreen=if(night)colors.onPrimaryContainer else colors.onPrimary
+    val mint=if(night)colors.primary else colors.primaryContainer
     var details by rememberSaveable{mutableStateOf(false)}
     Column(Modifier.fillMaxSize().verticalScroll(rememberScrollState()).padding(horizontal=20.dp),verticalArrangement=Arrangement.spacedBy(16.dp)) {
         if(backupError!=null)Surface(shape=RoundedCornerShape(20.dp),color=MaterialTheme.colorScheme.errorContainer,contentColor=MaterialTheme.colorScheme.onErrorContainer,modifier=Modifier.fillMaxWidth().clickable(onClick=openProfile)){
             Row(Modifier.padding(16.dp),verticalAlignment=Alignment.CenterVertically,horizontalArrangement=Arrangement.spacedBy(12.dp)){Icon(Icons.Outlined.SyncProblem,null);Column{Text(tr("Резервная копия не обновляется","The backup is not updating"),fontWeight=FontWeight.SemiBold);Text(tr("Откройте профиль, чтобы повторить или выбрать папку заново","Open the profile to retry or choose the folder again"),style=MaterialTheme.typography.bodySmall)}}
         }
-        Surface(shape=RoundedCornerShape(28.dp),color=green,contentColor=Color.White,modifier=Modifier.clickable{details=true}.testTag("energyCard")) {
+        Surface(shape=RoundedCornerShape(28.dp),color=green,contentColor=onGreen,modifier=Modifier.clickable{details=true}.testTag("energyCard")) {
             Column(Modifier.fillMaxWidth().padding(24.dp),verticalArrangement=Arrangement.spacedBy(12.dp)) {
                 Row(verticalAlignment=Alignment.CenterVertically){Text(tr("ЭНЕРГИЯ ЗА ДЕНЬ","ENERGY FOR THE DAY"),style=MaterialTheme.typography.labelMedium,color=mint,modifier=Modifier.weight(1f));Icon(Icons.Outlined.ChevronRight,tr("Подробнее","Details"),tint=mint)}
                 Row(Modifier.fillMaxWidth(),verticalAlignment=Alignment.CenterVertically){
-                    Column(Modifier.weight(1f)){Text(number(summary.kcal.value),fontSize=52.sp,fontWeight=FontWeight.SemiBold,letterSpacing=(-2).sp);Text("${tr("из","of")} ${number(goals?.kcal)} $KCAL",color=Color(0xFFC0D4C8));if(goals?.kcal==null)Text(tr("Задайте цель в профиле","Set a goal in the profile"),style=MaterialTheme.typography.bodySmall,color=mint)}
+                    Column(Modifier.weight(1f)){Text(number(summary.kcal.value),fontSize=52.sp,fontWeight=FontWeight.SemiBold,letterSpacing=(-2).sp);Text("${tr("из","of")} ${number(goals?.kcal)} $KCAL",color=onGreen.copy(alpha=0.78f));if(goals?.kcal==null)Text(tr("Задайте цель в профиле","Set a goal in the profile"),style=MaterialTheme.typography.bodySmall,color=mint)}
                     val progress=goals?.kcal?.let{(summary.kcal.value/it).coerceIn(0.0,1.0).toFloat()}?:0f
-                    Box(Modifier.size(86.dp),contentAlignment=Alignment.Center){Canvas(Modifier.fillMaxSize()){drawArc(Color(0xFF477762),-90f,360f,false,style=Stroke(8.dp.toPx(),cap=StrokeCap.Round));drawArc(mint,-90f,360f*progress,false,style=Stroke(8.dp.toPx(),cap=StrokeCap.Round))};Icon(Icons.Outlined.Restaurant,null,tint=mint,modifier=Modifier.size(28.dp))}
+                    Box(Modifier.size(86.dp),contentAlignment=Alignment.Center){Canvas(Modifier.fillMaxSize()){drawArc(onGreen.copy(alpha=0.22f),-90f,360f,false,style=Stroke(8.dp.toPx(),cap=StrokeCap.Round));drawArc(mint,-90f,360f*progress,false,style=Stroke(8.dp.toPx(),cap=StrokeCap.Round))};Icon(Icons.Outlined.Restaurant,null,tint=mint,modifier=Modifier.size(28.dp))}
                 }
                 val target=goals?.kcal
                 Text(if(target==null)tr("Каждая запись — чуть больше ясности","Every entry adds a bit of clarity") else if(summary.kcal.value>target)tr("Выше цели на ","Above the goal by ")+"${number(summary.kcal.value-target)} $KCAL" else tr("До цели ещё ","Left to the goal: ")+"${number(target-summary.kcal.value)} $KCAL",style=MaterialTheme.typography.bodyMedium,color=mint)

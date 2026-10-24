@@ -68,6 +68,7 @@ class NewFeaturesFlowTest {
         app.onNodeWithTag("quantity").performTextReplacement("50")
         app.onNodeWithText("Добавить в дневник").performScrollTo().performClick()
         waitText("Записать еду")
+        app.onNodeWithTag("diaryList").performScrollToNode(hasText("Б 6,6 · Ж 3,3 · У 33,9 · Кл 5,1 г",substring=true))
         app.onAllNodesWithText("Б 6,6 · Ж 3,3 · У 33,9 · Кл 5,1 г",substring=true).onFirst().assertExists()
         app.onNodeWithText("Обзор").performClick()
         app.onNodeWithTag("energyCard").performClick()

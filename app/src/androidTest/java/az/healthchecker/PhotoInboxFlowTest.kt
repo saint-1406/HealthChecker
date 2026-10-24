@@ -52,10 +52,12 @@ class PhotoInboxFlowTest {
         app.onNodeWithTag("photoView").assertIsDisplayed()
         app.onNodeWithTag("photoDone").performClick()
         app.onNodeWithTag("confirmDeletePhoto").performClick()
-        app.waitUntil(30000){app.onAllNodesWithTag("diaryList").fetchSemanticsNodes().isNotEmpty()}
-        waitText("Овсяные хлопья, сухие")
-        app.waitUntil(10000){app.onAllNodesWithTag("inboxPhoto").fetchSemanticsNodes().isEmpty()}
+        app.waitUntil(30000){runCatching{app.onNodeWithTag("diaryList").performScrollToNode(hasText("Овсяные хлопья, сухие"))}.isSuccess}
         app.onNodeWithText("Отменить").assertExists()
+        // With no photos left the card goes; the camera stays beside "Log food".
+        app.waitUntil(10000){app.onAllNodesWithTag("photoInbox").fetchSemanticsNodes().isEmpty()}
+        app.onNodeWithTag("diaryList").performScrollToNode(hasTestTag("photoMenu"))
+        app.onNodeWithTag("photoMenu").performClick();app.onNodeWithTag("photoFromGallery").assertExists();app.onNodeWithTag("shootMedicine").assertExists()
     }
 
     @Test fun medicinePhotoBecomesACardAndATakenDoseAndCanBeKept() {

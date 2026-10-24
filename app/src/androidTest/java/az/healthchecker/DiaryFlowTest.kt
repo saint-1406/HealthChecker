@@ -26,21 +26,23 @@ class DiaryFlowTest {
         app.onNodeWithText("Добавить в дневник").performScrollTo().performClick()
         waitText("Записать еду")
     }
+    /** Diary rows sit in a lazy list: scroll to one before looking at it. */
+    private fun diary(text:String)=app.waitUntil(30000){runCatching{app.onNodeWithTag("diaryList").performScrollToNode(hasText(text,substring=true))}.isSuccess}
     @Test fun eggsAndOatsSumEditAndSurviveRestart() {
         skipOnboarding()
         app.onNodeWithText("Дневник").performClick()
         addFood("yumurta","Яйцо куриное, варёное"){app.onNodeWithText("Штуки").performClick();app.onNodeWithTag("quantity").performTextReplacement("2")}
         addFood("овсяные хлопья сух","Овсяные хлопья, сухие"){app.onNodeWithTag("quantity").performTextReplacement("50")}
-        app.onNodeWithText("2 записи").assertExists()
+        diary("2 записи");app.onNodeWithText("2 записи").assertExists()
         app.onNodeWithText("Обзор").performClick()
         // 2 × 50 г яйца × 155/100 + 50 г хлопьев × 379/100 = 344,5 ккал.
         app.onNodeWithText("345").assertExists()
         app.onNodeWithText("Дневник").performClick()
-        app.onAllNodesWithText("Овсяные хлопья, сухие").onFirst().performClick()
+        diary("Овсяные хлопья, сухие");app.onAllNodesWithText("Овсяные хлопья, сухие").onFirst().performClick()
         app.onNodeWithTag("quantity").performTextReplacement("100,0")
         app.onNodeWithText("Сохранить изменения").performScrollTo().performClick()
         waitText("Записать еду")
-        app.onNodeWithText("2 записи").assertExists()
+        diary("2 записи");app.onNodeWithText("2 записи").assertExists()
         launch()
         waitText("Обзор")
         app.onNodeWithText("534").assertExists()
@@ -48,13 +50,15 @@ class DiaryFlowTest {
     @Test fun deletedEntryCanBeRestored() {
         skipOnboarding()
         app.onNodeWithText("Дневник").performClick()
-        app.onNodeWithText("+250 мл воды").performClick()
-        waitText("Вода питьевая")
-        app.onNodeWithContentDescription("Удалить Вода питьевая").performClick()
+        diary("+250 мл воды");app.onNodeWithText("+250 мл воды").performClick()
+        diary("Вода питьевая")
+        // The button can end up half under the navigation bar after scrolling: press it through its action, not a touch.
+        app.onNodeWithTag("diaryList").performScrollToNode(hasContentDescription("Удалить Вода питьевая"))
+        app.onNodeWithContentDescription("Удалить Вода питьевая").performSemanticsAction(androidx.compose.ui.semantics.SemanticsActions.OnClick)
         waitText("Запись удалена")
-        app.onNodeWithText("0 записей").assertExists()
+        diary("0 записей");app.onNodeWithText("0 записей").assertExists()
         app.onNodeWithText("Отменить").performClick()
-        waitText("1 запись")
+        diary("1 запись")
         app.onNodeWithText("Обзор").performClick()
         app.onNodeWithText("250 мл").assertExists()
     }
