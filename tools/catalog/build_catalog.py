@@ -54,11 +54,23 @@ def extra_food(item, foods):
           'density':item.get('density'),'source':item['source'],'sourceEn':item.get('sourceEn'),'isWater':False,'common':True}
     if 'base' in item:
         food['per100g']=dict(foods[item['base']]['per100g']);return food
-    b=item['basis'];c=b['carbs']
+    b=item['basis']
     def usda(ident,key):
         value=foods[ident]['per100g'][key]
         if value is None:raise ValueError(f'{item["id"]}: {ident} has no {key}')
         return value
+    if 'ingredients' in b:
+        # A portion modelled from USDA ingredients. A nutrient given as a number is kept (e.g. the user's estimate),
+        # "remainder" fat is the Atwater energy left after protein and carbohydrate, everything else is the sum.
+        ing=b['ingredients'];grams=b.get('grams') or sum(g for _,g in ing)
+        n={key:b[key] if isinstance(b.get(key),(int,float)) else sum(usda(i,key)*g/100 for i,g in ing) for key in ('kcal','protein','fat','carbs','fiber')}
+        if b.get('fat')=='remainder':
+            n['fat']=(n['kcal']-4*n['protein']-4*n['carbs'])/9
+            if n['fat']<0:raise ValueError(f'{item["id"]}: protein and carbohydrate exceed the energy')
+        k=100/grams
+        food['per100g']={key:round(v*k,2) for key,v in n.items()}
+        return food
+    c=b['carbs']
     if 'ingredients' in c:
         carbs=sum(usda(i,'carbs')*g/100 for i,g in c['ingredients']);fiber=sum(usda(i,'fiber')*g/100 for i,g in c['ingredients'])
     else:
@@ -103,7 +115,7 @@ def build_catalog(inputs, output, translations=HERE/'i18n'):
             if key in local:f[key]=local[key]
         f['common']=f['id'] in aliases
     if missing:raise ValueError(f'{len(missing)} untranslated names, e.g. {missing[:5]}')
-    for item in load_json(HERE/'extra-foods.json',[]):
+    for item in load_json(HERE/'extra-foods.json',[])+load_json(HERE/'sushi-foods.json',[]):
         foods[item['id']]=extra_food(item,foods)
     search_aliases=load_json(HERE/'search-aliases.json',{})
     for f in foods.values():

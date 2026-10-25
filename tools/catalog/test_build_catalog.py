@@ -33,6 +33,15 @@ class CatalogTest(unittest.TestCase):
         # 280 − 4·18 − 9·16 = 64 kcal → 16 g available carbohydrate, plus fibre in flour's proportion.
         self.assertAlmostEqual(f['per100g']['fiber'],16*2.7/73.6,places=2)
         self.assertAlmostEqual(f['per100g']['carbs'],16+16*2.7/73.6,places=2)
+    def test_extra_food_from_a_full_ingredient_model(self):
+        foods={'usda:rice':{'per100g':{'kcal':130.0,'protein':2.0,'fat':0.2,'carbs':28.0,'fiber':0.3}},'usda:fish':{'per100g':{'kcal':200.0,'protein':20.0,'fat':13.0,'carbs':0.0,'fiber':0.0}}}
+        f=extra_food({'id':'local:n','name':'Н','nameEn':'N','source':'s','basis':{'ingredients':[['usda:rice',20],['usda:fish',10]]}},foods)
+        # 30 g piece: 26 + 20 kcal, every nutrient summed and scaled to 100 g.
+        self.assertAlmostEqual(f['per100g']['kcal'],(26+20)/0.3,places=1);self.assertAlmostEqual(f['per100g']['fiber'],0.06/0.3,places=2)
+        g=extra_food({'id':'local:g','name':'Г','nameEn':'G','source':'s','basis':{'ingredients':[['usda:rice',20],['usda:fish',10]],'grams':30,'kcal':57.5,'protein':2.5,'carbs':6,'fat':'remainder','fiber':'ingredients'}},foods)
+        self.assertAlmostEqual(g['per100g']['kcal'],57.5/0.3,places=1);self.assertAlmostEqual(g['per100g']['fat'],(57.5-10-24)/9/0.3,places=1)
+        with self.assertRaises(ValueError):
+            extra_food({'id':'local:x','name':'Х','nameEn':'X','source':'s','basis':{'ingredients':[['usda:rice',20]],'kcal':10,'protein':5,'carbs':5,'fat':'remainder'}},foods)
     def test_extra_food_rejects_impossible_energy(self):
         with self.assertRaises(ValueError):
             extra_food({'id':'local:z','name':'З','nameEn':'Z','source':'s','basis':{'grams':100,'kcal':100,'protein':20,'fat':10,'carbs':{'atwater':True,'fiber':0}}},{})

@@ -1,0 +1,1664 @@
+[
+ {
+  "id": "local:sushi-philadelphia",
+  "name": "Ролл Филадельфия",
+  "nameEn": "Philadelphia roll",
+  "aliases": [
+   "филадельфия filadelfiya philadelphia суши ролл роллы sushi suşi roll rol"
+  ],
+  "basis": {
+   "ingredients": [
+    [
+     "usda:168880",
+     16
+    ],
+    [
+     "usda:169655",
+     0.64
+    ],
+    [
+     "usda:168458",
+     1.5
+    ],
+    [
+     "usda:175167",
+     7
+    ],
+    [
+     "usda:173418",
+     6
+    ],
+    [
+     "usda:168409",
+     2
+    ]
+   ],
+   "grams": 33,
+   "fat": "remainder",
+   "fiber": "ingredients",
+   "kcal": 57.5,
+   "protein": 2.5,
+   "carbs": 6.0
+  },
+  "portions": [
+   {
+    "name": "1 кусочек (≈33 г)",
+    "nameEn": "1 piece (~33 g)",
+    "grams": 33
+   },
+   {
+    "name": "Ролл 8 шт. (≈264 г)",
+    "nameEn": "Roll of 8 (~264 g)",
+    "grams": 264
+   }
+  ],
+  "density": null,
+  "source": "Суши-бары Баку, оценка на 1 кусочек: 50–65 ккал, белки 2–3 г, углеводы 5–7 г — взята середина. Жиры — остаток энергии по Этуотеру (4/4/9). Вес кусочка и клетчатка — по составу (USDA): рис 16 г, нори 1.5 г, лосось 7 г, сливочный сыр 6 г, огурец 2 г, рис с сахаром. Вес в заведении может отличаться.",
+  "sourceEn": "Baku sushi bars, estimate per piece: 50–65 kcal, protein 2–3 g, carbs 5–7 g — the middle is used. Fat is the Atwater energy remainder (4/4/9). Piece weight and fibre from the composition (USDA): rice 16 g, nori 1.5 g, salmon 7 g, cream cheese 6 g, cucumber 2 g, seasoned rice. Restaurants vary."
+ },
+ {
+  "id": "local:sushi-california",
+  "name": "Ролл Калифорния",
+  "nameEn": "California roll",
+  "aliases": [
+   "калифорния kaliforniya california краб суши ролл роллы sushi suşi roll rol"
+  ],
+  "basis": {
+   "ingredients": [
+    [
+     "usda:168880",
+     16
+    ],
+    [
+     "usda:169655",
+     0.64
+    ],
+    [
+     "usda:168458",
+     1.5
+    ],
+    [
+     "usda:173702",
+     6
+    ],
+    [
+     "usda:171705",
+     4
+    ],
+    [
+     "usda:168409",
+     3
+    ],
+    [
+     "usda:175132",
+     3
+    ],
+    [
+     "usda:171009",
+     1
+    ]
+   ],
+   "grams": 35,
+   "fat": "remainder",
+   "fiber": "ingredients",
+   "kcal": 50.0,
+   "protein": 1.5,
+   "carbs": 7.0
+  },
+  "portions": [
+   {
+    "name": "1 кусочек (≈35 г)",
+    "nameEn": "1 piece (~35 g)",
+    "grams": 35
+   },
+   {
+    "name": "Ролл 8 шт. (≈280 г)",
+    "nameEn": "Roll of 8 (~280 g)",
+    "grams": 280
+   }
+  ],
+  "density": null,
+  "source": "Суши-бары Баку, оценка на 1 кусочек: 40–60 ккал, белки 1–2 г, углеводы 6–8 г — взята середина. Жиры — остаток энергии по Этуотеру (4/4/9). Вес кусочка и клетчатка — по составу (USDA): рис 16 г, нори 1.5 г, крабовые палочки (сурими) 6 г, авокадо 4 г, огурец 3 г, икра тобико 3 г, майонез 1 г, рис с сахаром. Вес в заведении может отличаться.",
+  "sourceEn": "Baku sushi bars, estimate per piece: 40–60 kcal, protein 1–2 g, carbs 6–8 g — the middle is used. Fat is the Atwater energy remainder (4/4/9). Piece weight and fibre from the composition (USDA): rice 16 g, nori 1.5 g, surimi crab 6 g, avocado 4 g, cucumber 3 g, tobiko roe 3 g, mayonnaise 1 g, seasoned rice. Restaurants vary."
+ },
+ {
+  "id": "local:sushi-alaska",
+  "name": "Ролл Аляска",
+  "nameEn": "Alaska roll",
+  "aliases": [
+   "аляска alyaska alaska суши ролл роллы sushi suşi roll rol"
+  ],
+  "basis": {
+   "ingredients": [
+    [
+     "usda:168880",
+     16
+    ],
+    [
+     "usda:169655",
+     0.64
+    ],
+    [
+     "usda:168458",
+     1.5
+    ],
+    [
+     "usda:175167",
+     6
+    ],
+    [
+     "usda:171705",
+     4
+    ],
+    [
+     "usda:168409",
+     3
+    ],
+    [
+     "usda:170150",
+     1
+    ]
+   ],
+   "grams": 32,
+   "fat": "remainder",
+   "fiber": "ingredients",
+   "kcal": 55.0,
+   "protein": 2.5,
+   "carbs": 6.5
+  },
+  "portions": [
+   {
+    "name": "1 кусочек (≈32 г)",
+    "nameEn": "1 piece (~32 g)",
+    "grams": 32
+   },
+   {
+    "name": "Ролл 8 шт. (≈256 г)",
+    "nameEn": "Roll of 8 (~256 g)",
+    "grams": 256
+   }
+  ],
+  "density": null,
+  "source": "Суши-бары Баку, оценка на 1 кусочек: 45–65 ккал, белки 2–3 г, углеводы 5–8 г — взята середина. Жиры — остаток энергии по Этуотеру (4/4/9). Вес кусочка и клетчатка — по составу (USDA): рис 16 г, нори 1.5 г, лосось 6 г, авокадо 4 г, огурец 3 г, кунжут 1 г, рис с сахаром. Вес в заведении может отличаться.",
+  "sourceEn": "Baku sushi bars, estimate per piece: 45–65 kcal, protein 2–3 g, carbs 5–8 g — the middle is used. Fat is the Atwater energy remainder (4/4/9). Piece weight and fibre from the composition (USDA): rice 16 g, nori 1.5 g, salmon 6 g, avocado 4 g, cucumber 3 g, sesame 1 g, seasoned rice. Restaurants vary."
+ },
+ {
+  "id": "local:sushi-sake-maki",
+  "name": "Саке маки с лососем",
+  "nameEn": "Sake maki with salmon",
+  "aliases": [
+   "саке маки sake maki лосось losos суши ролл роллы sushi suşi roll rol"
+  ],
+  "basis": {
+   "ingredients": [
+    [
+     "usda:168880",
+     12
+    ],
+    [
+     "usda:169655",
+     0.48
+    ],
+    [
+     "usda:168458",
+     1.5
+    ],
+    [
+     "usda:175167",
+     5
+    ]
+   ],
+   "grams": 19,
+   "fat": "remainder",
+   "fiber": "ingredients",
+   "kcal": 30.0,
+   "protein": 1.5,
+   "carbs": 5.0
+  },
+  "portions": [
+   {
+    "name": "1 кусочек (≈19 г)",
+    "nameEn": "1 piece (~19 g)",
+    "grams": 19
+   },
+   {
+    "name": "Ролл 6 шт. (≈114 г)",
+    "nameEn": "Roll of 6 (~114 g)",
+    "grams": 114
+   }
+  ],
+  "density": null,
+  "source": "Суши-бары Баку, оценка на 1 кусочек: 25–35 ккал, белки 1–2 г, углеводы 4–6 г — взята середина. Жиры — остаток энергии по Этуотеру (4/4/9). Вес кусочка и клетчатка — по составу (USDA): рис 12 г, нори 1.5 г, лосось 5 г, рис с сахаром. Вес в заведении может отличаться.",
+  "sourceEn": "Baku sushi bars, estimate per piece: 25–35 kcal, protein 1–2 g, carbs 4–6 g — the middle is used. Fat is the Atwater energy remainder (4/4/9). Piece weight and fibre from the composition (USDA): rice 12 g, nori 1.5 g, salmon 5 g, seasoned rice. Restaurants vary."
+ },
+ {
+  "id": "local:sushi-ebi-maki",
+  "name": "Эби маки с креветкой",
+  "nameEn": "Ebi maki with shrimp",
+  "aliases": [
+   "эби маки ebi maki креветка krevet суши ролл роллы sushi suşi roll rol"
+  ],
+  "basis": {
+   "ingredients": [
+    [
+     "usda:168880",
+     12
+    ],
+    [
+     "usda:169655",
+     0.48
+    ],
+    [
+     "usda:168458",
+     1.5
+    ],
+    [
+     "usda:175179",
+     5
+    ],
+    [
+     "usda:171009",
+     0.5
+    ]
+   ],
+   "grams": 19,
+   "fat": "remainder",
+   "fiber": "ingredients",
+   "kcal": 32.5,
+   "protein": 1.5,
+   "carbs": 5.0
+  },
+  "portions": [
+   {
+    "name": "1 кусочек (≈19 г)",
+    "nameEn": "1 piece (~19 g)",
+    "grams": 19
+   },
+   {
+    "name": "Ролл 6 шт. (≈114 г)",
+    "nameEn": "Roll of 6 (~114 g)",
+    "grams": 114
+   }
+  ],
+  "density": null,
+  "source": "Суши-бары Баку, оценка на 1 кусочек: 25–40 ккал, белки 1–2 г, углеводы 4–6 г — взята середина. Жиры — остаток энергии по Этуотеру (4/4/9). Вес кусочка и клетчатка — по составу (USDA): рис 12 г, нори 1.5 г, креветка 5 г, майонез 0.5 г, рис с сахаром. Вес в заведении может отличаться.",
+  "sourceEn": "Baku sushi bars, estimate per piece: 25–40 kcal, protein 1–2 g, carbs 4–6 g — the middle is used. Fat is the Atwater energy remainder (4/4/9). Piece weight and fibre from the composition (USDA): rice 12 g, nori 1.5 g, shrimp 5 g, mayonnaise 0.5 g, seasoned rice. Restaurants vary."
+ },
+ {
+  "id": "local:sushi-spicy-cheese",
+  "name": "Пряный сырный ролл",
+  "nameEn": "Spicy cheese roll",
+  "aliases": [
+   "пряный сырный острый спайси spicy cheese pendirli суши ролл роллы sushi suşi roll rol"
+  ],
+  "basis": {
+   "ingredients": [
+    [
+     "usda:168880",
+     16
+    ],
+    [
+     "usda:169655",
+     0.64
+    ],
+    [
+     "usda:168458",
+     1.5
+    ],
+    [
+     "usda:173418",
+     8
+    ],
+    [
+     "usda:171009",
+     2
+    ],
+    [
+     "usda:171186",
+     0.5
+    ],
+    [
+     "usda:168409",
+     3
+    ]
+   ],
+   "grams": 32,
+   "fat": "remainder",
+   "fiber": "ingredients",
+   "kcal": 67.5,
+   "protein": 1.5,
+   "carbs": 7.5
+  },
+  "portions": [
+   {
+    "name": "1 кусочек (≈32 г)",
+    "nameEn": "1 piece (~32 g)",
+    "grams": 32
+   },
+   {
+    "name": "Ролл 8 шт. (≈256 г)",
+    "nameEn": "Roll of 8 (~256 g)",
+    "grams": 256
+   }
+  ],
+  "density": null,
+  "source": "Суши-бары Баку, оценка на 1 кусочек: 55–80 ккал, белки 1–2 г, углеводы 6–9 г — взята середина. Жиры — остаток энергии по Этуотеру (4/4/9). Вес кусочка и клетчатка — по составу (USDA): рис 16 г, нори 1.5 г, сливочный сыр 8 г, майонез 2 г, острый соус 0.5 г, огурец 3 г, рис с сахаром. Вес в заведении может отличаться.",
+  "sourceEn": "Baku sushi bars, estimate per piece: 55–80 kcal, protein 1–2 g, carbs 6–9 g — the middle is used. Fat is the Atwater energy remainder (4/4/9). Piece weight and fibre from the composition (USDA): rice 16 g, nori 1.5 g, cream cheese 8 g, mayonnaise 2 g, hot sauce 0.5 g, cucumber 3 g, seasoned rice. Restaurants vary."
+ },
+ {
+  "id": "local:sushi-chips",
+  "name": "Чипсы ролл",
+  "nameEn": "Chips roll",
+  "aliases": [
+   "чипсы чипс chips çips суши ролл роллы sushi suşi roll rol"
+  ],
+  "basis": {
+   "ingredients": [
+    [
+     "usda:168880",
+     16
+    ],
+    [
+     "usda:169655",
+     0.64
+    ],
+    [
+     "usda:168458",
+     1.5
+    ],
+    [
+     "usda:173418",
+     5
+    ],
+    [
+     "usda:173702",
+     4
+    ],
+    [
+     "usda:168409",
+     3
+    ],
+    [
+     "usda:169677",
+     4
+    ]
+   ],
+   "grams": 34,
+   "fat": "remainder",
+   "fiber": "ingredients",
+   "kcal": 67.5,
+   "protein": 2.0,
+   "carbs": 8.5
+  },
+  "portions": [
+   {
+    "name": "1 кусочек (≈34 г)",
+    "nameEn": "1 piece (~34 g)",
+    "grams": 34
+   },
+   {
+    "name": "Ролл 8 шт. (≈272 г)",
+    "nameEn": "Roll of 8 (~272 g)",
+    "grams": 272
+   }
+  ],
+  "density": null,
+  "source": "Суши-бары Баку, оценка на 1 кусочек: 55–80 ккал, белки 1–3 г, углеводы 7–10 г — взята середина. Жиры — остаток энергии по Этуотеру (4/4/9). Вес кусочка и клетчатка — по составу (USDA): рис 16 г, нори 1.5 г, сливочный сыр 5 г, крабовые палочки (сурими) 4 г, огурец 3 г, чипсы 4 г, рис с сахаром. Вес в заведении может отличаться.",
+  "sourceEn": "Baku sushi bars, estimate per piece: 55–80 kcal, protein 1–3 g, carbs 7–10 g — the middle is used. Fat is the Atwater energy remainder (4/4/9). Piece weight and fibre from the composition (USDA): rice 16 g, nori 1.5 g, cream cheese 5 g, surimi crab 4 g, cucumber 3 g, potato chips 4 g, seasoned rice. Restaurants vary."
+ },
+ {
+  "id": "local:sushi-bonito",
+  "name": "Ролл Бонито",
+  "nameEn": "Bonito roll",
+  "aliases": [
+   "бонито bonito суши ролл роллы sushi suşi roll rol"
+  ],
+  "basis": {
+   "ingredients": [
+    [
+     "usda:168880",
+     16
+    ],
+    [
+     "usda:169655",
+     0.64
+    ],
+    [
+     "usda:168458",
+     1.5
+    ],
+    [
+     "usda:175167",
+     5
+    ],
+    [
+     "usda:173418",
+     5
+    ],
+    [
+     "usda:168409",
+     2
+    ],
+    [
+     "usda:172005",
+     1
+    ]
+   ],
+   "grams": 31,
+   "fat": "remainder",
+   "fiber": "ingredients",
+   "kcal": 55.0,
+   "protein": 2.5,
+   "carbs": 6.5
+  },
+  "portions": [
+   {
+    "name": "1 кусочек (≈31 г)",
+    "nameEn": "1 piece (~31 g)",
+    "grams": 31
+   },
+   {
+    "name": "Ролл 8 шт. (≈248 г)",
+    "nameEn": "Roll of 8 (~248 g)",
+    "grams": 248
+   }
+  ],
+  "density": null,
+  "source": "Суши-бары Баку, оценка на 1 кусочек: 45–65 ккал, белки 2–3 г, углеводы 5–8 г — взята середина. Жиры — остаток энергии по Этуотеру (4/4/9). Вес кусочка и клетчатка — по составу (USDA): рис 16 г, нори 1.5 г, лосось 5 г, сливочный сыр 5 г, огурец 2 г, стружка бонито 1 г, рис с сахаром. Вес в заведении может отличаться.",
+  "sourceEn": "Baku sushi bars, estimate per piece: 45–65 kcal, protein 2–3 g, carbs 5–8 g — the middle is used. Fat is the Atwater energy remainder (4/4/9). Piece weight and fibre from the composition (USDA): rice 16 g, nori 1.5 g, salmon 5 g, cream cheese 5 g, cucumber 2 g, bonito flakes 1 g, seasoned rice. Restaurants vary."
+ },
+ {
+  "id": "local:sushi-chuka",
+  "name": "Чука ролл",
+  "nameEn": "Chuka roll",
+  "aliases": [
+   "чука chuka водоросли вегетарианский суши ролл роллы sushi suşi roll rol"
+  ],
+  "basis": {
+   "ingredients": [
+    [
+     "usda:168880",
+     16
+    ],
+    [
+     "usda:169655",
+     0.64
+    ],
+    [
+     "usda:168458",
+     1.5
+    ],
+    [
+     "usda:170496",
+     8
+    ],
+    [
+     "usda:171016",
+     0.5
+    ],
+    [
+     "usda:170150",
+     0.5
+    ],
+    [
+     "usda:168409",
+     3
+    ]
+   ],
+   "grams": 30,
+   "fat": "remainder",
+   "fiber": "ingredients",
+   "kcal": 45.0,
+   "protein": 1.0,
+   "carbs": 7.5
+  },
+  "portions": [
+   {
+    "name": "1 кусочек (≈30 г)",
+    "nameEn": "1 piece (~30 g)",
+    "grams": 30
+   },
+   {
+    "name": "Ролл 8 шт. (≈240 г)",
+    "nameEn": "Roll of 8 (~240 g)",
+    "grams": 240
+   }
+  ],
+  "density": null,
+  "source": "Суши-бары Баку, оценка на 1 кусочек: 35–55 ккал, белки 0,5–1,5 г, углеводы 6–9 г — взята середина. Жиры — остаток энергии по Этуотеру (4/4/9). Вес кусочка и клетчатка — по составу (USDA): рис 16 г, нори 1.5 г, водоросли чука 8 г, кунжутное масло 0.5 г, кунжут 0.5 г, огурец 3 г, рис с сахаром. Вес в заведении может отличаться.",
+  "sourceEn": "Baku sushi bars, estimate per piece: 35–55 kcal, protein 0.5–1.5 g, carbs 6–9 g — the middle is used. Fat is the Atwater energy remainder (4/4/9). Piece weight and fibre from the composition (USDA): rice 16 g, nori 1.5 g, chuka seaweed 8 g, sesame oil 0.5 g, sesame 0.5 g, cucumber 3 g, seasoned rice. Restaurants vary."
+ },
+ {
+  "id": "local:sushi-kani",
+  "name": "Кани ролл с сурими",
+  "nameEn": "Kani roll with surimi",
+  "aliases": [
+   "кани kani краб сурими surimi суши ролл роллы sushi suşi roll rol"
+  ],
+  "basis": {
+   "ingredients": [
+    [
+     "usda:168880",
+     16
+    ],
+    [
+     "usda:169655",
+     0.64
+    ],
+    [
+     "usda:168458",
+     1.5
+    ],
+    [
+     "usda:173702",
+     8
+    ],
+    [
+     "usda:171009",
+     1.5
+    ],
+    [
+     "usda:168409",
+     3
+    ]
+   ],
+   "grams": 31,
+   "fat": "remainder",
+   "fiber": "ingredients",
+   "kcal": 45.0,
+   "protein": 1.5,
+   "carbs": 7.5
+  },
+  "portions": [
+   {
+    "name": "1 кусочек (≈31 г)",
+    "nameEn": "1 piece (~31 g)",
+    "grams": 31
+   },
+   {
+    "name": "Ролл 8 шт. (≈248 г)",
+    "nameEn": "Roll of 8 (~248 g)",
+    "grams": 248
+   }
+  ],
+  "density": null,
+  "source": "Суши-бары Баку, оценка на 1 кусочек: 35–55 ккал, белки 1–2 г, углеводы 6–9 г — взята середина. Жиры — остаток энергии по Этуотеру (4/4/9). Вес кусочка и клетчатка — по составу (USDA): рис 16 г, нори 1.5 г, крабовые палочки (сурими) 8 г, майонез 1.5 г, огурец 3 г, рис с сахаром. Вес в заведении может отличаться.",
+  "sourceEn": "Baku sushi bars, estimate per piece: 35–55 kcal, protein 1–2 g, carbs 6–9 g — the middle is used. Fat is the Atwater energy remainder (4/4/9). Piece weight and fibre from the composition (USDA): rice 16 g, nori 1.5 g, surimi crab 8 g, mayonnaise 1.5 g, cucumber 3 g, seasoned rice. Restaurants vary."
+ },
+ {
+  "id": "local:sushi-hot-ebi",
+  "name": "Горячий ролл Эби с креветкой",
+  "nameEn": "Hot ebi roll with shrimp",
+  "aliases": [
+   "горячий темпура эби креветка isti ebi hot tempura суши ролл роллы sushi suşi roll rol"
+  ],
+  "basis": {
+   "ingredients": [
+    [
+     "usda:168880",
+     16
+    ],
+    [
+     "usda:169655",
+     0.64
+    ],
+    [
+     "usda:168458",
+     1.5
+    ],
+    [
+     "usda:175179",
+     6
+    ],
+    [
+     "usda:173418",
+     4
+    ],
+    [
+     "usda:168894",
+     3
+    ],
+    [
+     "usda:174928",
+     2
+    ],
+    [
+     "usda:171025",
+     3
+    ]
+   ],
+   "grams": 36,
+   "fat": "remainder",
+   "fiber": "ingredients",
+   "kcal": 77.5,
+   "protein": 2.5,
+   "carbs": 9.0
+  },
+  "portions": [
+   {
+    "name": "1 кусочек (≈36 г)",
+    "nameEn": "1 piece (~36 g)",
+    "grams": 36
+   },
+   {
+    "name": "Ролл 8 шт. (≈288 г)",
+    "nameEn": "Roll of 8 (~288 g)",
+    "grams": 288
+   }
+  ],
+  "density": null,
+  "source": "Суши-бары Баку, оценка на 1 кусочек: 65–90 ккал, белки 2–3 г, углеводы 7–11 г — взята середина. Жиры — остаток энергии по Этуотеру (4/4/9). Вес кусочка и клетчатка — по составу (USDA): рис 16 г, нори 1.5 г, креветка 6 г, сливочный сыр 4 г, мука кляра 3 г, панировка 2 г, масло фритюра 3 г, рис с сахаром. Вес в заведении может отличаться.",
+  "sourceEn": "Baku sushi bars, estimate per piece: 65–90 kcal, protein 2–3 g, carbs 7–11 g — the middle is used. Fat is the Atwater energy remainder (4/4/9). Piece weight and fibre from the composition (USDA): rice 16 g, nori 1.5 g, shrimp 6 g, cream cheese 4 g, batter flour 3 g, crumbs 2 g, frying oil 3 g, seasoned rice. Restaurants vary."
+ },
+ {
+  "id": "local:sushi-hot-salmon",
+  "name": "Горячий ролл с лососем",
+  "nameEn": "Hot roll with salmon",
+  "aliases": [
+   "горячий темпура лосось isti losos hot tempura суши ролл роллы sushi suşi roll rol"
+  ],
+  "basis": {
+   "ingredients": [
+    [
+     "usda:168880",
+     16
+    ],
+    [
+     "usda:169655",
+     0.64
+    ],
+    [
+     "usda:168458",
+     1.5
+    ],
+    [
+     "usda:175167",
+     7
+    ],
+    [
+     "usda:173418",
+     4
+    ],
+    [
+     "usda:168894",
+     3
+    ],
+    [
+     "usda:174928",
+     2
+    ],
+    [
+     "usda:171025",
+     3
+    ]
+   ],
+   "grams": 37,
+   "fat": "remainder",
+   "fiber": "ingredients",
+   "kcal": 80.0,
+   "protein": 3.0,
+   "carbs": 9.0
+  },
+  "portions": [
+   {
+    "name": "1 кусочек (≈37 г)",
+    "nameEn": "1 piece (~37 g)",
+    "grams": 37
+   },
+   {
+    "name": "Ролл 8 шт. (≈296 г)",
+    "nameEn": "Roll of 8 (~296 g)",
+    "grams": 296
+   }
+  ],
+  "density": null,
+  "source": "Суши-бары Баку, оценка на 1 кусочек: 65–95 ккал, белки 2–4 г, углеводы 7–11 г — взята середина. Жиры — остаток энергии по Этуотеру (4/4/9). Вес кусочка и клетчатка — по составу (USDA): рис 16 г, нори 1.5 г, лосось 7 г, сливочный сыр 4 г, мука кляра 3 г, панировка 2 г, масло фритюра 3 г, рис с сахаром. Вес в заведении может отличаться.",
+  "sourceEn": "Baku sushi bars, estimate per piece: 65–95 kcal, protein 2–4 g, carbs 7–11 g — the middle is used. Fat is the Atwater energy remainder (4/4/9). Piece weight and fibre from the composition (USDA): rice 16 g, nori 1.5 g, salmon 7 g, cream cheese 4 g, batter flour 3 g, crumbs 2 g, frying oil 3 g, seasoned rice. Restaurants vary."
+ },
+ {
+  "id": "local:sushi-canada",
+  "name": "Ролл Канада",
+  "nameEn": "Canada roll",
+  "aliases": [
+   "канада kanada canada угорь лосось суши ролл роллы sushi suşi roll rol"
+  ],
+  "basis": {
+   "ingredients": [
+    [
+     "usda:168880",
+     16
+    ],
+    [
+     "usda:169655",
+     0.64
+    ],
+    [
+     "usda:168458",
+     1.5
+    ],
+    [
+     "usda:175167",
+     4
+    ],
+    [
+     "usda:174194",
+     4
+    ],
+    [
+     "usda:173418",
+     5
+    ],
+    [
+     "usda:168409",
+     2
+    ],
+    [
+     "usda:171167",
+     1
+    ],
+    [
+     "usda:170150",
+     0.3
+    ]
+   ],
+   "grams": 34
+  },
+  "portions": [
+   {
+    "name": "1 кусочек (≈34 г)",
+    "nameEn": "1 piece (~34 g)",
+    "grams": 34
+   },
+   {
+    "name": "Ролл 8 шт. (≈272 г)",
+    "nameEn": "Roll of 8 (~272 g)",
+    "grams": 272
+   }
+  ],
+  "density": null,
+  "source": "Оценка по типичному составу кусочка в суши-барах Баку, все значения по USDA: рис 16 г, нори 1.5 г, лосось 4 г, угорь 4 г, сливочный сыр 5 г, огурец 2 г, соус унаги 1 г, кунжут 0.3 г, рис с сахаром. Вес и начинка в заведении могут отличаться.",
+  "sourceEn": "Estimate from a typical piece in Baku sushi bars, all values from USDA: rice 16 g, nori 1.5 g, salmon 4 g, eel 4 g, cream cheese 5 g, cucumber 2 g, unagi sauce 1 g, sesame 0.3 g, seasoned rice. Weight and filling vary by restaurant."
+ },
+ {
+  "id": "local:sushi-dragon",
+  "name": "Ролл Дракон с угрём",
+  "nameEn": "Dragon roll with eel",
+  "aliases": [
+   "дракон dragon угорь unagi суши ролл роллы sushi suşi roll rol"
+  ],
+  "basis": {
+   "ingredients": [
+    [
+     "usda:168880",
+     16
+    ],
+    [
+     "usda:169655",
+     0.64
+    ],
+    [
+     "usda:168458",
+     1.5
+    ],
+    [
+     "usda:174194",
+     6
+    ],
+    [
+     "usda:171705",
+     5
+    ],
+    [
+     "usda:168409",
+     3
+    ],
+    [
+     "usda:171167",
+     1.5
+    ],
+    [
+     "usda:170150",
+     0.3
+    ]
+   ],
+   "grams": 34
+  },
+  "portions": [
+   {
+    "name": "1 кусочек (≈34 г)",
+    "nameEn": "1 piece (~34 g)",
+    "grams": 34
+   },
+   {
+    "name": "Ролл 8 шт. (≈272 г)",
+    "nameEn": "Roll of 8 (~272 g)",
+    "grams": 272
+   }
+  ],
+  "density": null,
+  "source": "Оценка по типичному составу кусочка в суши-барах Баку, все значения по USDA: рис 16 г, нори 1.5 г, угорь 6 г, авокадо 5 г, огурец 3 г, соус унаги 1.5 г, кунжут 0.3 г, рис с сахаром. Вес и начинка в заведении могут отличаться.",
+  "sourceEn": "Estimate from a typical piece in Baku sushi bars, all values from USDA: rice 16 g, nori 1.5 g, eel 6 g, avocado 5 g, cucumber 3 g, unagi sauce 1.5 g, sesame 0.3 g, seasoned rice. Weight and filling vary by restaurant."
+ },
+ {
+  "id": "local:sushi-green-dragon",
+  "name": "Ролл Зелёный дракон",
+  "nameEn": "Green dragon roll",
+  "aliases": [
+   "зелёный дракон green dragon авокадо креветка суши ролл роллы sushi suşi roll rol"
+  ],
+  "basis": {
+   "ingredients": [
+    [
+     "usda:168880",
+     16
+    ],
+    [
+     "usda:169655",
+     0.64
+    ],
+    [
+     "usda:168458",
+     1.5
+    ],
+    [
+     "usda:175179",
+     4
+    ],
+    [
+     "usda:171705",
+     7
+    ],
+    [
+     "usda:173418",
+     4
+    ],
+    [
+     "usda:168409",
+     2
+    ],
+    [
+     "usda:175132",
+     1
+    ]
+   ],
+   "grams": 36
+  },
+  "portions": [
+   {
+    "name": "1 кусочек (≈36 г)",
+    "nameEn": "1 piece (~36 g)",
+    "grams": 36
+   },
+   {
+    "name": "Ролл 8 шт. (≈288 г)",
+    "nameEn": "Roll of 8 (~288 g)",
+    "grams": 288
+   }
+  ],
+  "density": null,
+  "source": "Оценка по типичному составу кусочка в суши-барах Баку, все значения по USDA: рис 16 г, нори 1.5 г, креветка 4 г, авокадо 7 г, сливочный сыр 4 г, огурец 2 г, икра тобико 1 г, рис с сахаром. Вес и начинка в заведении могут отличаться.",
+  "sourceEn": "Estimate from a typical piece in Baku sushi bars, all values from USDA: rice 16 g, nori 1.5 g, shrimp 4 g, avocado 7 g, cream cheese 4 g, cucumber 2 g, tobiko roe 1 g, seasoned rice. Weight and filling vary by restaurant."
+ },
+ {
+  "id": "local:sushi-baked-salmon",
+  "name": "Запечённый ролл с лососем",
+  "nameEn": "Baked roll with salmon",
+  "aliases": [
+   "запечённый запеченный лосось bişmiş baked суши ролл роллы sushi suşi roll rol"
+  ],
+  "basis": {
+   "ingredients": [
+    [
+     "usda:168880",
+     16
+    ],
+    [
+     "usda:169655",
+     0.64
+    ],
+    [
+     "usda:168458",
+     1.5
+    ],
+    [
+     "usda:175167",
+     5
+    ],
+    [
+     "usda:173418",
+     4
+    ],
+    [
+     "usda:168409",
+     2
+    ],
+    [
+     "usda:171009",
+     3
+    ],
+    [
+     "usda:173414",
+     3
+    ],
+    [
+     "usda:175132",
+     1
+    ]
+   ],
+   "grams": 36
+  },
+  "portions": [
+   {
+    "name": "1 кусочек (≈36 г)",
+    "nameEn": "1 piece (~36 g)",
+    "grams": 36
+   },
+   {
+    "name": "Ролл 8 шт. (≈288 г)",
+    "nameEn": "Roll of 8 (~288 g)",
+    "grams": 288
+   }
+  ],
+  "density": null,
+  "source": "Оценка по типичному составу кусочка в суши-барах Баку, все значения по USDA: рис 16 г, нори 1.5 г, лосось 5 г, сливочный сыр 4 г, огурец 2 г, майонез 3 г, сыр 3 г, икра тобико 1 г, рис с сахаром. Вес и начинка в заведении могут отличаться.",
+  "sourceEn": "Estimate from a typical piece in Baku sushi bars, all values from USDA: rice 16 g, nori 1.5 g, salmon 5 g, cream cheese 4 g, cucumber 2 g, mayonnaise 3 g, cheese 3 g, tobiko roe 1 g, seasoned rice. Weight and filling vary by restaurant."
+ },
+ {
+  "id": "local:sushi-baked-crab",
+  "name": "Запечённый ролл с крабом",
+  "nameEn": "Baked crab roll",
+  "aliases": [
+   "запечённый запеченный краб сурими bişmiş baked crab суши ролл роллы sushi suşi roll rol"
+  ],
+  "basis": {
+   "ingredients": [
+    [
+     "usda:168880",
+     16
+    ],
+    [
+     "usda:169655",
+     0.64
+    ],
+    [
+     "usda:168458",
+     1.5
+    ],
+    [
+     "usda:173702",
+     8
+    ],
+    [
+     "usda:171705",
+     3
+    ],
+    [
+     "usda:168409",
+     2
+    ],
+    [
+     "usda:171009",
+     3
+    ],
+    [
+     "usda:173414",
+     2
+    ]
+   ],
+   "grams": 36
+  },
+  "portions": [
+   {
+    "name": "1 кусочек (≈36 г)",
+    "nameEn": "1 piece (~36 g)",
+    "grams": 36
+   },
+   {
+    "name": "Ролл 8 шт. (≈288 г)",
+    "nameEn": "Roll of 8 (~288 g)",
+    "grams": 288
+   }
+  ],
+  "density": null,
+  "source": "Оценка по типичному составу кусочка в суши-барах Баку, все значения по USDA: рис 16 г, нори 1.5 г, крабовые палочки (сурими) 8 г, авокадо 3 г, огурец 2 г, майонез 3 г, сыр 2 г, рис с сахаром. Вес и начинка в заведении могут отличаться.",
+  "sourceEn": "Estimate from a typical piece in Baku sushi bars, all values from USDA: rice 16 g, nori 1.5 g, surimi crab 8 g, avocado 3 g, cucumber 2 g, mayonnaise 3 g, cheese 2 g, seasoned rice. Weight and filling vary by restaurant."
+ },
+ {
+  "id": "local:sushi-hot-chicken",
+  "name": "Горячий ролл с курицей",
+  "nameEn": "Hot roll with chicken",
+  "aliases": [
+   "горячий темпура курица toyuq isti hot chicken суши ролл роллы sushi suşi roll rol"
+  ],
+  "basis": {
+   "ingredients": [
+    [
+     "usda:168880",
+     16
+    ],
+    [
+     "usda:169655",
+     0.64
+    ],
+    [
+     "usda:168458",
+     1.5
+    ],
+    [
+     "usda:171477",
+     7
+    ],
+    [
+     "usda:173418",
+     4
+    ],
+    [
+     "usda:168409",
+     2
+    ],
+    [
+     "usda:168894",
+     3
+    ],
+    [
+     "usda:174928",
+     2
+    ],
+    [
+     "usda:171025",
+     3
+    ]
+   ],
+   "grams": 39
+  },
+  "portions": [
+   {
+    "name": "1 кусочек (≈39 г)",
+    "nameEn": "1 piece (~39 g)",
+    "grams": 39
+   },
+   {
+    "name": "Ролл 8 шт. (≈312 г)",
+    "nameEn": "Roll of 8 (~312 g)",
+    "grams": 312
+   }
+  ],
+  "density": null,
+  "source": "Оценка по типичному составу кусочка в суши-барах Баку, все значения по USDA: рис 16 г, нори 1.5 г, курица 7 г, сливочный сыр 4 г, огурец 2 г, мука кляра 3 г, панировка 2 г, масло фритюра 3 г, рис с сахаром. Вес и начинка в заведении могут отличаться.",
+  "sourceEn": "Estimate from a typical piece in Baku sushi bars, all values from USDA: rice 16 g, nori 1.5 g, chicken 7 g, cream cheese 4 g, cucumber 2 g, batter flour 3 g, crumbs 2 g, frying oil 3 g, seasoned rice. Weight and filling vary by restaurant."
+ },
+ {
+  "id": "local:sushi-kappa-maki",
+  "name": "Каппа маки с огурцом",
+  "nameEn": "Kappa maki with cucumber",
+  "aliases": [
+   "каппа маки огурец kappa xiyar суши ролл роллы sushi suşi roll rol"
+  ],
+  "basis": {
+   "ingredients": [
+    [
+     "usda:168880",
+     12
+    ],
+    [
+     "usda:169655",
+     0.48
+    ],
+    [
+     "usda:168458",
+     1.5
+    ],
+    [
+     "usda:168409",
+     6
+    ],
+    [
+     "usda:170150",
+     0.3
+    ]
+   ],
+   "grams": 20
+  },
+  "portions": [
+   {
+    "name": "1 кусочек (≈20 г)",
+    "nameEn": "1 piece (~20 g)",
+    "grams": 20
+   },
+   {
+    "name": "Ролл 6 шт. (≈120 г)",
+    "nameEn": "Roll of 6 (~120 g)",
+    "grams": 120
+   }
+  ],
+  "density": null,
+  "source": "Оценка по типичному составу кусочка в суши-барах Баку, все значения по USDA: рис 12 г, нори 1.5 г, огурец 6 г, кунжут 0.3 г, рис с сахаром. Вес и начинка в заведении могут отличаться.",
+  "sourceEn": "Estimate from a typical piece in Baku sushi bars, all values from USDA: rice 12 g, nori 1.5 g, cucumber 6 g, sesame 0.3 g, seasoned rice. Weight and filling vary by restaurant."
+ },
+ {
+  "id": "local:sushi-avocado-maki",
+  "name": "Маки с авокадо",
+  "nameEn": "Avocado maki",
+  "aliases": [
+   "авокадо маки avocado avokado суши ролл роллы sushi suşi roll rol"
+  ],
+  "basis": {
+   "ingredients": [
+    [
+     "usda:168880",
+     12
+    ],
+    [
+     "usda:169655",
+     0.48
+    ],
+    [
+     "usda:168458",
+     1.5
+    ],
+    [
+     "usda:171705",
+     6
+    ]
+   ],
+   "grams": 20
+  },
+  "portions": [
+   {
+    "name": "1 кусочек (≈20 г)",
+    "nameEn": "1 piece (~20 g)",
+    "grams": 20
+   },
+   {
+    "name": "Ролл 6 шт. (≈120 г)",
+    "nameEn": "Roll of 6 (~120 g)",
+    "grams": 120
+   }
+  ],
+  "density": null,
+  "source": "Оценка по типичному составу кусочка в суши-барах Баку, все значения по USDA: рис 12 г, нори 1.5 г, авокадо 6 г, рис с сахаром. Вес и начинка в заведении могут отличаться.",
+  "sourceEn": "Estimate from a typical piece in Baku sushi bars, all values from USDA: rice 12 g, nori 1.5 g, avocado 6 g, seasoned rice. Weight and filling vary by restaurant."
+ },
+ {
+  "id": "local:sushi-tekka-maki",
+  "name": "Тэкка маки с тунцом",
+  "nameEn": "Tekka maki with tuna",
+  "aliases": [
+   "тэкка текка маки тунец tuna tekka суши ролл роллы sushi suşi roll rol"
+  ],
+  "basis": {
+   "ingredients": [
+    [
+     "usda:168880",
+     12
+    ],
+    [
+     "usda:169655",
+     0.48
+    ],
+    [
+     "usda:168458",
+     1.5
+    ],
+    [
+     "usda:175159",
+     5
+    ]
+   ],
+   "grams": 19
+  },
+  "portions": [
+   {
+    "name": "1 кусочек (≈19 г)",
+    "nameEn": "1 piece (~19 g)",
+    "grams": 19
+   },
+   {
+    "name": "Ролл 6 шт. (≈114 г)",
+    "nameEn": "Roll of 6 (~114 g)",
+    "grams": 114
+   }
+  ],
+  "density": null,
+  "source": "Оценка по типичному составу кусочка в суши-барах Баку, все значения по USDA: рис 12 г, нори 1.5 г, тунец 5 г, рис с сахаром. Вес и начинка в заведении могут отличаться.",
+  "sourceEn": "Estimate from a typical piece in Baku sushi bars, all values from USDA: rice 12 g, nori 1.5 g, tuna 5 g, seasoned rice. Weight and filling vary by restaurant."
+ },
+ {
+  "id": "local:sushi-unagi-maki",
+  "name": "Унаги маки с угрём",
+  "nameEn": "Unagi maki with eel",
+  "aliases": [
+   "унаги маки угорь unagi суши ролл роллы sushi suşi roll rol"
+  ],
+  "basis": {
+   "ingredients": [
+    [
+     "usda:168880",
+     12
+    ],
+    [
+     "usda:169655",
+     0.48
+    ],
+    [
+     "usda:168458",
+     1.5
+    ],
+    [
+     "usda:174194",
+     5
+    ],
+    [
+     "usda:171167",
+     1
+    ],
+    [
+     "usda:170150",
+     0.3
+    ]
+   ],
+   "grams": 20
+  },
+  "portions": [
+   {
+    "name": "1 кусочек (≈20 г)",
+    "nameEn": "1 piece (~20 g)",
+    "grams": 20
+   },
+   {
+    "name": "Ролл 6 шт. (≈120 г)",
+    "nameEn": "Roll of 6 (~120 g)",
+    "grams": 120
+   }
+  ],
+  "density": null,
+  "source": "Оценка по типичному составу кусочка в суши-барах Баку, все значения по USDA: рис 12 г, нори 1.5 г, угорь 5 г, соус унаги 1 г, кунжут 0.3 г, рис с сахаром. Вес и начинка в заведении могут отличаться.",
+  "sourceEn": "Estimate from a typical piece in Baku sushi bars, all values from USDA: rice 12 g, nori 1.5 g, eel 5 g, unagi sauce 1 g, sesame 0.3 g, seasoned rice. Weight and filling vary by restaurant."
+ },
+ {
+  "id": "local:sushi-nigiri-salmon",
+  "name": "Нигири с лососем",
+  "nameEn": "Salmon nigiri",
+  "aliases": [
+   "нигири суши лосось sake nigiri суши ролл роллы sushi suşi roll rol"
+  ],
+  "basis": {
+   "ingredients": [
+    [
+     "usda:168880",
+     18
+    ],
+    [
+     "usda:169655",
+     0.72
+    ],
+    [
+     "usda:175167",
+     12
+    ]
+   ],
+   "grams": 31
+  },
+  "portions": [
+   {
+    "name": "1 нигири (≈31 г)",
+    "nameEn": "1 nigiri (~31 g)",
+    "grams": 31
+   },
+   {
+    "name": "Пара, 2 шт. (≈62 г)",
+    "nameEn": "Pair of 2 (~62 g)",
+    "grams": 62
+   }
+  ],
+  "density": null,
+  "source": "Оценка по типичному составу штуки в суши-барах Баку, все значения по USDA: рис 18 г, лосось 12 г, рис с сахаром. Вес и начинка в заведении могут отличаться.",
+  "sourceEn": "Estimate from a typical piece in Baku sushi bars, all values from USDA: rice 18 g, salmon 12 g, seasoned rice. Weight and filling vary by restaurant."
+ },
+ {
+  "id": "local:sushi-nigiri-eel",
+  "name": "Нигири с угрём",
+  "nameEn": "Eel nigiri",
+  "aliases": [
+   "нигири суши угорь unagi nigiri суши ролл роллы sushi suşi roll rol"
+  ],
+  "basis": {
+   "ingredients": [
+    [
+     "usda:168880",
+     18
+    ],
+    [
+     "usda:169655",
+     0.72
+    ],
+    [
+     "usda:174194",
+     11
+    ],
+    [
+     "usda:171167",
+     1
+    ],
+    [
+     "usda:168458",
+     0.5
+    ]
+   ],
+   "grams": 31
+  },
+  "portions": [
+   {
+    "name": "1 нигири (≈31 г)",
+    "nameEn": "1 nigiri (~31 g)",
+    "grams": 31
+   },
+   {
+    "name": "Пара, 2 шт. (≈62 г)",
+    "nameEn": "Pair of 2 (~62 g)",
+    "grams": 62
+   }
+  ],
+  "density": null,
+  "source": "Оценка по типичному составу штуки в суши-барах Баку, все значения по USDA: рис 18 г, угорь 11 г, соус унаги 1 г, нори 0.5 г, рис с сахаром. Вес и начинка в заведении могут отличаться.",
+  "sourceEn": "Estimate from a typical piece in Baku sushi bars, all values from USDA: rice 18 g, eel 11 g, unagi sauce 1 g, nori 0.5 g, seasoned rice. Weight and filling vary by restaurant."
+ },
+ {
+  "id": "local:sushi-nigiri-shrimp",
+  "name": "Нигири с креветкой",
+  "nameEn": "Shrimp nigiri",
+  "aliases": [
+   "нигири суши креветка ebi nigiri суши ролл роллы sushi suşi roll rol"
+  ],
+  "basis": {
+   "ingredients": [
+    [
+     "usda:168880",
+     18
+    ],
+    [
+     "usda:169655",
+     0.72
+    ],
+    [
+     "usda:175179",
+     10
+    ]
+   ],
+   "grams": 29
+  },
+  "portions": [
+   {
+    "name": "1 нигири (≈29 г)",
+    "nameEn": "1 nigiri (~29 g)",
+    "grams": 29
+   },
+   {
+    "name": "Пара, 2 шт. (≈58 г)",
+    "nameEn": "Pair of 2 (~58 g)",
+    "grams": 58
+   }
+  ],
+  "density": null,
+  "source": "Оценка по типичному составу штуки в суши-барах Баку, все значения по USDA: рис 18 г, креветка 10 г, рис с сахаром. Вес и начинка в заведении могут отличаться.",
+  "sourceEn": "Estimate from a typical piece in Baku sushi bars, all values from USDA: rice 18 g, shrimp 10 g, seasoned rice. Weight and filling vary by restaurant."
+ },
+ {
+  "id": "local:sushi-nigiri-tuna",
+  "name": "Нигири с тунцом",
+  "nameEn": "Tuna nigiri",
+  "aliases": [
+   "нигири суши тунец maguro nigiri суши ролл роллы sushi suşi roll rol"
+  ],
+  "basis": {
+   "ingredients": [
+    [
+     "usda:168880",
+     18
+    ],
+    [
+     "usda:169655",
+     0.72
+    ],
+    [
+     "usda:175159",
+     12
+    ]
+   ],
+   "grams": 31
+  },
+  "portions": [
+   {
+    "name": "1 нигири (≈31 г)",
+    "nameEn": "1 nigiri (~31 g)",
+    "grams": 31
+   },
+   {
+    "name": "Пара, 2 шт. (≈62 г)",
+    "nameEn": "Pair of 2 (~62 g)",
+    "grams": 62
+   }
+  ],
+  "density": null,
+  "source": "Оценка по типичному составу штуки в суши-барах Баку, все значения по USDA: рис 18 г, тунец 12 г, рис с сахаром. Вес и начинка в заведении могут отличаться.",
+  "sourceEn": "Estimate from a typical piece in Baku sushi bars, all values from USDA: rice 18 g, tuna 12 g, seasoned rice. Weight and filling vary by restaurant."
+ },
+ {
+  "id": "local:sushi-gunkan-spicy-salmon",
+  "name": "Гункан со спайси лососем",
+  "nameEn": "Spicy salmon gunkan",
+  "aliases": [
+   "гункан спайси острый лосось gunkan spicy суши ролл роллы sushi suşi roll rol"
+  ],
+  "basis": {
+   "ingredients": [
+    [
+     "usda:168880",
+     15
+    ],
+    [
+     "usda:169655",
+     0.6
+    ],
+    [
+     "usda:168458",
+     2
+    ],
+    [
+     "usda:175167",
+     8
+    ],
+    [
+     "usda:171009",
+     2
+    ],
+    [
+     "usda:171186",
+     0.5
+    ]
+   ],
+   "grams": 28
+  },
+  "portions": [
+   {
+    "name": "1 гункан (≈28 г)",
+    "nameEn": "1 gunkan (~28 g)",
+    "grams": 28
+   }
+  ],
+  "density": null,
+  "source": "Оценка по типичному составу штуки в суши-барах Баку, все значения по USDA: рис 15 г, нори 2 г, лосось 8 г, майонез 2 г, острый соус 0.5 г, рис с сахаром. Вес и начинка в заведении могут отличаться.",
+  "sourceEn": "Estimate from a typical piece in Baku sushi bars, all values from USDA: rice 15 g, nori 2 g, salmon 8 g, mayonnaise 2 g, hot sauce 0.5 g, seasoned rice. Weight and filling vary by restaurant."
+ },
+ {
+  "id": "local:sushi-gunkan-tobiko",
+  "name": "Гункан с икрой тобико",
+  "nameEn": "Tobiko gunkan",
+  "aliases": [
+   "гункан икра тобико tobiko gunkan суши ролл роллы sushi suşi roll rol"
+  ],
+  "basis": {
+   "ingredients": [
+    [
+     "usda:168880",
+     15
+    ],
+    [
+     "usda:169655",
+     0.6
+    ],
+    [
+     "usda:168458",
+     2
+    ],
+    [
+     "usda:175132",
+     10
+    ]
+   ],
+   "grams": 28
+  },
+  "portions": [
+   {
+    "name": "1 гункан (≈28 г)",
+    "nameEn": "1 gunkan (~28 g)",
+    "grams": 28
+   }
+  ],
+  "density": null,
+  "source": "Оценка по типичному составу штуки в суши-барах Баку, все значения по USDA: рис 15 г, нори 2 г, икра тобико 10 г, рис с сахаром. Вес и начинка в заведении могут отличаться.",
+  "sourceEn": "Estimate from a typical piece in Baku sushi bars, all values from USDA: rice 15 g, nori 2 g, tobiko roe 10 g, seasoned rice. Weight and filling vary by restaurant."
+ },
+ {
+  "id": "local:sushi-chuka-salad",
+  "name": "Салат чука",
+  "nameEn": "Chuka seaweed salad",
+  "aliases": [
+   "чука салат водоросли chuka salad wakame"
+  ],
+  "basis": {
+   "ingredients": [
+    [
+     "usda:170496",
+     85
+    ],
+    [
+     "usda:171016",
+     5
+    ],
+    [
+     "usda:169655",
+     3
+    ],
+    [
+     "usda:170150",
+     2
+    ],
+    [
+     "usda:174277",
+     5
+    ]
+   ],
+   "grams": 100
+  },
+  "portions": [
+   {
+    "name": "Порция (≈100 г)",
+    "nameEn": "Serving (~100 g)",
+    "grams": 100
+   }
+  ],
+  "density": null,
+  "source": "Оценка по типичному составу порции в суши-барах Баку, все значения по USDA: водоросли чука 85 г, кунжутное масло 5 г, кунжут 2 г, соевый соус 5 г. Вес и начинка в заведении могут отличаться.",
+  "sourceEn": "Estimate from a typical serving in Baku sushi bars, all values from USDA: chuka seaweed 85 g, sesame oil 5 g, sesame 2 g, soy sauce 5 g. Weight and filling vary by restaurant."
+ },
+ {
+  "id": "local:sushi-miso-soup",
+  "name": "Мисо-суп",
+  "nameEn": "Miso soup",
+  "aliases": [
+   "мисо суп miso soup"
+  ],
+  "basis": {
+   "ingredients": [
+    [
+     "usda:173647",
+     213
+    ],
+    [
+     "usda:172442",
+     18
+    ],
+    [
+     "usda:172476",
+     15
+    ],
+    [
+     "usda:170496",
+     2
+    ],
+    [
+     "usda:170005",
+     2
+    ]
+   ],
+   "grams": 250
+  },
+  "portions": [
+   {
+    "name": "Пиала (≈250 мл)",
+    "nameEn": "Bowl (~250 ml)",
+    "grams": 250
+   }
+  ],
+  "density": 1.0,
+  "source": "Оценка по типичному составу порции в суши-барах Баку, все значения по USDA: вода 213 г, паста мисо 18 г, тофу 15 г, водоросли чука 2 г, зелёный лук 2 г. Вес и начинка в заведении могут отличаться.",
+  "sourceEn": "Estimate from a typical serving in Baku sushi bars, all values from USDA: water 213 g, miso paste 18 g, tofu 15 g, chuka seaweed 2 g, scallion 2 g. Weight and filling vary by restaurant."
+ },
+ {
+  "id": "local:sushi-sashimi-salmon",
+  "base": "usda:175167",
+  "name": "Сашими из лосося",
+  "nameEn": "Salmon sashimi",
+  "aliases": [
+   "сашими лосось sashimi salmon losos суши ролл роллы sushi suşi roll rol"
+  ],
+  "portions": [
+   {
+    "name": "1 кусочек (≈15 г)",
+    "nameEn": "1 slice (~15 g)",
+    "grams": 15
+   },
+   {
+    "name": "Порция 5 шт. (≈75 г)",
+    "nameEn": "5 slices (~75 g)",
+    "grams": 75
+   }
+  ],
+  "source": "Сырая рыба, значения USDA FoodData Central; кусочек сашими около 15 г.",
+  "sourceEn": "Raw fish, USDA FoodData Central values; a sashimi slice is about 15 g."
+ },
+ {
+  "id": "local:sushi-sashimi-tuna",
+  "base": "usda:175159",
+  "name": "Сашими из тунца",
+  "nameEn": "Tuna sashimi",
+  "aliases": [
+   "сашими тунец sashimi tuna суши ролл роллы sushi suşi roll rol"
+  ],
+  "portions": [
+   {
+    "name": "1 кусочек (≈15 г)",
+    "nameEn": "1 slice (~15 g)",
+    "grams": 15
+   },
+   {
+    "name": "Порция 5 шт. (≈75 г)",
+    "nameEn": "5 slices (~75 g)",
+    "grams": 75
+   }
+  ],
+  "source": "Сырая рыба, значения USDA FoodData Central; кусочек сашими около 15 г.",
+  "sourceEn": "Raw fish, USDA FoodData Central values; a sashimi slice is about 15 g."
+ }
+]

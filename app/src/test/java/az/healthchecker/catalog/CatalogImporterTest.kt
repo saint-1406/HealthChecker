@@ -12,7 +12,7 @@ class CatalogImporterTest {
     private val catalog by lazy{CatalogImporter(ApplicationProvider.getApplicationContext<Context>())}
     private fun ids(query:String,custom:List<Food> = emptyList())=catalog.search(query,custom).map{it.id}
     @Test fun bundledCatalogHasSourcedFoodsAndWater() {
-        assertEquals(7802,catalog.foods.size);assertEquals(catalog.foods.size,catalog.foods.map{it.id}.toSet().size)
+        assertEquals(7834,catalog.foods.size);assertEquals(catalog.foods.size,catalog.foods.map{it.id}.toSet().size)
         val water=catalog.foods.single{it.isWater};assertEquals("usda:173647",water.id);assertEquals(1.0,water.density!!,0.0)
     }
     @Test fun azerbaijaniAndRussianSpellingsFindTheSameEgg() {
@@ -43,6 +43,28 @@ class CatalogImporterTest {
         assertEquals(171.0,calculate(catalog.byId("local:puste-antep")!!,Quantity(30.0,Measure.GRAMS)).nutrients.kcal!!,0.01)
         assertEquals(140.0,calculate(catalog.byId("local:sosiska-assorti")!!,Quantity(50.0,Measure.GRAMS)).nutrients.kcal!!,0.01)
         listOf("xəngəl","хинкали","Can əti nar qovurma","düşbərə","дюшбара","popkorn","темпура","sosiska","püstə","фисташки антеп").forEach{q->assertTrue(q,ids(q).any{it.startsWith("local:")})}
+    }
+    @Test fun sushiPiecesKeepTheGivenEstimates() {
+        fun piece(id:String):Nutrients { val f=catalog.byId(id)!!;return calculate(f,Quantity(1.0,Measure.PIECES,f.portions.first().grams)).nutrients }
+        // Middle of the user's ranges per piece; fat is what the energy leaves after protein and carbohydrate.
+        val philadelphia=piece("local:sushi-philadelphia")
+        assertEquals(57.5,philadelphia.kcal!!,0.01);assertEquals(2.5,philadelphia.protein!!,0.01);assertEquals(6.0,philadelphia.carbs!!,0.01)
+        assertEquals((57.5-4*2.5-4*6.0)/9,philadelphia.fat!!,0.01)
+        assertEquals(30.0,piece("local:sushi-sake-maki").kcal!!,0.01);assertEquals(80.0,piece("local:sushi-hot-salmon").kcal!!,0.01)
+        assertEquals(45.0,piece("local:sushi-chuka").kcal!!,0.01);assertEquals(1.0,piece("local:sushi-chuka").protein!!,0.01)
+        // A whole roll is eight pieces.
+        val roll=catalog.byId("local:sushi-california")!!
+        assertEquals(8*50.0,calculate(roll,Quantity(1.0,Measure.PIECES,roll.portions[1].grams)).nutrients.kcal!!,0.1)
+        assertEquals(32,catalog.foods.count{it.id.startsWith("local:sushi-")})
+        catalog.foods.filter{it.id.startsWith("local:sushi-")}.forEach{assertNotNull(it.id,it.per100g.fiber);assertTrue(it.id,it.common)}
+    }
+    @Test fun sushiIsFoundInRussianEnglishAndAzerbaijani() {
+        assertEquals("local:sushi-philadelphia",ids("филадельфия").first());assertEquals("local:sushi-philadelphia",ids("filadelfiya").first())
+        assertEquals("local:sushi-california",ids("kaliforniya").first());assertEquals("local:sushi-hot-ebi",ids("горячий эби").first())
+        assertTrue(ids("суши").take(20).all{it.startsWith("local:sushi-")})
+        assertTrue(ids("ролл").first().startsWith("local:sushi-"))
+        listOf("гункан","сашими лосось","нигири","маки","tekka","мисо суп","чука").forEach{q->assertTrue(q,ids(q).first().startsWith("local:sushi-"))}
+        assertEquals("usda:174277",ids("соевый соус").first());assertEquals("usda:171831",ids("васаби").first())
     }
     @Test fun emptyQueryIsLimitedAndCustomFoodsComeFirst() {
         val custom=Food("custom:1","Лаваш Bakı",per100g=Nutrients(250.0))

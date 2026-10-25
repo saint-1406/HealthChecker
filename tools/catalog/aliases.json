@@ -749,5 +749,29 @@
     "aliases": [
       "şabalıd"
     ]
+  },
+  "usda:174277": {
+    "name": "Соевый соус",
+    "aliases": [
+      "soya sousu"
+    ]
+  },
+  "usda:169765": {
+    "name": "Имбирь маринованный (с подсластителем)",
+    "aliases": [
+      "zəncəfil гари gari"
+    ]
+  },
+  "usda:171831": {
+    "name": "Васаби",
+    "aliases": [
+      "vasabi"
+    ]
+  },
+  "usda:168411": {
+    "name": "Эдамаме, варёные",
+    "aliases": [
+      "edamame соя бобы"
+    ]
   }
 }
