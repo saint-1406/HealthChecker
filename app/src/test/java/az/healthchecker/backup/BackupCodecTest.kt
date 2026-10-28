@@ -18,13 +18,15 @@ class BackupCodecTest {
         assertThrows(IllegalArgumentException::class.java){BackupCodec.encode(s.copy(weights=weights+weights.first()))}
         assertThrows(IllegalArgumentException::class.java){BackupCodec.encode(s.copy(weights=listOf(weights.first().copy(kg=Double.NaN))))}
     }
-    @Test fun schemaFiveKeepsTheUsersVideosAndFourStillRestores() {
+    @Test fun schemaSixKeepsTheUsersVideosAndTheirChangesAndFourStillRestores() {
         val now=java.time.Instant.parse("2026-10-28T08:00:00Z")
-        val s=snapshot().copy(videos=listOf(makeOwnVideo("video:${UUID.randomUUID()}","Утренняя","https://youtu.be/ml6cT4AZdqI",now),makeOwnVideo("video:${UUID.randomUUID()}","Файл","",now)))
+        // An own link, an own file and the user's changes to a built-in video (saved under its id, without the timeline).
+        val changed=editVideo(WorkoutVideo("yt:eoY6qlkp1xA","30 MIN",youtubeId="eoY6qlkp1xA",embeddable=false),"Моя 30-минутка","По вторникам","https://youtu.be/eoY6qlkp1xA").copy(addedAt=now.toString())
+        val s=snapshot().copy(videos=listOf(makeOwnVideo("video:${UUID.randomUUID()}","Утренняя","https://youtu.be/ml6cT4AZdqI",now),makeOwnVideo("video:${UUID.randomUUID()}","Файл","",now),changed))
         val text=BackupCodec.encode(s).toString(Charsets.UTF_8)
-        assertTrue(text.contains("\"schemaVersion\":5"));assertTrue(text.contains("ml6cT4AZdqI"));assertEquals(s,BackupCodec.decode(text.toByteArray()))
+        assertTrue(text.contains("\"schemaVersion\":6"));assertTrue(text.contains("ml6cT4AZdqI"));assertEquals(s,BackupCodec.decode(text.toByteArray()))
         val old=snapshot()
-        val four=BackupCodec.encode(old).toString(Charsets.UTF_8).replace("\"schemaVersion\":5","\"schemaVersion\":4").replace(",\"videos\":[]","")
+        val four=BackupCodec.encode(old).toString(Charsets.UTF_8).replace("\"schemaVersion\":6","\"schemaVersion\":4").replace(",\"videos\":[]","")
         assertFalse(four.contains("videos"));assertEquals(old,BackupCodec.decode(four.toByteArray()))
         assertThrows(IllegalArgumentException::class.java){BackupCodec.encode(s.copy(videos=s.videos+s.videos.first()))}
         assertThrows(IllegalArgumentException::class.java){BackupCodec.encode(s.copy(videos=listOf(s.videos.first().copy(youtubeId="<script>"))))}

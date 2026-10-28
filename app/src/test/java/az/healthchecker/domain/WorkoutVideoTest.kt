@@ -53,9 +53,26 @@ class WorkoutVideoTest {
         assertNull(makeOwnVideo("video:2","Файл","",now).youtubeId)
         assertThrows(IllegalArgumentException::class.java){makeOwnVideo("video:3","Имя","https://vimeo.com/1",now)}
         assertThrows(IllegalArgumentException::class.java){makeOwnVideo("video:4","  ","https://youtu.be/ml6cT4AZdqI",now)}
-        assertThrows(IllegalArgumentException::class.java){validateVideo(v.copy(id="yt:ml6cT4AZdqI"))}
+        assertThrows(IllegalArgumentException::class.java){validateVideo(v.copy(id="custom:ml6cT4AZdqI"))}
         assertThrows(IllegalArgumentException::class.java){validateVideo(v.copy(youtubeId="bad"))}
         assertThrows(IllegalArgumentException::class.java){validateVideo(v.copy(segments=listOf(seg(10,5,"squat"))))}
+    }
+    @Test fun nameDescriptionAndLinkCanBeChangedAndABuiltInKeepsItsTimeline() {
+        val builtIn=video.copy(id="yt:eoY6qlkp1xA",youtubeId="eoY6qlkp1xA",embeddable=false,about="Разминка",aboutEn="Warm-up")
+        val edited=editVideo(builtIn," Моя 30-минутка ","  Делаю по вторникам  ","https://youtu.be/ml6cT4AZdqI")
+        assertEquals(listOf("Моя 30-минутка","Делаю по вторникам","Делаю по вторникам","ml6cT4AZdqI"),listOf(edited.title,edited.about,edited.aboutEn,edited.youtubeId))
+        // Saved without the timeline, merged back over the bundled one; another video is tried in the player.
+        val saved=edited.copy(segments=emptyList());validateVideo(saved)
+        val merged=builtIn.withEdits(saved)
+        assertEquals(builtIn.segments,merged.segments);assertEquals("ml6cT4AZdqI",merged.youtubeId);assertTrue(merged.embeddable)
+        // Only the description changed: the owner's ban on embedding still applies.
+        assertFalse(builtIn.withEdits(editVideo(builtIn,"Test","Новое описание","https://www.youtube.com/watch?v=eoY6qlkp1xA")).embeddable)
+        assertSame(builtIn,builtIn.withEdits(null))
+        assertNull(editVideo(builtIn,"Без ссылки","","").youtubeId)
+        assertThrows(IllegalArgumentException::class.java){editVideo(builtIn,"x","","https://vimeo.com/1")}
+        assertThrows(IllegalArgumentException::class.java){editVideo(builtIn," ","","")}
+        assertThrows(IllegalArgumentException::class.java){editVideo(builtIn,"x","a".repeat(2001),"")}
+        assertThrows(IllegalArgumentException::class.java){validateVideo(saved.copy(id="yt:../evil"))}
     }
     @Test fun followAlongClockJumpsAndKeepsItsState() {
         val running=Stopwatch().start(1000).seek(5000,352_000)

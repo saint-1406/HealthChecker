@@ -71,6 +71,8 @@ class AppViewModel(application:Application):AndroidViewModel(application) {
     /** Automatic step counting: switched on, and whether this phone has a step counter at all. */
     val stepTracking=MutableStateFlow(StepTracking.enabled(context))
     val stepSensor=StepTracking.sensorAvailable(context)
+    /** The installed release number, as the update file is named (HealthChecker-update-v11.apk → "11"). */
+    val appVersion:String = runCatching{context.packageManager.getPackageInfo(context.packageName,0).versionName}.getOrNull().orEmpty()
     private var undo:(suspend ()->kotlin.Unit)?=null
     private val runningBackups=AtomicInteger()
     private val backups=BackupCoordinator(object:BackupEnvironment {
@@ -219,7 +221,20 @@ class AppViewModel(application:Application):AndroidViewModel(application) {
             }
         }
     }
-    fun video(id:String):WorkoutVideo? = libraryVideos.value.find{it.id==id}?:snapshot.value.videos.find{it.id==id}
+    /** Built-in videos with the user's changes, then the user's own videos. */
+    fun videoList(s:UserSnapshot=snapshot.value):List<WorkoutVideo> = libraryVideos.value.map{v->v.withEdits(s.videos.find{it.id==v.id})}+s.videos.filter{it.own}
+    fun video(id:String):WorkoutVideo? = videoList().find{it.id==id}
+    /** Whether the user changed this built-in video (so it can be put back). */
+    fun videoEdited(id:String):Boolean = !id.startsWith("video:")&&snapshot.value.videos.any{it.id==id}
+    /** Saves a new title, description and link; for a built-in video only the changes are kept, the timeline stays bundled. */
+    fun editVideoDetails(video:WorkoutVideo,title:String,about:String,link:String,done:()->kotlin.Unit)=action(done) {
+        val edited=editVideo(video,title,about,link)
+        repository.saveVideo(if(video.own)edited else edited.copy(channel="",durationSec=null,segments=emptyList(),addedAt=Instant.now().toString()))
+    }
+    fun resetVideoDetails(id:String,done:()->kotlin.Unit={})=action(done) {
+        val old=snapshot.value.videos.find{it.id==id}?:return@action
+        repository.deleteVideo(id);offerUndo(tr("Возвращены исходные название, описание и ссылка","The original name, description and link are back")){repository.saveVideo(old)}
+    }
     fun videoPosition(id:String,second:Int){if(videoPositions.value[id]!=second)videoPositions.value=videoPositions.value+(id to second)}
     fun videoClockMs(id:String):Long = videoClock.value?.takeIf{it.first==id}?.second?.elapsed(clock())?:(videoPositions.value[id]?:0)*1000L
     fun startVideoClock(id:String){val c=videoClock.value;videoClock.value=id to (if(c?.first==id)c.second else Stopwatch((videoPositions.value[id]?:0)*1000L)).start(clock())}

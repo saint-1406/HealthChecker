@@ -42,6 +42,8 @@ import az.healthchecker.ui.*
             if(weight==null)Text(tr("Укажите вес в профиле, чтобы считать калории упражнений","Enter your weight in the profile to estimate exercise calories"),color=MaterialTheme.colorScheme.error,style=MaterialTheme.typography.bodySmall,modifier=Modifier.clickable(onClick=openProfile))
         }}
         item{Button(onClick=add,modifier=Modifier.fillMaxWidth().heightIn(min=54.dp).testTag("addExercise")){Icon(Icons.Outlined.Add,null);Spacer(Modifier.width(8.dp));Text(tr("Добавить упражнение","Add exercise"))}}
+        // Right under "Add exercise", above the day's list, so it is on the first screen however much was logged.
+        item{FilledTonalButton(onClick=videos,modifier=Modifier.fillMaxWidth().heightIn(min=54.dp).testTag("openVideos")){Icon(Icons.Outlined.SmartDisplay,null);Spacer(Modifier.width(8.dp));Text(tr("Видеотренировки","Workout videos"))}}
         if(day.workouts.isNotEmpty()){
             item{SectionTitle(tr("Выполненные упражнения","Completed exercises"),count(day.workouts.size,"упражнение","упражнения","упражнений","exercise","exercises"))}
             items(day.workouts,key={it.id}){w->Panel {
@@ -51,16 +53,6 @@ import az.healthchecker.ui.*
                 }
             }}
         }
-        item{Panel(Modifier.clickable(onClick=videos).testTag("openVideos")){
-            Row(horizontalArrangement=Arrangement.spacedBy(12.dp),verticalAlignment=Alignment.CenterVertically){
-                Icon(Icons.Outlined.SmartDisplay,null,tint=MaterialTheme.colorScheme.primary)
-                Column(Modifier.weight(1f)){
-                    Text(tr("Видеотренировки","Workout videos"),style=MaterialTheme.typography.titleMedium)
-                    Text(tr("YouTube или свой файл: что делать сейчас и вся тренировка в дневник одной кнопкой","YouTube or your own file: what to do now, and the whole workout to the diary in one tap"),style=MaterialTheme.typography.bodySmall,color=MaterialTheme.colorScheme.onSurfaceVariant)
-                }
-                Icon(Icons.Outlined.ChevronRight,null)
-            }
-        }}
         plan?.let{p->
             item{Panel {
                 SectionTitle(tr("Рекомендации на сегодня","Today's suggestions"),if(p.recovery)tr("Мышцы ещё восстанавливаются после последних тренировок — лёгкий день","Muscles are still recovering from recent training — an easy day") else tr("Акцент: ","Focus: ")+p.focus.distinct().joinToString(", "){muscleLabel(it).lowercase(Lang.locale)})

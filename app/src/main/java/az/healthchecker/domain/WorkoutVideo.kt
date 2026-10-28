@@ -95,8 +95,25 @@ fun makeOwnVideo(id:String,title:String,link:String,addedAt:Instant):WorkoutVide
     require(name.length<=200){tr("Название слишком длинное","The name is too long")}
     return WorkoutVideo(id,name,youtubeId=yt,addedAt=addedAt.toString())
 }
+/**
+ * A built-in video as the user changed it: their title, description and link over the bundled timeline. A new link
+ * points at another video, whose embedding is unknown, so the player is tried.
+ */
+fun WorkoutVideo.withEdits(edit:WorkoutVideo?):WorkoutVideo = if(edit==null)this else
+    copy(title=edit.title,about=edit.about,aboutEn=edit.aboutEn,youtubeId=edit.youtubeId,embeddable=if(edit.youtubeId==youtubeId)embeddable else true)
+/** The user's title, description and YouTube link (blank removes it) on a video, checked like a new one; one text serves both languages. */
+fun editVideo(video:WorkoutVideo,title:String,about:String,link:String):WorkoutVideo {
+    val name=title.trim();val text=about.trim()
+    require(name.isNotEmpty()){tr("Назовите видео","Give the video a name")}
+    require(name.length<=200){tr("Название слишком длинное","The name is too long")}
+    require(text.length<=2000){tr("Описание слишком длинное","The description is too long")}
+    val yt=link.takeIf{it.isNotBlank()}?.let{youtubeId(it)?:throw IllegalArgumentException(tr("Это не похоже на ссылку YouTube","This does not look like a YouTube link"))}
+    return video.copy(title=name,about=text,aboutEn=text,youtubeId=yt)
+}
+/** Ids of the built-in videos; the user's changes to one are saved under the same id. */
+private val BUILT_IN_VIDEO_ID=Regex("yt:[A-Za-z0-9_-]{11}")
 fun validateVideo(v:WorkoutVideo) {
-    require(v.id.startsWith("video:")&&v.id.length<=100&&v.title.isNotBlank()&&v.title.length<=200&&v.channel.length<=200&&v.about.length<=2000&&v.aboutEn.length<=2000)
+    require((v.id.startsWith("video:")||BUILT_IN_VIDEO_ID.matches(v.id))&&v.id.length<=100&&v.title.isNotBlank()&&v.title.length<=200&&v.channel.length<=200&&v.about.length<=2000&&v.aboutEn.length<=2000)
     require(v.youtubeId==null||YOUTUBE_ID.matches(v.youtubeId));require(v.durationSec==null||v.durationSec in 1..86400)
     require(v.segments.size<=500&&v.segments.all{it.start>=0&&it.end>it.start&&it.end<=86400&&EXERCISE_ID.matches(it.exerciseId)&&it.title.length<=200})
     v.addedAt?.let(Instant::parse)

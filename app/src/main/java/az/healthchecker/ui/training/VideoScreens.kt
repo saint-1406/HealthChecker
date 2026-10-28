@@ -19,6 +19,8 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.foundation.lazy.rememberLazyListState
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.outlined.ArrowBack
@@ -53,6 +55,7 @@ import kotlinx.coroutines.delay
     val settings by vm.settings.collectAsStateWithLifecycle()
     var adding by rememberSaveable{mutableStateOf(false)}
     val filePicker=rememberLauncherForActivityResult(ActivityResultContracts.OpenDocument()){uri->uri?.let{vm.attachVideoFile(it,null,open)}}
+    val videos=remember(library,snapshot.videos){vm.videoList(snapshot)}
     Column(Modifier.fillMaxSize()) {
         Row(Modifier.padding(start=8.dp,end=16.dp,top=8.dp),verticalAlignment=Alignment.CenterVertically){
             IconButton(onClick=back){Icon(Icons.AutoMirrored.Outlined.ArrowBack,tr("Назад","Back"))}
@@ -61,7 +64,7 @@ import kotlinx.coroutines.delay
         LazyColumn(Modifier.weight(1f).fillMaxWidth().testTag("videoList"),contentPadding=PaddingValues(16.dp),verticalArrangement=Arrangement.spacedBy(12.dp)) {
             item{Text(tr("Занимайтесь по видео: приложение показывает, какое упражнение идёт и сколько осталось, и одной кнопкой записывает всю тренировку в дневник.",
                 "Train along with a video: the app shows which exercise is on and how long is left, and logs the whole workout to the diary in one tap."),style=MaterialTheme.typography.bodyMedium)}
-            items(library+snapshot.videos,key={it.id}){v->VideoCard(vm,v,settings.videoFiles[v.id]){open(v.id)}}
+            items(videos,key={it.id}){v->VideoCard(vm,v,settings.videoFiles[v.id]){open(v.id)}}
             item{FlowRow(horizontalArrangement=Arrangement.spacedBy(8.dp),verticalArrangement=Arrangement.spacedBy(8.dp)){
                 Button(onClick={adding=true},modifier=Modifier.testTag("addVideoLink")){Icon(Icons.Outlined.Link,null);Spacer(Modifier.width(6.dp));Text(tr("Ссылка YouTube","YouTube link"))}
                 OutlinedButton(onClick={filePicker.launch(arrayOf("video/*"))}){Icon(Icons.Outlined.VideoFile,null);Spacer(Modifier.width(6.dp));Text(tr("Файл с телефона","File on the phone"))}
@@ -115,6 +118,25 @@ private fun videoSummary(vm:AppViewModel,v:WorkoutVideo):String = listOfNotNull(
         dismissButton={TextButton(onClick=close){Text(tr("Отмена","Cancel"))}})
 }
 
+/** Name, description and YouTube link of a video; a built-in one keeps its timeline and can go back to how it came. */
+@Composable private fun EditVideoDialog(vm:AppViewModel,video:WorkoutVideo,edited:Boolean,close:()->Unit,saved:()->Unit) {
+    var title by rememberSaveable{mutableStateOf(video.title)}
+    var about by rememberSaveable{mutableStateOf(video.displayAbout)}
+    var link by rememberSaveable{mutableStateOf(video.youtubeId?.let{youtubeWatchUrl(it)}.orEmpty())}
+    val busy by vm.busy.collectAsStateWithLifecycle()
+    val check=runCatching{editVideo(video,title,about,link)}
+    AlertDialog(onDismissRequest=close,title={Text(tr("Видео","Video"))},text={Column(Modifier.verticalScroll(rememberScrollState()),verticalArrangement=Arrangement.spacedBy(8.dp)){
+        OutlinedTextField(title,{title=it.take(200)},label={Text(tr("Название","Name"))},modifier=Modifier.fillMaxWidth().testTag("editVideoTitle"))
+        OutlinedTextField(about,{about=it.take(2000)},label={Text(tr("Описание","Description"))},minLines=3,maxLines=8,modifier=Modifier.fillMaxWidth().testTag("editVideoAbout"))
+        OutlinedTextField(link,{link=it.take(300)},label={Text(tr("Ссылка YouTube","YouTube link"))},singleLine=true,modifier=Modifier.fillMaxWidth().testTag("editVideoLink"))
+        check.exceptionOrNull()?.let{Text(it.message?:"",color=MaterialTheme.colorScheme.error,style=MaterialTheme.typography.bodySmall)}
+        Text(if(video.segments.isNotEmpty())tr("Разметка упражнений остаётся прежней — меняйте ссылку на то же видео, например на копию, которую разрешено встраивать.","The exercise timeline stays the same — point the link at the same workout, for example a copy that may be embedded.")
+            else tr("Пустая ссылка убирает YouTube: видео будет играть только из своего файла.","An empty link removes YouTube: the video then plays only from your own file."),style=MaterialTheme.typography.bodySmall,color=MaterialTheme.colorScheme.onSurfaceVariant)
+        if(edited)TextButton(onClick={vm.resetVideoDetails(video.id,saved)},enabled=!busy,modifier=Modifier.testTag("resetVideo")){Text(tr("Вернуть исходные","Restore the original"))}
+    }},confirmButton={TextButton(onClick={vm.editVideoDetails(video,title,about,link,saved)},enabled=check.isSuccess&&!busy,modifier=Modifier.testTag("saveVideoEdit")){Text(tr("Сохранить","Save"))}},
+        dismissButton={TextButton(onClick=close){Text(tr("Отмена","Cancel"))}})
+}
+
 /** Lets the timeline move whichever player is showing. */
 private class PlayerControl { var seek:(Int)->Unit = {} }
 private enum class Source { CLOCK, FILE, YOUTUBE }
@@ -127,7 +149,7 @@ private enum class Source { CLOCK, FILE, YOUTUBE }
 @Composable fun VideoScreen(vm:AppViewModel,snapshot:UserSnapshot,date:String,id:String,back:()->Unit) {
     val library by vm.libraryVideos.collectAsStateWithLifecycle()
     val settings by vm.settings.collectAsStateWithLifecycle()
-    val video=remember(library,snapshot.videos,id){vm.video(id)}
+    val video=remember(library,snapshot.videos,id){vm.videoList(snapshot).find{it.id==id}}
     if(video==null){TextButton(onClick=back){Text(tr("Видео недоступно. Вернуться","The video is unavailable. Go back"))};return}
     val context=LocalContext.current
     val view=LocalView.current
@@ -140,6 +162,7 @@ private enum class Source { CLOCK, FILE, YOUTUBE }
     var youtubeError by rememberSaveable(id){mutableStateOf<Int?>(null)}
     var full by rememberSaveable{mutableStateOf(false)}
     var logging by rememberSaveable{mutableStateOf(false)}
+    var editing by rememberSaveable{mutableStateOf(false)}
     var position by remember(id){mutableIntStateOf(vm.videoPositions.value[id]?:0)}
     val control=remember(id){PlayerControl()}
     val clock by vm.videoClock.collectAsStateWithLifecycle()
@@ -165,6 +188,7 @@ private enum class Source { CLOCK, FILE, YOUTUBE }
                 if(video.channel.isNotBlank())Text(video.channel,style=MaterialTheme.typography.bodySmall,color=MaterialTheme.colorScheme.onSurfaceVariant)
             }
             if(source!=Source.CLOCK)IconButton(onClick={full=true}){Icon(Icons.Outlined.Fullscreen,tr("На весь экран","Full screen"))}
+            IconButton(onClick={editing=true},modifier=Modifier.testTag("editVideo")){Icon(Icons.Outlined.Edit,tr("Изменить название, описание и ссылку","Edit the name, description and link"))}
         }
         player(if(full)Modifier.weight(1f).fillMaxWidth() else Modifier.fillMaxWidth().aspectRatio(16f/9f))
         if(full)Surface(color=MaterialTheme.colorScheme.surfaceContainer){Row(Modifier.fillMaxWidth().padding(horizontal=8.dp),verticalAlignment=Alignment.CenterVertically){
@@ -183,6 +207,8 @@ private enum class Source { CLOCK, FILE, YOUTUBE }
         }}
         if(!full)VideoTimeline(vm,snapshot,date,video,position,source,linked,file!=null,{seek(it)},{logging=true},{filePicker.launch(arrayOf("video/*"))},back)
     }
+    // A new link is another video: drop the old player and its error, the placeholder offers the new one.
+    if(editing)EditVideoDialog(vm,video,vm.videoEdited(id),{editing=false}){editing=false;youtubeError=null;if(chosen==Source.YOUTUBE)chosen=Source.CLOCK}
     if(logging)LogVideoDialog(vm,video,position,snapshot.bodyWeight(date),{logging=false}){upTo,minutes,vigorous->
         logging=false
         if(video.segments.isEmpty())vm.logVideoAsWorkout(minutes!!,vigorous,date) else vm.logVideo(video,upTo,date)
@@ -258,7 +284,7 @@ private fun youtubeErrorText(code:Int):String = when(code) {
             if(video.displayAbout.isNotBlank())Text(video.displayAbout,style=MaterialTheme.typography.bodyMedium)
             if(video.segments.isNotEmpty()){
                 val kcal=video.segments.sumOf{s->vm.exercise(s.exerciseId)?.let{burnedKcal(it.met,weight,s.seconds/60.0)}?:0.0}
-                Text(listOfNotNull(count(video.segments.size,"упражнение","упражнения","упражнений","exercise","exercises"),tr("работа ","work ")+"${(video.workSeconds+30)/60} ${tr("мин","min")}",if(weight!=null)"≈ ${number(kcal)} $KCAL" else null).joinToString(" · "),
+                Text(listOfNotNull(count(video.segments.size,"упражнение","упражнения","упражнений","exercise","exercises"),tr("работа ","work ")+"${number(video.workSeconds/60.0,1)} ${tr("мин","min")}",if(weight!=null)"≈ ${number(kcal)} $KCAL" else null).joinToString(" · "),
                     style=MaterialTheme.typography.titleSmall,color=MaterialTheme.colorScheme.primary,modifier=Modifier.testTag("videoTotals"))
                 Text(tr("Нажмите на упражнение, чтобы перейти к нему.","Tap an exercise to jump to it."),style=MaterialTheme.typography.bodySmall,color=MaterialTheme.colorScheme.onSurfaceVariant)
             }

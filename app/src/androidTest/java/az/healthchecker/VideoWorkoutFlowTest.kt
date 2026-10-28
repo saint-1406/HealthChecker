@@ -17,6 +17,7 @@ class VideoWorkoutFlowTest {
     private fun launch(){scenario?.close();scenario=ActivityScenario.launch(MainActivity::class.java)}
     private fun waitText(text:String,timeout:Long=90000,substring:Boolean=false)=app.waitUntil(timeout){app.onAllNodesWithText(text,substring=substring).fetchSemanticsNodes().isNotEmpty()}
     private fun skipOnboarding(){launch();waitText("Начать без расчёта");app.onNodeWithText("Начать без расчёта").performClick();waitText("Обзор")}
+    private fun dialogClosed()=app.waitUntil(30000){app.onAllNodesWithTag("saveVideoEdit").fetchSemanticsNodes().isEmpty()}
     private fun openVideos() {
         app.onNodeWithText("Тренировки").performClick()
         app.waitUntil(90000){runCatching{app.onNodeWithTag("trainingList").performScrollToNode(hasTestTag("openVideos"))}.isSuccess}
@@ -51,8 +52,33 @@ class VideoWorkoutFlowTest {
         waitText("Записано из видео: 32 упражнения",30000)
         app.onNodeWithContentDescription("Назад").performClick()
         app.onNodeWithContentDescription("Назад").performClick()
+        // The way in stays on the first screen above the day's list, however much was logged.
+        app.onNodeWithTag("openVideos").assertIsDisplayed()
         app.onNodeWithTag("trainingList").performScrollToNode(hasText("Выполненные упражнения"))
         app.onNodeWithText("32 упражнения").assertExists()
+        // The profile names the installed release, as the update file is numbered.
+        app.onNodeWithText("Профиль").performClick()
+        app.onNodeWithTag("appVersion").performScrollTo().assert(hasText("HealthChecker · версия ",substring=true))
+    }
+    @Test fun builtInVideoLinkAndDescriptionCanBeChangedAndPutBack() {
+        skipOnboarding()
+        openVideos()
+        app.onAllNodesWithText("30 MIN FULL BODY WORKOUT",substring=true).onFirst().performClick()
+        waitText("34 упражнения",30000,substring=true)
+        app.onNodeWithTag("editVideo").performClick()
+        app.onNodeWithTag("editVideoLink").assert(hasText("eoY6qlkp1xA",substring=true))
+        app.onNodeWithTag("editVideoLink").performTextReplacement("https://youtu.be/ml6cT4AZdqI")
+        app.onNodeWithTag("editVideoAbout").performTextReplacement("Делаю по вторникам")
+        app.onNodeWithTag("saveVideoEdit").performClick()
+        // Another video may allow embedding, so the player is offered; the timeline stays.
+        dialogClosed()
+        app.onNodeWithText("Делаю по вторникам").assertExists()
+        app.onNodeWithTag("loadYoutube").assertExists()
+        app.onNodeWithTag("videoTotals").assert(hasText("34 упражнения",substring=true))
+        app.onNodeWithTag("editVideo").performClick()
+        app.onNodeWithTag("resetVideo").performClick()
+        app.waitUntil(30000){app.onAllNodesWithText("запретил",substring=true).fetchSemanticsNodes().isNotEmpty()}
+        app.onNodeWithText("Делаю по вторникам").assertDoesNotExist()
     }
     @Test fun ownYouTubeLinkLoadsOnlyOnRequestAndIsLoggedByTime() {
         skipOnboarding()
@@ -72,6 +98,12 @@ class VideoWorkoutFlowTest {
         app.onNodeWithTag("videoMinutes").performTextInput("20")
         app.onNodeWithTag("confirmLogVideo").performClick()
         waitText("Записано: Кардио-тренировка по видео, умеренная",30000)
+        // Its description can be written afterwards.
+        app.onNodeWithTag("editVideo").performClick()
+        app.onNodeWithTag("editVideoAbout").performTextInput("Йога-разминка по утрам")
+        app.onNodeWithTag("saveVideoEdit").performClick()
+        dialogClosed()
+        app.onNodeWithText("Йога-разминка по утрам").assertExists()
         // The link is kept after a restart.
         launch()
         openVideos()
