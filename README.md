@@ -161,10 +161,10 @@ python -m unittest discover -s tools/catalog
 python -m unittest discover -s tools/exercises
 python tools/exercises/videos.py
 .\gradlew.bat :app:connectedDebugAndroidTest
-.\scripts\build-apk.ps1 -VersionCode 12
+.\scripts\build-apk.ps1 -VersionCode 13
 ```
 
-Последняя команда проверяет unit-тесты, lint, подпись, applicationId и versionCode release-сборки, затем кладёт новый файл `dist/HealthChecker-update-v<номер>.apk` рядом с прежними (базовая версия и старые обновления не трогаются), дописывает его SHA-256 в `dist/SHA256SUMS.txt` и номер в `dist/HealthChecker.version`. Рядом пишется `dist/HealthChecker-update-v<номер>.apk.sha256`. С ключом `-Publish` (после `git push` в `main`) скрипт создаёт релиз GitHub `v<номер>` с этим APK и его контрольной суммой; нужен GitHub CLI, один раз войти командой `gh auth login`. Базовый установщик в `releases/` меняется только отдельным решением. Номер должен быть больше выданного (сейчас выдан **11**, следующий — 12), иначе Android не поставит обновление поверх; скрипт это проверяет. При ошибке предыдущий APK в `dist` не заменяется.
+Последняя команда проверяет unit-тесты, lint, подпись, applicationId и versionCode release-сборки, затем кладёт новый файл `dist/HealthChecker-update-v<номер>.apk` рядом с прежними (базовая версия и старые обновления не трогаются), дописывает его SHA-256 в `dist/SHA256SUMS.txt` и номер в `dist/HealthChecker.version`. Рядом пишется `dist/HealthChecker-update-v<номер>.apk.sha256`. С ключом `-Publish` (после `git push` в `main`) скрипт создаёт релиз GitHub `v<номер>` с этим APK и его контрольной суммой; нужен GitHub CLI, один раз войти командой `gh auth login`. Базовый установщик в `releases/` меняется только отдельным решением. Номер должен быть больше выданного (сейчас выдан **12**, следующий — 13), иначе Android не поставит обновление поверх; скрипт это проверяет. При ошибке предыдущий APK в `dist` не заменяется.
 
 Локальный постоянный ключ текущей установки находится в `.local/signing/healthchecker.jks`; пароль — в `.local/signing/password.txt`, конфигурация сборки — в `signing.properties`. Эти файлы исключены из Git. **Сохраните ключ и пароль отдельно:** без прежнего ключа обновить уже установленный APK нельзя. Не публикуйте их вместе с исходниками.
 
