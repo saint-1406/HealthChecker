@@ -29,7 +29,16 @@ class ExerciseCatalogTest(unittest.TestCase):
         for i,t in titles.items():self.assertIn(t,by[i]['videoNames'],i)
         # Warm-ups are timed mobility moves, so the recommender can pick them for the start of a session.
         for i in ('cross_toe_touch','front_toe_touch'):self.assertEqual(('WARMUP','MOBILITY','SECONDS'),(by[i]['category'],by[i]['kind'],by[i]['measure']),i)
-        self.assertEqual(202,len(self.items))
+
+    def test_thirty_minute_video_titles_name_their_exercise(self):
+        by={i['id']:i for i in self.items}
+        titles={'standing_t_raise':'Standing T-Raise','arm_raises':'Arm Raises','side_step_squat':'Side to Side Squat','reverse_lunge_knee_up':'Reverse Lunge Knee Up',
+                'pushup_knee_up':'Push Up & Knee Up','pushup_t_rotation':'Push Up & T-Rotation','lying_leg_press':'Leg Press','lying_knee_rotation':'T-Rotation',
+                'plank_hip_twist':'Plank & Twist','squat_and_jack':'Squat & Jack','a_skip':'A-Skip','arm_circles':'Single Arm Circles','cross_toe_touch':'Side Toe Touch',
+                'side_lunge':'Side Lunge','single_leg_bridge':'Single Leg Bridge','snow_angel':'Reverse Snow Angel','crunch':'Crunches','plank':'Plank Hold','half_burpee':'Slow Burpee'}
+        for i,t in titles.items():self.assertIn(t,by[i]['videoNames'],i)
+        for i in ('standing_t_raise','arm_raises'):self.assertEqual(('WARMUP','MOBILITY','SECONDS'),(by[i]['category'],by[i]['kind'],by[i]['measure']),i)
+        self.assertEqual(213,len(self.items))
 
     def test_user_video_routine_is_findable_by_its_titles(self):
         titles=['OH Squat','High Plank SH Tap','Knee to Elbow Crunch','Jumping Jack','Split Squat','High Plank & Pike','Table Top Crunches',

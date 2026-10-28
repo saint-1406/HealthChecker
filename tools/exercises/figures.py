@@ -228,6 +228,26 @@ add('hip_flexor_stretch', [P(350, (15, 10), (5, 0), (100, 180), (210, 270))], ho
 add('supine_twist', [P(270, (90, 90), (90, 90), (60, 150), (40, 130))], hold=True)
 add('butterfly_stretch', [P(0, (200, 175), (160, 185), (240, 120), (120, 240), front=True)], hold=True)
 
+# ---- From the 30-minute video ---------------------------------------------------------------------------------------
+# Bent arms in front of the chest open out into a T.
+add('standing_t_raise', [P(0, (240, 100), (120, 260), front=True), F_ARMS_OUT])
+add('arm_raises', [F_STAND, F_ARMS_OUT, P(0, (335, 335), (25, 25), front=True)])
+# A step out into a wide squat, alternately to each side.
+WIDE_SQUAT = P(0, (190, 170), (170, 190), (235, 170), (125, 190), front=True)
+add('side_step_squat', [F_STAND, with_(WIDE_SQUAT, dx=0.12), F_STAND, with_(WIDE_SQUAT, dx=-0.12)])
+# Back from the lunge the rear leg drives forward into a knee lift, the opposite arm swinging forward.
+add('reverse_lunge_knee_up', [LUNGE_UP, LUNGE_DOWN, P(0, (215, 160), (130, 40), (180, 180), (85, 175))])
+add('pushup_knee_up', [PLANK, PUSH_DOWN, PLANK, with_(PLANK, ln=(120, 225))])
+add('pushup_t_rotation', [PLANK, PUSH_DOWN, PLANK, P(70, (180, 180), (0, 0), (248, 248), (248, 248))])
+add('lying_leg_press', [P(270, (90, 90), (90, 90), (80, 80), (80, 80)), P(270, (90, 90), (90, 90), (340, 70), (340, 70))])
+# Seen from the side the raised knees tip towards and away from the viewer.
+TABLETOP = P(270, (90, 90), (90, 90), (0, 90), (0, 90))
+add('lying_knee_rotation', [TABLETOP, P(270, (90, 90), (90, 90), (60, 150), (40, 130)), TABLETOP, P(270, (90, 90), (90, 90), (40, 130), (60, 150))])
+add('plank_hip_twist', [FOREARM_PLANK, with_(FOREARM_PLANK, ln=(263, 263), lf=(249, 249)), FOREARM_PLANK, with_(FOREARM_PLANK, ln=(249, 249), lf=(263, 263))])
+add('squat_and_jack', [F_STAND, F_HALF_SQUAT, F_STAND, F_JACK_OUT])
+A_SKIP = P(5, (215, 160), (130, 40), (75, 175), (185, 185), lift=0.06)
+add('a_skip', [A_SKIP, swap(A_SKIP)])
+
 # ---- Dumbbells (the app draws dumbbells in the hands for every dumbbell exercise) --------------------------------
 add('db_goblet_squat', [P(0, (155, 20), (155, 20)), P(35, (130, 10), (130, 10), (95, 200), (95, 200))])
 add('db_swing', [P(70, (200, 200), (200, 200), (150, 190), (150, 190)), P(0, (90, 90), (90, 90))])

@@ -95,7 +95,8 @@ class DishAndTrainingFlowTest {
         app.onNodeWithTag("startWorkout").performClick()
         app.onNodeWithTag("workoutNowList").performScrollToNode(hasTestTag("logPrescribed"))
         app.onAllNodesWithTag("logPrescribed").onFirst().performClick()
-        app.waitUntil(10000){app.onAllNodesWithText("Выполнено 1 из",substring=true).fetchSemanticsNodes().isNotEmpty()}
+        // A tall first card can push the progress line out of the lazy list, so scroll back up to it.
+        app.waitUntil(10000){runCatching{app.onNodeWithTag("workoutNowList").performScrollToNode(hasText("Выполнено 1 из",substring=true))}.isSuccess}
         app.onNodeWithContentDescription("Назад").performClick()
         waitText("2 упражнения")
         app.onNodeWithText("Обзор").performClick()

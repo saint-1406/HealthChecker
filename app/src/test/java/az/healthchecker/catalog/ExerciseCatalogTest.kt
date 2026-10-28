@@ -11,7 +11,7 @@ import org.robolectric.annotation.Config
 class ExerciseCatalogTest {
     private val catalog by lazy{ExerciseCatalog(ApplicationProvider.getApplicationContext<Context>())}
     @Test fun bundledHomeExercisesLoad() {
-        val all=catalog.exercises;assertEquals(202,all.size);assertEquals(all.size,all.map{it.id}.toSet().size)
+        val all=catalog.exercises;assertEquals(213,all.size);assertEquals(all.size,all.map{it.id}.toSet().size)
         assertTrue(all.all{it.met in 1.0..15.0&&it.metCode.length==5&&it.cue.isNotBlank()&&it.level in 1..3})
         assertEquals(37,all.count{it.equipment==Equipment.DUMBBELLS})
     }
@@ -32,6 +32,23 @@ class ExerciseCatalogTest {
             "Cross toe touches" to "cross_toe_touch","Negative squad" to "squat_negative","prone pull-up" to "prone_pullup","high plank toe in out" to "high_plank_toe_in_out",
             "Front toe touch" to "front_toe_touch","пресс с наклоном в разные стороны" to "oblique_crunch").forEach{(q,id)->assertEquals(q,id,catalog.search(q,null,null,true).first().id)}
     }
+    @Test fun titlesOfTheThirtyMinuteVideoFindTheirExerciseFirst() {
+        mapOf("Single Arm Circles" to "arm_circles","Arm Raises" to "arm_raises","Side Toe Touch" to "cross_toe_touch","Side Lunge" to "side_lunge","Reverse Lunge Knee Up" to "reverse_lunge_knee_up",
+            "Side to Side Squat" to "side_step_squat","Single Leg Bridge" to "single_leg_bridge","Push Up & Knee Up" to "pushup_knee_up","Prone Pull Up" to "prone_pullup",
+            "Push Up & T-Rotation" to "pushup_t_rotation","Reverse Snow Angel" to "snow_angel","Crunches" to "crunch","Leg Press" to "lying_leg_press","T-Rotation" to "lying_knee_rotation",
+            "Plank & Twist" to "plank_hip_twist","Plank Hold" to "plank","Squat & Jack" to "squat_and_jack","Slow Burpee" to "half_burpee","A-Skip" to "a_skip",
+            "Standing T-Raise" to "standing_t_raise").forEach{(q,id)->assertEquals(q,id,catalog.search(q,null,null,true).first().id)}
+    }
+    @Test fun builtInVideosPointAtCatalogExercises() {
+        val videos=VideoLibrary(ApplicationProvider.getApplicationContext<Context>()).videos
+        assertEquals(listOf("eoY6qlkp1xA","jFvQl1boyM0"),videos.map{it.youtubeId});assertTrue(videos.none{it.embeddable||it.own})
+        videos.forEach{v->v.segments.forEach{s->assertNotNull(s.exerciseId,catalog.byId(s.exerciseId))};assertTrue(v.segments.zipWithNext().all{(a,b)->a.end<=b.start})}
+        val thirty=videos.first()
+        assertEquals(listOf(34,32,1812),listOf(thirty.segments.size,thirty.workDone().size,thirty.durationSec))
+        // Jumping jacks open the warm-up and close the cardio: one entry with two sets, 30 s and 40 s.
+        assertEquals(VideoWork("jumping_jacks",2,70),thirty.workDone().single{it.exerciseId=="jumping_jacks"})
+        assertEquals(24,videos[1].segments.size)
+    }
     @Test fun keywordsMusclesAndDirectionsNarrowTheSearch() {
         assertTrue(catalog.search("приседания",null,null,false).take(3).all{it.name.startsWith("Присед")})
         assertTrue(catalog.search("пресс",null,null,false).isNotEmpty()&&catalog.search("пресс",null,null,false).all{Muscle.CORE in it.muscles})
@@ -39,7 +56,7 @@ class ExerciseCatalogTest {
         assertTrue(catalog.search("планка таз",null,null,false).map{it.id}.containsAll(listOf("plank_pike","forearm_plank_pike")))
         assertEquals("skip_imitation",catalog.search("скакалка",null,null,false).first().id)
         assertTrue(catalog.search("отжиманий",null,null,false).any{it.id=="pushup"})
-        assertEquals(19,catalog.search("",null,ExerciseCategory.WARMUP,false).size)
+        assertEquals(21,catalog.search("",null,ExerciseCategory.WARMUP,false).size)
     }
     @Test fun everyBeginnerHomePlanCanBeBuilt() {
         val plan=recommend(catalog.exercises,UserSnapshot(),"2026-10-19",TrainingPrefs(false,1))

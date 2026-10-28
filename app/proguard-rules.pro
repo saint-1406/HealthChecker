@@ -22,6 +22,9 @@
 -keepclassmembers class az.healthchecker.<1> { static az.healthchecker.<1>$Companion Companion; }
 -keepclassmembers class az.healthchecker.**$Companion { kotlinx.serialization.KSerializer serializer(...); }
 
+# The YouTube player page of the workout videos calls its bridge by method name (Android.time, ready, error).
+-keepclassmembers class az.healthchecker.ui.training.** { @android.webkit.JavascriptInterface <methods>; }
+
 # Readable stack traces from logcat; retrace them with app/build/outputs/mapping/release/mapping.txt of the same build.
 -keepattributes SourceFile,LineNumberTable
 -renamesourcefileattribute SourceFile

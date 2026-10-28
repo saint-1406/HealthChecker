@@ -62,6 +62,7 @@ import kotlinx.coroutines.delay
     // The food form returns to the protein screen when a food was picked there.
     var entryBack by rememberSaveable{mutableStateOf("main")}
     var photoName by rememberSaveable{mutableStateOf("")}
+    var videoId by rememberSaveable{mutableStateOf("")}
     val photos by vm.photos.collectAsStateWithLifecycle()
     var planVariant by rememberSaveable{mutableIntStateOf(0)}
     var planDate by rememberSaveable{mutableStateOf("")}
@@ -77,7 +78,7 @@ import kotlinx.coroutines.delay
     fun openDish(existing:Food?,fromInventory:Boolean=false){if(existing!=null||vm.dish.value==null)vm.startDish(existing);dishFromInventory=fromInventory;route="dish"}
     fun editMedication(m:Medication?){medicationId=m?.id?:"";route="medication"}
     fun editIngredient(index:Int){ingredientIndex=index;ingredientFood=vm.dish.value?.ingredients?.getOrNull(index)?.foodId?:"";route="dish-ingredient"}
-    BackHandler(route!="main"){route=when(route){"custom"->"search";"dish"->if(dishFromInventory)"main" else "search";"dish-search","dish-ingredient"->"dish";"workout","exercise-search"->returnTo;"editor"->entryBack;else->"main"}}
+    BackHandler(route!="main"){route=when(route){"custom"->"search";"dish"->if(dishFromInventory)"main" else "search";"dish-search","dish-ingredient"->"dish";"workout","exercise-search"->returnTo;"editor"->entryBack;"video"->"videos";else->"main"}}
     LaunchedEffect(notice){if(notice!=null){delay(8000);vm.dismissNotice()}}
     val today=remember(lastToday){LocalDate.now()}
     val appearance=settings.appearance
@@ -125,6 +126,8 @@ import kotlinx.coroutines.delay
                         val p=preset.split("|").takeIf{it.size==4}?.let{v->Prescription(v[0].toIntOrNull(),v[1].toIntOrNull(),v[2].toIntOrNull(),v[3].toDoubleOrNull())}
                         if(exercise!=null)WorkoutEditor(vm,exercise,old,p,draftId,date,snapshot.bodyWeight(date),{route=returnTo})else TextButton(onClick={route=returnTo}){Text(tr("Упражнение недоступно. Вернуться","The exercise is unavailable. Go back"))}
                     }
+                    "videos" -> VideoLibraryScreen(vm,snapshot,{route="main"}){videoId=it;route="video"}
+                    "video" -> VideoScreen(vm,snapshot,date,videoId,{route="videos"})
                     "custom" -> CustomFoodEditor(vm,{route="search"})
                     "medication" -> MedicationEditor(vm,snapshot.medications.find{it.id==medicationId},date,{route="main"})
                     "steps" -> StepsScreen(vm,snapshot,date,{route="main"})
@@ -142,7 +145,7 @@ import kotlinx.coroutines.delay
                     else -> when(tab) {
                         0 -> DashboardScreen(vm,snapshot,date,backupError,{tab=1;route="search"},{vm.water(date)},::edit,{tab=3},{tab=2},{route="steps"},{route="protein"},{tab=1})
                         1 -> DiaryScreen(vm,snapshot,date,{route="search"},::edit,{e->add(e.foodId,e.id)},::editMedication){photoName=it.fileName;route="photo"}
-                        2 -> TrainingScreen(vm,snapshot,date,rememberTodayPlan(vm,snapshot,date,variant),{leaveFor("exercise-search")},{route="workout-now"},::editWorkout,{tab=3})
+                        2 -> TrainingScreen(vm,snapshot,date,rememberTodayPlan(vm,snapshot,date,variant),{leaveFor("exercise-search")},{route="workout-now"},::editWorkout,{tab=3}){route="videos"}
                         else -> ProfileScreen(vm,false,{folderPicker.launch(null)},{restorePicker.launch(arrayOf("application/json","text/plain"))},date,{openDish(null,true)},{openDish(it,true)}){route="appearance"}
                     }
                 }

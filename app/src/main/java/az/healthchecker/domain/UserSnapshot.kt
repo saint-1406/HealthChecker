@@ -4,6 +4,8 @@ import kotlinx.serialization.Serializable
     val workouts: List<WorkoutEntry> = emptyList(), val trainingDays: Map<String, Boolean> = emptyMap(), val trainingPrefs: TrainingPrefs? = null,
     val medications: List<Medication> = emptyList(), val medicationIntakes: List<MedicationIntake> = emptyList(), val steps: List<StepDay> = emptyList(),
     val weights: List<WeightEntry> = emptyList(),
+    /** Workout videos the user added (YouTube links and titles); files on the phone are linked per device and not kept here. */
+    val videos: List<WorkoutVideo> = emptyList(),
     /** Exercise pictures as base64 JPEG by exercise id; filled only for backups, the app keeps them as files. */
     val exerciseImages: Map<String, String> = emptyMap())
 data class DayState(val date: String, val entries: List<DiaryEntry>, val summary: DaySummary, val goals: DailyGoals?, val completed: Boolean)

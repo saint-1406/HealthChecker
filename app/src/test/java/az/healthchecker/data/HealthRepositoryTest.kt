@@ -66,5 +66,16 @@ class HealthRepositoryTest {
         r.replaceSnapshot(backup);assertArrayEquals(jpeg,r.imageFile("prisoner_squat").readBytes());assertEquals(2,r.exportSnapshot().weights.size)
         r.replaceSnapshot(backup.copy(exerciseImages=emptyMap()));assertTrue(r.imageVersions().isEmpty())
     }
+    @Test fun ownVideosAndAWholeVideoWorkoutPersistAsOneChange()=runTest {
+        val r=repository();val now=java.time.Instant.parse("2026-10-28T08:00:00Z");val zone=java.time.ZoneId.of("Asia/Baku")
+        val v=makeOwnVideo("video:${UUID.randomUUID()}","Утренняя","https://youtu.be/ml6cT4AZdqI",now)
+        r.saveVideo(v);r.saveVideo(v);assertEquals(listOf(v),r.exportSnapshot().videos)
+        val squat=Exercise("squat","Приседания",muscles=listOf(Muscle.LEGS),equipment=Equipment.NONE,kind=ExerciseKind.STRENGTH,level=1,met=3.0,metCode="02056",measure=ExerciseMeasure.REPS,secondsPerRep=3.0)
+        val done=listOf(VideoWork("squat",1,30),VideoWork("squat",2,80)).map{videoWorkout(UUID.randomUUID().toString(),squat,it,"2026-10-28",now,zone,70.0)}
+        val before=r.exportVersioned().first
+        r.upsertWorkouts(done);assertEquals(before+1,r.exportVersioned().first);assertEquals(done.toSet(),r.exportSnapshot().workouts.toSet())
+        r.deleteWorkouts(done.map{it.id});assertTrue(r.exportSnapshot().workouts.isEmpty())
+        val s=r.exportSnapshot();r.deleteVideo(v.id);assertTrue(r.exportSnapshot().videos.isEmpty());r.replaceSnapshot(s);assertEquals(listOf(v),r.exportSnapshot().videos)
+    }
     @Test fun restoredSnapshotsDoNotDuplicate()=runTest { val r=repository();val s=UserSnapshot(entries=listOf(entry()));r.replaceSnapshot(s);r.replaceSnapshot(s);assertEquals(s,r.exportSnapshot()) }
 }

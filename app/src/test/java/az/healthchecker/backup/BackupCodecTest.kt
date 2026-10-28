@@ -12,11 +12,22 @@ class BackupCodecTest {
         val picture=java.util.Base64.getEncoder().encodeToString(jpeg)
         val weights=listOf(makeWeight("2026-10-20",80.4,java.time.Instant.parse("2026-10-20T04:30:00Z"),java.time.ZoneId.of("Asia/Baku")),makeWeight("2026-10-21",80.1,java.time.Instant.parse("2026-10-21T04:30:00Z"),java.time.ZoneId.of("Asia/Baku")))
         val s=snapshot().copy(weights=weights,exerciseImages=mapOf("prisoner_squat" to picture))
-        val bytes=BackupCodec.encode(s);assertTrue(bytes.toString(Charsets.UTF_8).contains("\"schemaVersion\":4"));assertEquals(s,BackupCodec.decode(bytes))
+        val bytes=BackupCodec.encode(s);assertTrue(bytes.toString(Charsets.UTF_8).contains("\"schemaVersion\":${BackupCodec.SCHEMA_VERSION}"));assertEquals(s,BackupCodec.decode(bytes))
         assertThrows(IllegalArgumentException::class.java){BackupCodec.encode(s.copy(exerciseImages=mapOf("prisoner_squat" to java.util.Base64.getEncoder().encodeToString("not a jpeg".toByteArray()))))}
         assertThrows(IllegalArgumentException::class.java){BackupCodec.encode(s.copy(exerciseImages=mapOf("../evil" to picture)))}
         assertThrows(IllegalArgumentException::class.java){BackupCodec.encode(s.copy(weights=weights+weights.first()))}
         assertThrows(IllegalArgumentException::class.java){BackupCodec.encode(s.copy(weights=listOf(weights.first().copy(kg=Double.NaN))))}
+    }
+    @Test fun schemaFiveKeepsTheUsersVideosAndFourStillRestores() {
+        val now=java.time.Instant.parse("2026-10-28T08:00:00Z")
+        val s=snapshot().copy(videos=listOf(makeOwnVideo("video:${UUID.randomUUID()}","Утренняя","https://youtu.be/ml6cT4AZdqI",now),makeOwnVideo("video:${UUID.randomUUID()}","Файл","",now)))
+        val text=BackupCodec.encode(s).toString(Charsets.UTF_8)
+        assertTrue(text.contains("\"schemaVersion\":5"));assertTrue(text.contains("ml6cT4AZdqI"));assertEquals(s,BackupCodec.decode(text.toByteArray()))
+        val old=snapshot()
+        val four=BackupCodec.encode(old).toString(Charsets.UTF_8).replace("\"schemaVersion\":5","\"schemaVersion\":4").replace(",\"videos\":[]","")
+        assertFalse(four.contains("videos"));assertEquals(old,BackupCodec.decode(four.toByteArray()))
+        assertThrows(IllegalArgumentException::class.java){BackupCodec.encode(s.copy(videos=s.videos+s.videos.first()))}
+        assertThrows(IllegalArgumentException::class.java){BackupCodec.encode(s.copy(videos=listOf(s.videos.first().copy(youtubeId="<script>"))))}
     }
     @Test fun futureSchemaAndBrokenJsonRejected() { val b=BackupCodec.encode(snapshot()).toString(Charsets.UTF_8);assertThrows(IllegalArgumentException::class.java){BackupCodec.decode(b.replace("\"schemaVersion\":${BackupCodec.SCHEMA_VERSION}","\"schemaVersion\":${BackupCodec.SCHEMA_VERSION+1}").toByteArray())};assertThrows(IllegalArgumentException::class.java){BackupCodec.decode(b.dropLast(8).toByteArray())} }
     @Test fun schemaOneFileFromVersionThreeStillRestores() {

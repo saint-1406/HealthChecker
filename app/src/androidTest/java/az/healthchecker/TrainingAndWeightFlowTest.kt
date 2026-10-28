@@ -69,7 +69,8 @@ class TrainingAndWeightFlowTest {
         app.onAllNodesWithTag("exerciseFigure").onFirst().assert(hasContentDescription("Схема движения: ",substring=true))
         app.onNodeWithTag("workoutNowList").performScrollToNode(hasTestTag("logPrescribed"))
         app.onAllNodesWithTag("logPrescribed").onFirst().performClick()
-        app.waitUntil(10000){app.onAllNodesWithText("Выполнено 1 из",substring=true).fetchSemanticsNodes().isNotEmpty()}
+        // A tall first card can push the progress line out of the lazy list, so scroll back up to it.
+        app.waitUntil(10000){runCatching{app.onNodeWithTag("workoutNowList").performScrollToNode(hasText("Выполнено 1 из",substring=true))}.isSuccess}
         app.onAllNodesWithText("Записано").onFirst().assertExists()
         // The rest timer sits under the list and counts down on its own.
         app.onNodeWithTag("rest30").performClick()

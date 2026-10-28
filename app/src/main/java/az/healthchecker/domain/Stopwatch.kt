@@ -7,6 +7,8 @@ data class Stopwatch(val accumulatedMs:Long=0,val startedAt:Long?=null) {
     fun start(now:Long):Stopwatch = if(running)this else copy(startedAt=now)
     fun pause(now:Long):Stopwatch = if(running)Stopwatch(elapsed(now),null) else this
     fun reset():Stopwatch = Stopwatch()
+    /** Jumps to [ms] and keeps running or stays paused, as before (following a video from a chosen exercise). */
+    fun seek(now:Long,ms:Long):Stopwatch = Stopwatch(ms.coerceAtLeast(0),if(running)now else null)
 }
 
 /** 0:07.3, 12:05.0 or 1:02:03 once past an hour. */

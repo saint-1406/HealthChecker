@@ -1,0 +1,606 @@
+[
+ {
+  "id": "yt:eoY6qlkp1xA",
+  "title": "30 MIN FULL BODY WORKOUT with WARM UP | No Equipment | Fat Burn",
+  "channel": "재호 - Fitness (Jaeho)",
+  "youtubeId": "eoY6qlkp1xA",
+  "durationSec": 1812,
+  "embeddable": false,
+  "about": "Разминка 5 мин (9 × 30 с), затем ноги, верх тела, пресс и кардио: по 6 упражнений, 40 с работы и 20 с отдыха.",
+  "aboutEn": "A 5-minute warm-up (9 × 30 s), then lower body, upper body, abs and cardio: 6 exercises each, 40 s of work and 20 s of rest.",
+  "segments": [
+   {
+    "start": 17,
+    "end": 47,
+    "exerciseId": "arm_circles",
+    "title": "Single Arm Circles",
+    "section": "Разминка",
+    "sectionEn": "Warm-up",
+    "note": "по 15 с каждой рукой",
+    "noteEn": "15 s per arm"
+   },
+   {
+    "start": 52,
+    "end": 82,
+    "exerciseId": "standing_t_raise",
+    "title": "T-Raise",
+    "section": "Разминка",
+    "sectionEn": "Warm-up",
+    "note": "",
+    "noteEn": ""
+   },
+   {
+    "start": 87,
+    "end": 117,
+    "exerciseId": "arm_raises",
+    "title": "Arm Raises",
+    "section": "Разминка",
+    "sectionEn": "Warm-up",
+    "note": "",
+    "noteEn": ""
+   },
+   {
+    "start": 122,
+    "end": 152,
+    "exerciseId": "squat",
+    "title": "Air Squat",
+    "section": "Разминка",
+    "sectionEn": "Warm-up",
+    "note": "",
+    "noteEn": ""
+   },
+   {
+    "start": 157,
+    "end": 187,
+    "exerciseId": "reverse_lunge",
+    "title": "Reverse Lunge",
+    "section": "Разминка",
+    "sectionEn": "Warm-up",
+    "note": "",
+    "noteEn": ""
+   },
+   {
+    "start": 192,
+    "end": 222,
+    "exerciseId": "cross_toe_touch",
+    "title": "Side Toe Touch",
+    "section": "Разминка",
+    "sectionEn": "Warm-up",
+    "note": "",
+    "noteEn": ""
+   },
+   {
+    "start": 227,
+    "end": 257,
+    "exerciseId": "side_lunge",
+    "title": "Side Lunge",
+    "section": "Разминка",
+    "sectionEn": "Warm-up",
+    "note": "",
+    "noteEn": ""
+   },
+   {
+    "start": 262,
+    "end": 292,
+    "exerciseId": "inchworm",
+    "title": "Arm Walking",
+    "section": "Разминка",
+    "sectionEn": "Warm-up",
+    "note": "",
+    "noteEn": ""
+   },
+   {
+    "start": 297,
+    "end": 327,
+    "exerciseId": "jumping_jacks",
+    "title": "Jumping Jack",
+    "section": "Разминка",
+    "sectionEn": "Warm-up",
+    "note": "",
+    "noteEn": ""
+   },
+   {
+    "start": 352,
+    "end": 392,
+    "exerciseId": "squat_knee_elbow",
+    "title": "Squat Knee to Elbow",
+    "section": "Ноги и ягодицы",
+    "sectionEn": "Lower body",
+    "note": "",
+    "noteEn": ""
+   },
+   {
+    "start": 412,
+    "end": 452,
+    "exerciseId": "reverse_lunge_knee_up",
+    "title": "Reverse Lunge Knee Up",
+    "section": "Ноги и ягодицы",
+    "sectionEn": "Lower body",
+    "note": "20 с одной ногой, 20 с другой",
+    "noteEn": "20 s on each leg"
+   },
+   {
+    "start": 472,
+    "end": 512,
+    "exerciseId": "side_lunge",
+    "title": "Side Lunge",
+    "section": "Ноги и ягодицы",
+    "sectionEn": "Lower body",
+    "note": "",
+    "noteEn": ""
+   },
+   {
+    "start": 532,
+    "end": 572,
+    "exerciseId": "bounce_squat",
+    "title": "Bounce Squat",
+    "section": "Ноги и ягодицы",
+    "sectionEn": "Lower body",
+    "note": "",
+    "noteEn": ""
+   },
+   {
+    "start": 592,
+    "end": 632,
+    "exerciseId": "side_step_squat",
+    "title": "Side to Side Squat",
+    "section": "Ноги и ягодицы",
+    "sectionEn": "Lower body",
+    "note": "",
+    "noteEn": ""
+   },
+   {
+    "start": 652,
+    "end": 692,
+    "exerciseId": "single_leg_bridge",
+    "title": "Single Leg Bridge",
+    "section": "Ноги и ягодицы",
+    "sectionEn": "Lower body",
+    "note": "20 с одной ногой, 20 с другой",
+    "noteEn": "20 s on each leg"
+   },
+   {
+    "start": 722,
+    "end": 762,
+    "exerciseId": "pushup_knee_up",
+    "title": "Push Up & Knee Up",
+    "section": "Верх тела",
+    "sectionEn": "Upper body",
+    "note": "",
+    "noteEn": ""
+   },
+   {
+    "start": 782,
+    "end": 822,
+    "exerciseId": "prone_pullup",
+    "title": "Prone Pull Up",
+    "section": "Верх тела",
+    "sectionEn": "Upper body",
+    "note": "",
+    "noteEn": ""
+   },
+   {
+    "start": 842,
+    "end": 882,
+    "exerciseId": "pushup_t_rotation",
+    "title": "Push Up & T-Rotation",
+    "section": "Верх тела",
+    "sectionEn": "Upper body",
+    "note": "",
+    "noteEn": ""
+   },
+   {
+    "start": 902,
+    "end": 942,
+    "exerciseId": "snow_angel",
+    "title": "Reverse Snow Angel",
+    "section": "Верх тела",
+    "sectionEn": "Upper body",
+    "note": "",
+    "noteEn": ""
+   },
+   {
+    "start": 962,
+    "end": 1002,
+    "exerciseId": "plank_pike",
+    "title": "High Plank & Pike",
+    "section": "Верх тела",
+    "sectionEn": "Upper body",
+    "note": "",
+    "noteEn": ""
+   },
+   {
+    "start": 1022,
+    "end": 1062,
+    "exerciseId": "back_extension",
+    "title": "Back Extension",
+    "section": "Верх тела",
+    "sectionEn": "Upper body",
+    "note": "",
+    "noteEn": ""
+   },
+   {
+    "start": 1092,
+    "end": 1132,
+    "exerciseId": "crunch",
+    "title": "Crunches",
+    "section": "Пресс",
+    "sectionEn": "Abs",
+    "note": "",
+    "noteEn": ""
+   },
+   {
+    "start": 1152,
+    "end": 1192,
+    "exerciseId": "lying_leg_press",
+    "title": "Leg Press",
+    "section": "Пресс",
+    "sectionEn": "Abs",
+    "note": "",
+    "noteEn": ""
+   },
+   {
+    "start": 1212,
+    "end": 1252,
+    "exerciseId": "bicycle_crunch",
+    "title": "Bicycle Crunch",
+    "section": "Пресс",
+    "sectionEn": "Abs",
+    "note": "",
+    "noteEn": ""
+   },
+   {
+    "start": 1272,
+    "end": 1312,
+    "exerciseId": "lying_knee_rotation",
+    "title": "T-Rotation",
+    "section": "Пресс",
+    "sectionEn": "Abs",
+    "note": "",
+    "noteEn": ""
+   },
+   {
+    "start": 1332,
+    "end": 1372,
+    "exerciseId": "mountain_climber",
+    "title": "Mountain Climber",
+    "section": "Пресс",
+    "sectionEn": "Abs",
+    "note": "",
+    "noteEn": ""
+   },
+   {
+    "start": 1392,
+    "end": 1412,
+    "exerciseId": "plank_hip_twist",
+    "title": "Plank & Twist",
+    "section": "Пресс",
+    "sectionEn": "Abs",
+    "note": "",
+    "noteEn": ""
+   },
+   {
+    "start": 1412,
+    "end": 1432,
+    "exerciseId": "plank",
+    "title": "Plank Hold",
+    "section": "Пресс",
+    "sectionEn": "Abs",
+    "note": "",
+    "noteEn": ""
+   },
+   {
+    "start": 1462,
+    "end": 1502,
+    "exerciseId": "squat_and_jack",
+    "title": "Squat & Jack",
+    "section": "Кардио",
+    "sectionEn": "Cardio",
+    "note": "",
+    "noteEn": ""
+   },
+   {
+    "start": 1522,
+    "end": 1562,
+    "exerciseId": "jog_in_place",
+    "title": "Jog on the Spot",
+    "section": "Кардио",
+    "sectionEn": "Cardio",
+    "note": "",
+    "noteEn": ""
+   },
+   {
+    "start": 1582,
+    "end": 1622,
+    "exerciseId": "half_burpee",
+    "title": "Slow Burpee",
+    "section": "Кардио",
+    "sectionEn": "Cardio",
+    "note": "",
+    "noteEn": ""
+   },
+   {
+    "start": 1642,
+    "end": 1682,
+    "exerciseId": "a_skip",
+    "title": "A-Skip",
+    "section": "Кардио",
+    "sectionEn": "Cardio",
+    "note": "",
+    "noteEn": ""
+   },
+   {
+    "start": 1702,
+    "end": 1742,
+    "exerciseId": "standing_heel_touch",
+    "title": "Heel Touch",
+    "section": "Кардио",
+    "sectionEn": "Cardio",
+    "note": "",
+    "noteEn": ""
+   },
+   {
+    "start": 1762,
+    "end": 1802,
+    "exerciseId": "jumping_jacks",
+    "title": "Jumping Jack",
+    "section": "Кардио",
+    "sectionEn": "Cardio",
+    "note": "",
+    "noteEn": ""
+   }
+  ]
+ },
+ {
+  "id": "yt:jFvQl1boyM0",
+  "title": "25 MIN FULL BODY WORKOUT AT HOME | Fat Burn",
+  "channel": "재호 - Fitness (Jaeho)",
+  "youtubeId": "jFvQl1boyM0",
+  "durationSec": 1465,
+  "embeddable": false,
+  "about": "Три круга по 8 упражнений: 40 с работы, 20 с отдыха, 30 с между кругами.",
+  "aboutEn": "Three rounds of 8 exercises: 40 s of work, 20 s of rest, 30 s between rounds.",
+  "segments": [
+   {
+    "start": 16,
+    "end": 56,
+    "exerciseId": "prisoner_squat",
+    "title": "OH Squat",
+    "section": "Круг 1",
+    "sectionEn": "Round 1",
+    "note": "",
+    "noteEn": ""
+   },
+   {
+    "start": 76,
+    "end": 116,
+    "exerciseId": "plank_shoulder_tap",
+    "title": "High Plank SH Tap",
+    "section": "Круг 1",
+    "sectionEn": "Round 1",
+    "note": "",
+    "noteEn": ""
+   },
+   {
+    "start": 136,
+    "end": 176,
+    "exerciseId": "knee_elbow_crunch",
+    "title": "Knee to Elbow Crunch",
+    "section": "Круг 1",
+    "sectionEn": "Round 1",
+    "note": "",
+    "noteEn": ""
+   },
+   {
+    "start": 196,
+    "end": 236,
+    "exerciseId": "jumping_jacks",
+    "title": "Jumping Jack",
+    "section": "Круг 1",
+    "sectionEn": "Round 1",
+    "note": "",
+    "noteEn": ""
+   },
+   {
+    "start": 256,
+    "end": 296,
+    "exerciseId": "split_squat",
+    "title": "Split Squat",
+    "section": "Круг 1",
+    "sectionEn": "Round 1",
+    "note": "",
+    "noteEn": ""
+   },
+   {
+    "start": 316,
+    "end": 356,
+    "exerciseId": "plank_pike",
+    "title": "High Plank & Pike",
+    "section": "Круг 1",
+    "sectionEn": "Round 1",
+    "note": "",
+    "noteEn": ""
+   },
+   {
+    "start": 376,
+    "end": 416,
+    "exerciseId": "tabletop_crunch",
+    "title": "Table Top Crunches",
+    "section": "Круг 1",
+    "sectionEn": "Round 1",
+    "note": "",
+    "noteEn": ""
+   },
+   {
+    "start": 436,
+    "end": 476,
+    "exerciseId": "jog_in_place",
+    "title": "Jog on the Spot",
+    "section": "Круг 1",
+    "sectionEn": "Round 1",
+    "note": "",
+    "noteEn": ""
+   },
+   {
+    "start": 506,
+    "end": 546,
+    "exerciseId": "squat_knee_elbow",
+    "title": "Squat Knee to Elbow",
+    "section": "Круг 2",
+    "sectionEn": "Round 2",
+    "note": "",
+    "noteEn": ""
+   },
+   {
+    "start": 566,
+    "end": 606,
+    "exerciseId": "back_extension",
+    "title": "Back Extension",
+    "section": "Круг 2",
+    "sectionEn": "Round 2",
+    "note": "",
+    "noteEn": ""
+   },
+   {
+    "start": 626,
+    "end": 666,
+    "exerciseId": "bridge_crunch",
+    "title": "Bridge Crunches",
+    "section": "Круг 2",
+    "sectionEn": "Round 2",
+    "note": "",
+    "noteEn": ""
+   },
+   {
+    "start": 686,
+    "end": 726,
+    "exerciseId": "standing_heel_touch",
+    "title": "Heel Touch",
+    "section": "Круг 2",
+    "sectionEn": "Round 2",
+    "note": "",
+    "noteEn": ""
+   },
+   {
+    "start": 746,
+    "end": 786,
+    "exerciseId": "squat",
+    "title": "Air Squat",
+    "section": "Круг 2",
+    "sectionEn": "Round 2",
+    "note": "",
+    "noteEn": ""
+   },
+   {
+    "start": 806,
+    "end": 846,
+    "exerciseId": "plank_t_rotation",
+    "title": "Plank T Rotation",
+    "section": "Круг 2",
+    "sectionEn": "Round 2",
+    "note": "",
+    "noteEn": ""
+   },
+   {
+    "start": 866,
+    "end": 906,
+    "exerciseId": "plank_toe_in_out",
+    "title": "Plank Toe In & Out",
+    "section": "Круг 2",
+    "sectionEn": "Round 2",
+    "note": "",
+    "noteEn": ""
+   },
+   {
+    "start": 926,
+    "end": 966,
+    "exerciseId": "skip_imitation",
+    "title": "Jump Rope",
+    "section": "Круг 2",
+    "sectionEn": "Round 2",
+    "note": "",
+    "noteEn": ""
+   },
+   {
+    "start": 996,
+    "end": 1036,
+    "exerciseId": "sumo_squat",
+    "title": "Wide Squat",
+    "section": "Последний круг",
+    "sectionEn": "Final round",
+    "note": "",
+    "noteEn": ""
+   },
+   {
+    "start": 1056,
+    "end": 1096,
+    "exerciseId": "forearm_plank_pike",
+    "title": "Plank Pike",
+    "section": "Последний круг",
+    "sectionEn": "Final round",
+    "note": "",
+    "noteEn": ""
+   },
+   {
+    "start": 1116,
+    "end": 1156,
+    "exerciseId": "prone_t_raise",
+    "title": "T-Raise",
+    "section": "Последний круг",
+    "sectionEn": "Final round",
+    "note": "",
+    "noteEn": ""
+   },
+   {
+    "start": 1176,
+    "end": 1216,
+    "exerciseId": "jog_in_place",
+    "title": "Jog on the Spot",
+    "section": "Последний круг",
+    "sectionEn": "Final round",
+    "note": "",
+    "noteEn": ""
+   },
+   {
+    "start": 1236,
+    "end": 1276,
+    "exerciseId": "bounce_squat",
+    "title": "Bounce Squat",
+    "section": "Последний круг",
+    "sectionEn": "Final round",
+    "note": "",
+    "noteEn": ""
+   },
+   {
+    "start": 1296,
+    "end": 1336,
+    "exerciseId": "climber_toe_tap",
+    "title": "Mountain Climber Toe Taps",
+    "section": "Последний круг",
+    "sectionEn": "Final round",
+    "note": "",
+    "noteEn": ""
+   },
+   {
+    "start": 1356,
+    "end": 1396,
+    "exerciseId": "skip_imitation",
+    "title": "Jump Rope",
+    "section": "Последний круг",
+    "sectionEn": "Final round",
+    "note": "",
+    "noteEn": ""
+   },
+   {
+    "start": 1416,
+    "end": 1456,
+    "exerciseId": "standing_heel_touch",
+    "title": "Heel Touch",
+    "section": "Последний круг",
+    "sectionEn": "Final round",
+    "note": "",
+    "noteEn": ""
+   }
+  ]
+ }
+]

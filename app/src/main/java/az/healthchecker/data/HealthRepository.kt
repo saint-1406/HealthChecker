@@ -28,7 +28,8 @@ class HealthRepository(context: Context, name: String = "healthchecker.db") {
         medications=rows.filter{it.kind=="med"}.map{json.decodeFromString<Medication>(it.payload)},
         medicationIntakes=rows.filter{it.kind=="medtake"}.map{json.decodeFromString<MedicationIntake>(it.payload)},
         steps=rows.filter{it.kind=="steps"}.map{json.decodeFromString<StepDay>(it.payload)},
-        weights=rows.filter{it.kind=="weight"}.map{json.decodeFromString<WeightEntry>(it.payload)})
+        weights=rows.filter{it.kind=="weight"}.map{json.decodeFromString<WeightEntry>(it.payload)},
+        videos=rows.filter{it.kind=="video"}.map{json.decodeFromString<WorkoutVideo>(it.payload)}.sortedBy{it.addedAt})
     private suspend fun changed() { val r=dao.revision()?:Revision();dao.putRevision(r.copy(current=r.current+1)) }
     suspend fun exportSnapshot():UserSnapshot = db.withTransaction{decode(dao.all())}
     /** For backups: the data plus the exercise pictures, which live as files rather than in the database. */
@@ -64,6 +65,11 @@ class HealthRepository(context: Context, name: String = "healthchecker.db") {
     suspend fun completeDay(date:String,completed:Boolean) { LocalDate.parse(date);db.withTransaction{if(completed)dao.put(StoredRecord("day:$date","day",date))else dao.delete("day:$date");changed()} }
     suspend fun upsertWorkout(workout:WorkoutEntry) { validateSnapshot(UserSnapshot(workouts=listOf(workout)));db.withTransaction{dao.put(StoredRecord("workout:${workout.id}","workout",json.encodeToString(workout)));changed()} }
     suspend fun deleteWorkout(id:String) { db.withTransaction{dao.delete("workout:$id");changed()} }
+    /** A whole video workout in one change, so it reaches the backup (and the undo) together. */
+    suspend fun upsertWorkouts(workouts:List<WorkoutEntry>) { validateSnapshot(UserSnapshot(workouts=workouts));db.withTransaction{workouts.forEach{dao.put(StoredRecord("workout:${it.id}","workout",json.encodeToString(it)))};changed()} }
+    suspend fun deleteWorkouts(ids:List<String>) { db.withTransaction{ids.forEach{dao.delete("workout:$it")};changed()} }
+    suspend fun saveVideo(video:WorkoutVideo) { validateSnapshot(UserSnapshot(videos=listOf(video)));db.withTransaction{dao.put(StoredRecord("video:${video.id}","video",json.encodeToString(video)));changed()} }
+    suspend fun deleteVideo(id:String) { db.withTransaction{dao.delete("video:$id");changed()} }
     /** true — a training happened, false — an explicit rest day, null — not marked. */
     suspend fun markTraining(date:String,trained:Boolean?) { LocalDate.parse(date);db.withTransaction{if(trained==null)dao.delete("trainday:$date") else dao.put(StoredRecord("trainday:$date","trainday",trained.toString()));changed()} }
     suspend fun saveTrainingPrefs(prefs:TrainingPrefs) { validateSnapshot(UserSnapshot(trainingPrefs=prefs));db.withTransaction{dao.put(StoredRecord("trainprefs","trainprefs",json.encodeToString(prefs)));changed()} }
@@ -111,6 +117,7 @@ class HealthRepository(context: Context, name: String = "healthchecker.db") {
             snapshot.medicationIntakes.forEach{dao.put(StoredRecord("medtake:${it.id}","medtake",json.encodeToString(it)))}
             snapshot.steps.forEach{dao.put(StoredRecord("steps:${it.date}","steps",json.encodeToString(it)))}
             snapshot.weights.forEach{dao.put(StoredRecord("weight:${it.date}","weight",json.encodeToString(it)))}
+            snapshot.videos.forEach{dao.put(StoredRecord("video:${it.id}","video",json.encodeToString(it)))}
             changed()
         }
         val decoder=java.util.Base64.getDecoder()

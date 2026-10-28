@@ -41,6 +41,9 @@ fun validateSnapshot(s:UserSnapshot) {
     require(s.weights.size<=50000 && s.exerciseImages.size<=MAX_EXERCISE_IMAGES) { tr("Слишком много записей","Too many records") }
     unique(s.weights.map{it.date})
     s.weights.forEach(::validateWeight)
+    require(s.videos.size<=1000) { tr("Слишком много записей","Too many records") }
+    unique(s.videos.map{it.id})
+    s.videos.forEach(::validateVideo)
     s.exerciseImages.forEach{(id,data)->
         require(EXERCISE_ID.matches(id) && data.length<=MAX_IMAGE_BASE64)
         val bytes=java.util.Base64.getDecoder().decode(data)

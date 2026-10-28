@@ -26,7 +26,7 @@ import az.healthchecker.ui.*
 }
 
 @OptIn(ExperimentalLayoutApi::class)
-@Composable fun TrainingScreen(vm:AppViewModel,snapshot:UserSnapshot,date:String,plan:Recommendation?,add:()->Unit,start:()->Unit,edit:(WorkoutEntry)->Unit,openProfile:()->Unit) {
+@Composable fun TrainingScreen(vm:AppViewModel,snapshot:UserSnapshot,date:String,plan:Recommendation?,add:()->Unit,start:()->Unit,edit:(WorkoutEntry)->Unit,openProfile:()->Unit,videos:()->Unit) {
     val prefs=snapshot.trainingPrefs?:TrainingPrefs()
     val day=snapshot.training(date)
     val weight=snapshot.bodyWeight(date)
@@ -51,6 +51,16 @@ import az.healthchecker.ui.*
                 }
             }}
         }
+        item{Panel(Modifier.clickable(onClick=videos).testTag("openVideos")){
+            Row(horizontalArrangement=Arrangement.spacedBy(12.dp),verticalAlignment=Alignment.CenterVertically){
+                Icon(Icons.Outlined.SmartDisplay,null,tint=MaterialTheme.colorScheme.primary)
+                Column(Modifier.weight(1f)){
+                    Text(tr("Видеотренировки","Workout videos"),style=MaterialTheme.typography.titleMedium)
+                    Text(tr("YouTube или свой файл: что делать сейчас и вся тренировка в дневник одной кнопкой","YouTube or your own file: what to do now, and the whole workout to the diary in one tap"),style=MaterialTheme.typography.bodySmall,color=MaterialTheme.colorScheme.onSurfaceVariant)
+                }
+                Icon(Icons.Outlined.ChevronRight,null)
+            }
+        }}
         plan?.let{p->
             item{Panel {
                 SectionTitle(tr("Рекомендации на сегодня","Today's suggestions"),if(p.recovery)tr("Мышцы ещё восстанавливаются после последних тренировок — лёгкий день","Muscles are still recovering from recent training — an easy day") else tr("Акцент: ","Focus: ")+p.focus.distinct().joinToString(", "){muscleLabel(it).lowercase(Lang.locale)})

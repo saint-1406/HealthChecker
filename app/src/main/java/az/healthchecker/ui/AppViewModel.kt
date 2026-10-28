@@ -3,12 +3,14 @@ package az.healthchecker.ui
 import android.app.Application
 import android.content.Intent
 import android.net.Uri
+import androidx.core.net.toUri
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.viewModelScope
 import az.healthchecker.backup.*
 import az.healthchecker.catalog.CatalogImporter
 import az.healthchecker.catalog.ExerciseCatalog
 import az.healthchecker.catalog.FigureMotion
+import az.healthchecker.catalog.VideoLibrary
 import az.healthchecker.data.*
 import az.healthchecker.steps.StepTracking
 import az.healthchecker.domain.*
@@ -59,6 +61,12 @@ class AppViewModel(application:Application):AndroidViewModel(application) {
     @Volatile private var exerciseCatalog:ExerciseCatalog?=null
     private val exerciseLoad=viewModelScope.async(Dispatchers.IO){ExerciseCatalog.shared(context).also{exerciseCatalog=it;exercises.value=it.exercises}}
     val dish=MutableStateFlow<DishDraft?>(null)
+    /** Built-in workout videos with their exercise timelines; the user's own videos are in the snapshot. */
+    val libraryVideos=MutableStateFlow<List<WorkoutVideo>>(emptyList())
+    /** Where each video was left in this session, so coming back (or turning the phone) continues from there. */
+    val videoPositions=MutableStateFlow<Map<String,Int>>(emptyMap())
+    /** Following a video by its timeline while it plays elsewhere (the YouTube app, a TV): a stopwatch for one video. */
+    val videoClock=MutableStateFlow<Pair<String,Stopwatch>?>(null)
     val language=MutableStateFlow(Lang.current)
     /** Automatic step counting: switched on, and whether this phone has a step counter at all. */
     val stepTracking=MutableStateFlow(StepTracking.enabled(context))
@@ -85,6 +93,7 @@ class AppViewModel(application:Application):AndroidViewModel(application) {
             catch(e:CancellationException){throw e}catch(e:Exception){error.value=tr("Не удалось открыть каталог продуктов: ","Could not open the food catalog: ")+e.message}
         }
         viewModelScope.launch { try{exerciseLoad.await()}catch(e:CancellationException){throw e}catch(e:Exception){error.value=tr("Не удалось открыть каталог упражнений: ","Could not open the exercise catalog: ")+e.message} }
+        viewModelScope.launch(Dispatchers.IO){libraryVideos.value=VideoLibrary.shared(context).videos}
         viewModelScope.launch(Dispatchers.IO){repository.snapshots.collect{snapshot.value=it}}
         viewModelScope.launch(Dispatchers.IO){preferences.settings.collect{settings.value=it}}
         viewModelScope.launch(Dispatchers.IO){repository.revisions.collect{r->revision.value=r;if(r.current!=r.backedUp)performBackup(false)}}
@@ -209,6 +218,56 @@ class AppViewModel(application:Application):AndroidViewModel(application) {
                 delay(minOf(left,50))
             }
         }
+    }
+    fun video(id:String):WorkoutVideo? = libraryVideos.value.find{it.id==id}?:snapshot.value.videos.find{it.id==id}
+    fun videoPosition(id:String,second:Int){if(videoPositions.value[id]!=second)videoPositions.value=videoPositions.value+(id to second)}
+    fun videoClockMs(id:String):Long = videoClock.value?.takeIf{it.first==id}?.second?.elapsed(clock())?:(videoPositions.value[id]?:0)*1000L
+    fun startVideoClock(id:String){val c=videoClock.value;videoClock.value=id to (if(c?.first==id)c.second else Stopwatch((videoPositions.value[id]?:0)*1000L)).start(clock())}
+    fun pauseVideoClock(){videoClock.value=videoClock.value?.let{(id,w)->id to w.pause(clock())}}
+    fun seekVideoClock(id:String,second:Int){val c=videoClock.value;videoClock.value=id to (if(c?.first==id)c.second else Stopwatch()).seek(clock(),second*1000L);videoPosition(id,second)}
+    /** Whether this install may still read the user's file: the link dies with a reinstall or when the file is gone. */
+    fun videoFileReadable(file:VideoFile):Boolean = context.contentResolver.persistedUriPermissions.any{it.uri.toString()==file.uri&&it.isReadPermission}
+    fun addVideo(title:String,link:String,done:(WorkoutVideo)->kotlin.Unit)=action {
+        val v=makeOwnVideo("video:"+UUID.randomUUID(),title,link,Instant.now())
+        repository.saveVideo(v);withContext(Dispatchers.Main){done(v)}
+    }
+    /**
+     * Links the user's own video file (picked with the system file picker) to a video, or adds it as a new video named after
+     * the file. Only the link is kept: the file stays where it is and plays without the internet.
+     */
+    fun attachVideoFile(uri:Uri,videoId:String?,done:(String)->kotlin.Unit={})=action {
+        context.contentResolver.takePersistableUriPermission(uri,Intent.FLAG_GRANT_READ_URI_PERMISSION)
+        val name=context.contentResolver.query(uri,arrayOf(android.provider.OpenableColumns.DISPLAY_NAME),null,null,null)?.use{c->if(c.moveToFirst())c.getString(0) else null}?:tr("Видео","Video")
+        val id=videoId?:("video:"+UUID.randomUUID()).also{id->repository.saveVideo(makeOwnVideo(id,name.substringBeforeLast('.').take(200),"",Instant.now()))}
+        releaseVideoFile(preferences.videoFile(id,VideoFile(uri.toString(),name)))
+        withContext(Dispatchers.Main){done(id)}
+    }
+    fun removeVideoFile(id:String)=action { releaseVideoFile(preferences.videoFile(id,null)) }
+    /** Gives the file access back to Android once no video links that file any more. */
+    private suspend fun releaseVideoFile(old:VideoFile?) {
+        if(old==null||preferences.settings.first().videoFiles.values.any{it.uri==old.uri})return
+        runCatching{context.contentResolver.releasePersistableUriPermission(old.uri.toUri(),Intent.FLAG_GRANT_READ_URI_PERMISSION)}
+    }
+    fun deleteVideo(video:WorkoutVideo,done:()->kotlin.Unit={})=action(done) {
+        val file=preferences.settings.first().videoFiles[video.id]
+        repository.deleteVideo(video.id)
+        offerUndo(tr("Видео «${video.title}» удалено","Video “${video.title}” deleted")){repository.saveVideo(video)}
+        // The file link goes with the video; undo brings the video back without it.
+        file?.let{releaseVideoFile(preferences.videoFile(video.id,null))}
+    }
+    /** Logs the exercises of a video workout, the whole video or up to [upTo] seconds, as one change that undo takes back. */
+    fun logVideo(video:WorkoutVideo,upTo:Int?,date:String)=action {
+        val weight=snapshot.value.bodyWeight(date);val now=Instant.now();val zone=ZoneId.systemDefault()
+        val entries=video.workDone(upTo).mapNotNull{w->exercise(w.exerciseId)?.let{videoWorkout(UUID.randomUUID().toString(),it,w,date,now,zone,weight)}}
+        require(entries.isNotEmpty()){tr("В этом отрезке видео ещё нет упражнений","This part of the video has no exercises yet")}
+        repository.upsertWorkouts(entries)
+        offerUndo(tr("Записано из видео: ","Logged from the video: ")+count(entries.size,"упражнение","упражнения","упражнений","exercise","exercises")){repository.deleteWorkouts(entries.map{it.id})}
+    }
+    /** A video without a timeline goes to the diary as one video workout of the Compendium's class. */
+    fun logVideoAsWorkout(minutes:Double,vigorous:Boolean,date:String)=action {
+        val e=exercise(if(vigorous)"video_cardio_hard" else "video_cardio")?:error(tr("Упражнение не найдено","Exercise not found"))
+        val w=makeWorkout(UUID.randomUUID().toString(),e,null,null,null,null,minutes,date,null,Instant.now(),ZoneId.systemDefault(),snapshot.value.bodyWeight(date))
+        repository.upsertWorkout(w);offerUndo(tr("Записано: ","Logged: ")+e.displayName){repository.deleteWorkout(w.id)}
     }
     fun saveWeight(date:String,kg:Double,done:()->kotlin.Unit)=action(done) { repository.saveWeight(makeWeight(date,kg,Instant.now(),ZoneId.systemDefault())) }
     fun deleteWeight(entry:WeightEntry)=action { repository.deleteWeight(entry.date);offerUndo(tr("Вес удалён","Weight deleted")){repository.saveWeight(entry)} }
