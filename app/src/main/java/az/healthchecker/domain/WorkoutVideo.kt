@@ -4,17 +4,26 @@ import java.time.Instant
 import java.time.ZoneId
 import kotlin.math.roundToInt
 
-/** One exercise as a workout video runs it, from [start] to [end] seconds; the gaps between segments are the video's rests. */
-@Serializable data class VideoSegment(val start:Int,val end:Int,val exerciseId:String,val title:String,val section:String="",val sectionEn:String="",val note:String="",val noteEn:String="") {
+/**
+ * One exercise as a workout video runs it, from [start] to [end] seconds; the gaps between segments are the video's rests.
+ * [work] is the exercise's own time when the segment also holds a rest (timed by the author's chapters); null — all of it.
+ */
+@Serializable data class VideoSegment(val start:Int,val end:Int,val exerciseId:String,val title:String,val section:String="",val sectionEn:String="",val note:String="",val noteEn:String="",val work:Int?=null) {
     val seconds:Int get() = end-start
+    val workSeconds:Int get() = work?:seconds
 }
 /**
  * A workout video: on YouTube, a file on the phone, or both. The built-in videos carry their exercise timeline; a video the
  * user adds has none and is logged as one video workout. [embeddable] false: the owner does not allow the video in other apps.
  */
 @Serializable data class WorkoutVideo(val id:String,val title:String,val channel:String="",val youtubeId:String?=null,val durationSec:Int?=null,val embeddable:Boolean=true,
-    val about:String="",val aboutEn:String="",val segments:List<VideoSegment> = emptyList(),val addedAt:String?=null) {
+    val about:String="",val aboutEn:String="",val segments:List<VideoSegment> = emptyList(),val addedAt:String?=null,
+    /** "exact" — timed from the video itself; "chapters" — from the author's chapter list in the description. */
+    val timing:String="exact",
+    /** What kind of workout it is, for the library filter: full, abs, cardio, legs, upper, dumbbells, nojump, warmup. */
+    val tags:List<String> = emptyList()) {
     val own:Boolean get() = id.startsWith("video:")
+    val byChapters:Boolean get() = timing=="chapters"
 }
 /** The user's own copy of a video on this phone: a document they picked, kept by its persistable link. */
 @Serializable data class VideoFile(val uri:String,val name:String)
@@ -55,7 +64,21 @@ fun WorkoutVideo.moment(second:Int):VideoMoment {
     val s=segments[i]
     return if(second>=s.start)VideoMoment(s,segments.getOrNull(i+1),i,s.end-second) else VideoMoment(null,s,i,s.start-second)
 }
-val WorkoutVideo.workSeconds:Int get() = segments.sumOf{it.seconds}
+val WorkoutVideo.workSeconds:Int get() = segments.sumOf{it.workSeconds}
+
+/** Lengths the library filters by, in whole minutes of the video. */
+enum class VideoLength(val minutes:IntRange) { SHORT(0..12), MEDIUM(13..22), LONG(23..1440) }
+/**
+ * The library filter: every word of [query] in the title or in an exercise of the video ([exerciseNames] gives an exercise's
+ * names in both languages), a kind of workout from [tag], a length, only the user's own videos.
+ */
+fun filterVideos(videos:List<WorkoutVideo>,query:String,tag:String?,length:VideoLength?,ownOnly:Boolean,exerciseNames:(String)->String):List<WorkoutVideo> {
+    val words=query.lowercase().split(' ').filter{it.isNotBlank()}
+    return videos.filter{v->
+        (!ownOnly||v.own)&&(tag==null||tag in v.tags)&&(length==null||v.durationSec?.let{(it+30)/60 in length.minutes}==true)&&
+            words.all{w->v.title.lowercase().contains(w)||v.segments.any{s->s.title.lowercase().contains(w)||exerciseNames(s.exerciseId).lowercase().contains(w)}}
+    }
+}
 
 /** An exercise of a video workout as it goes to the diary: its segments up to a point, added together. */
 data class VideoWork(val exerciseId:String,val parts:Int,val seconds:Int)
@@ -68,8 +91,9 @@ const val MIN_PART_SECONDS=10
 fun WorkoutVideo.workDone(upTo:Int?=null):List<VideoWork> {
     val done=LinkedHashMap<String,MutableList<Int>>()
     for(s in segments){
-        val seconds=if(upTo==null)s.seconds else minOf(s.end,upTo)-s.start
-        if(seconds>=minOf(MIN_PART_SECONDS,s.seconds))done.getOrPut(s.exerciseId){mutableListOf()}+=seconds
+        // Of a segment that also holds a rest, only its work counts, however far into it the video got.
+        val seconds=minOf(s.workSeconds,if(upTo==null)s.seconds else minOf(s.end,upTo)-s.start)
+        if(seconds>=minOf(MIN_PART_SECONDS,s.workSeconds))done.getOrPut(s.exerciseId){mutableListOf()}+=seconds
     }
     return done.map{(id,parts)->VideoWork(id,parts.size,parts.sum())}
 }
@@ -115,6 +139,7 @@ private val BUILT_IN_VIDEO_ID=Regex("yt:[A-Za-z0-9_-]{11}")
 fun validateVideo(v:WorkoutVideo) {
     require((v.id.startsWith("video:")||BUILT_IN_VIDEO_ID.matches(v.id))&&v.id.length<=100&&v.title.isNotBlank()&&v.title.length<=200&&v.channel.length<=200&&v.about.length<=2000&&v.aboutEn.length<=2000)
     require(v.youtubeId==null||YOUTUBE_ID.matches(v.youtubeId));require(v.durationSec==null||v.durationSec in 1..86400)
-    require(v.segments.size<=500&&v.segments.all{it.start>=0&&it.end>it.start&&it.end<=86400&&EXERCISE_ID.matches(it.exerciseId)&&it.title.length<=200})
+    require(v.segments.size<=500&&v.segments.all{it.start>=0&&it.end>it.start&&it.end<=86400&&EXERCISE_ID.matches(it.exerciseId)&&it.title.length<=200&&(it.work==null||it.work in 1..it.seconds)})
+    require(v.timing.length<=20&&v.tags.size<=20&&v.tags.all{it.length<=20})
     v.addedAt?.let(Instant::parse)
 }

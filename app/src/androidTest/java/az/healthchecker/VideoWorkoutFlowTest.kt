@@ -60,6 +60,21 @@ class VideoWorkoutFlowTest {
         app.onNodeWithText("Профиль").performClick()
         app.onNodeWithTag("appVersion").performScrollTo().assert(hasText("HealthChecker · версия ",substring=true))
     }
+    @Test fun channelLibraryFiltersByExerciseAndKind() {
+        skipOnboarding()
+        openVideos()
+        app.onNodeWithTag("videoCount").assert(hasText("Найдено: 143"))
+        // An exercise name finds the videos that have it; a kind of workout narrows the list.
+        app.onNodeWithTag("videoSearch").performTextInput("макгилла")
+        app.onNodeWithTag("videoCount").assert(!hasText("Найдено: 143")).assert(!hasText("Найдено: 0"))
+        app.onNodeWithTag("videoTag_abs").performClick()
+        app.onNodeWithTag("videoCount").assert(!hasText("Найдено: 0"))
+        app.onAllNodesWithTag("videoCard").onFirst().performClick()
+        // Timed by the author's chapters: the screen says so and lists the exercise searched for.
+        app.waitUntil(30000){app.onAllNodesWithTag("videoTimeline").fetchSemanticsNodes().isNotEmpty()}
+        app.onNodeWithTag("videoTimeline").performScrollToNode(hasTestTag("chaptersNote"))
+        app.onNodeWithTag("videoTimeline").performScrollToNode(hasText("Скручивание Макгилла",substring=true))
+    }
     @Test fun builtInVideoLinkAndDescriptionCanBeChangedAndPutBack() {
         skipOnboarding()
         openVideos()

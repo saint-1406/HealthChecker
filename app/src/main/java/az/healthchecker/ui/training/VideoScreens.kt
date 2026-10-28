@@ -19,6 +19,7 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.foundation.lazy.rememberLazyListState
+import androidx.compose.foundation.horizontalScroll
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -54,8 +55,15 @@ import kotlinx.coroutines.delay
     val library by vm.libraryVideos.collectAsStateWithLifecycle()
     val settings by vm.settings.collectAsStateWithLifecycle()
     var adding by rememberSaveable{mutableStateOf(false)}
+    var query by rememberSaveable{mutableStateOf("")}
+    var tag by rememberSaveable{mutableStateOf("")}
+    var length by rememberSaveable{mutableStateOf("")}
+    var ownOnly by rememberSaveable{mutableStateOf(false)}
     val filePicker=rememberLauncherForActivityResult(ActivityResultContracts.OpenDocument()){uri->uri?.let{vm.attachVideoFile(it,null,open)}}
     val videos=remember(library,snapshot.videos){vm.videoList(snapshot)}
+    val shown=remember(videos,query,tag,length,ownOnly){
+        filterVideos(videos,query,tag.ifBlank{null},VideoLength.entries.find{it.name==length},ownOnly){id->vm.exercise(id)?.let{it.name+" "+(it.nameEn?:"")}.orEmpty()}
+    }
     Column(Modifier.fillMaxSize()) {
         Row(Modifier.padding(start=8.dp,end=16.dp,top=8.dp),verticalAlignment=Alignment.CenterVertically){
             IconButton(onClick=back){Icon(Icons.AutoMirrored.Outlined.ArrowBack,tr("Назад","Back"))}
@@ -64,11 +72,23 @@ import kotlinx.coroutines.delay
         LazyColumn(Modifier.weight(1f).fillMaxWidth().testTag("videoList"),contentPadding=PaddingValues(16.dp),verticalArrangement=Arrangement.spacedBy(12.dp)) {
             item{Text(tr("Занимайтесь по видео: приложение показывает, какое упражнение идёт и сколько осталось, и одной кнопкой записывает всю тренировку в дневник.",
                 "Train along with a video: the app shows which exercise is on and how long is left, and logs the whole workout to the diary in one tap."),style=MaterialTheme.typography.bodyMedium)}
-            items(videos,key={it.id}){v->VideoCard(vm,v,settings.videoFiles[v.id]){open(v.id)}}
             item{FlowRow(horizontalArrangement=Arrangement.spacedBy(8.dp),verticalArrangement=Arrangement.spacedBy(8.dp)){
                 Button(onClick={adding=true},modifier=Modifier.testTag("addVideoLink")){Icon(Icons.Outlined.Link,null);Spacer(Modifier.width(6.dp));Text(tr("Ссылка YouTube","YouTube link"))}
                 OutlinedButton(onClick={filePicker.launch(arrayOf("video/*"))}){Icon(Icons.Outlined.VideoFile,null);Spacer(Modifier.width(6.dp));Text(tr("Файл с телефона","File on the phone"))}
             }}
+            item{Column(verticalArrangement=Arrangement.spacedBy(6.dp)){
+                OutlinedTextField(query,{query=it.take(60)},label={Text(tr("Название или упражнение","Name or exercise"))},leadingIcon={Icon(Icons.Outlined.Search,null)},singleLine=true,modifier=Modifier.fillMaxWidth().testTag("videoSearch"))
+                Row(Modifier.horizontalScroll(rememberScrollState()),horizontalArrangement=Arrangement.spacedBy(6.dp)){
+                    FilterChip(selected=tag.isBlank()&&!ownOnly,onClick={tag="";ownOnly=false},label={Text(tr("Все","All"))})
+                    VIDEO_TAGS.forEach{t->FilterChip(selected=tag==t,onClick={tag=if(tag==t)"" else t;ownOnly=false},label={Text(videoTagLabel(t))},modifier=Modifier.testTag("videoTag_$t"))}
+                    FilterChip(selected=ownOnly,onClick={ownOnly=!ownOnly;tag=""},label={Text(tr("Мои видео","My videos"))})
+                }
+                Row(Modifier.horizontalScroll(rememberScrollState()),horizontalArrangement=Arrangement.spacedBy(6.dp)){
+                    VideoLength.entries.forEach{l->FilterChip(selected=length==l.name,onClick={length=if(length==l.name)"" else l.name},label={Text(videoLengthLabel(l))})}
+                }
+                Text(tr("Найдено: ","Found: ")+shown.size,style=MaterialTheme.typography.bodySmall,color=MaterialTheme.colorScheme.onSurfaceVariant,modifier=Modifier.testTag("videoCount"))
+            }}
+            items(shown,key={it.id}){v->VideoCard(vm,v,settings.videoFiles[v.id]){open(v.id)}}
             item{Text(tr("Видео с YouTube загружается из интернета только когда вы нажмёте «Загрузить видео». Скачивать ролики с YouTube приложение не будет: это запрещают правила YouTube. Чтобы заниматься без интернета, прикрепите свой видеофайл с телефона — он играет прямо здесь, вместе с разметкой упражнений.",
                 "A YouTube video loads from the internet only when you tap “Load the video”. The app does not download videos from YouTube: YouTube's terms forbid it. To train offline, attach your own video file from the phone — it plays right here, with the exercise timeline."),
                 style=MaterialTheme.typography.bodySmall,color=MaterialTheme.colorScheme.onSurfaceVariant)}
@@ -97,10 +117,17 @@ import kotlinx.coroutines.delay
     }
 }
 
+/** Kinds of workout the library filters by, in this order. */
+private val VIDEO_TAGS=listOf("full","abs","cardio","legs","upper","dumbbells","nojump","warmup")
+private fun videoTagLabel(tag:String):String = when(tag){"full"->tr("Всё тело","Full body");"abs"->tr("Пресс","Abs");"cardio"->tr("Кардио","Cardio");"legs"->tr("Ноги","Legs")
+    "upper"->tr("Верх тела","Upper body");"dumbbells"->tr("Гантели","Dumbbells");"nojump"->tr("Без прыжков","No jumping");"warmup"->tr("Разминка","Warm-up");else->tag}
+private fun videoLengthLabel(l:VideoLength):String = when(l){VideoLength.SHORT->tr("до 12 мин","up to 12 min");VideoLength.MEDIUM->tr("13–22 мин","13–22 min");VideoLength.LONG->tr("от 23 мин","23 min and more")}
+
 /** "30 min · 34 exercises" for a video with a timeline, otherwise what kind of video it is. */
 private fun videoSummary(vm:AppViewModel,v:WorkoutVideo):String = listOfNotNull(
     v.durationSec?.let{"${(it+30)/60} ${tr("мин","min")}"},
-    if(v.segments.isNotEmpty())count(v.segments.size,"упражнение","упражнения","упражнений","exercise","exercises")+" · "+count(v.workDone().size,"вид","вида","видов","kind","kinds") else tr("Своё видео без разметки","Your own video, no timeline")
+    if(v.segments.isNotEmpty())count(v.segments.size,"упражнение","упражнения","упражнений","exercise","exercises")+" · "+count(v.workDone().size,"вид","вида","видов","kind","kinds") else tr("Своё видео без разметки","Your own video, no timeline"),
+    if(v.byChapters)tr("по главам автора","by the author's chapters") else null
 ).joinToString(" · ")
 
 @Composable private fun AddVideoDialog(vm:AppViewModel,close:()->Unit,added:(WorkoutVideo)->Unit) {
@@ -283,15 +310,18 @@ private fun youtubeErrorText(code:Int):String = when(code) {
         item{Column(verticalArrangement=Arrangement.spacedBy(6.dp)){
             if(video.displayAbout.isNotBlank())Text(video.displayAbout,style=MaterialTheme.typography.bodyMedium)
             if(video.segments.isNotEmpty()){
-                val kcal=video.segments.sumOf{s->vm.exercise(s.exerciseId)?.let{burnedKcal(it.met,weight,s.seconds/60.0)}?:0.0}
+                val kcal=video.segments.sumOf{s->vm.exercise(s.exerciseId)?.let{burnedKcal(it.met,weight,s.workSeconds/60.0)}?:0.0}
                 Text(listOfNotNull(count(video.segments.size,"упражнение","упражнения","упражнений","exercise","exercises"),tr("работа ","work ")+"${number(video.workSeconds/60.0,1)} ${tr("мин","min")}",if(weight!=null)"≈ ${number(kcal)} $KCAL" else null).joinToString(" · "),
                     style=MaterialTheme.typography.titleSmall,color=MaterialTheme.colorScheme.primary,modifier=Modifier.testTag("videoTotals"))
                 Text(tr("Нажмите на упражнение, чтобы перейти к нему.","Tap an exercise to jump to it."),style=MaterialTheme.typography.bodySmall,color=MaterialTheme.colorScheme.onSurfaceVariant)
+                if(video.byChapters)Text(tr("Разметка — по главам из описания автора: отрезок от главы до главы включает отдых рядом с упражнением, поэтому время работы оценено (≈ на 10–20 с меньше отрезка).",
+                    "The timeline follows the author's chapters in the description: a chapter also holds the rest next to the exercise, so the work time is estimated (≈ 10–20 s less than the chapter)."),
+                    style=MaterialTheme.typography.bodySmall,color=MaterialTheme.colorScheme.onSurfaceVariant,modifier=Modifier.testTag("chaptersNote"))
             }
         }}
         item{Button(onClick=log,modifier=Modifier.fillMaxWidth().heightIn(min=52.dp).testTag("logVideo")){Icon(Icons.Outlined.Check,null);Spacer(Modifier.width(8.dp));Text(tr("Записать тренировку в дневник","Log the workout to the diary"))}}
         itemsIndexed(video.segments){i,s->Column(verticalArrangement=Arrangement.spacedBy(8.dp)){
-            if(i==0||video.segments[i-1].section!=s.section)Text(s.displaySection.uppercase(Lang.locale),style=MaterialTheme.typography.labelLarge,color=MaterialTheme.colorScheme.primary,modifier=Modifier.padding(top=8.dp))
+            if(s.displaySection.isNotBlank()&&(i==0||video.segments[i-1].section!=s.section))Text(s.displaySection.uppercase(Lang.locale),style=MaterialTheme.typography.labelLarge,color=MaterialTheme.colorScheme.primary,modifier=Modifier.padding(top=8.dp))
             val now=moment.current===s
             Surface(shape=RoundedCornerShape(16.dp),color=if(now)MaterialTheme.colorScheme.primaryContainer else MaterialTheme.colorScheme.surface,modifier=Modifier.fillMaxWidth().clickable{seek(s.start)}.testTag("segment")){
                 Row(Modifier.padding(10.dp),horizontalArrangement=Arrangement.spacedBy(10.dp),verticalAlignment=Alignment.CenterVertically){
@@ -301,7 +331,7 @@ private fun youtubeErrorText(code:Int):String = when(code) {
                         Text(s.title,style=MaterialTheme.typography.titleSmall,fontWeight=FontWeight.SemiBold)
                         Text(listOfNotNull(vm.exercise(s.exerciseId)?.displayName,s.displayNote.takeIf{it.isNotBlank()}).joinToString(" · "),style=MaterialTheme.typography.bodySmall,color=MaterialTheme.colorScheme.onSurfaceVariant)
                     }
-                    Text("${s.seconds} ${tr("с","s")}",style=MaterialTheme.typography.labelLarge)
+                    Text((if(s.work!=null)"≈ " else "")+"${s.workSeconds} ${tr("с","s")}",style=MaterialTheme.typography.labelLarge)
                 }
             }
         }}

@@ -248,6 +248,27 @@ add('squat_and_jack', [F_STAND, F_HALF_SQUAT, F_STAND, F_JACK_OUT])
 A_SKIP = P(5, (215, 160), (130, 40), (75, 175), (185, 185), lift=0.06)
 add('a_skip', [A_SKIP, swap(A_SKIP)])
 
+# ---- From the channel's chapter lists ------------------------------------------------------------------------------
+# One knee bent, the other leg straight; the head and shoulders rise only a little.
+add('mcgill_crunch', [with_(CRUNCH_DOWN, lf=(90, 90)), with_(CRUNCH_UP, t=285, lf=(90, 90))])
+add('hip_raise', [P(270, (90, 90), (90, 90), (0, 0), (0, 0)), P(255, (90, 90), (90, 90), (345, 345), (345, 345))])
+add('star_crunch', [P(270, (270, 270), (270, 270), (95, 95), (95, 95)), P(300, (30, 60), (30, 60), (30, 120), (30, 120))])
+add('extended_crunch', [P(270, (270, 270), (270, 270), (80, 80), (80, 80)), P(300, (60, 60), (60, 60), (20, 110), (20, 110))])
+add('single_leg_raise', [with_(SUPINE_FLAT, ln=(5, 5)), with_(SUPINE_FLAT, lf=(5, 5))])
+add('cross_mountain_climber', [with_(PLANK, ln=(135, 230)), with_(PLANK, lf=(135, 230))])
+# Sitting back on the hands, the legs fold in and stretch out.
+add('v_sit_in_out', [P(330, (160, 160), (160, 160), (65, 65), (65, 65)), P(345, (160, 160), (160, 160), (25, 125), (25, 125))])
+add('twist_crunch', [CRUNCH_DOWN, with_(CRUNCH_UP, an=(30, 100), af=(0, 280))])
+add('plank_reach', [PLANK, with_(PLANK, an=(80, 80))])
+add('plank_knee_drive', [PLANK, with_(PLANK, ln=(110, 230))])
+add('pushup_pike', [PLANK, PUSH_DOWN, PLANK, PIKE])
+add('explosive_pushup', [PUSH_DOWN, with_(PLANK, lift=0.08)])
+# Front view: the knee comes out to the side and the elbow on that side bends down to it.
+add('standing_side_crunch', [P(0, (240, 330), (120, 30), front=True), P(350, (215, 330), (120, 30), (250, 175), (180, 180), front=True)])
+add('standing_knee_crunch', [STAND_UP, P(10, (150, 100), (150, 100), (80, 180), (180, 180))])
+add('plank_toe_touch', [PLANK, PIKE, with_(PIKE, an=(220, 220))])
+
+
 # ---- Dumbbells (the app draws dumbbells in the hands for every dumbbell exercise) --------------------------------
 add('db_goblet_squat', [P(0, (155, 20), (155, 20)), P(35, (130, 10), (130, 10), (95, 200), (95, 200))])
 add('db_swing', [P(70, (200, 200), (200, 200), (150, 190), (150, 190)), P(0, (90, 90), (90, 90))])
@@ -268,7 +289,7 @@ add('db_overhead_triceps', [P(0, (18, 200), (14, 196)), P(0, (18, 14), (14, 10))
 add('db_kickback', [P(60, (250, 175), (250, 175), (170, 185), (170, 185)), P(60, (250, 250), (250, 250), (170, 185), (170, 185))])
 add('db_skull_crusher', [P(270, (0, 0), (0, 0), (45, 135), (45, 135)), P(270, (0, 270), (0, 270), (45, 135), (45, 135))])
 add('db_side_bend', [P(12, (190, 190), (170, 170), front=True), P(348, (190, 190), (170, 170), front=True)])
-add('db_woodchop', [P(0, (320, 320), (330, 330), (195, 195), (165, 165), front=True), P(0, (160, 160), (150, 150), (195, 195), (165, 165), front=True)])
+add('db_woodchop woodchop', [P(0, (320, 320), (330, 330), (195, 195), (165, 165), front=True), P(0, (160, 160), (150, 150), (195, 195), (165, 165), front=True)])
 add('db_farmer_hold', walking(P(0, (180, 180), (180, 180), (165, 180), (195, 195))))
 add('db_thruster db_strength_session db_circuit', [P(35, (150, 10), (150, 10), (95, 200), (95, 200)), P(0, (18, 12), (14, 8))])
 add('db_clean_press', [with_(HINGE, t=30, ln=(150, 195), lf=(150, 195)), P(0, (150, 10), (150, 10)), P(0, (18, 12), (14, 8))])

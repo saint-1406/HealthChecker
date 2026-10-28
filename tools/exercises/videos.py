@@ -8,6 +8,7 @@ Run: python tools/exercises/videos.py  ->  app/src/main/assets/videos/library.js
 """
 import json, sys
 from pathlib import Path
+import channel
 
 ROOT = Path(__file__).resolve().parents[2]
 EXERCISES = ROOT / 'app/src/main/assets/exercises/exercises.json'
@@ -67,6 +68,10 @@ VIDEOS = [
 # The 30-minute video calls its standing warm-up raise "T-Raise", the title the 25-minute video uses for the prone one.
 SHARED_TITLES = {('T-Raise', 'standing_t_raise')}
 
+def compact(segment):
+    """Leaves out what the app fills in itself: empty texts and a work time equal to the whole segment."""
+    return {k: v for k, v in segment.items() if v != '' and not (k == 'work' and v == segment['end'] - segment['start'])}
+
 def build(exercises=EXERCISES, output=OUTPUT):
     catalog = {e['id']: e for e in json.loads(Path(exercises).read_text(encoding='utf-8'))}
     out = []
@@ -84,10 +89,17 @@ def build(exercises=EXERCISES, output=OUTPUT):
         assert segments[0]['start'] >= 0 and segments[-1]['end'] <= v['durationSec'], v['id']
         about, about_en = v['about']
         out.append({'id': v['id'], 'title': v['title'], 'channel': v['channel'], 'youtubeId': v['youtubeId'], 'durationSec': v['durationSec'],
-                    'embeddable': v['embeddable'], 'about': about, 'aboutEn': about_en, 'segments': segments})
+                    'embeddable': v['embeddable'], 'about': about, 'aboutEn': about_en, 'segments': [compact(s) for s in segments], 'tags': ['full']})
+    # Then the rest of the channel, timed by the author's chapters.
+    more, left_out = channel.videos(catalog, skip={v['youtubeId'] for v in VIDEOS})
+    for v in more:
+        for a, b in zip(v['segments'], v['segments'][1:]): assert a['end'] <= b['start'], (v['id'], a, b)
+        assert all(0 < s['work'] <= s['end'] - s['start'] for s in v['segments']), v['id']
+        out.append({k: val for k, val in v.items() if val != ''} | {'segments': [compact(s) for s in v['segments']]})
     Path(output).parent.mkdir(parents=True, exist_ok=True)
-    Path(output).write_text(json.dumps(out, ensure_ascii=False, indent=1), encoding='utf-8')
-    return {v['id']: len(v['segments']) for v in out}
+    lines = [json.dumps(v, ensure_ascii=False, separators=(',', ':')) for v in out]
+    Path(output).write_text('[\n' + ',\n'.join(lines) + '\n]\n', encoding='utf-8')
+    return {'videos': len(out), 'segments': sum(len(v['segments']) for v in out), 'left out': len(left_out)}
 
 if __name__ == '__main__':
     print(build(*sys.argv[1:]))

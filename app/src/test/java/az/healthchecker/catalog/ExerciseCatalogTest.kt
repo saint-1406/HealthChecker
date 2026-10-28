@@ -11,7 +11,7 @@ import org.robolectric.annotation.Config
 class ExerciseCatalogTest {
     private val catalog by lazy{ExerciseCatalog(ApplicationProvider.getApplicationContext<Context>())}
     @Test fun bundledHomeExercisesLoad() {
-        val all=catalog.exercises;assertEquals(213,all.size);assertEquals(all.size,all.map{it.id}.toSet().size)
+        val all=catalog.exercises;assertEquals(229,all.size);assertEquals(all.size,all.map{it.id}.toSet().size)
         assertTrue(all.all{it.met in 1.0..15.0&&it.metCode.length==5&&it.cue.isNotBlank()&&it.level in 1..3})
         assertEquals(37,all.count{it.equipment==Equipment.DUMBBELLS})
     }
@@ -39,10 +39,19 @@ class ExerciseCatalogTest {
             "Plank & Twist" to "plank_hip_twist","Plank Hold" to "plank","Squat & Jack" to "squat_and_jack","Slow Burpee" to "half_burpee","A-Skip" to "a_skip",
             "Standing T-Raise" to "standing_t_raise").forEach{(q,id)->assertEquals(q,id,catalog.search(q,null,null,true).first().id)}
     }
+    @Test fun chapterTitlesOfTheChannelFindTheirExerciseFirst() {
+        mapOf("McGill Crunch" to "mcgill_crunch","Star Crunch" to "star_crunch","Seated Twist" to "russian_twist","L-Sit Up" to "situp","Mountain Climber Twist" to "cross_mountain_climber",
+            "Standing Crunch" to "standing_knee_crunch","Hip Raise" to "hip_raise","Extended Crunch" to "extended_crunch","V-Sit In & Out" to "v_sit_in_out",
+            "Side Knee to Elbow" to "standing_side_crunch","Push Up & Pike" to "pushup_pike","Woodchop" to "woodchop","Plank Reach" to "plank_reach")
+            .forEach{(q,id)->assertEquals(q,id,catalog.search(q,null,null,true).first().id)}
+    }
     @Test fun builtInVideosPointAtCatalogExercises() {
         val videos=VideoLibrary(ApplicationProvider.getApplicationContext<Context>()).videos
-        assertEquals(listOf("eoY6qlkp1xA","jFvQl1boyM0"),videos.map{it.youtubeId});assertTrue(videos.none{it.embeddable||it.own})
-        videos.forEach{v->v.segments.forEach{s->assertNotNull(s.exerciseId,catalog.byId(s.exerciseId))};assertTrue(v.segments.zipWithNext().all{(a,b)->a.end<=b.start})}
+        // The user's two videos first (timed from the video itself), then 141 more of the channel by the author's chapters.
+        assertEquals(listOf("eoY6qlkp1xA","jFvQl1boyM0"),videos.take(2).map{it.youtubeId});assertTrue(videos.take(2).none{it.embeddable||it.own||it.byChapters})
+        assertEquals(143,videos.size);assertEquals(141,videos.count{it.byChapters});assertEquals(2,videos.count{it.embeddable})
+        videos.forEach{v->v.segments.forEach{s->assertNotNull(s.exerciseId,catalog.byId(s.exerciseId));assertTrue(s.workSeconds in 1..s.seconds)};assertTrue(v.segments.zipWithNext().all{(a,b)->a.end<=b.start});validateVideo(v.copy(id="video:check"))}
+        assertEquals(1922,videos.sumOf{it.segments.size})
         val thirty=videos.first()
         assertEquals(listOf(34,32,1812),listOf(thirty.segments.size,thirty.workDone().size,thirty.durationSec))
         // Jumping jacks open the warm-up and close the cardio: one entry with two sets, 30 s and 40 s.

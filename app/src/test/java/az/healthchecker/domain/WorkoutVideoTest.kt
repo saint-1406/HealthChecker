@@ -74,6 +74,27 @@ class WorkoutVideoTest {
         assertThrows(IllegalArgumentException::class.java){editVideo(builtIn,"x","a".repeat(2001),"")}
         assertThrows(IllegalArgumentException::class.java){validateVideo(saved.copy(id="yt:../evil"))}
     }
+    @Test fun aChapterHoldingARestCountsOnlyItsWork() {
+        // Chapters of a minute: 40 s of work each, the rest of the minute is rest.
+        val byChapters=WorkoutVideo("yt:x","x",timing="chapters",segments=listOf(VideoSegment(0,60,"squat","AIR SQUAT",work=40),VideoSegment(60,120,"squat","AIR SQUAT",work=40)))
+        assertTrue(byChapters.byChapters);assertEquals(80,byChapters.workSeconds)
+        assertEquals(listOf(VideoWork("squat",2,80)),byChapters.workDone())
+        // 25 s into the second chapter: its first 25 s; 70 s in, at most its 40 s of work.
+        assertEquals(listOf(VideoWork("squat",2,65)),byChapters.workDone(85))
+        assertEquals(listOf(VideoWork("squat",1,40)),byChapters.workDone(65))
+        assertThrows(IllegalArgumentException::class.java){validateVideo(byChapters.copy(id="video:1",segments=listOf(VideoSegment(0,60,"squat","x",work=61))))}
+    }
+    @Test fun libraryFilterFindsByTitleExerciseKindAndLength() {
+        val abs=WorkoutVideo("yt:a","10 MIN SIX PACK ABS",durationSec=600,tags=listOf("abs"),segments=listOf(seg(0,40,"mcgill_crunch","MCGILL CRUNCH")))
+        val full=WorkoutVideo("yt:b","30 MIN FULL BODY",durationSec=1812,tags=listOf("full"),segments=listOf(seg(0,40,"burpee","SLOW BURPEE")))
+        val mine=makeOwnVideo("video:1","Утренняя йога","",now)
+        val all=listOf(abs,full,mine);val names={id:String->when(id){"burpee"->"Бёрпи Burpee";"mcgill_crunch"->"Скручивание Макгилла McGill curl-up";else->""}}
+        fun ids(q:String,tag:String?=null,len:VideoLength?=null,own:Boolean=false)=filterVideos(all,q,tag,len,own,names).map{it.id}
+        assertEquals(listOf("yt:a","yt:b","video:1"),ids(""))
+        assertEquals(listOf("yt:a"),ids("six pack"));assertEquals(listOf("yt:b"),ids("бёрпи"));assertEquals(listOf("yt:a"),ids("макгилла"));assertEquals(listOf("yt:b"),ids("slow"))
+        assertEquals(listOf("yt:b"),ids("",tag="full"));assertEquals(listOf("yt:a"),ids("",len=VideoLength.SHORT));assertEquals(listOf("yt:b"),ids("",len=VideoLength.LONG))
+        assertEquals(listOf("video:1"),ids("",own=true));assertEquals(emptyList<String>(),ids("кошка"))
+    }
     @Test fun followAlongClockJumpsAndKeepsItsState() {
         val running=Stopwatch().start(1000).seek(5000,352_000)
         assertTrue(running.running);assertEquals(353_000,running.elapsed(6000))

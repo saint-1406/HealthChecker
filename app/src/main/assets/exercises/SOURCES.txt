@@ -5,3 +5,4 @@ Herrmann SD, Willis EA, Ainsworth BE, et al. 2024 Adult Compendium of Physical A
 Недельные ориентиры: WHO guidelines on physical activity and sedentary behaviour (2020): взрослым 150–300 минут умеренной или 75–150 минут интенсивной аэробной активности в неделю и силовые упражнения на основные группы мышц не реже 2 дней в неделю.
 Второй набор (разминка, аэробика, выносливость, HIIT, баланс, йога, растяжка и упражнения из видеотренировки пользователя) — tools/exercises/additions.py; дополнительно коды 02002, 12020, 17138.
 Воспроизведение: python tools/exercises/build_exercises.py
+Разметка видеотренировок: tools/exercises/videos.py (две тренировки, размеченные по кадрам видео) и tools/exercises/channel.py — главы из описаний видео канала «재호 - Fitness» (jaeho_channel.json, прочитано 28.10.2026 со страниц YouTube; сами видео не скачивались).

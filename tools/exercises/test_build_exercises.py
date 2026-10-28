@@ -38,7 +38,16 @@ class ExerciseCatalogTest(unittest.TestCase):
                 'side_lunge':'Side Lunge','single_leg_bridge':'Single Leg Bridge','snow_angel':'Reverse Snow Angel','crunch':'Crunches','plank':'Plank Hold','half_burpee':'Slow Burpee'}
         for i,t in titles.items():self.assertIn(t,by[i]['videoNames'],i)
         for i in ('standing_t_raise','arm_raises'):self.assertEqual(('WARMUP','MOBILITY','SECONDS'),(by[i]['category'],by[i]['kind'],by[i]['measure']),i)
-        self.assertEqual(213,len(self.items))
+
+    def test_channel_exercises_exist_with_their_titles(self):
+        by={i['id']:i for i in self.items}
+        titles={'mcgill_crunch':'McGill Crunch','hip_raise':'Hip Raise','star_crunch':'Star Crunch','extended_crunch':'Extended Crunch','single_leg_raise':'Single Leg Raise',
+                'cross_mountain_climber':'Mountain Climber Twist','v_sit_in_out':'V-Sit In & Out','twist_crunch':'Twist Crunch','plank_reach':'Plank Reach',
+                'plank_knee_drive':'Plank Knee Up','pushup_pike':'Push Up & Pike','explosive_pushup':'Explosive Push Up','standing_side_crunch':'Side Knee to Elbow',
+                'standing_knee_crunch':'Standing Crunch','plank_toe_touch':'High Plank Toe Touch','woodchop':'Woodchop','russian_twist':'Seated Twist','situp':'L-Sit Up'}
+        for i,t in titles.items():self.assertIn(t,by[i]['videoNames'],i)
+        self.assertEqual('HIIT',by['cross_mountain_climber']['category'])
+        self.assertEqual(229,len(self.items))
 
     def test_user_video_routine_is_findable_by_its_titles(self):
         titles=['OH Squat','High Plank SH Tap','Knee to Elbow Crunch','Jumping Jack','Split Squat','High Plank & Pike','Table Top Crunches',
