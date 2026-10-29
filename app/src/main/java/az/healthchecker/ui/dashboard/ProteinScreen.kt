@@ -65,7 +65,7 @@ import kotlinx.coroutines.delay
                     Text(if(today.grams.value>=goal)tr("Цель по белку выполнена","The protein goal is met") else tr("Осталось ","Left: ")+"${number(goal-today.grams.value)} $G",style=MaterialTheme.typography.bodyMedium)
                 }
                 Text(listOfNotNull(today.energyShare?.let{tr("Белок даёт ","Protein gives ")+"${number(it*100)}% "+tr("калорий дня","of the day's calories")},
-                    weight?.takeIf{today.grams.value>0}?.let{"${number(today.grams.value/it,1)} $G "+tr("на кг веса","per kg of body weight")}).joinToString(" · ").ifEmpty{tr("Сегодня белка ещё нет в дневнике","No protein in the diary today yet")},
+                    weight?.takeIf{today.grams.value>0}?.let{"${if(today.grams.complete)"" else "≥ "}${number(today.grams.value/it,1)} $G "+tr("на кг веса","per kg of body weight")}).joinToString(" · ").ifEmpty{if(today.grams.complete&&today.grams.value==0.0)tr("Сегодня белка ещё нет в дневнике","No protein in the diary today yet") else tr("Недостаточно данных для расчёта доли калорий","Not enough data to calculate the calorie share")},
                     style=MaterialTheme.typography.bodySmall,color=MaterialTheme.colorScheme.onSurfaceVariant)
             }}
             item{Panel {
@@ -76,7 +76,7 @@ import kotlinx.coroutines.delay
                 ProteinChart(stats.days)
                 Row{Text(shortDate(stats.days.first().date),style=MaterialTheme.typography.labelSmall,color=MaterialTheme.colorScheme.onSurfaceVariant,modifier=Modifier.weight(1f));Text(shortDate(stats.days.last().date),style=MaterialTheme.typography.labelSmall,color=MaterialTheme.colorScheme.onSurfaceVariant)}
                 Text(stats.average?.let{tr("В среднем ","Average ")+"${number(it)} $G "+tr("в день","a day")}?:tr("Пока нет дней с полными данными","No days with complete data yet"),style=MaterialTheme.typography.bodyMedium,modifier=Modifier.testTag("proteinAverage"))
-                if(stats.goalDays>0)Text(tr("Цель выполнена: ","Goal met: ")+"${stats.goalMet} "+tr("из","of")+" ${stats.goalDays} "+tr("дн. с записями","logged days"),style=MaterialTheme.typography.bodySmall,color=MaterialTheme.colorScheme.onSurfaceVariant)
+                if(stats.goalDays>0)Text(tr("Цель выполнена: ","Goal met: ")+"${stats.goalMet} "+tr("из","of")+" ${stats.goalDays} "+tr("дн. с достаточными данными","days with sufficient data"),style=MaterialTheme.typography.bodySmall,color=MaterialTheme.colorScheme.onSurfaceVariant)
                 stats.perKg?.let{Text("${number(it,1)} $G "+tr("на кг веса в среднем. Для взрослых обычно советуют от 0,8 г/кг, при силовых тренировках — 1,2–2 г/кг.","per kg of body weight on average. Adults are usually advised 0.8 g/kg or more, 1.2–2 g/kg with strength training."),style=MaterialTheme.typography.bodySmall,color=MaterialTheme.colorScheme.onSurfaceVariant)}
             }}
             if(stats.sources.isNotEmpty())item{Panel {

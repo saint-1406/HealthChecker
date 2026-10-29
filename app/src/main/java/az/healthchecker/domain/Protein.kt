@@ -3,9 +3,9 @@ import java.time.LocalDate
 import kotlin.math.abs
 
 /** Protein of one day: eaten ("complete" is false when part of it is unknown), the goal then in force and the day's calories. */
-data class ProteinDay(val date:String,val grams:NutrientTotal,val goal:Double?,val kcal:Double,val logged:Boolean) {
+data class ProteinDay(val date:String,val grams:NutrientTotal,val goal:Double?,val kcal:Double,val logged:Boolean,val kcalComplete:Boolean=true) {
     /** Share of the day's energy from protein at 4 kcal per gram; null on a day without calories. */
-    val energyShare:Double? get() = if(kcal>0)grams.value*4/kcal else null
+    val energyShare:Double? get() = if(kcal>0 && kcalComplete && grams.complete)grams.value*4/kcal else null
 }
 data class ProteinSource(val foodId:String,val name:String,val grams:Double,val times:Int)
 data class ProteinStats(val days:List<ProteinDay>,val average:Double?,val goalMet:Int,val goalDays:Int,val perKg:Double?,val sources:List<ProteinSource>)
@@ -17,9 +17,10 @@ data class ProteinStats(val days:List<ProteinDay>,val average:Double?,val goalMe
 fun proteinStats(snapshot:UserSnapshot,endDate:String,days:Int,name:(DiaryEntry)->String={it.name}):ProteinStats {
     val end=LocalDate.parse(endDate)
     val states=(days-1 downTo 0).map{snapshot.day(end.minusDays(it.toLong()).toString())}
-    val list=states.map{ProteinDay(it.date,it.summary.protein,it.goals?.protein,it.summary.kcal.value,isLogged(it))}
+    val list=states.map{ProteinDay(it.date,it.summary.protein,it.goals?.protein,it.summary.kcal.value,isLogged(it),it.summary.kcal.complete)}
     val average=list.filter{it.logged&&it.grams.complete}.takeIf{it.isNotEmpty()}?.map{it.grams.value}?.average()
-    val withGoal=list.filter{it.logged&&it.goal!=null}
+    // An incomplete sum below the goal cannot be classified as a failed day. A known lower bound above it is enough.
+    val withGoal=list.filter{it.logged&&it.goal!=null&&(it.grams.complete||it.grams.value>=it.goal)}
     val sources=states.flatMap{it.entries}.filter{(it.nutrients.protein?:0.0)>0}.groupBy{it.foodId}
         .map{(id,entries)->ProteinSource(id,name(entries.first()),entries.sumOf{it.nutrients.protein?:0.0},entries.size)}
         .sortedByDescending{it.grams}.take(8)

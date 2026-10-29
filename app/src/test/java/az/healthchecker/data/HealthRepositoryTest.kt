@@ -78,4 +78,14 @@ class HealthRepositoryTest {
         val s=r.exportSnapshot();r.deleteVideo(v.id);assertTrue(r.exportSnapshot().videos.isEmpty());r.replaceSnapshot(s);assertEquals(listOf(v),r.exportSnapshot().videos)
     }
     @Test fun restoredSnapshotsDoNotDuplicate()=runTest { val r=repository();val s=UserSnapshot(entries=listOf(entry()));r.replaceSnapshot(s);r.replaceSnapshot(s);assertEquals(s,r.exportSnapshot()) }
+    @Test fun deletingTheNewestWeightRemovesItFromSubsequentCalorieEstimates()=runTest {
+        val r=repository();val zone=java.time.ZoneId.of("Asia/Baku")
+        r.saveProfile(Profile(initialWeight=82.0,currentWeight=82.0))
+        r.saveWeight(makeWeight("2026-10-20",81.0,java.time.Instant.parse("2026-10-20T04:00:00Z"),zone))
+        r.saveWeight(makeWeight("2026-10-21",70.0,java.time.Instant.parse("2026-10-21T04:00:00Z"),zone))
+        r.deleteWeight("2026-10-21")
+        assertEquals(81.0,r.exportSnapshot().profile!!.currentWeight,0.0)
+        r.deleteWeight("2026-10-20")
+        assertEquals(82.0,r.exportSnapshot().profile!!.currentWeight,0.0)
+    }
 }

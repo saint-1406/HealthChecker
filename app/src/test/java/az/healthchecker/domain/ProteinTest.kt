@@ -24,6 +24,17 @@ class ProteinTest {
         val st=proteinStats(s,"2026-10-22",1)
         assertFalse(st.days.single().grams.complete);assertNull(st.average);assertNull(st.perKg)
     }
+    @Test fun incompleteNutrientsDoNotProduceAnExactEnergyShareOrAFailedGoal() {
+        val date="2026-10-22"
+        val goals=listOf(DailyGoals(date,protein=100.0))
+        val partial=proteinStats(UserSnapshot(goals=goals,entries=listOf(eat(chicken,100.0,date),eat(mystery,100.0,date))),date,1)
+        assertNull(partial.days.single().energyShare)
+        assertEquals(0,partial.goalDays)
+        val reached=proteinStats(UserSnapshot(goals=goals,entries=listOf(eat(chicken,400.0,date),eat(mystery,100.0,date))),date,1)
+        assertEquals(1,reached.goalDays);assertEquals(1,reached.goalMet)
+        val unknownEnergy=food("unknownEnergy",10.0,null)
+        assertNull(proteinStats(UserSnapshot(entries=listOf(eat(chicken,100.0,date),eat(unknownEnergy,100.0,date))),date,1).days.single().energyShare)
+    }
     @Test fun foodsFilterByProteinAndSortBothWays() {
         val foods=listOf(chicken,rice,mystery,food("egg",12.6,143.0),food("lentils",24.6,352.0),food("water",0.0,0.0,water=true))
         assertEquals(listOf("chicken","lentils","egg","rice"),proteinFoods(foods,null,ProteinMatch.AT_LEAST,ProteinSort.HIGH_FIRST).map{it.id})

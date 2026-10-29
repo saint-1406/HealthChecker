@@ -16,20 +16,25 @@ class HealthRepository(context: Context, name: String = "healthchecker.db") {
     private val images=ExerciseImageStore(context)
     val snapshots:Flow<UserSnapshot> = dao.observe().map(::decode)
     val revisions:Flow<Revision> = dao.observeRevision().map{it?:Revision()}
-    private fun decode(rows:List<StoredRecord>):UserSnapshot = UserSnapshot(
-        profile=rows.find{it.kind=="profile"}?.let{json.decodeFromString<Profile>(it.payload)},
-        goals=rows.filter{it.kind=="goal"}.map{json.decodeFromString<DailyGoals>(it.payload)},
-        entries=rows.filter{it.kind=="entry"}.map{json.decodeFromString<DiaryEntry>(it.payload)},
-        customFoods=rows.filter{it.kind=="food"}.map{json.decodeFromString<Food>(it.payload)},
-        completedDays=rows.filter{it.kind=="day"}.map{it.payload}.toSet(),onboarded=rows.any{it.kind=="onboarded"},
-        workouts=rows.filter{it.kind=="workout"}.map{json.decodeFromString<WorkoutEntry>(it.payload)},
-        trainingDays=rows.filter{it.kind=="trainday"}.associate{it.key.removePrefix("trainday:") to (it.payload=="true")},
-        trainingPrefs=rows.find{it.kind=="trainprefs"}?.let{json.decodeFromString<TrainingPrefs>(it.payload)},
-        medications=rows.filter{it.kind=="med"}.map{json.decodeFromString<Medication>(it.payload)},
-        medicationIntakes=rows.filter{it.kind=="medtake"}.map{json.decodeFromString<MedicationIntake>(it.payload)},
-        steps=rows.filter{it.kind=="steps"}.map{json.decodeFromString<StepDay>(it.payload)},
-        weights=rows.filter{it.kind=="weight"}.map{json.decodeFromString<WeightEntry>(it.payload)},
-        videos=rows.filter{it.kind=="video"}.map{json.decodeFromString<WorkoutVideo>(it.payload)}.sortedBy{it.addedAt})
+    private fun decode(rows:List<StoredRecord>):UserSnapshot {
+        // One grouping pass instead of rescanning the entire diary for every record type.
+        val kinds=rows.groupBy{it.kind}
+        fun records(kind:String)=kinds[kind].orEmpty()
+        return UserSnapshot(
+        profile=records("profile").firstOrNull()?.let{json.decodeFromString<Profile>(it.payload)},
+        goals=records("goal").map{json.decodeFromString<DailyGoals>(it.payload)},
+        entries=records("entry").map{json.decodeFromString<DiaryEntry>(it.payload)},
+        customFoods=records("food").map{json.decodeFromString<Food>(it.payload)},
+        completedDays=records("day").map{it.payload}.toSet(),onboarded=records("onboarded").isNotEmpty(),
+        workouts=records("workout").map{json.decodeFromString<WorkoutEntry>(it.payload)},
+        trainingDays=records("trainday").associate{it.key.removePrefix("trainday:") to (it.payload=="true")},
+        trainingPrefs=records("trainprefs").firstOrNull()?.let{json.decodeFromString<TrainingPrefs>(it.payload)},
+        medications=records("med").map{json.decodeFromString<Medication>(it.payload)},
+        medicationIntakes=records("medtake").map{json.decodeFromString<MedicationIntake>(it.payload)},
+        steps=records("steps").map{json.decodeFromString<StepDay>(it.payload)},
+        weights=records("weight").map{json.decodeFromString<WeightEntry>(it.payload)},
+        videos=records("video").map{json.decodeFromString<WorkoutVideo>(it.payload)}.sortedBy{it.addedAt})
+    }
     private suspend fun changed() { val r=dao.revision()?:Revision();dao.putRevision(r.copy(current=r.current+1)) }
     suspend fun exportSnapshot():UserSnapshot = db.withTransaction{decode(dao.all())}
     /** For backups: the data plus the exercise pictures, which live as files rather than in the database. */
@@ -50,7 +55,18 @@ class HealthRepository(context: Context, name: String = "healthchecker.db") {
         if(newest&&profile!=null)dao.put(StoredRecord("profile","profile",json.encodeToString(profile.copy(currentWeight=entry.kg))))
         changed()
     } }
-    suspend fun deleteWeight(date:String) { db.withTransaction{dao.delete("weight:$date");changed()} }
+    suspend fun deleteWeight(date:String) { db.withTransaction{
+        val deleted=dao.get("weight:$date")?.let{json.decodeFromString<WeightEntry>(it.payload)}
+        val weights=dao.all().filter{it.kind=="weight"}.map{json.decodeFromString<WeightEntry>(it.payload)}
+        dao.delete("weight:$date")
+        val profile=dao.get("profile")?.let{json.decodeFromString<Profile>(it.payload)}
+        // Undo the profile update made by the latest weigh-in, preserving a weight edited manually afterwards.
+        if(deleted!=null && profile!=null && weights.maxOfOrNull{it.date}==date && profile.currentWeight==deleted.kg) {
+            val previous=weights.filter{it.date!=date}.maxByOrNull{it.date}?.kg?:profile.initialWeight
+            dao.put(StoredRecord("profile","profile",json.encodeToString(profile.copy(currentWeight=previous))))
+        }
+        changed()
+    } }
     suspend fun backedUpRevision():Long = (dao.revision()?:Revision()).backedUp
     suspend fun markBackedUp(version:Long) { db.withTransaction{val r=dao.revision()?:Revision();dao.putRevision(r.copy(backedUp=version))} }
     suspend fun upsertEntry(entry:DiaryEntry) { validateSnapshot(UserSnapshot(entries=listOf(entry)));db.withTransaction{dao.put(StoredRecord("entry:${entry.id}","entry",json.encodeToString(entry)));changed()} }
@@ -123,6 +139,4 @@ class HealthRepository(context: Context, name: String = "healthchecker.db") {
         val decoder=java.util.Base64.getDecoder()
         images.replaceAll(snapshot.exerciseImages.mapValues{decoder.decode(it.value)})
     }
-    fun observeDay(date:LocalDate):Flow<DayState> = snapshots.map{it.day(date.toString())}
-    fun observeWeek(endDate:LocalDate):Flow<List<DayState>> = snapshots.map{it.week(endDate.toString())}
 }
