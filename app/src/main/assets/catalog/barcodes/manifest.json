@@ -1,0 +1,15 @@
+{
+  "revision": "d07e994d22778c80da576ed5f7f9cb5f1b6d8c6e",
+  "snapshotDate": "2026-10-29",
+  "products": 4682262,
+  "withCalories": 943729,
+  "uncompressedBytes": 391446528,
+  "sha256": "e4e4b042a3721eae676c17864303d596aa9e809a3ca8d459a4e1d1f9b84657aa",
+  "parts": [
+    "products.sqlite.gz.part000",
+    "products.sqlite.gz.part001",
+    "products.sqlite.gz.part002",
+    "products.sqlite.gz.part003",
+    "products.sqlite.gz.part004"
+  ]
+}

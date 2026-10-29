@@ -10,7 +10,7 @@ android {
         targetSdk = 36
         versionCode = providers.gradleProperty("versionCode").orNull?.toInt() ?: 1
         // The release number (v11 → "11"), so Android's app info and the profile tell the user which update is installed.
-        versionName = versionCode.toString()
+        versionName = providers.gradleProperty("versionName").orNull ?: versionCode.toString()
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
     }
     signingConfigs { create("localRelease") { if(signing.isNotEmpty()) { storeFile = file(signing.getProperty("storeFile")); storePassword = signing.getProperty("storePassword"); keyAlias = signing.getProperty("keyAlias"); keyPassword = signing.getProperty("keyPassword") } } }

@@ -16,6 +16,7 @@ import androidx.compose.material.icons.outlined.QrCodeScanner
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.runtime.saveable.rememberSaveable
+import androidx.compose.runtime.saveable.Saver
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.*
@@ -29,27 +30,33 @@ import com.google.zxing.client.android.Intents
 import com.journeyapps.barcodescanner.ScanContract
 import com.journeyapps.barcodescanner.ScanOptions
 import kotlinx.coroutines.*
+import kotlinx.serialization.json.Json
+import kotlinx.serialization.encodeToString
+
+private val labelStateSaver=Saver<LabelProduct?,String>(
+    save={Json.encodeToString(it)},
+    restore={runCatching{Json.decodeFromString<LabelProduct?>(it)}.getOrNull()}
+)
 
 @Composable fun BarcodeScreen(vm:AppViewModel,back:()->Unit,select:(Food)->Unit) {
     val scope=rememberCoroutineScope();val context=LocalContext.current
     val keyboard=LocalSoftwareKeyboardController.current;val focus=LocalFocusManager.current
-    val client=remember{OpenFoodFactsClient()}
-    val lookup=remember{BarcodeLookup(scope,{code->vm.snapshot.value.customFoods.find{it.barcode==code}},{code->withContext(Dispatchers.IO){client.lookup(code)}})}
+    val lookup=remember{BarcodeLookup(scope,{code->vm.snapshot.value.customFoods.find{it.barcode==code}},{code->withContext(Dispatchers.IO){OfflineBarcodeCatalog.shared(context).lookup(code)}})}
     val state by lookup.state.collectAsState()
     val busy by vm.busy.collectAsState()
     var input by rememberSaveable{mutableStateOf("")}
     var submitted by rememberSaveable{mutableStateOf("")}
-    var review by remember{mutableStateOf<LabelProduct?>(null)}
+    var review by rememberSaveable(stateSaver=labelStateSaver){mutableStateOf<LabelProduct?>(null)}
     var photoError by remember{mutableStateOf<String?>(null)}
     val reading=state.readingPhoto
-    fun accept(value:String){input=value;submitted=value;photoError=null;review=null;keyboard?.hide();focus.clearFocus();lookup.accept(value)}
+    fun accept(value:String){input=value;submitted=value;photoError=null;review=null;keyboard?.hide();focus.clearFocus();lookup.acceptAndSearch(value)}
     val scanner=rememberLauncherForActivityResult(ScanContract()){r->
         if(r.contents!=null)runCatching{normalizeScannedCode(r.contents,r.formatName)}.onSuccess{accept(it)}.onFailure{photoError=it.message}
         else if(r.originalIntent?.hasExtra(Intents.Scan.MISSING_CAMERA_PERMISSION)==true)photoError=tr("Камера недоступна. Разрешите её в настройках или введите код вручную.","Camera access is unavailable. Allow it in settings or enter the code manually.")
     }
     val picker=rememberLauncherForActivityResult(ActivityResultContracts.PickVisualMedia()){uri->if(uri!=null&&!reading){lookup.readPhoto({readBarcodePhoto(context,uri)}){accept(it)}}}
     DisposableEffect(lookup){onDispose{lookup.cancel()}}
-    LaunchedEffect(Unit){if(input.isNotBlank())lookup.accept(input)}
+    LaunchedEffect(Unit){if(review==null&&submitted.isNotBlank()&&submitted==input)lookup.acceptAndSearch(input)}
     LaunchedEffect(state.food?.id){state.food?.let(select)}
     BackHandler(review!=null){review=null}
     val preview=review
@@ -60,6 +67,7 @@ import kotlinx.coroutines.*
     Column(Modifier.fillMaxSize().verticalScroll(rememberScrollState()).imePadding().padding(20.dp),verticalArrangement=Arrangement.spacedBy(12.dp)) {
         Row(verticalAlignment=Alignment.CenterVertically){IconButton(onClick=back){Icon(Icons.AutoMirrored.Outlined.ArrowBack,tr("Назад","Back"))};SectionTitle(tr("Сканер товаров","Product scanner"))}
         Text(tr("Наведите камеру на штрихкод упаковки. Можно также выбрать его фотографию или ввести цифры.","Point the camera at the package barcode. You can also choose a barcode photo or enter the digits."))
+        Text(tr("Поиск полностью без интернета: сначала ваши товары, затем встроенная база Open Food Facts. При первом поиске подготовка базы может занять немного времени.","Lookup works entirely offline: your products first, then the bundled Open Food Facts database. Preparing the database may take a moment on the first search."),style=MaterialTheme.typography.bodySmall)
         Button(onClick={
             lookup.cancel()
             runCatching{scanner.launch(ScanOptions().setDesiredBarcodeFormats(listOf(ScanOptions.EAN_13,ScanOptions.EAN_8,ScanOptions.UPC_A,ScanOptions.UPC_E,ScanOptions.ITF))
@@ -69,21 +77,26 @@ import kotlinx.coroutines.*
         OutlinedButton(onClick={picker.launch(PickVisualMediaRequest(ActivityResultContracts.PickVisualMedia.ImageOnly))},enabled=!reading,modifier=Modifier.fillMaxWidth().heightIn(min=48.dp)){Icon(Icons.Outlined.PhotoLibrary,null);Spacer(Modifier.width(8.dp));Text(tr("Выбрать фото штрихкода","Choose a barcode photo"))}
         OutlinedTextField(input,{input=it.take(40);submitted="";lookup.cancel();photoError=null},label={Text(tr("Цифры штрихкода","Barcode digits"))},singleLine=true,
             keyboardOptions=KeyboardOptions(keyboardType=KeyboardType.Number,imeAction=ImeAction.Search),keyboardActions=KeyboardActions(onSearch={accept(input)}),modifier=Modifier.fillMaxWidth().testTag("barcodeInput"))
-        Button(onClick={accept(input)},enabled=input.isNotBlank()&&!reading,modifier=Modifier.fillMaxWidth().heightIn(min=48.dp).testTag("barcodeFind")){Text(tr("Найти на телефоне","Find on this phone"))}
+        Button(onClick={accept(input)},enabled=input.isNotBlank()&&!reading&&!state.loading,modifier=Modifier.fillMaxWidth().heightIn(min=48.dp).testTag("barcodeFind")){Text(tr("Найти товар","Find product"))}
         if(reading||state.loading)LinearProgressIndicator(Modifier.fillMaxWidth())
         val message=photoError?:state.message.takeIf{submitted==input}
         message?.let{Text(it,color=MaterialTheme.colorScheme.error,modifier=Modifier.testTag("barcodeMessage"))}
         val matching=submitted==input&&state.code.isNotEmpty()&&runCatching{normalizeBarcode(input)==state.code}.getOrDefault(false)
         if(matching&&state.food==null)Panel {
-            Text(tr("На телефоне этого товара пока нет","This product is not saved on this phone yet"),style=MaterialTheme.typography.titleMedium)
-            Text(tr("Поиск онлайн отправит только штрихкод в Open Food Facts. Дневник и фотографии остаются на телефоне.","Online lookup sends only the barcode to Open Food Facts. Your diary and photos stay on this phone."),style=MaterialTheme.typography.bodySmall)
-            Button(onClick={lookup.lookupOnline()},enabled=!state.loading&&!reading,modifier=Modifier.fillMaxWidth().heightIn(min=48.dp).testTag("barcodeOnline")){Text(tr("Найти онлайн","Look up online"))}
+            Text(when {
+                state.loading->tr("Ищем во встроенной базе…","Searching the bundled database…")
+                state.label!=null->tr("Товар найден во встроенной базе","Product found in the bundled database")
+                state.notFound->tr("Товар не найден во встроенной базе","Product not found in the bundled database")
+                else->tr("Не удалось проверить встроенную базу","Could not check the bundled database")
+            },style=MaterialTheme.typography.titleMedium,modifier=Modifier.testTag("barcodeStatus"))
+            if(state.notFound)Text(tr("Добавьте фото и данные с этикетки — товар сохранится в вашей личной базе.","Add a photo and the label values to save this product in your personal database."))
+            if(!state.loading&&state.message!=null)Button(onClick={lookup.lookupCatalog()},enabled=!reading,modifier=Modifier.fillMaxWidth().heightIn(min=48.dp).testTag("barcodeRetry")){Text(tr("Повторить поиск в базе","Retry database lookup"))}
             state.label?.let{label->
                 Text(listOf(label.name,label.brand).filter{it.isNotBlank()}.joinToString(" · "))
                 Text(tr("Сверьте данные с упаковкой перед сохранением.","Check these details against the package before saving."))
                 Button(onClick={review=label},modifier=Modifier.fillMaxWidth().heightIn(min=48.dp).testTag("barcodeReview")){Text(tr("Проверить данные","Review details"))}
             }
-            TextButton(onClick={lookup.cancel();review=LabelProduct(state.code)},enabled=!reading,modifier=Modifier.fillMaxWidth().heightIn(min=48.dp).testTag("barcodeManual")){Text(tr("Ввести по этикетке","Enter from label"))}
+            TextButton(onClick={lookup.cancel();review=LabelProduct(state.code)},enabled=!reading,modifier=Modifier.fillMaxWidth().heightIn(min=48.dp).testTag("barcodeManual")){Text(if(state.label!=null)tr("Не тот товар? Добавить вручную","Wrong product? Add manually")else tr("Добавить вручную","Add manually"))}
         }
         Text(tr("Сохранённые товары доступны без интернета. Штрихкод определяет товар, пищевые значения берутся из его карточки.","Saved products work offline. The barcode identifies a product; nutrition comes from its product card."),style=MaterialTheme.typography.bodySmall)
     }
@@ -101,18 +114,20 @@ import kotlinx.coroutines.*
     var basisName by rememberSaveable(label.code){mutableStateOf(label.basis.name)}
     var mass by rememberSaveable(label.code){mutableStateOf("")}
     var error by remember{mutableStateOf<String?>(null)}
+    var photo by rememberSaveable(label.code){mutableStateOf<String?>(null)}
+    var photoBusy by remember{mutableStateOf(false)}
     val basis=NutritionBasis.valueOf(basisName)
-    val uriHandler=LocalUriHandler.current
     fun optional(text:String):Double?=if(text.isBlank())null else text.trim().replace(',','.').toDoubleOrNull()?.also{require(it.isFinite()&&it>=0){tr("Проверьте числа на этикетке","Check the label numbers")}}?:throw IllegalArgumentException(tr("Проверьте числа на этикетке","Check the label numbers"))
     Column(Modifier.fillMaxSize().verticalScroll(rememberScrollState()).imePadding().padding(20.dp),verticalArrangement=Arrangement.spacedBy(12.dp)) {
         IconButton(onClick=back){Icon(Icons.AutoMirrored.Outlined.ArrowBack,tr("Назад","Back"))}
         SectionTitle(tr("Проверьте этикетку","Check the label"),label.code)
         if(label.fromOpenFoodFacts){
             Text(tr("Open Food Facts: данные могут быть неполными. Исправьте значения по своей упаковке.","Open Food Facts data may be incomplete. Correct the values using your package."))
-            TextButton(onClick={runCatching{uriHandler.openUri("https://world.openfoodfacts.org/product/${label.code}")}}){Text("Open Food Facts · ODbL")}
+            Text("Open Food Facts · ODbL · world.openfoodfacts.org",style=MaterialTheme.typography.bodySmall)
         }
         OutlinedTextField(name,{name=it.take(150)},label={Text(tr("Название продукта","Product name"))},modifier=Modifier.fillMaxWidth().testTag("barcodeName"))
         OutlinedTextField(brand,{brand=it.take(45)},label={Text(tr("Бренд (необязательно)","Brand (optional)"))},modifier=Modifier.fillMaxWidth())
+        ProductPhotoEditor(photo,!busy,{photoBusy=it},{photo=it})
         Text(tr("Пищевая ценность указана:","Nutrition values are per:"))
         Row(horizontalArrangement=Arrangement.spacedBy(8.dp)){
             FilterChip(selected=basis==NutritionBasis.MASS,onClick={if(basis!=NutritionBasis.MASS){basisName=NutritionBasis.MASS.name;pack=""}},label={Text(tr("100 г","100 g"))},modifier=Modifier.heightIn(min=48.dp))
@@ -136,7 +151,7 @@ import kotlinx.coroutines.*
         Button(onClick={runCatching{
             require(name.isNotBlank()){tr("Введите название продукта","Enter the product name")}
             val energy=optional(kcal)?:throw IllegalArgumentException(tr("Укажите калории с этикетки","Enter calories from the label"))
-            label.copy(name=name,brand=brand,nutrients=Nutrients(energy,optional(protein),optional(fat),optional(carbs),optional(fiber)),packageAmount=optional(pack)).toFood(basis,if(basis==NutritionBasis.VOLUME)optional(mass)else null)
-        }.onSuccess(save).onFailure{error=it.message}},enabled=!busy,modifier=Modifier.fillMaxWidth().heightIn(min=54.dp).testTag("barcodeSaveFood")){Text(tr("Сохранить и указать порцию","Save and choose portion"))}
+            label.copy(name=name,brand=brand,nutrients=Nutrients(energy,optional(protein),optional(fat),optional(carbs),optional(fiber)),packageAmount=optional(pack)).toFood(basis,if(basis==NutritionBasis.VOLUME)optional(mass)else null).copy(productPhoto=photo)
+        }.onSuccess(save).onFailure{error=it.message}},enabled=!busy&&!photoBusy,modifier=Modifier.fillMaxWidth().heightIn(min=54.dp).testTag("barcodeSaveFood")){Text(tr("Добавить в мою базу и указать порцию","Add to my database and choose portion"))}
     }
 }

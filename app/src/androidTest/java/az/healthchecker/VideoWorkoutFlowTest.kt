@@ -86,10 +86,11 @@ class VideoWorkoutFlowTest {
         app.onNodeWithTag("editVideoLink").performTextReplacement("https://youtu.be/ml6cT4AZdqI")
         app.onNodeWithTag("editVideoAbout").performTextReplacement("Делаю по вторникам")
         app.onNodeWithTag("saveVideoEdit").performClick()
-        // Another video may allow embedding, so the player is offered; the timeline stays.
+        // The offline build keeps external YouTube links and never offers embedded network playback.
         dialogClosed()
         app.onNodeWithText("Делаю по вторникам").assertExists()
-        app.onNodeWithTag("loadYoutube").assertExists()
+        app.onNodeWithTag("loadYoutube").assertDoesNotExist()
+        app.onNodeWithTag("openYoutube").assertExists()
         app.onNodeWithTag("videoTotals").assert(hasText("34 упражнения",substring=true))
         app.onNodeWithTag("editVideo").performClick()
         app.onNodeWithTag("resetVideo").performClick()
@@ -107,9 +108,10 @@ class VideoWorkoutFlowTest {
         app.onNodeWithTag("videoLink").performTextInput("https://youtu.be/ml6cT4AZdqI?si=x")
         app.onNodeWithTag("videoTitle").performTextInput("Утренняя тренировка")
         app.onNodeWithTag("saveVideo").performClick()
-        // The new video opens; nothing goes online until the user taps "Load the video".
+        // The app itself never goes online; only an external app can open the link.
         waitText("Утренняя тренировка",30000)
-        app.onNodeWithTag("loadYoutube").assertExists()
+        app.onNodeWithTag("loadYoutube").assertDoesNotExist()
+        app.onNodeWithTag("openYoutube").assertExists()
         app.onNodeWithTag("logVideo").performClick()
         app.onNodeWithTag("videoMinutes").performTextInput("20")
         app.onNodeWithTag("confirmLogVideo").performClick()

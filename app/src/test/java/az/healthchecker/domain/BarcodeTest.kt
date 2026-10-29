@@ -5,6 +5,14 @@ import org.junit.Assert.*
 import org.junit.Test
 
 class BarcodeTest {
+    @Test fun denseVolumeNutritionIsNormalizedOnlyAfterMeasuredDensity() {
+        val label=LabelProduct(normalizeBarcode("4006381333931"),"Syrup",nutrients=Nutrients(448.0,carbs=112.0),basis=NutritionBasis.VOLUME)
+        val food=label.toFood(NutritionBasis.VOLUME,140.0)
+        assertEquals(80.0,food.per100g.carbs!!,1e-8)
+        val portion=calculate(food,Quantity(200.0,Measure.ML))
+        assertEquals(896.0,portion.nutrients.kcal!!,1e-8)
+        assertEquals(224.0,portion.nutrients.carbs!!,1e-8)
+    }
     @Test fun canonicalCodesPreserveLeadingZerosAndUnifyUpcAliases() {
         assertEquals("00012345678905",normalizeBarcode("012345678905"))
         assertEquals(normalizeBarcode("012345678905"),normalizeBarcode("0012345678905"))
@@ -16,38 +24,6 @@ class BarcodeTest {
         listOf("4006381333932","0000000000000","123","https://example.com/4006381333931","4e12","+4006381333931").forEach {
             assertThrows(IllegalArgumentException::class.java){normalizeBarcode(it)}
         }
-    }
-    private fun response(nutrients:String,per:String="100g",preparation:String="as_sold",unit:String="g")="""{"code":"4006381333931","status":"success","product":{"code":"4006381333931","product_name":"Test","brands":"Brand","product_quantity":500,"product_quantity_unit":"$unit","nutrition":{"aggregated_set":{"per":"$per","preparation":"$preparation","nutrients":{$nutrients}}}}}"""
-    private fun n(name:String,value:String,unit:String="g",source:String="packaging")=""""$name":{"value":$value,"unit":"$unit","source":"$source"}"""
-    @Test fun parserUsesLabelNumbersNotEstimatesAndConvertsKjOnlyWhenKcalMissing() {
-        val p=OpenFoodFacts.parse("4006381333931",response(listOf(n("energy-kj","836.8","kJ"),n("proteins","5"),n("fat","99",source="estimate")).joinToString(",")))!!
-        assertEquals(200.0,p.nutrients.kcal!!,0.0001);assertEquals(5.0,p.nutrients.protein!!,0.0)
-        assertNull(p.nutrients.fat);assertNull(p.nutrients.carbs);assertEquals("Test",p.name)
-        assertEquals(500.0,p.packageAmount!!,0.0)
-    }
-    @Test fun servingsPreparedValuesAndInvalidNutrientsDoNotBecomePer100g() {
-        val data=n("energy-kcal","200","kcal")
-        assertNull(OpenFoodFacts.parse("4006381333931",response(data,"serving"))!!.nutrients.kcal)
-        assertNull(OpenFoodFacts.parse("4006381333931",response(data,preparation="prepared"))!!.nutrients.kcal)
-        val invalid=response(n("energy-kcal","-1","kcal")+","+n("proteins","10000"))
-        val p=OpenFoodFacts.parse("4006381333931",invalid)!!
-        assertNull(p.nutrients.kcal);assertNull(p.nutrients.protein)
-    }
-    @Test fun wrongProductNeverImportsAndNotFoundIsDistinct() {
-        assertThrows(IllegalArgumentException::class.java){OpenFoodFacts.parse("3017620422003",response(""))}
-        assertNull(OpenFoodFacts.parse("4006381333931","""{"status":"failure","product":null}"""))
-        assertThrows(IllegalArgumentException::class.java){OpenFoodFacts.parse("4006381333931","not json")}
-    }
-    @Test fun packageUnitsNeverOverrideTheNutritionBasis() {
-        val kcal=n("energy-kcal","60","kcal")
-        val mass=OpenFoodFacts.parse("4006381333931",response(kcal,per="100g",unit="ml"))!!
-        assertEquals(NutritionBasis.MASS,mass.basis);assertNull(mass.packageAmount)
-        assertEquals(60.0,mass.toFood(NutritionBasis.MASS).per100g.kcal!!,0.0)
-        val volume=OpenFoodFacts.parse("4006381333931",response(kcal,per="100ml",unit="g"))!!
-        assertEquals(NutritionBasis.VOLUME,volume.basis);assertNull(volume.packageAmount)
-        val food=volume.toFood(NutritionBasis.VOLUME,103.0)
-        assertTrue(food.portions.isEmpty())
-        assertEquals(120.0,calculate(food,Quantity(200.0,Measure.ML)).nutrients.kcal!!,1e-8)
     }
     @Test fun volumeLabelRequiresMeasuredDensityAndKeepsCaloriesCorrect() {
         val label=LabelProduct(normalizeBarcode("4006381333931"),"Milk","Brand",Nutrients(60.0,3.0),500.0,NutritionBasis.VOLUME)

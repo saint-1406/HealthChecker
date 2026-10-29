@@ -1,0 +1,29 @@
+{
+  "revision": "d07e994d22778c80da576ed5f7f9cb5f1b6d8c6e",
+  "snapshot_date": "2026-10-29",
+  "source_sha256": "2ec8e749dc20e7793d560b56035407c067f981ebe90d8c7d227d9534d4aa6ace",
+  "source_url": "https://huggingface.co/datasets/openfoodfacts/product-database/resolve/d07e994d22778c80da576ed5f7f9cb5f1b6d8c6e/food.parquet",
+  "license": "ODbL-1.0",
+  "contents_license": "DbCL-1.0",
+  "attribution": "Contains data from Open Food Facts, available under the Open Database License.",
+  "source_rows": 4882161,
+  "valid_gtin_rows": 4682309,
+  "invalid_gtin_rows": 199852,
+  "azerbaijan_tagged_valid_rows": 1290,
+  "products": 4682262,
+  "with_calories": 943729,
+  "duplicate_alias_rows": 47,
+  "source_rows_declared": 4882161,
+  "database_bytes": 391446528,
+  "database_sha256": "e4e4b042a3721eae676c17864303d596aa9e809a3ca8d459a4e1d1f9b84657aa",
+  "gzip_bytes": 154003442,
+  "gzip_sha256": "164deb04612a466060b6583441f6dd038f32d97c4f8fe88052728cc53ea34962",
+  "part_sha256": {
+    "products.sqlite.gz.part000": "3859c740b7c0ba0fdb406235ac7f4f805e7870f71e298edb85113a5398868234",
+    "products.sqlite.gz.part001": "dbd01b0196312af59810f827607cf60da3b2f8078c8125edf75298b77838dce6",
+    "products.sqlite.gz.part002": "d03d959272f1a708789f612d00c01bee4d36a456104276ee49ac9e6a53f7eaaf",
+    "products.sqlite.gz.part003": "a79cee50d9404256cf9944937f29923f33c5b128aea4b83b7a2dbcd0f937c3e8",
+    "products.sqlite.gz.part004": "157cd4e1065ff07ebe0133f42a7c737bd3bc15c484ece607d0d8c19323e3ae43"
+  },
+  "nutrition_policy": "Explicit as-sold 100g/100ml values only; no serving/prepared/estimated substitutions. Unknown stays null. Every valid GTIN identity is retained."
+}

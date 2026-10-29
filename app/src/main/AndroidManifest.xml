@@ -7,8 +7,6 @@
     <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED"/>
     <!-- Workout timers vibrate when the rest or hold time is over. -->
     <uses-permission android:name="android.permission.VIBRATE"/>
-    <!-- Explicit YouTube playback and optional public product lookup; never uploads diary or photos. -->
-    <uses-permission android:name="android.permission.INTERNET"/>
     <uses-permission android:name="android.permission.CAMERA"/>
     <uses-feature android:name="android.hardware.camera" android:required="false"/>
     <uses-feature android:name="android.hardware.camera.autofocus" android:required="false"/>

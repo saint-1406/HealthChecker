@@ -8,11 +8,12 @@ import java.io.InputStream
 import java.io.ByteArrayOutputStream
 // Schema 2 added workouts, training marks, training settings and dish recipes; schema 3 added fibre, English names,
 // medications with their intakes and steps; schema 4 added the weight log and exercise pictures; schema 5 added the
-// user's workout videos; schema 6 their changes to the built-in videos. Older files still decode.
+// user's workout videos; schema 6 their changes to the built-in videos; schema 8 barcodes;
+// schema 9 private product photos. Older files still decode.
 @Serializable private data class BackupEnvelope(val format:String="healthchecker-backup",val schemaVersion:Int=BackupCodec.SCHEMA_VERSION,val snapshot:UserSnapshot)
 object BackupCodec {
     const val MAX_BYTES=25*1024*1024
-    const val SCHEMA_VERSION=8
+    const val SCHEMA_VERSION=9
     private val json=Json{encodeDefaults=true}
     fun encode(snapshot:UserSnapshot):ByteArray {
         validateSnapshot(snapshot)

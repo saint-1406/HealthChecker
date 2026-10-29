@@ -49,6 +49,7 @@ import az.healthchecker.ui.*
     Column(Modifier.fillMaxSize().verticalScroll(rememberScrollState()).imePadding().padding(24.dp),verticalArrangement=Arrangement.spacedBy(18.dp)) {
         IconButton(onClick=back){Icon(Icons.AutoMirrored.Outlined.ArrowBack,tr("Назад","Back"))}
         SectionTitle(food.displayName,subtitle)
+        ProductPhotoPreview(food.productPhoto)
         FlowRow(horizontalArrangement=Arrangement.spacedBy(8.dp)){
             listOf(Measure.GRAMS to tr("Граммы","Grams"),Measure.PIECES to tr("Штуки","Pieces")).plus(if(food.density!=null)listOf(Measure.ML to tr("Миллилитры","Millilitres"))else emptyList()).forEach{(u,label)->FilterChip(selected=unit==u,onClick=click@{
                 if(u==unit)return@click

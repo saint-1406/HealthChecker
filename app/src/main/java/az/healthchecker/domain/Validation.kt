@@ -12,7 +12,7 @@ fun validateSnapshot(s:UserSnapshot) {
     fun unique(ids:List<String>) { require(ids.size==ids.toSet().size) { tr("Повторяющиеся идентификаторы","Duplicate identifiers") } }
     unique(s.entries.map{it.id});unique(s.customFoods.map{it.id});unique(s.goals.map{it.effectiveFrom});unique(s.workouts.map{it.id})
     unique(s.customFoods.mapNotNull{it.barcode})
-    s.customFoods.forEach{f->require(f.barcode==null||normalizeBarcode(f.barcode)==f.barcode)}
+    s.customFoods.forEach{f->require(f.barcode==null||normalizeBarcode(f.barcode)==f.barcode);f.productPhoto?.let(::validateProductPhoto)}
     s.profile?.let { estimateMaintenance(it);require(it.initialWeight.isFinite() && it.initialWeight in 2.0..500.0) }
     fun nutrient(n:Nutrients,max:Double) { listOf(n.kcal,n.protein,n.fat,n.carbs,n.fiber).forEach{require(it==null || it.isFinite() && it in 0.0..max)} }
     s.goals.forEach { g -> LocalDate.parse(g.effectiveFrom);listOf(g.kcal,g.protein,g.waterMl).forEach { require(it==null || it.isFinite() && it>0 && it<=100000) } }

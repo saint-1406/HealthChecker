@@ -11,6 +11,7 @@ import androidx.compose.runtime.*
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.testTag
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.semantics.Role
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.style.TextAlign
@@ -19,6 +20,9 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import az.healthchecker.domain.*
 import az.healthchecker.ui.*
 import az.healthchecker.ui.inventory.InventorySection
+import az.healthchecker.barcode.OfflineBarcodeCatalog
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.withContext
 import java.time.*
 import java.time.format.DateTimeFormatter
 
@@ -30,6 +34,8 @@ import java.time.format.DateTimeFormatter
     var kcal by rememberSaveable(goals){mutableStateOf(goals?.kcal?.let(::plain)?:"")};var protein by rememberSaveable(goals){mutableStateOf(goals?.protein?.let(::plain)?:"")};var water by rememberSaveable(goals){mutableStateOf(goals?.waterMl?.let(::plain)?:"")}
     var message by remember{mutableStateOf<String?>(null)}
     var sources by rememberSaveable{mutableStateOf(false)}
+    val context=LocalContext.current
+    val barcodeManifest by produceState<az.healthchecker.barcode.BarcodeManifest?>(null){value=withContext(Dispatchers.IO){runCatching{OfflineBarcodeCatalog.shared(context).manifest}.getOrNull()}}
     val hostActivity=androidx.activity.compose.LocalActivity.current
     // The whole interface, dates and system dialogs switch together, so the screen is rebuilt in the new language.
     @Composable fun LanguageChips() = FlowRow(horizontalArrangement=Arrangement.spacedBy(8.dp)){AppLanguage.entries.forEach{l->FilterChip(selected=Lang.current==l,onClick={if(Lang.current!=l){vm.setLanguage(l);hostActivity?.recreate()}},label={Text(if(l==AppLanguage.RU)"Русский" else "English")},modifier=Modifier.testTag("lang-${l.tag}"))}}
@@ -83,12 +89,17 @@ import java.time.format.DateTimeFormatter
                 LanguageChips()
             }
             Panel {SectionTitle(tr("Каталог продуктов","Food catalog"),"$catalogSize ${tr("позиций · работает без интернета","foods · works offline")}");Text(tr("У каждого продукта есть русское и английское название, поиск понимает оба языка и азербайджанские слова. Повседневные продукты показываются первыми. Региональные бренды можно добавить по этикетке.","Every food has a Russian and an English name; search understands both languages and Azerbaijani words. Everyday foods come first. Add regional brands from the label."),style=MaterialTheme.typography.bodySmall);TextButton(onClick={sources=true}){Text(tr("Источники и точность","Sources and accuracy"))}}
+            barcodeManifest?.let{m->Panel {
+                SectionTitle(tr("Товары по штрихкоду","Products by barcode"),"${m.products} "+tr("карточек · без интернета","cards · offline"))
+                Text(tr("Встроенный снимок Open Food Facts от ","Bundled Open Food Facts snapshot: ")+m.snapshotDate+tr(". Сканируйте упаковку и сверьте этикетку. Отсутствующий товар можно добавить вручную с фото.",". Scan a package and verify the label. Missing products can be added manually with a photo."),style=MaterialTheme.typography.bodySmall)
+                Text("Open Food Facts · ODbL 1.0 · DbCL 1.0",style=MaterialTheme.typography.bodySmall)
+            }}
             // Matches the update file's number, so the user can see which update the phone has.
             if(vm.appVersion.isNotBlank())Text("HealthChecker · "+tr("версия ","version ")+vm.appVersion,style=MaterialTheme.typography.bodySmall,color=MaterialTheme.colorScheme.onSurfaceVariant,modifier=Modifier.fillMaxWidth().testTag("appVersion"),textAlign=TextAlign.Center)
         }
         Spacer(Modifier.height(16.dp))
     }
     if(sources)AlertDialog(onDismissRequest={sources=false},title={Text(tr("О данных","About the data"))},text={Text(tr(
-        "USDA FoodData Central · SR Legacy, апрель 2018. Получено 18.10.2026. Данные public domain.\nfdc.nal.usda.gov\nРусские названия — перевод английских описаний USDA; значения не менялись. Клетчатка — USDA «Fiber, total dietary».\n\nПорции и пищевая ценность усреднённые. Qatıq находится через натуральный йогурт как приблизительный аналог, а не конкретный местный бренд. Ресторанные блюда Баку — расчётные оценки; как получено каждое значение, написано в карточке продукта.\n\nOpen Food Facts был недоступен; его данные не включены.\n\nУпражнения: 229 домашних упражнений и разметка 143 видеотренировок канала 재호 - Fitness (по главам автора). Расход энергии — MET из 2024 Adult Compendium of Physical Activities (pacompendium.com): ккал ≈ MET × вес × время. Шаги — ходьба 3,8 MET (код 17190), длина шага ≈ 0,415 × рост. Недельные ориентиры — рекомендации ВОЗ 2020.\n\nПриложение не отправляет дневник на сервер; в интернет выходит только проигрыватель YouTube и только по вашему нажатию.",
-        "USDA FoodData Central · SR Legacy, April 2018. Retrieved 18 Oct 2026. Public domain data.\nfdc.nal.usda.gov\nRussian names translate the USDA English descriptions; values are unchanged. Fibre is USDA “Fiber, total dietary”.\n\nPortions and nutrition values are averages. Qatıq is found through plain yogurt as an approximate equivalent, not a specific local brand. Baku restaurant dishes are calculated estimates; each food card says how its values were derived.\n\nOpen Food Facts was unavailable; its data is not included.\n\nExercises: 229 home exercises and the timelines of 143 workout videos of the channel 재호 - Fitness (by the author's chapters). Energy — MET from the 2024 Adult Compendium of Physical Activities (pacompendium.com): kcal ≈ MET × weight × time. Steps — walking at 3.8 MET (code 17190), step length ≈ 0.415 × height. Weekly targets — WHO 2020 guidelines.\n\nThe app never sends your diary to a server; only the YouTube player goes online, and only when you tap."))},confirmButton={TextButton(onClick={sources=false}){Text(tr("Понятно","Got it"))}})
+        "USDA FoodData Central · SR Legacy, апрель 2018. Получено 18.10.2026. Данные public domain.\nfdc.nal.usda.gov\nРусские названия — перевод английских описаний USDA; значения не менялись. Клетчатка — USDA «Fiber, total dietary».\n\nПорции и пищевая ценность усреднённые. Qatıq находится через натуральный йогурт как приблизительный аналог, а не конкретный местный бренд. Ресторанные блюда Баку — расчётные оценки; как получено каждое значение, написано в карточке продукта.\n\nOpen Food Facts: полная встроенная база штрихкодов. ODbL 1.0; отдельные данные DbCL 1.0. Снимок и число карточек указаны в профиле. Копия базы и исходники импорта: github.com/saint-1406/HealthChecker. Сверяйте значения с этикеткой.\n\nУпражнения: 229 домашних упражнений и разметка 143 видеотренировок канала 재호 - Fitness (по главам автора). Расход энергии — MET из 2024 Adult Compendium of Physical Activities (pacompendium.com): ккал ≈ MET × вес × время. Шаги — ходьба 3,8 MET (код 17190), длина шага ≈ 0,415 × рост. Недельные ориентиры — рекомендации ВОЗ 2020.\n\nПриложение не имеет разрешения на доступ к интернету. Ссылки YouTube открываются внешним приложением по нажатию.",
+        "USDA FoodData Central · SR Legacy, April 2018. Retrieved 18 Oct 2026. Public domain data.\nfdc.nal.usda.gov\nRussian names translate the USDA English descriptions; values are unchanged. Fibre is USDA “Fiber, total dietary”.\n\nPortions and nutrition values are averages. Qatıq is found through plain yogurt as an approximate equivalent, not a specific local brand. Baku restaurant dishes are calculated estimates; each food card says how its values were derived.\n\nOpen Food Facts: full bundled barcode database. ODbL 1.0; individual contents DbCL 1.0. The snapshot date and card count are shown in the profile. Database and importer: github.com/saint-1406/HealthChecker. Verify values against the label.\n\nExercises: 229 home exercises and the timelines of 143 workout videos of the channel 재호 - Fitness (by the author's chapters). Energy — MET from the 2024 Adult Compendium of Physical Activities (pacompendium.com): kcal ≈ MET × weight × time. Steps — walking at 3.8 MET (code 17190), step length ≈ 0.415 × height. Weekly targets — WHO 2020 guidelines.\n\nThe app has no internet permission. YouTube links open in an external app only when you tap."))},confirmButton={TextButton(onClick={sources=false}){Text(tr("Понятно","Got it"))}})
 }

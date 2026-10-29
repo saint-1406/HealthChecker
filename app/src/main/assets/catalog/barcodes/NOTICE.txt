@@ -1,0 +1,17 @@
+Contains data from Open Food Facts (https://world.openfoodfacts.org),
+made available under the Open Database License (ODbL) 1.0.
+Individual database contents: Database Contents License (DbCL) 1.0.
+
+This is a derived, offline database of product identities and available
+nutrition/packaging values from the complete official food Parquet snapshot.
+Its schema, filtering rules, source revision and hashes are provided with
+the importer and report. The derived database is distributed in full in
+the HealthChecker repository and the corresponding GitHub Release.
+https://github.com/saint-1406/HealthChecker
+
+ODbL: https://opendatacommons.org/licenses/odbl/1.0/
+DbCL: https://opendatacommons.org/licenses/dbcl/1.0/
+
+The database licenses apply to this OFF-derived database, not to the
+application code or the user's private diary/photos.
+No Open Food Facts product images are redistributed in this database.

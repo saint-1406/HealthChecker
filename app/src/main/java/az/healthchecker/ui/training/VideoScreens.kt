@@ -1,14 +1,7 @@
 package az.healthchecker.ui.training
-import android.annotation.SuppressLint
 import android.content.ActivityNotFoundException
 import android.content.Context
 import android.content.Intent
-import android.os.Handler
-import android.os.Looper
-import android.webkit.JavascriptInterface
-import android.webkit.WebResourceRequest
-import android.webkit.WebView
-import android.webkit.WebViewClient
 import android.widget.VideoView
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
@@ -89,8 +82,8 @@ import kotlinx.coroutines.delay
                 Text(tr("Найдено: ","Found: ")+shown.size,style=MaterialTheme.typography.bodySmall,color=MaterialTheme.colorScheme.onSurfaceVariant,modifier=Modifier.testTag("videoCount"))
             }}
             items(shown,key={it.id}){v->VideoCard(vm,v,settings.videoFiles[v.id]){open(v.id)}}
-            item{Text(tr("Видео с YouTube загружается из интернета только когда вы нажмёте «Загрузить видео». Скачивать ролики с YouTube приложение не будет: это запрещают правила YouTube. Чтобы заниматься без интернета, прикрепите свой видеофайл с телефона — он играет прямо здесь, вместе с разметкой упражнений.",
-                "A YouTube video loads from the internet only when you tap “Load the video”. The app does not download videos from YouTube: YouTube's terms forbid it. To train offline, attach your own video file from the phone — it plays right here, with the exercise timeline."),
+            item{Text(tr("Приложение работает без доступа к сети. Ссылки YouTube открываются во внешнем приложении. Свой видеофайл с телефона играет прямо здесь, вместе с разметкой упражнений.",
+                "This app has no network access. YouTube links open in an external app. Your own video files play here with the exercise timeline."),
                 style=MaterialTheme.typography.bodySmall,color=MaterialTheme.colorScheme.onSurfaceVariant)}
         }
     }
@@ -185,8 +178,8 @@ private enum class Source { CLOCK, FILE, YOUTUBE }
     val file=remember(linked){linked?.takeIf(vm::videoFileReadable)}
     var chosen by rememberSaveable(id){mutableStateOf(if(file!=null)Source.FILE else Source.CLOCK)}
     // A file that went away (reinstall, deleted) falls back to the timer.
-    val source=if(chosen==Source.FILE&&file==null)Source.CLOCK else chosen
-    var youtubeError by rememberSaveable(id){mutableStateOf<Int?>(null)}
+    // YOUTUBE is kept as an enum value to read a saved v16 screen, but never runs in this offline build.
+    val source=if(chosen==Source.YOUTUBE||(chosen==Source.FILE&&file==null))Source.CLOCK else chosen
     var full by rememberSaveable{mutableStateOf(false)}
     var logging by rememberSaveable{mutableStateOf(false)}
     var editing by rememberSaveable{mutableStateOf(false)}
@@ -203,8 +196,7 @@ private enum class Source { CLOCK, FILE, YOUTUBE }
     val filePicker=rememberLauncherForActivityResult(ActivityResultContracts.OpenDocument()){uri->uri?.let{vm.attachVideoFile(it,id){chosen=Source.FILE}}}
     val player:@Composable (Modifier)->Unit = {m->when(source){
         Source.FILE->FilePlayer(file!!.uri,position,control,m,::moved){chosen=Source.CLOCK;vm.error.value=tr("Файл не открывается. Прикрепите его заново.","The file does not open. Attach it again.")}
-        Source.YOUTUBE->YouTubePlayer(video.youtubeId!!,position,control,m,::moved){code->youtubeError=code;chosen=Source.CLOCK}
-        Source.CLOCK->PlayerPlaceholder(video,file!=null,linked!=null&&file==null,youtubeError,m,{youtubeError=null;chosen=Source.YOUTUBE},{if(!openYoutube(context,video.youtubeId!!,position))vm.notice.value=Notice(tr("На телефоне нет приложения, которое откроет YouTube","No app on the phone can open YouTube"))},{chosen=Source.FILE}){filePicker.launch(arrayOf("video/*"))}
+        else->PlayerPlaceholder(video,file!=null,linked!=null&&file==null,m,{if(!openYoutube(context,video.youtubeId!!,position))vm.notice.value=Notice(tr("На телефоне нет приложения, которое откроет YouTube","No app on the phone can open YouTube"))},{chosen=Source.FILE}){filePicker.launch(arrayOf("video/*"))}
     }}
     // Both views call the player from the same place, so switching keeps it playing instead of loading it again.
     Column(Modifier.fillMaxSize().then(if(full)Modifier.background(Color.Black) else Modifier)) {
@@ -235,7 +227,7 @@ private enum class Source { CLOCK, FILE, YOUTUBE }
         if(!full)VideoTimeline(vm,snapshot,date,video,position,source,linked,file!=null,{seek(it)},{logging=true},{filePicker.launch(arrayOf("video/*"))},back)
     }
     // A new link is another video: drop the old player and its error, the placeholder offers the new one.
-    if(editing)EditVideoDialog(vm,video,vm.videoEdited(id),{editing=false}){editing=false;youtubeError=null;if(chosen==Source.YOUTUBE)chosen=Source.CLOCK}
+    if(editing)EditVideoDialog(vm,video,vm.videoEdited(id),{editing=false}){editing=false;if(chosen==Source.YOUTUBE)chosen=Source.CLOCK}
     if(logging)LogVideoDialog(vm,video,position,snapshot.bodyWeight(date),{logging=false}){upTo,minutes,vigorous->
         logging=false
         if(video.segments.isEmpty())vm.logVideoAsWorkout(minutes!!,vigorous,date) else vm.logVideo(video,upTo,date)
@@ -266,37 +258,26 @@ private fun openYoutube(context:Context,youtubeId:String,second:Int):Boolean =
     }
 }
 
-@Composable private fun PlayerPlaceholder(video:WorkoutVideo,hasFile:Boolean,lostFile:Boolean,youtubeError:Int?,modifier:Modifier,load:()->Unit,openYoutube:()->Unit,playFile:()->Unit,attach:()->Unit) {
+@Composable private fun PlayerPlaceholder(video:WorkoutVideo,hasFile:Boolean,lostFile:Boolean,modifier:Modifier,openYoutube:()->Unit,playFile:()->Unit,attach:()->Unit) {
     Box(modifier.background(MaterialTheme.colorScheme.surfaceContainerHighest),contentAlignment=Alignment.Center){
         Column(Modifier.padding(16.dp),horizontalAlignment=Alignment.CenterHorizontally,verticalArrangement=Arrangement.spacedBy(6.dp)){
             val yt=video.youtubeId
             val message=when {
-                youtubeError!=null->youtubeErrorText(youtubeError)
                 lostFile->tr("Прикреплённый файл больше недоступен (приложение переустановлено или файл удалён). Прикрепите его заново.","The attached file is no longer available (the app was reinstalled or the file was removed). Attach it again.")
                 yt!=null&&!video.embeddable->tr("Автор этого видео запретил показ в других приложениях. Откройте его в YouTube — разметка ниже будет идти по таймеру — или прикрепите свой файл.","The owner of this video does not allow it in other apps. Open it in YouTube — the timeline below follows along on a timer — or attach your own file.")
-                yt!=null->tr("Видео с YouTube загрузится из интернета только по нажатию.","The YouTube video loads from the internet only when you tap.")
+                yt!=null->tr("Приложение работает без доступа к сети. Откройте ссылку во внешнем YouTube или прикрепите свой видеофайл.","This app has no network access. Open the link in the external YouTube app or attach your own video file.")
                 else->tr("Прикрепите видеофайл с телефона.","Attach a video file from the phone.")
             }
             Text(message,style=MaterialTheme.typography.bodyMedium,modifier=Modifier.testTag("playerMessage"))
             Row(horizontalArrangement=Arrangement.spacedBy(8.dp)){
                 when {
                     hasFile->Button(onClick=playFile){Icon(Icons.Outlined.PlayArrow,null);Spacer(Modifier.width(4.dp));Text(tr("Свой файл","Own file"))}
-                    yt!=null&&video.embeddable&&youtubeError==null->Button(onClick=load,modifier=Modifier.testTag("loadYoutube")){Icon(Icons.Outlined.CloudDownload,null);Spacer(Modifier.width(4.dp));Text(tr("Загрузить видео","Load the video"))}
                     else->OutlinedButton(onClick=attach){Text(tr("Прикрепить файл","Attach a file"))}
                 }
                 if(yt!=null)OutlinedButton(onClick=openYoutube,modifier=Modifier.testTag("openYoutube")){Text(tr("В YouTube","In YouTube"))}
             }
-            if(yt!=null&&!video.embeddable&&youtubeError==null)TextButton(onClick=load){Text(tr("Всё равно попробовать здесь","Try here anyway"),style=MaterialTheme.typography.bodySmall)}
         }
     }
-}
-
-private fun youtubeErrorText(code:Int):String = when(code) {
-    101,150->tr("Автор запретил показ этого видео в других приложениях (ошибка $code). Откройте его в YouTube или прикрепите свой файл.","The owner does not allow this video in other apps (error $code). Open it in YouTube or attach your own file.")
-    100->tr("Видео удалено или скрыто автором.","The video was removed or made private.")
-    2->tr("YouTube не принял ссылку на видео.","YouTube did not accept the video link.")
-    0->tr("YouTube не загрузился. Проверьте интернет и попробуйте снова.","YouTube did not load. Check the internet connection and try again.")
-    else->tr("YouTube не смог показать видео (ошибка $code). Откройте его в YouTube.","YouTube could not play the video (error $code). Open it in YouTube.")
 }
 
 @OptIn(ExperimentalLayoutApi::class)
@@ -407,58 +388,4 @@ private fun youtubeErrorText(code:Int):String = when(code) {
     }
     LaunchedEffect(player){while(true){player?.let{if(it.isPlaying){at=it.currentPosition/1000;onMoved(at)};playing=it.isPlaying};delay(500)}}
     LifecycleEventEffect(Lifecycle.Event.ON_STOP){player?.pause();playing=false}
-}
-
-/** The site address the YouTube player is told it is embedded in: YouTube asks apps to send their app id as the Referer. */
-private const val YOUTUBE_ORIGIN="https://az.healthchecker.app"
-private fun youtubePage(id:String,start:Int):String = """<!doctype html><html><head><meta name="viewport" content="width=device-width,initial-scale=1">
-<style>html,body{margin:0;height:100%;background:#000;overflow:hidden}#p{width:100%;height:100%}</style></head><body><div id="p"></div>
-<script src="https://www.youtube.com/iframe_api"></script><script>
-var player;
-function onYouTubeIframeAPIReady(){player=new YT.Player('p',{width:'100%',height:'100%',videoId:'$id',
- playerVars:{playsinline:1,rel:0,fs:0,autoplay:1,start:$start,origin:'$YOUTUBE_ORIGIN'},
- events:{onReady:function(){Android.ready()},onError:function(e){Android.error(e.data)}}});
- setInterval(function(){if(player&&player.getCurrentTime)Android.time(player.getCurrentTime())},500)}
-function seek(s){if(player&&player.seekTo)player.seekTo(s,true)}
-function pause(){if(player&&player.pauseVideo)player.pauseVideo()}
-</script></body></html>"""
-
-/**
- * The official YouTube IFrame player in a WebView, loaded only after the user asked for it. The page's base address
- * carries the app id, which YouTube requires as the Referer of embedded players (otherwise error 152/153).
- */
-@SuppressLint("SetJavaScriptEnabled")
-@Composable private fun YouTubePlayer(youtubeId:String,start:Int,control:PlayerControl,modifier:Modifier,moved:(Int)->Unit,failed:(Int)->Unit) {
-    val onMoved by rememberUpdatedState(moved);val onFailed by rememberUpdatedState(failed)
-    var ready by remember{mutableStateOf(false)}
-    var web by remember{mutableStateOf<WebView?>(null)}
-    Box(modifier.background(Color.Black),contentAlignment=Alignment.Center){
-        AndroidView(factory={ctx->WebView(ctx).apply{
-            settings.javaScriptEnabled=true
-            settings.mediaPlaybackRequiresUserGesture=false
-            settings.allowFileAccess=false;settings.allowContentAccess=false
-            setBackgroundColor(android.graphics.Color.BLACK)
-            val main=Handler(Looper.getMainLooper())
-            addJavascriptInterface(object {
-                @JavascriptInterface fun time(seconds:Double){main.post{onMoved(seconds.toInt())}}
-                @JavascriptInterface fun ready(){main.post{ready=true}}
-                @JavascriptInterface fun error(code:Int){main.post{onFailed(code)}}
-            },"Android")
-            webViewClient=object:WebViewClient(){
-                // "Watch on YouTube" and other links leave the player for the YouTube app or the browser.
-                override fun shouldOverrideUrlLoading(view:WebView,request:WebResourceRequest):Boolean {
-                    if(!request.isForMainFrame)return false
-                    try{ctx.startActivity(Intent(Intent.ACTION_VIEW,request.url))}catch(_:ActivityNotFoundException){}
-                    return true
-                }
-            }
-            control.seek={s->evaluateJavascript("seek($s)",null)}
-            loadDataWithBaseURL("$YOUTUBE_ORIGIN/",youtubePage(youtubeId,start),"text/html","utf-8",null)
-            web=this
-        }},onRelease={it.destroy()},modifier=Modifier.fillMaxSize())
-        if(!ready)CircularProgressIndicator()
-    }
-    // Without the internet the player never gets ready; say so instead of spinning forever.
-    LaunchedEffect(Unit){delay(25000);if(!ready)onFailed(0)}
-    LifecycleEventEffect(Lifecycle.Event.ON_STOP){web?.evaluateJavascript("pause()",null)}
 }

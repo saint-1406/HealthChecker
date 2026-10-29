@@ -4,7 +4,7 @@ import az.healthchecker.domain.*
 import kotlinx.coroutines.*
 import kotlinx.coroutines.flow.*
 
-data class BarcodeLookupState(val code:String="",val food:Food?=null,val label:LabelProduct?=null,val loading:Boolean=false,val message:String?=null,val readingPhoto:Boolean=false)
+data class BarcodeLookupState(val code:String="",val food:Food?=null,val label:LabelProduct?=null,val loading:Boolean=false,val message:String?=null,val readingPhoto:Boolean=false,val notFound:Boolean=false)
 
 /** Superseded/cancelled requests cannot replace the current product. */
 class BarcodeLookup(private val scope:CoroutineScope,private val local:(String)->Food?,private val fetch:suspend (String)->LabelProduct?) {
@@ -18,17 +18,18 @@ class BarcodeLookup(private val scope:CoroutineScope,private val local:(String)-
         mutable.value=try{val code=normalizeBarcode(raw);BarcodeLookupState(code,food=local(code))}
             catch(e:IllegalArgumentException){BarcodeLookupState(message=e.message)}
     }
-    fun lookupOnline() {
+    fun acceptAndSearch(raw:String) { accept(raw);lookupCatalog() }
+    fun lookupCatalog() {
         val current=state.value
         if(current.code.isEmpty()||current.food!=null||current.loading||current.readingPhoto)return
         val token=++generation
-        mutable.value=current.copy(loading=true,label=null,message=null)
+        mutable.value=current.copy(loading=true,label=null,message=null,notFound=false)
         job=scope.launch {
             try {
                 val label=fetch(current.code)
-                if(generation==token)mutable.value=current.copy(label=label,message=if(label==null)tr("Товар не найден. Добавьте его по этикетке.","Product not found. Add it from the label.")else null)
+                if(generation==token)mutable.value=current.copy(label=label,message=null,notFound=label==null)
             }catch(e:CancellationException){throw e}
-            catch(e:Exception){if(generation==token)mutable.value=current.copy(message=if(e is java.io.IOException)tr("Нет связи с сервисом. Повторите поиск или введите этикетку.","Cannot reach the service. Retry or enter the label manually.")else e.message?:tr("Не удалось найти товар","Could not look up this product"))}
+            catch(e:Exception){if(generation==token)mutable.value=current.copy(notFound=false,message=tr("Не удалось открыть встроенную базу. Проверьте свободное место или добавьте товар вручную.","Could not open the bundled database. Check available storage or add the product manually."))}
         }
     }
     fun readPhoto(decode:suspend ()->String,accepted:(String)->Unit={accept(it)}) {
