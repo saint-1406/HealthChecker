@@ -4,13 +4,17 @@ import androidx.datastore.preferences.preferencesDataStore
 import androidx.datastore.preferences.core.*
 import az.healthchecker.domain.Appearance
 import az.healthchecker.domain.VideoFile
+import az.healthchecker.domain.Quantity
+import az.healthchecker.domain.Measure
+import az.healthchecker.domain.OverviewCards
 import kotlinx.coroutines.flow.*
 import kotlinx.serialization.json.Json
 import kotlinx.serialization.encodeToString
 import kotlinx.serialization.decodeFromString
 private val Context.settingsStore by preferencesDataStore("settings")
 /** [videoFiles]: video id → the user's own copy on this phone; links to documents work only on this install, so they stay out of backups. */
-data class Settings(val appearance:Appearance=Appearance(),val folder:String="",val lastBackup:Long=0,val backups:List<String> = emptyList(),val videoFiles:Map<String,VideoFile> = emptyMap()) {
+data class Settings(val appearance:Appearance=Appearance(),val folder:String="",val lastBackup:Long=0,val backups:List<String> = emptyList(),val videoFiles:Map<String,VideoFile> = emptyMap(),
+    val lastPortions:Map<String,Quantity> = emptyMap(),val waterMl:Int=250,val overviewCards:OverviewCards=OverviewCards(),val backupPromptDismissed:Boolean=false) {
     val theme:String get() = appearance.mode
 }
 class SettingsRepository(context:Context) {
@@ -22,13 +26,33 @@ class SettingsRepository(context:Context) {
     private val seasonSkipped=stringPreferencesKey("seasonSkipped");private val background=longPreferencesKey("background");private val dim=floatPreferencesKey("backgroundDim")
     private val cardAlpha=floatPreferencesKey("cardAlpha");private val decorations=booleanPreferencesKey("decorations")
     private val videoFiles=stringPreferencesKey("videoFiles")
+    private val lastPortions=stringPreferencesKey("lastPortions")
+    private val water= intPreferencesKey("waterMl")
+    private val cards=stringPreferencesKey("overviewCards")
+    private val backupPrompt=booleanPreferencesKey("backupPromptDismissed")
     val settings:Flow<Settings> = store.data.map{
         val d=Appearance()
         Settings(Appearance(it[theme]?:d.mode,it[palette]?:d.palette,it[customHue]?:d.customHue,it[seasonal]?:d.seasonal,it[seasonSkipped]?:d.seasonSkipped,
             it[background]?:d.background,it[dim]?:d.dim,it[cardAlpha]?:d.cardAlpha,it[decorations]?:d.decorations),
             it[folder]?:"",it[last]?:0,it[backups]?.split('\n')?.filter(String::isNotEmpty)?:(it[legacyBackups]?:emptySet()).toList(),
-            it[videoFiles]?.let{s->runCatching{Json.decodeFromString<Map<String,VideoFile>>(s)}.getOrNull()}?:emptyMap())
+            it[videoFiles]?.let{s->runCatching{Json.decodeFromString<Map<String,VideoFile>>(s)}.getOrNull()}?:emptyMap(),
+            lastPortions=it[lastPortions]?.let{s->runCatching{Json.decodeFromString<Map<String,Quantity>>(s)}.getOrNull()}?.filterValues(::validQuantity)?:emptyMap(),
+            waterMl=it[water]?.takeIf{v->v in listOf(200,250,500)}?:250,
+            overviewCards=it[cards]?.let{s->runCatching{Json.decodeFromString<OverviewCards>(s)}.getOrNull()}?:OverviewCards(),
+            backupPromptDismissed=it[backupPrompt]?:false)
     }
+    private fun validQuantity(q:Quantity):Boolean = q.value.isFinite()&&q.value>0&&q.value<=(if(q.unit==Measure.PIECES)10000 else 100000) &&
+        (q.unit!=Measure.PIECES||(q.portionGrams!=null&&q.portionGrams.isFinite()&&q.portionGrams>0&&q.portionGrams<=100000))
+    suspend fun portion(id:String,q:Quantity) {
+        require(id.length in 1..200 && validQuantity(q))
+        store.edit { p->
+            val old=p[lastPortions]?.let{s->runCatching{Json.decodeFromString<Map<String,Quantity>>(s)}.getOrNull()}.orEmpty()
+            p[lastPortions]=Json.encodeToString(((old-id)+(id to q)).entries.toList().takeLast(1000).associate{it.toPair()})
+        }
+    }
+    suspend fun waterMl(value:Int){require(value in listOf(200,250,500));store.edit{it[water]=value}}
+    suspend fun cards(value:OverviewCards){store.edit{it[cards]=Json.encodeToString(value)}}
+    suspend fun dismissBackupPrompt(){store.edit{it[backupPrompt]=true}}
     suspend fun theme(value:String){store.edit{it[theme]=value}}
     suspend fun appearance(a:Appearance){store.edit{
         it[theme]=a.mode;it[palette]=a.palette;it[customHue]=a.customHue;it[seasonal]=a.seasonal;it[seasonSkipped]=a.seasonSkipped

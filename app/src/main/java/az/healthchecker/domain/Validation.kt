@@ -5,6 +5,9 @@ import java.time.ZoneId
 import java.util.UUID
 
 fun validateSnapshot(s:UserSnapshot) {
+    require(s.favoriteFoods.size<=10000 && s.favoriteFoods.all{it.length in 1..200} && s.savedMeals.size<=200)
+    require(s.savedMeals.map{it.id}.toSet().size==s.savedMeals.size)
+    s.savedMeals.forEach(::validateSavedMeal)
     require(s.entries.size<=50000 && s.customFoods.size<=10000 && s.goals.size<=10000 && s.completedDays.size<=50000 && s.workouts.size<=50000 && s.trainingDays.size<=50000) { tr("Слишком много записей","Too many records") }
     fun unique(ids:List<String>) { require(ids.size==ids.toSet().size) { tr("Повторяющиеся идентификаторы","Duplicate identifiers") } }
     unique(s.entries.map{it.id});unique(s.customFoods.map{it.id});unique(s.goals.map{it.effectiveFrom});unique(s.workouts.map{it.id})

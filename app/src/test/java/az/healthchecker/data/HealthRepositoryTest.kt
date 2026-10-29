@@ -78,6 +78,16 @@ class HealthRepositoryTest {
         val s=r.exportSnapshot();r.deleteVideo(v.id);assertTrue(r.exportSnapshot().videos.isEmpty());r.replaceSnapshot(s);assertEquals(listOf(v),r.exportSnapshot().videos)
     }
     @Test fun restoredSnapshotsDoNotDuplicate()=runTest { val r=repository();val s=UserSnapshot(entries=listOf(entry()));r.replaceSnapshot(s);r.replaceSnapshot(s);assertEquals(s,r.exportSnapshot()) }
+    @Test fun pictureActivationFailureRollsBackTheWholeRestore()=runTest {
+        val context=ApplicationProvider.getApplicationContext<Context>();val r=repository();val original=entry();r.upsertEntry(original)
+        val pictures=java.io.File(context.filesDir,"exercise-images")
+        pictures.deleteRecursively();pictures.writeText("blocked")
+        try {
+            val jpeg=java.util.Base64.getEncoder().encodeToString(byteArrayOf(0xFF.toByte(),0xD8.toByte(),1,2))
+            assertThrows(java.io.IOException::class.java){kotlinx.coroutines.runBlocking{r.replaceSnapshot(UserSnapshot(entries=listOf(entry().copy(name="New")),exerciseImages=mapOf("squat" to jpeg)))}}
+            assertEquals(listOf(original),r.exportSnapshot().entries);assertEquals("blocked",pictures.readText())
+        } finally { pictures.delete() }
+    }
     @Test fun deletingTheNewestWeightRemovesItFromSubsequentCalorieEstimates()=runTest {
         val r=repository();val zone=java.time.ZoneId.of("Asia/Baku")
         r.saveProfile(Profile(initialWeight=82.0,currentWeight=82.0))

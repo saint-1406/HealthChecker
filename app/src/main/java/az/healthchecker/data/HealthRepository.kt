@@ -15,6 +15,19 @@ class HealthRepository(context: Context, name: String = "healthchecker.db") {
     private val json=Json{encodeDefaults=true}
     private val images=ExerciseImageStore(context)
     private val imageReplacement=ImageReplacement(context.applicationContext.filesDir)
+    private val meals=MealsStore(db,dao,json,::changed)
+    val mealDrafts=meals.drafts
+    suspend fun mealDraft()=meals.draft()
+    suspend fun appendMealItems(items:List<MealItem>,date:String)=meals.append(items,date)
+    suspend fun updateMealItem(id:String,q:Quantity)=meals.update(id,q)
+    suspend fun removeMealItem(id:String)=meals.remove(id)
+    suspend fun clearMealDraft()=meals.clear()
+    suspend fun commitMealDraft(id:String,now:java.time.Instant,zone:java.time.ZoneId)=meals.commit(id,now,zone)
+    suspend fun logMealItem(item:MealItem,date:String,now:java.time.Instant,zone:java.time.ZoneId)=meals.log(item,date,now,zone)
+    suspend fun setFavorite(id:String,enabled:Boolean)=meals.favorite(id,enabled)
+    suspend fun saveMeal(meal:SavedMeal)=meals.save(meal)
+    suspend fun deleteMeal(id:String)=meals.delete(id)
+    suspend fun deleteEntries(ids:List<String>)=meals.deleteEntries(ids)
     private suspend fun recoverImages()=db.withTransaction{imageReplacement.recover(dao.get("image-generation")?.payload)}
     val snapshots:Flow<UserSnapshot> = dao.observe().map{recoverImages();decode(it)}
     val revisions:Flow<Revision> = dao.observeRevision().map{it?:Revision()}
@@ -35,7 +48,8 @@ class HealthRepository(context: Context, name: String = "healthchecker.db") {
         medicationIntakes=records("medtake").map{json.decodeFromString<MedicationIntake>(it.payload)},
         steps=records("steps").map{json.decodeFromString<StepDay>(it.payload)},
         weights=records("weight").map{json.decodeFromString<WeightEntry>(it.payload)},
-        videos=records("video").map{json.decodeFromString<WorkoutVideo>(it.payload)}.sortedBy{it.addedAt})
+        videos=records("video").map{json.decodeFromString<WorkoutVideo>(it.payload)}.sortedBy{it.addedAt},
+        favoriteFoods=records("favorite").map{it.payload}.toSet(),savedMeals=records("meal").map{json.decodeFromString<SavedMeal>(it.payload)})
     }
     private suspend fun changed() { val r=dao.revision()?:Revision();dao.putRevision(r.copy(current=r.current+1)) }
     suspend fun exportSnapshot():UserSnapshot = db.withTransaction{recoverImages();decode(dao.all())}
@@ -141,6 +155,8 @@ class HealthRepository(context: Context, name: String = "healthchecker.db") {
             snapshot.steps.forEach{dao.put(StoredRecord("steps:${it.date}","steps",json.encodeToString(it)))}
             snapshot.weights.forEach{dao.put(StoredRecord("weight:${it.date}","weight",json.encodeToString(it)))}
             snapshot.videos.forEach{dao.put(StoredRecord("video:${it.id}","video",json.encodeToString(it)))}
+            snapshot.favoriteFoods.forEach{dao.put(StoredRecord("favorite:$it","favorite",it))}
+            snapshot.savedMeals.forEach{dao.put(StoredRecord("meal:${it.id}","meal",json.encodeToString(it)))}
             imageReplacement.activate()
             dao.put(StoredRecord("image-generation","internal",generation))
             changed()
