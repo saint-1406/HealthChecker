@@ -14,7 +14,9 @@ class HealthRepository(context: Context, name: String = "healthchecker.db") {
     private val dao=db.dao()
     private val json=Json{encodeDefaults=true}
     private val images=ExerciseImageStore(context)
-    val snapshots:Flow<UserSnapshot> = dao.observe().map(::decode)
+    private val imageReplacement=ImageReplacement(context.applicationContext.filesDir)
+    private suspend fun recoverImages()=db.withTransaction{imageReplacement.recover(dao.get("image-generation")?.payload)}
+    val snapshots:Flow<UserSnapshot> = dao.observe().map{recoverImages();decode(it)}
     val revisions:Flow<Revision> = dao.observeRevision().map{it?:Revision()}
     private fun decode(rows:List<StoredRecord>):UserSnapshot {
         // One grouping pass instead of rescanning the entire diary for every record type.
@@ -36,17 +38,19 @@ class HealthRepository(context: Context, name: String = "healthchecker.db") {
         videos=records("video").map{json.decodeFromString<WorkoutVideo>(it.payload)}.sortedBy{it.addedAt})
     }
     private suspend fun changed() { val r=dao.revision()?:Revision();dao.putRevision(r.copy(current=r.current+1)) }
-    suspend fun exportSnapshot():UserSnapshot = db.withTransaction{decode(dao.all())}
+    suspend fun exportSnapshot():UserSnapshot = db.withTransaction{recoverImages();decode(dao.all())}
     /** For backups: the data plus the exercise pictures, which live as files rather than in the database. */
     suspend fun exportVersioned():Pair<Long,UserSnapshot> {
-        val (revision,snapshot)=db.withTransaction{Pair((dao.revision()?:Revision()).current,decode(dao.all()))}
-        val encoder=java.util.Base64.getEncoder()
-        return revision to snapshot.copy(exerciseImages=images.all().mapValues{encoder.encodeToString(it.value)})
+        return db.withTransaction {
+            recoverImages()
+            val encoder=java.util.Base64.getEncoder()
+            (dao.revision()?:Revision()).current to decode(dao.all()).copy(exerciseImages=images.all().mapValues{encoder.encodeToString(it.value)})
+        }
     }
-    fun imageVersions():Map<String,Long> = images.versions()
+    suspend fun imageVersions():Map<String,Long> = db.withTransaction{recoverImages();images.versions()}
     fun imageFile(id:String):java.io.File = images.file(id)
-    suspend fun saveExerciseImage(id:String,jpeg:ByteArray) { images.write(id,jpeg);db.withTransaction{changed()} }
-    suspend fun deleteExerciseImage(id:String) { images.delete(id);db.withTransaction{changed()} }
+    suspend fun saveExerciseImage(id:String,jpeg:ByteArray) { db.withTransaction{recoverImages();images.write(id,jpeg);changed()} }
+    suspend fun deleteExerciseImage(id:String) { db.withTransaction{recoverImages();images.delete(id);changed()} }
     /** A newer weigh-in also becomes the profile's current weight; the initial weight never changes. */
     suspend fun saveWeight(entry:WeightEntry) { validateSnapshot(UserSnapshot(weights=listOf(entry)));db.withTransaction{
         dao.put(StoredRecord("weight:${entry.date}","weight",json.encodeToString(entry)))
@@ -118,7 +122,10 @@ class HealthRepository(context: Context, name: String = "healthchecker.db") {
     suspend fun finishOnboarding(){db.withTransaction{dao.put(StoredRecord("onboarded","onboarded","true"));changed()}}
     suspend fun replaceSnapshot(snapshot:UserSnapshot) {
         validateSnapshot(snapshot)
-        db.withTransaction {
+        try { db.withTransaction {
+            recoverImages()
+            val decoder=java.util.Base64.getDecoder()
+            val generation=imageReplacement.prepare(snapshot.exerciseImages.mapValues{decoder.decode(it.value)})
             dao.clear()
             snapshot.profile?.let{dao.put(StoredRecord("profile","profile",json.encodeToString(it)))}
             snapshot.goals.forEach{dao.put(StoredRecord("goal:${it.effectiveFrom}","goal",json.encodeToString(it)))}
@@ -134,9 +141,13 @@ class HealthRepository(context: Context, name: String = "healthchecker.db") {
             snapshot.steps.forEach{dao.put(StoredRecord("steps:${it.date}","steps",json.encodeToString(it)))}
             snapshot.weights.forEach{dao.put(StoredRecord("weight:${it.date}","weight",json.encodeToString(it)))}
             snapshot.videos.forEach{dao.put(StoredRecord("video:${it.id}","video",json.encodeToString(it)))}
+            imageReplacement.activate()
+            dao.put(StoredRecord("image-generation","internal",generation))
             changed()
+        } } catch(e:Exception) {
+            try { recoverImages() } catch(recovery:Exception){e.addSuppressed(recovery)}
+            throw e
         }
-        val decoder=java.util.Base64.getDecoder()
-        images.replaceAll(snapshot.exerciseImages.mapValues{decoder.decode(it.value)})
+        recoverImages()
     }
 }
