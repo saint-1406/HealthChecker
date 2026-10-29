@@ -94,7 +94,14 @@ class HealthRepository(context: Context, name: String = "healthchecker.db") {
         dao.put(StoredRecord("profile","profile",json.encodeToString(profile.copy(initialWeight=old?.initialWeight?:profile.initialWeight))));changed()
     } }
     suspend fun saveGoals(goals:DailyGoals) { validateSnapshot(UserSnapshot(goals=listOf(goals)));db.withTransaction{dao.put(StoredRecord("goal:${goals.effectiveFrom}","goal",json.encodeToString(goals)));changed()} }
-    suspend fun saveFood(food:Food) { validateSnapshot(UserSnapshot(customFoods=listOf(food)));db.withTransaction{dao.put(StoredRecord("food:${food.id}","food",json.encodeToString(food)));changed()} }
+    suspend fun foodByBarcode(code:String):Food? {
+        val normalized=normalizeBarcode(code)
+        return dao.byKind("food").map{json.decodeFromString<Food>(it.payload)}.find{it.barcode==normalized}
+    }
+    suspend fun saveFood(food:Food) { validateSnapshot(UserSnapshot(customFoods=listOf(food)));db.withTransaction{
+        food.barcode?.let{code->require(foodByBarcode(code)?.id.let{it==null||it==food.id}){tr("Этот штрихкод уже привязан к другому продукту","This barcode belongs to another food")}}
+        dao.put(StoredRecord("food:${food.id}","food",json.encodeToString(food)));changed()
+    } }
     suspend fun deleteFood(id:String) { db.withTransaction{dao.delete("food:$id");changed()} }
     suspend fun completeDay(date:String,completed:Boolean) { LocalDate.parse(date);db.withTransaction{if(completed)dao.put(StoredRecord("day:$date","day",date))else dao.delete("day:$date");changed()} }
     suspend fun upsertWorkout(workout:WorkoutEntry) { validateSnapshot(UserSnapshot(workouts=listOf(workout)));db.withTransaction{dao.put(StoredRecord("workout:${workout.id}","workout",json.encodeToString(workout)));changed()} }

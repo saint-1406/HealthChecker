@@ -6,6 +6,7 @@ import kotlinx.coroutines.flow.Flow
 @Entity(tableName="revision") data class Revision(@PrimaryKey val id:Int=1,val current:Long=0,val backedUp:Long=-1)
 @Dao interface HealthDao {
     @Query("SELECT * FROM records") suspend fun all():List<StoredRecord>
+    @Query("SELECT * FROM records WHERE kind=:kind") suspend fun byKind(kind:String):List<StoredRecord>
     @Query("SELECT * FROM records") fun observe():Flow<List<StoredRecord>>
     @Query("SELECT * FROM records WHERE `key`=:key") suspend fun get(key:String):StoredRecord?
     @Query("SELECT COUNT(*) FROM records WHERE kind=:kind") suspend fun countKind(kind:String):Int

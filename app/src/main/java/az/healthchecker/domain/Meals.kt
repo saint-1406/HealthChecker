@@ -22,6 +22,7 @@ fun validateMealItems(items:List<MealItem>,allowEmpty:Boolean=false) {
         require(UUID.fromString(it.id).toString()==it.id)
         require(it.food.id.length in 1..200 && it.food.name.isNotBlank() && it.food.name.length<=500)
         val food=it.food
+        require(food.barcode==null||normalizeBarcode(food.barcode)==food.barcode)
         require(food.density==null||food.density.isFinite()&&food.density>0&&food.density<=20)
         require(food.portions.size<=100 && food.portions.all{p->p.grams.isFinite()&&p.grams>0&&p.grams<=200000})
         // A diary snapshot reconstructed per 100 g can exceed a boundary by a few floating-point ulps.
