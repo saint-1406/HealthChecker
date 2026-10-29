@@ -47,10 +47,14 @@ class MealsStore(private val db:HealthDatabase,private val dao:HealthDao,private
         require(id.length in 1..200)
         val key="favorite:$id"
         if((dao.get(key)!=null)==enabled)return@withTransaction
+        if(enabled)require(dao.countKind("favorite")<10000){tr("Слишком много избранных продуктов","Too many favorite foods")}
         if(enabled)dao.put(StoredRecord(key,"favorite",id))else dao.delete(key)
         changed()
     }
-    suspend fun save(meal:SavedMeal) {validateSavedMeal(meal);db.withTransaction{dao.put(StoredRecord("meal:${meal.id}","meal",json.encodeToString(meal)));changed()} }
+    suspend fun save(meal:SavedMeal) {validateSavedMeal(meal);db.withTransaction{
+        require(dao.get("meal:${meal.id}")!=null||dao.countKind("meal")<200){tr("Можно сохранить до 200 наборов","You can save up to 200 meals")}
+        dao.put(StoredRecord("meal:${meal.id}","meal",json.encodeToString(meal)));changed()
+    } }
     suspend fun delete(id:String)=db.withTransaction{dao.delete("meal:$id");changed()}
     suspend fun deleteEntries(ids:List<String>)=db.withTransaction{if(ids.isNotEmpty()){ids.forEach{dao.delete("entry:$it")};changed()}}
 }

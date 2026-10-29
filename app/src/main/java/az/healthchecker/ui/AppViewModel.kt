@@ -32,6 +32,7 @@ class AppViewModel(application:Application):AndroidViewModel(application) {
     val repository=HealthRepository(context)
     private val preferences=SettingsRepository(context)
     val snapshot=MutableStateFlow(UserSnapshot())
+    val mealDraft=MutableStateFlow<MealDraft?>(null)
     val settings=MutableStateFlow(Settings())
     val ready=MutableStateFlow(false)
     val error=MutableStateFlow<String?>(null)
@@ -97,6 +98,7 @@ class AppViewModel(application:Application):AndroidViewModel(application) {
         viewModelScope.launch { try{exerciseLoad.await()}catch(e:CancellationException){throw e}catch(e:Exception){error.value=tr("Не удалось открыть каталог упражнений: ","Could not open the exercise catalog: ")+e.message} }
         viewModelScope.launch(Dispatchers.IO){libraryVideos.value=VideoLibrary.shared(context).videos}
         viewModelScope.launch(Dispatchers.IO){repository.snapshots.collect{snapshot.value=it}}
+        viewModelScope.launch(Dispatchers.IO){repository.mealDrafts.collect{mealDraft.value=it}}
         viewModelScope.launch(Dispatchers.IO){preferences.settings.collect{settings.value=it}}
         viewModelScope.launch(Dispatchers.IO){repository.revisions.collect{r->revision.value=r;if(r.current!=r.backedUp)performBackup(false)}}
         // Counting may have been stopped by the system; start it again if the user left it on.
@@ -106,9 +108,9 @@ class AppViewModel(application:Application):AndroidViewModel(application) {
     /** The name of a logged food in the current language; the user's own foods and removed products keep the saved name. */
     fun entryName(e:DiaryEntry):String = catalog?.byId(e.foodId)?.displayName?:e.name
     fun workoutName(w:WorkoutEntry):String = exerciseCatalog?.byId(w.exerciseId)?.displayName?:w.name
-    suspend fun search(query:String):List<Food> {
+    suspend fun search(query:String,filter:FoodFilter=FoodFilter.ALL):List<Food> {
         val loaded=try{catalogLoad.await()}catch(e:CancellationException){throw e}catch(e:Exception){null}
-        return withContext(Dispatchers.Default){loaded?.search(query,snapshot.value.customFoods)?:emptyList()}
+        return withContext(Dispatchers.Default){loaded?.search(query,snapshot.value.customFoods,filter=filter,favorites=snapshot.value.favoriteFoods)?:emptyList()}
     }
     fun food(id:String):Food? = snapshot.value.customFoods.find{it.id==id}?:catalog?.byId(id)
     /** Foods for the protein list: the user's own and everyday catalog foods, or the whole catalog; a name narrows them. */
@@ -139,11 +141,57 @@ class AppViewModel(application:Application):AndroidViewModel(application) {
     private fun offerUndo(text:String,revert:suspend ()->kotlin.Unit){undo=revert;notice.value=Notice(text,true)}
     fun saveEntry(id:String,food:Food,q:Quantity,date:String,old:DiaryEntry?,done:()->kotlin.Unit) = action(done) {
         repository.upsertEntry(makeEntry(id,food,q,date,old,Instant.now(),ZoneId.systemDefault()))
+        preferences.portion(food.id,q)
+    }
+    fun toggleFavorite(id:String)=action { repository.setFavorite(id,id !in snapshot.value.favoriteFoods) }
+    fun addAnotherFood(id:String,food:Food,q:Quantity,date:String,done:()->kotlin.Unit)=action(done) {
+        mealDraft.value=repository.appendMealItems(listOf(MealItem(foodSnapshot(food),q,id)),date)
+        preferences.portion(food.id,q)
+    }
+    fun logFood(id:String,food:Food,q:Quantity,date:String,done:(String)->kotlin.Unit) {
+        var loggedDay=date
+        action({done(loggedDay)}) {
+            val entries=repository.logMealItem(MealItem(foodSnapshot(food),q,id),date,Instant.now(),ZoneId.systemDefault())
+            loggedDay=entries.firstOrNull()?.localDate?:date
+            mealDraft.value=repository.mealDraft()
+            afterMealLogged(entries)
+        }
+    }
+    private suspend fun afterMealLogged(entries:List<DiaryEntry>) {
+        if(entries.isEmpty())return
+        preferences.portions(entries.associate{it.foodId to it.quantity})
+        offerUndo(tr("Записано: ","Logged: ")+count(entries.size,"продукт","продукта","продуктов","food","foods")){repository.deleteEntries(entries.map{it.id})}
+    }
+    fun commitMealDraft(done:(String)->kotlin.Unit) {
+        val draft=mealDraft.value?:return
+        action({done(draft.date)}) {
+            val entries=repository.commitMealDraft(draft.id,Instant.now(),ZoneId.systemDefault())
+            mealDraft.value=repository.mealDraft();afterMealLogged(entries)
+        }
+    }
+    fun updateMealItem(item:MealItem,q:Quantity,done:()->kotlin.Unit)=action(done) {
+        repository.updateMealItem(item.id,q);mealDraft.value=repository.mealDraft();preferences.portion(item.food.id,q)
+    }
+    fun removeMealItem(id:String)=action { repository.removeMealItem(id);mealDraft.value=repository.mealDraft() }
+    fun discardMealDraft(done:()->kotlin.Unit)=action(done) {
+        val old=repository.mealDraft();repository.clearMealDraft();mealDraft.value=null
+        old?.let{offerUndo(tr("Приём пищи очищен","Meal cleared")){mealDraft.value=repository.appendMealItems(it.items,it.date)}}
+    }
+    fun addSavedMeal(meal:SavedMeal,date:String,done:()->kotlin.Unit)=action(done) {
+        mealDraft.value=repository.appendMealItems(meal.items.map{it.copy(id=UUID.randomUUID().toString())},date)
+    }
+    fun persistSavedMeal(meal:SavedMeal,done:()->kotlin.Unit)=action(done) { repository.saveMeal(meal) }
+    fun deleteSavedMeal(meal:SavedMeal)=action { repository.deleteMeal(meal.id);offerUndo(tr("Набор удалён","Saved meal deleted")){repository.saveMeal(meal)} }
+    fun waterSize(ml:Int)=action { preferences.waterMl(ml) }
+    fun dismissBackupSetup()=action { preferences.dismissBackupPrompt() }
+    fun showOverviewCard(card:String,show:Boolean) {
+        viewModelScope.launch {try{preferences.showCard(card,show)}catch(e:Exception){error.value=e.message}}
     }
     fun water(date:String)=action {
         val f=catalogLoad.await().byId(WATER_ID)?:error(tr("Вода не найдена","Water not found"))
-        val e=makeEntry(UUID.randomUUID().toString(),f,Quantity(250.0,Measure.ML),date,null,Instant.now(),ZoneId.systemDefault())
-        repository.upsertEntry(e);offerUndo(tr("Добавлено 250 мл воды","Added 250 ml of water")){repository.deleteEntry(e.id)}
+        val ml=settings.value.waterMl
+        val e=makeEntry(UUID.randomUUID().toString(),f,Quantity(ml.toDouble(),Measure.ML),date,null,Instant.now(),ZoneId.systemDefault())
+        repository.upsertEntry(e);preferences.portion(f.id,e.quantity);offerUndo(tr("Добавлено $ml мл воды","Added $ml ml of water")){repository.deleteEntry(e.id)}
     }
     fun delete(entry:DiaryEntry)=action { repository.deleteEntry(entry.id);offerUndo(tr("Запись удалена","Entry deleted")){repository.upsertEntry(entry)} }
     fun undo()=action { undo?.invoke();undo=null;notice.value=null }
@@ -351,7 +399,7 @@ class AppViewModel(application:Application):AndroidViewModel(application) {
     }
     fun confirmRestore()=action {
         val s=restorePreview.value?:return@action
-        repository.replaceSnapshot(s);restorePreview.value=null;undo=null;imageVersions.value=repository.imageVersions()
+        repository.replaceSnapshot(s);restorePreview.value=null;undo=null;mealDraft.value=null;imageVersions.value=repository.imageVersions()
         notice.value=Notice(if(settings.value.folder.isEmpty())tr("Данные восстановлены. Выберите папку для новых копий в профиле.","Data restored. Choose a folder for new backups in the profile.") else tr("Данные восстановлены","Data restored"))
     }
     fun saveMedication(medication:Medication,done:()->kotlin.Unit)=action(done){repository.saveMedication(medication)}

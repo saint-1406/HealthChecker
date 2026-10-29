@@ -10,6 +10,7 @@ import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
@@ -35,6 +36,7 @@ import kotlinx.coroutines.delay
 @Composable fun HealthApp(vm:AppViewModel=viewModel()) {
     val settings by vm.settings.collectAsStateWithLifecycle()
     val snapshot by vm.snapshot.collectAsStateWithLifecycle()
+    val mealDraft by vm.mealDraft.collectAsStateWithLifecycle()
     val ready by vm.ready.collectAsStateWithLifecycle()
     val busy by vm.busy.collectAsStateWithLifecycle()
     val error by vm.error.collectAsStateWithLifecycle()
@@ -49,6 +51,9 @@ import kotlinx.coroutines.delay
     var selectedEntry by rememberSaveable{mutableStateOf("")}
     var templateEntry by rememberSaveable{mutableStateOf("")}
     var draftId by rememberSaveable{mutableStateOf(UUID.randomUUID().toString())}
+    var foodDate by rememberSaveable{mutableStateOf(date)}
+    var mealItemId by rememberSaveable{mutableStateOf("")}
+    var foodSearchBack by rememberSaveable{mutableStateOf("main")}
     var calendar by rememberSaveable{mutableStateOf(false)}
     var exerciseId by rememberSaveable{mutableStateOf("")}
     var workoutId by rememberSaveable{mutableStateOf("")}
@@ -70,15 +75,16 @@ import kotlinx.coroutines.delay
     val folderPicker=rememberLauncherForActivityResult(ActivityResultContracts.OpenDocumentTree()){it?.let(vm::selectFolder)}
     val restorePicker=rememberLauncherForActivityResult(ActivityResultContracts.OpenDocument()){it?.let(vm::previewRestore)}
     LifecycleResumeEffect(Unit){val today=LocalDate.now().toString();date=advanceSelectedDate(date,lastToday,today);lastToday=today;onPauseOrDispose{}}
-    fun edit(e:DiaryEntry){selectedEntry=e.id;selectedFood=e.foodId;templateEntry="";draftId=e.id;entryBack="main";route="editor"}
-    fun add(food:String,template:String="",from:String="main"){selectedFood=food;selectedEntry="";templateEntry=template;draftId=UUID.randomUUID().toString();entryBack=from;route="editor"}
+    fun edit(e:DiaryEntry){selectedEntry=e.id;selectedFood=e.foodId;templateEntry="";draftId=e.id;foodDate=e.localDate;entryBack="main";route="editor"}
+    fun add(food:String,template:String="",from:String="main"){selectedFood=food;selectedEntry="";templateEntry=template;draftId=UUID.randomUUID().toString();foodDate=mealDraft?.date?:date;entryBack=from;route="editor"}
+    fun foodSearch(backTo:String="main"){foodSearchBack=backTo;route="search"}
     fun leaveFor(next:String){if(route=="main"||route=="workout-now")returnTo=route;route=next}
     fun logExercise(e:Exercise,p:Prescription?){exerciseId=e.id;workoutId="";preset=p?.let{listOf(it.sets,it.reps,it.seconds,it.minutes).joinToString("|"){v->v?.toString()?:""}}?:"";draftId=UUID.randomUUID().toString();leaveFor("workout")}
     fun editWorkout(w:WorkoutEntry){exerciseId=w.exerciseId;workoutId=w.id;preset="";draftId=w.id;leaveFor("workout")}
     fun openDish(existing:Food?,fromInventory:Boolean=false){if(existing!=null||vm.dish.value==null)vm.startDish(existing);dishFromInventory=fromInventory;route="dish"}
     fun editMedication(m:Medication?){medicationId=m?.id?:"";route="medication"}
     fun editIngredient(index:Int){ingredientIndex=index;ingredientFood=vm.dish.value?.ingredients?.getOrNull(index)?.foodId?:"";route="dish-ingredient"}
-    BackHandler(route!="main"){route=when(route){"custom"->"search";"dish"->if(dishFromInventory)"main" else "search";"dish-search","dish-ingredient"->"dish";"workout","exercise-search"->returnTo;"editor"->entryBack;"video"->"videos";else->"main"}}
+    BackHandler(route!="main"){route=when(route){"search"->foodSearchBack;"custom"->"search";"dish"->if(dishFromInventory)"main" else "search";"dish-search","dish-ingredient"->"dish";"workout","exercise-search"->returnTo;"editor"->entryBack;"meal-item"->"meal";"video"->"videos";else->"main"}}
     LaunchedEffect(notice){if(notice!=null){delay(8000);vm.dismissNotice()}}
     val today=remember(lastToday){LocalDate.now()}
     val appearance=settings.appearance
@@ -91,10 +97,10 @@ import kotlinx.coroutines.delay
             bottomBar={if(ready && snapshot.onboarded && route=="main")NavigationBar(containerColor=MaterialTheme.colorScheme.surface){
                 listOf(tr("Обзор","Overview") to Icons.Outlined.SpaceDashboard,tr("Дневник","Diary") to Icons.AutoMirrored.Outlined.MenuBook,tr("Тренировки","Training") to Icons.Outlined.FitnessCenter,tr("Профиль","Profile") to Icons.Outlined.PersonOutline).forEachIndexed{i,(label,icon)->NavigationBarItem(selected=tab==i,onClick={tab=i},icon={Icon(icon,label)},label={Text(label)})}
             }},
-            topBar={if(ready && snapshot.onboarded && route=="main" && tab!=3)Column(Modifier.statusBarsPadding().padding(horizontal=24.dp,vertical=16.dp)){
-                Text("HEALTHCHECKER",style=MaterialTheme.typography.labelMedium,color=MaterialTheme.colorScheme.primary,fontWeight=FontWeight.Bold)
+            topBar={if(ready && snapshot.onboarded && route=="main" && tab!=3)Column(Modifier.statusBarsPadding().padding(horizontal=24.dp,vertical=if(LocalDensity.current.fontScale>1.3f)8.dp else 16.dp)){
+                if(LocalDensity.current.fontScale<=1.3f)Text("HEALTHCHECKER",style=MaterialTheme.typography.labelMedium,color=MaterialTheme.colorScheme.primary,fontWeight=FontWeight.Bold)
                 Row(Modifier.fillMaxWidth(),verticalAlignment=Alignment.CenterVertically){
-                    Text(when(tab){0->tr("Ваш день","Your day");1->tr("Дневник питания","Food diary");else->tr("Тренировки","Training")},style=MaterialTheme.typography.headlineLarge,fontWeight=FontWeight.Bold,modifier=Modifier.weight(1f))
+                    Text(when(tab){0->tr("Ваш день","Your day");1->tr("Дневник питания","Food diary");else->tr("Тренировки","Training")},style=if(LocalDensity.current.fontScale>1.3f)MaterialTheme.typography.titleLarge else MaterialTheme.typography.headlineLarge,fontWeight=FontWeight.Bold,modifier=Modifier.weight(1f))
                     IconButton(onClick={calendar=true}){Icon(Icons.Outlined.CalendarMonth,tr("Выбрать дату","Choose a date"))}
                 }
                 Row(verticalAlignment=Alignment.CenterVertically){
@@ -104,11 +110,18 @@ import kotlinx.coroutines.delay
                 }
             }}
         ){padding->
-            Box(Modifier.fillMaxSize().padding(padding)) {
+            Column(Modifier.fillMaxSize().padding(padding)) {
+              Box(Modifier.fillMaxWidth().weight(1f)) {
                 if(!ready)Column(Modifier.align(Alignment.Center),horizontalAlignment=Alignment.CenterHorizontally){CircularProgressIndicator();Spacer(Modifier.height(16.dp));Text(tr("Открываем ваш дневник…","Opening your diary…"))}
                 else if(!snapshot.onboarded)ProfileScreen(vm,true,{folderPicker.launch(null)},{restorePicker.launch(arrayOf("application/json","text/plain"))})
                 else when(route) {
-                    "search" -> FoodSearchScreen(vm,tr("Что вы съели?","What did you eat?"),{route="main"},{add(it.id)},{route="custom"},{openDish(null)},{openDish(it)})
+                    "search" -> FoodSearchScreen(vm,tr("Что вы съели?","What did you eat?"),{route=foodSearchBack},{add(it.id)},{route="custom"},{openDish(null)},{openDish(it)})
+                    "meals" -> SavedMealsScreen(vm,snapshot,date,{route="main"}){meal->vm.addSavedMeal(meal,date){route="meal"}}
+                    "meal" -> mealDraft?.let{d->MealDraftScreen(vm,d,{route="main"},{foodSearch("meal")},{item->mealItemId=item.id;route="meal-item"}){vm.commitMealDraft{day->date=day;tab=1;route="main"}}}
+                        ?:TextButton(onClick={foodSearch()}){Text(tr("Добавить продукт","Add food"))}
+                    "meal-item" -> mealDraft?.items?.find{it.id==mealItemId}?.let{item->
+                        PortionEditor(item.food,item.quantity,"meal-item:${item.id}",tr("Порция в приёме пищи","Meal portion"),tr("Сохранить порцию","Save portion"),busy,{route="meal"}){q->vm.updateMealItem(item,q){route="meal"}}
+                    }?:TextButton(onClick={route="meal"}){Text(tr("Вернуться к приёму пищи","Back to the meal"))}
                     // Started from the inventory, a saved dish goes back there; from food search it opens straight for eating.
                     "dish" -> DishEditor(vm,{route=if(dishFromInventory)"main" else "search"},{route="dish-search"},::editIngredient){if(dishFromInventory){tab=3;route="main"}else add(it.id)}
                     "dish-search" -> FoodSearchScreen(vm,tr("Ингредиент блюда","Dish ingredient"),{route="dish"},{ingredientIndex=-1;ingredientFood=it.id;route="dish-ingredient"},null,null,{})
@@ -140,17 +153,19 @@ import kotlinx.coroutines.delay
                         val template=if(old==null)snapshot.entries.find{it.id==templateEntry}else null
                         // A repeated entry stays usable even when its catalog product is no longer available.
                         val food=if(old!=null)vm.foodFor(old)else vm.food(selectedFood)?:template?.let(vm::foodFor)
-                        if(food!=null)EntryEditor(vm,food,old,template,draftId,date,{route=entryBack})else TextButton(onClick={route=entryBack}){Text(tr("Продукт недоступен. Вернуться","The food is unavailable. Go back"))}
+                        if(food!=null)EntryEditor(vm,food,old,template,draftId,foodDate,{route=entryBack},{foodSearch("meal")}){day->date=day;route=entryBack}else TextButton(onClick={route=entryBack}){Text(tr("Продукт недоступен. Вернуться","The food is unavailable. Go back"))}
                     }
                     else -> when(tab) {
-                        0 -> DashboardScreen(vm,snapshot,date,backupError,{tab=1;route="search"},{vm.water(date)},::edit,{tab=3},{tab=2},{route="steps"},{route="protein"},{tab=1})
-                        1 -> DiaryScreen(vm,snapshot,date,{route="search"},::edit,{e->add(e.foodId,e.id)},::editMedication){photoName=it.fileName;route="photo"}
+                        0 -> DashboardScreen(vm,snapshot,date,backupError,{tab=1;foodSearch()},{vm.water(date)},::edit,{tab=3},{tab=2},{route="steps"},{route="protein"},{tab=1},{route="meal"},{folderPicker.launch(null)})
+                        1 -> DiaryScreen(vm,snapshot,date,{foodSearch()},::edit,{e->add(e.foodId,e.id)},::editMedication,
+                            openPhoto={photoName=it.fileName;route="photo"},selectFood={add(it.id)},openMeals={route="meals"},openDraft={route="meal"},openProfile={tab=3},chooseFolder={folderPicker.launch(null)})
                         2 -> TrainingScreen(vm,snapshot,date,rememberTodayPlan(vm,snapshot,date,variant),{leaveFor("exercise-search")},{route="workout-now"},::editWorkout,{tab=3}){route="videos"}
                         else -> ProfileScreen(vm,false,{folderPicker.launch(null)},{restorePicker.launch(arrayOf("application/json","text/plain"))},date,{openDish(null,true)},{openDish(it,true)}){route="appearance"}
                     }
                 }
                 if(busy)LinearProgressIndicator(Modifier.fillMaxWidth().align(Alignment.TopCenter))
-                notice?.let{n->Snackbar(modifier=Modifier.align(Alignment.BottomCenter).padding(16.dp),action=if(n.undo)({TextButton(onClick={vm.undo()}){Text(tr("Отменить","Undo"))}})else null,dismissAction={IconButton(onClick={vm.dismissNotice()}){Icon(Icons.Outlined.Close,tr("Закрыть","Close"))}}){Text(n.text)}}
+              }
+              notice?.let{n->Snackbar(modifier=Modifier.padding(16.dp),action=if(n.undo)({TextButton(onClick={vm.undo()}){Text(tr("Отменить","Undo"))}})else null,dismissAction={IconButton(onClick={vm.dismissNotice()}){Icon(Icons.Outlined.Close,tr("Закрыть","Close"))}}){Text(n.text,maxLines=3)}}
             }
         }
         if(error!=null)AlertDialog(onDismissRequest={vm.error.value=null},title={Text(tr("Не удалось выполнить действие","Something went wrong"))},text={Text(error!!)},confirmButton={TextButton(onClick={vm.error.value=null}){Text(tr("Понятно","OK"))}})

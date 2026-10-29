@@ -2,6 +2,7 @@ package az.healthchecker.ui.profile
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
+import androidx.compose.foundation.selection.toggleable
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.*
@@ -10,6 +11,7 @@ import androidx.compose.runtime.*
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.testTag
+import androidx.compose.ui.semantics.Role
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
@@ -54,6 +56,15 @@ import java.time.format.DateTimeFormatter
             Text(tr("Изменения целей действуют с сегодняшнего дня. Прошлые дни сохраняют свои цели.","Goal changes apply from today. Past days keep their goals."),style=MaterialTheme.typography.bodySmall,color=MaterialTheme.colorScheme.onSurfaceVariant)
         }
         if(!onboarding){
+            Panel {
+                SectionTitle(tr("Карточки обзора","Overview cards"),tr("Оставьте на главном экране то, чем пользуетесь. Карточки можно вернуть здесь.","Keep the cards you use on the main screen. You can bring them back here."))
+                listOf(Triple("weight",tr("Вес","Weight"),settings.overviewCards.weight),Triple("steps",tr("Шаги","Steps"),settings.overviewCards.steps),Triple("training",tr("Тренировки","Training"),settings.overviewCards.training)).forEach{(key,label,checked)->
+                    val tag=when(key){"weight"->"showWeight";"steps"->"showSteps";else->"showTraining"}
+                    Row(Modifier.fillMaxWidth().heightIn(min=48.dp).toggleable(value=checked,role=Role.Switch,onValueChange={vm.showOverviewCard(key,it)}).testTag(tag),verticalAlignment=androidx.compose.ui.Alignment.CenterVertically){Text(label,modifier=Modifier.weight(1f));Switch(checked=checked,onCheckedChange=null)}
+                }
+                Text(tr("Стакан для быстрого добавления воды","Glass size for quick water logging"),style=MaterialTheme.typography.bodyMedium)
+                FlowRow(horizontalArrangement=Arrangement.spacedBy(8.dp)){listOf(200,250,500).forEach{ml->FilterChip(selected=settings.waterMl==ml,onClick={vm.waterSize(ml)},label={Text("$ml $ML")},modifier=Modifier.heightIn(min=48.dp))}}
+            }
             Panel {
                 SectionTitle(tr("Резервная копия","Backup"),tr("Чтобы дневник пережил удаление приложения","So the diary survives reinstalling the app"))
                 Text(tr("Выберите папку в памяти телефона. После переустановки откройте сохранённый JSON-файл через «Восстановить». Копия содержит личные данные.","Choose a folder on the phone. After reinstalling, open the saved JSON file with “Restore”. The backup contains personal data."),style=MaterialTheme.typography.bodyMedium)

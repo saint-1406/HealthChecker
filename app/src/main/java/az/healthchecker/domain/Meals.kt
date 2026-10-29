@@ -21,6 +21,12 @@ fun validateMealItems(items:List<MealItem>,allowEmpty:Boolean=false) {
     items.forEach {
         require(UUID.fromString(it.id).toString()==it.id)
         require(it.food.id.length in 1..200 && it.food.name.isNotBlank() && it.food.name.length<=500)
+        val food=it.food
+        require(food.density==null||food.density.isFinite()&&food.density>0&&food.density<=20)
+        require(food.portions.size<=100 && food.portions.all{p->p.grams.isFinite()&&p.grams>0&&p.grams<=200000})
+        // A diary snapshot reconstructed per 100 g can exceed a boundary by a few floating-point ulps.
+        require(food.per100g.kcal==null||food.per100g.kcal.isFinite()&&food.per100g.kcal in 0.0..(1000.0+1e-8))
+        listOf(food.per100g.protein,food.per100g.fat,food.per100g.carbs,food.per100g.fiber).forEach{n->require(n==null||n.isFinite()&&n in 0.0..(100.0+1e-8))}
         calculate(it.food,it.quantity)
     }
 }

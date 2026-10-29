@@ -20,6 +20,7 @@ import androidx.compose.ui.graphics.StrokeCap
 import androidx.compose.ui.graphics.luminance
 import androidx.compose.ui.graphics.drawscope.Stroke
 import androidx.compose.ui.platform.testTag
+import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.semantics.contentDescription
 import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.text.font.FontWeight
@@ -30,9 +31,13 @@ import az.healthchecker.domain.*
 import az.healthchecker.ui.*
 import az.healthchecker.ui.steps.stepsEnergy
 import az.healthchecker.ui.steps.stepsText
+import az.healthchecker.ui.diary.MealDraftCard
 
-@Composable fun DashboardScreen(vm:AppViewModel,snapshot:UserSnapshot,date:String,backupError:String?,add:()->Unit,water:()->Unit,edit:(DiaryEntry)->Unit,openProfile:()->Unit,openTraining:()->Unit,openSteps:()->Unit,openProtein:()->Unit,openDiary:()->Unit) {
+@Composable fun DashboardScreen(vm:AppViewModel,snapshot:UserSnapshot,date:String,backupError:String?,add:()->Unit,water:()->Unit,edit:(DiaryEntry)->Unit,openProfile:()->Unit,openTraining:()->Unit,openSteps:()->Unit,openProtein:()->Unit,openDiary:()->Unit,openDraft:()->Unit,chooseFolder:()->Unit) {
     val day=snapshot.day(date);val summary=day.summary;val goals=day.goals
+    val settings by vm.settings.collectAsStateWithLifecycle()
+    val draft by vm.mealDraft.collectAsStateWithLifecycle()
+    val largeType=LocalDensity.current.fontScale>1.3f
     // The day's energy card takes the theme's main colour: solid by day, its deep container by night.
     val colors=MaterialTheme.colorScheme;val night=colors.background.luminance()<0.3f
     val green=if(night)colors.primaryContainer else colors.primary;val onGreen=if(night)colors.onPrimaryContainer else colors.onPrimary
@@ -46,9 +51,9 @@ import az.healthchecker.ui.steps.stepsText
             Column(Modifier.fillMaxWidth().padding(24.dp),verticalArrangement=Arrangement.spacedBy(12.dp)) {
                 Row(verticalAlignment=Alignment.CenterVertically){Text(tr("ЭНЕРГИЯ ЗА ДЕНЬ","ENERGY FOR THE DAY"),style=MaterialTheme.typography.labelMedium,color=mint,modifier=Modifier.weight(1f));Icon(Icons.Outlined.ChevronRight,tr("Подробнее","Details"),tint=mint)}
                 Row(Modifier.fillMaxWidth(),verticalAlignment=Alignment.CenterVertically){
-                    Column(Modifier.weight(1f)){Text(number(summary.kcal.value),fontSize=52.sp,fontWeight=FontWeight.SemiBold,letterSpacing=(-2).sp);Text("${tr("из","of")} ${number(goals?.kcal)} $KCAL",color=onGreen.copy(alpha=0.78f));if(goals?.kcal==null)Text(tr("Задайте цель в профиле","Set a goal in the profile"),style=MaterialTheme.typography.bodySmall,color=mint)}
+                    Column(Modifier.weight(1f)){Text(number(summary.kcal.value),fontSize=if(largeType)36.sp else 52.sp,fontWeight=FontWeight.SemiBold,letterSpacing=(-2).sp);Text("${tr("из","of")} ${number(goals?.kcal)} $KCAL",color=onGreen.copy(alpha=0.78f));if(goals?.kcal==null)Text(tr("Задайте цель в профиле","Set a goal in the profile"),style=MaterialTheme.typography.bodySmall,color=mint)}
                     val progress=goals?.kcal?.let{(summary.kcal.value/it).coerceIn(0.0,1.0).toFloat()}?:0f
-                    Box(Modifier.size(86.dp),contentAlignment=Alignment.Center){Canvas(Modifier.fillMaxSize()){drawArc(onGreen.copy(alpha=0.22f),-90f,360f,false,style=Stroke(8.dp.toPx(),cap=StrokeCap.Round));drawArc(mint,-90f,360f*progress,false,style=Stroke(8.dp.toPx(),cap=StrokeCap.Round))};Icon(Icons.Outlined.Restaurant,null,tint=mint,modifier=Modifier.size(28.dp))}
+                    if(!largeType)Box(Modifier.size(86.dp),contentAlignment=Alignment.Center){Canvas(Modifier.fillMaxSize()){drawArc(onGreen.copy(alpha=0.22f),-90f,360f,false,style=Stroke(8.dp.toPx(),cap=StrokeCap.Round));drawArc(mint,-90f,360f*progress,false,style=Stroke(8.dp.toPx(),cap=StrokeCap.Round))};Icon(Icons.Outlined.Restaurant,null,tint=mint,modifier=Modifier.size(28.dp))}
                 }
                 val target=goals?.kcal
                 Text(if(target==null)tr("Каждая запись — чуть больше ясности","Every entry adds a bit of clarity") else if(summary.kcal.value>target)tr("Выше цели на ","Above the goal by ")+"${number(summary.kcal.value-target)} $KCAL" else tr("До цели ещё ","Left to the goal: ")+"${number(target-summary.kcal.value)} $KCAL",style=MaterialTheme.typography.bodyMedium,color=mint)
@@ -56,10 +61,17 @@ import az.healthchecker.ui.steps.stepsText
                 if(!summary.kcal.complete)Text(tr("Сумма неполная: есть неизвестные значения","The total is incomplete: some values are unknown"),style=MaterialTheme.typography.bodySmall)
             }
         }
-        Row(horizontalArrangement=Arrangement.spacedBy(12.dp)) {
+        MainFoodActions(add,water,settings.waterMl,largeType)
+        draft?.let{MealDraftCard(it,openDraft)}
+        if(largeType)Column(verticalArrangement=Arrangement.spacedBy(12.dp)) {
+            MetricCard(tr("Белок","Protein"),summary.protein.value,goals?.protein,G,Icons.Outlined.EggAlt,summary.protein.complete,Modifier.fillMaxWidth().testTag("proteinCard"),openProtein)
+            MetricCard(tr("Вода","Water"),summary.waterMl,goals?.waterMl,ML,Icons.Outlined.WaterDrop,true,Modifier.fillMaxWidth())
+        } else Row(horizontalArrangement=Arrangement.spacedBy(12.dp)) {
             MetricCard(tr("Белок","Protein"),summary.protein.value,goals?.protein,G,Icons.Outlined.EggAlt,summary.protein.complete,Modifier.weight(1f).testTag("proteinCard"),openProtein)
             MetricCard(tr("Вода","Water"),summary.waterMl,goals?.waterMl,ML,Icons.Outlined.WaterDrop,true,Modifier.weight(1f))
         }
+        SaveStatus(vm,openProfile)
+        BackupSetupCard(vm,snapshot,chooseFolder)
         val photos by vm.photos.collectAsStateWithLifecycle()
         if(photos.isNotEmpty())Panel(Modifier.clickable(onClick=openDiary).testTag("photosWaiting")){
             Row(verticalAlignment=Alignment.CenterVertically,horizontalArrangement=Arrangement.spacedBy(12.dp)){
@@ -68,9 +80,9 @@ import az.healthchecker.ui.steps.stepsText
                 Icon(Icons.Outlined.ChevronRight,null)
             }
         }
-        WeightCard(vm,snapshot,date)
+        if(settings.overviewCards.weight)WeightCard(vm,snapshot,date)
         val steps=snapshot.stepsOn(date)
-        Panel(Modifier.clickable(onClick=openSteps).testTag("stepsCard")){
+        if(settings.overviewCards.steps)Panel(Modifier.clickable(onClick=openSteps).testTag("stepsCard")){
             Row(verticalAlignment=Alignment.CenterVertically,horizontalArrangement=Arrangement.spacedBy(12.dp)){
                 Icon(Icons.AutoMirrored.Outlined.DirectionsWalk,null,tint=MaterialTheme.colorScheme.primary)
                 Column(Modifier.weight(1f)){
@@ -81,7 +93,7 @@ import az.healthchecker.ui.steps.stepsText
             }
         }
         val training=snapshot.training(date)
-        Panel(Modifier.clickable(onClick=openTraining)){
+        if(settings.overviewCards.training)Panel(Modifier.clickable(onClick=openTraining).testTag("trainingCard")){
             Row(verticalAlignment=Alignment.CenterVertically,horizontalArrangement=Arrangement.spacedBy(12.dp)){
                 Icon(Icons.Outlined.FitnessCenter,null,tint=MaterialTheme.colorScheme.primary)
                 Column(Modifier.weight(1f)){
@@ -90,10 +102,6 @@ import az.healthchecker.ui.steps.stepsText
                 }
                 Icon(Icons.Outlined.ChevronRight,null)
             }
-        }
-        Row(Modifier.fillMaxWidth(),horizontalArrangement=Arrangement.spacedBy(12.dp)){
-            Button(onClick=add,modifier=Modifier.weight(1f).heightIn(min=50.dp)){Icon(Icons.Outlined.Add,null);Text(tr("Записать еду","Log food"))}
-            FilledTonalButton(onClick=water,modifier=Modifier.heightIn(min=50.dp)){Icon(Icons.Outlined.WaterDrop,null);Text("+250 $ML")}
         }
         Panel {
             val start=java.time.LocalDate.parse(date).minusDays(6).toString()
@@ -115,6 +123,17 @@ import az.healthchecker.ui.steps.stepsText
     if(details)EnergySheet(vm,day){details=false}
 }
 /** "12,5 г", with "+" when part of the day is unknown. */
+@Composable private fun MainFoodActions(add:()->Unit,water:()->Unit,ml:Int,largeType:Boolean) {
+    BoxWithConstraints(Modifier.fillMaxWidth()) {
+        if(largeType||maxWidth<340.dp)Column(verticalArrangement=Arrangement.spacedBy(8.dp)) {
+            Button(onClick=add,modifier=Modifier.fillMaxWidth().heightIn(min=54.dp).testTag("logFoodButton")){Icon(Icons.Outlined.Add,tr("Добавить еду","Add food"));Spacer(Modifier.width(8.dp));Text(tr("Записать еду","Log food"))}
+            FilledTonalButton(onClick=water,modifier=Modifier.fillMaxWidth().heightIn(min=48.dp)){Icon(Icons.Outlined.WaterDrop,null);Spacer(Modifier.width(8.dp));Text("+$ml $ML")}
+        } else Row(Modifier.fillMaxWidth(),horizontalArrangement=Arrangement.spacedBy(12.dp)) {
+            Button(onClick=add,modifier=Modifier.weight(1f).heightIn(min=54.dp).testTag("logFoodButton")){Icon(Icons.Outlined.Add,tr("Добавить еду","Add food"));Text(tr("Записать еду","Log food"))}
+            FilledTonalButton(onClick=water,modifier=Modifier.heightIn(min=54.dp)){Icon(Icons.Outlined.WaterDrop,null);Text("+$ml $ML")}
+        }
+    }
+}
 private fun total(t:NutrientTotal):String = "${number(t.value,1)}${if(!t.complete)"+" else ""} $G"
 
 /** Day totals of every nutrient and the same numbers for each entry separately. */

@@ -71,4 +71,10 @@ class CatalogImporterTest {
         val result=ids("",listOf(custom));assertEquals(50,result.size);assertEquals("custom:1",result.first())
         assertTrue(ids("бессмыслица-xyz").isEmpty())
     }
+    @Test fun favoritesAndOwnFoodsAreFilteredBeforeLimitingResults() {
+        val last=catalog.foods.last()
+        assertEquals(listOf(last.id),catalog.search("",emptyList(),limit=1,filter=FoodFilter.FAVORITES,favorites=setOf(last.id)).map{it.id})
+        val own=Food("custom:one","Свой продукт",per100g=Nutrients(100.0))
+        assertEquals(listOf(own),catalog.search("",listOf(own),filter=FoodFilter.OWN))
+    }
 }

@@ -27,34 +27,34 @@
 ### Task 1: Recoverable restore
 Files: `data/ExerciseImages.kt`, new `data/ImageReplacement.kt`, `data/HealthRepository.kt`, new `data/ImageReplacementTest.kt`, `data/HealthRepositoryTest.kt`.
 Interfaces: `ImageReplacement.prepare(Map<String,ByteArray>): String`, `activate()`, `recover(committedGeneration:String?)`; repository owns generation marker within Room transaction, file store owns staging/journal.
-- [ ] RED: injected preparation/second-rename failure leaves old DB and images; recovery chooses old files without committed marker and new with marker.
-- [ ] Implement staging, durable journal, rollback and cleanup; serialize restore/image access with database transactions.
-- [ ] GREEN: targeted tests; commit.
+- [x] RED: injected preparation/second-rename failure leaves old DB and images; recovery chooses old files without committed marker and new with marker.
+- [x] Implement staging, durable journal, rollback and cleanup; serialize restore/image access with database transactions.
+- [x] GREEN: targeted tests; commit.
 
 ### Task 2: Food collections and meal drafts
 Files: new `domain/Meals.kt`, `domain/UserSnapshot.kt`, `domain/Validation.kt`, `backup/BackupCodec.kt`, `data/HealthRepository.kt`, new `domain/MealsTest.kt`, repository/backup tests.
 Interfaces: `MealItem(food:Food,quantity:Quantity)`, `SavedMeal(id,name,items)`, `MealDraft(id,date,items)`, `MealDraft.entries(now,zone)`, repository draft CRUD, batch commit/delete, favorite toggle and saved-meal CRUD. Snapshot adds `favoriteFoods:Set<String>` and `savedMeals:List<SavedMeal>`.
-- [ ] RED: separate products, snapshot stability, duplicate commit, rollback invalid item, draft survives restart but excluded from backup, legacy backup reads, new fields roundtrip.
-- [ ] Implement repository transaction operations and validation; schema 7.
-- [ ] GREEN: domain, Room, backup tests; commit.
+- [x] RED: separate products, snapshot stability, duplicate commit, rollback invalid item, draft survives restart but excluded from backup, legacy backup reads, new fields roundtrip.
+- [x] Implement repository transaction operations and validation; schema 7.
+- [x] GREEN: domain, Room, backup tests; commit.
 
 ### Task 3: Portion memory and settings
 Files: new `domain/PortionInput.kt`, `data/SettingsRepository.kt`, `ui/diary/EntryEditor.kt`, tests.
 Interfaces: `convertQuantity(food,q,target,pieceGrams):Quantity` preserves grams; `Settings` adds last portions, waterMl, visible overview cards and backup prompt dismissed. Atomic DataStore updates per setting.
-- [ ] RED: 150 g ↔ 3 × 50 g, density 0.8 ml conversion, same-unit no-op, unknown piece mass validation, settings persist.
-- [ ] Implement controls/memory, 200/250/500 water presets, task 2 collection validation reuse.
-- [ ] GREEN: targeted tests; commit.
+- [x] RED: 150 g ↔ 3 × 50 g, density 0.8 ml conversion, same-unit no-op, unknown piece mass validation, settings persist.
+- [x] Implement controls/memory, 200/250/500 water presets, task 2 collection validation reuse.
+- [x] GREEN: targeted tests; commit.
 
 ### Task 4: Daily-use UI
 Files: new `ui/diary/MealScreen.kt`, `ui/diary/FoodShortcuts.kt`, new `ui/SaveStatus.kt`, `ui/HealthApp.kt`, `ui/AppViewModel.kt`, diary/search/dashboard/profile screens.
-- [ ] Add instrumentation scenarios: favorite → search favorite; batch 2 eggs + 50 g oats → single commit; saved meal → edit quantities → commit; draft back/relaunch; remembered portions; hidden cards; compact medicines; backup prompt dismiss.
-- [ ] Integrate persistent draft and meal editing/routes. Keep immediate existing-entry and photo recording behavior.
-- [ ] Move actions/shortcuts; source/preparation badges, filter search; settings and status feedback. Freeze draft date.
-- [ ] GREEN: compile plus domain suite, instrumentation; commit.
+- [x] Add instrumentation scenarios: favorite → search favorite; batch 2 eggs + 50 g oats → single commit; saved meal → edit quantities → commit; draft back/relaunch; remembered portions; hidden cards; compact medicines; backup prompt dismiss.
+- [x] Integrate persistent draft and meal editing/routes. Keep immediate existing-entry and photo recording behavior.
+- [x] Move actions/shortcuts; source/preparation badges, filter search; settings and status feedback. Freeze draft date.
+- [x] GREEN: compile plus domain suite, instrumentation; commit.
 
 ### Task 5: Release and review
 Files: instrumentation tests, README, `docs/testing.md`.
-- [ ] Emulator normal and small screen/font 200% workflows; fix actual layout failures. Check 48 dp controls and accessibility labels.
-- [ ] Fresh whole-change review; fix important findings once with regression tests.
-- [ ] Unit/Python/lint, release v14, signature/package/version/hash checks, install over v13 and confirm diary/settings persist; record actual evidence and limits.
-- [ ] Commit documentation and final result. Leave publication for a separate request.
+- [x] Emulator normal and small screen/font 200% workflows; fix actual layout failures. Check 48 dp controls and accessibility labels.
+- [x] Fresh whole-change review; fix important findings once with regression tests.
+- [x] Unit/Python/lint, release v14, signature/package/version/hash checks, install over v13 and confirm diary/settings persist; record actual evidence and limits.
+- [x] Commit documentation and final result. Leave publication for a separate request.

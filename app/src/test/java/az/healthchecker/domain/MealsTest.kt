@@ -32,4 +32,17 @@ class MealsTest {
         assertThrows(IllegalArgumentException::class.java){validateSnapshot(UserSnapshot(savedMeals=listOf(SavedMeal("meal:1","Breakfast",listOf(item,item)))))}
         assertThrows(IllegalArgumentException::class.java){MealDraft(UUID.randomUUID().toString(),"2026-10-29",listOf(item.copy(quantity=Quantity(-1.0,Measure.GRAMS)))).entries(now,ZoneId.of("Asia/Baku"))}
     }
+    @Test fun aWeighedOilEntryCanBecomeASavedMealWithoutLosingNutrition() {
+        val oil=Food("usda:oil","Оливковое масло",per100g=Nutrients(884.0,0.0,100.0,0.0))
+        val weighed=calculate(oil,Quantity(7.0,Measure.GRAMS))
+        // Same reconstruction as AppViewModel.foodFor when a saved meal is created from the diary.
+        val reconstructed=oil.copy(per100g=weighed.nutrients.times(100/weighed.grams))
+        assertTrue(reconstructed.per100g.fat!!>100.0)
+        val meal=SavedMeal("meal:oil","Масло",listOf(MealItem(reconstructed,Quantity(7.0,Measure.GRAMS))))
+        val restored=BackupCodec.decode(BackupCodec.encode(UserSnapshot(savedMeals=listOf(meal))))
+        val result=calculate(restored.savedMeals.single().items.single().food,Quantity(7.0,Measure.GRAMS))
+        assertEquals(weighed.nutrients.fat!!,result.nutrients.fat!!,1e-10)
+        assertEquals(weighed.nutrients.kcal!!,result.nutrients.kcal!!,1e-10)
+        assertThrows(IllegalArgumentException::class.java){validateSavedMeal(meal.copy(items=listOf(meal.items.single().copy(food=oil.copy(per100g=Nutrients(900.0,fat=100.1))))))}
+    }
 }

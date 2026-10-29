@@ -152,7 +152,7 @@ class PhotoCapture(val shoot:(PhotoKind)->Unit,val pick:()->Unit)
             when(mode) {
                 "portion" -> {
                     val food=vm.food(foodId)
-                    if(food!=null)EntryEditor(vm,food,null,null,draft,date){mode="search"} else LaunchedEffect(Unit){mode="search"}
+                    if(food!=null)EntryEditor(vm,food,null,null,draft,date,back={mode="search"},useMealDraft=false) else LaunchedEffect(Unit){mode="search"}
                 }
                 "custom" -> CustomFoodEditor(vm){mode="search"}
                 "med" -> MedicinePicker(vm,snapshot,date){mode="med-new"}

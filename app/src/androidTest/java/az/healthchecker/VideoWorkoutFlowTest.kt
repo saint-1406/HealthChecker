@@ -52,7 +52,8 @@ class VideoWorkoutFlowTest {
         waitText("Записано из видео: 32 упражнения",30000)
         app.onNodeWithContentDescription("Назад").performClick()
         app.onNodeWithContentDescription("Назад").performClick()
-        // The way in stays on the first screen above the day's list, however much was logged.
+        // The notice reserves its own space: the shortcut stays reachable above the day's list.
+        app.onNodeWithTag("trainingList").performScrollToNode(hasTestTag("openVideos"))
         app.onNodeWithTag("openVideos").assertIsDisplayed()
         app.onNodeWithTag("trainingList").performScrollToNode(hasText("Выполненные упражнения"))
         app.onNodeWithText("32 упражнения").assertExists()

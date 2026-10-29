@@ -43,16 +43,23 @@ class SettingsRepository(context:Context) {
     }
     private fun validQuantity(q:Quantity):Boolean = q.value.isFinite()&&q.value>0&&q.value<=(if(q.unit==Measure.PIECES)10000 else 100000) &&
         (q.unit!=Measure.PIECES||(q.portionGrams!=null&&q.portionGrams.isFinite()&&q.portionGrams>0&&q.portionGrams<=100000))
-    suspend fun portion(id:String,q:Quantity) {
-        require(id.length in 1..200 && validQuantity(q))
+    suspend fun portion(id:String,q:Quantity)=portions(mapOf(id to q))
+    suspend fun portions(values:Map<String,Quantity>) {
+        require(values.all{(id,q)->id.length in 1..200 && validQuantity(q)})
         store.edit { p->
             val old=p[lastPortions]?.let{s->runCatching{Json.decodeFromString<Map<String,Quantity>>(s)}.getOrNull()}.orEmpty()
-            p[lastPortions]=Json.encodeToString(((old-id)+(id to q)).entries.toList().takeLast(1000).associate{it.toPair()})
+            p[lastPortions]=Json.encodeToString(((old-values.keys)+values).entries.toList().takeLast(1000).associate{it.toPair()})
         }
     }
     suspend fun waterMl(value:Int){require(value in listOf(200,250,500));store.edit{it[water]=value}}
     suspend fun cards(value:OverviewCards){store.edit{it[cards]=Json.encodeToString(value)}}
-    suspend fun dismissBackupPrompt(){store.edit{it[backupPrompt]=true}}
+    suspend fun showCard(card:String,show:Boolean){store.edit{p->
+        val old=p[cards]?.let{s->runCatching{Json.decodeFromString<OverviewCards>(s)}.getOrNull()}?:OverviewCards()
+        val next=when(card){"weight"->old.copy(weight=show);"steps"->old.copy(steps=show);"training"->old.copy(training=show);else->throw IllegalArgumentException("Unknown overview card")}
+        p[cards]=Json.encodeToString(next)
+    }}
+    suspend fun backupPromptDismissed(value:Boolean){store.edit{it[backupPrompt]=value}}
+    suspend fun dismissBackupPrompt()=backupPromptDismissed(true)
     suspend fun theme(value:String){store.edit{it[theme]=value}}
     suspend fun appearance(a:Appearance){store.edit{
         it[theme]=a.mode;it[palette]=a.palette;it[customHue]=a.customHue;it[seasonal]=a.seasonal;it[seasonSkipped]=a.seasonSkipped

@@ -22,4 +22,9 @@ class PortionInputTest {
         assertEquals(setOf(FoodPreparation.DRY),foodPreparations(egg.copy(nameEn="Oats, dry")))
         assertTrue(foodPreparations(egg.copy(nameEn="Strawberries")).isEmpty())
     }
+    @Test fun preparationDescribesTheFoodRatherThanItsIngredients() {
+        assertEquals(setOf(FoodPreparation.COOKED),foodPreparations(egg.copy(nameEn="Soup, vegetable, prepared from dry mix")))
+        assertEquals(setOf(FoodPreparation.COOKED),foodPreparations(egg.copy(nameEn="Nuts, almonds, dry roasted, without salt")))
+        assertTrue(foodPreparations(egg.copy(nameEn="Sandwich, with cheese and raw onions")).isEmpty())
+    }
 }

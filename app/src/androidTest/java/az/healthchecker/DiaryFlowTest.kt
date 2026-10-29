@@ -38,7 +38,7 @@ class DiaryFlowTest {
         // 2 × 50 г яйца × 155/100 + 50 г хлопьев × 379/100 = 344,5 ккал.
         app.onNodeWithText("345").assertExists()
         app.onNodeWithText("Дневник").performClick()
-        diary("Овсяные хлопья, сухие");app.onAllNodesWithText("Овсяные хлопья, сухие").onFirst().performClick()
+        app.onNodeWithTag("diaryList").performScrollToNode(hasContentDescription("Изменить запись: Овсяные хлопья, сухие"));app.onNodeWithContentDescription("Изменить запись: Овсяные хлопья, сухие").performClick()
         app.onNodeWithTag("quantity").performTextReplacement("100,0")
         app.onNodeWithText("Сохранить изменения").performScrollTo().performClick()
         waitText("Записать еду")

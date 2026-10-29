@@ -14,13 +14,20 @@ fun convertQuantity(food:Food,q:Quantity,target:Measure,pieceGrams:Double?=null)
     return converted
 }
 enum class FoodPreparation { RAW, COOKED, DRY }
-private val PREPARATION_WORDS=Regex("[^a-z]+")
+private val RAW_PREPARATION=Regex("^(raw|uncooked)(?=$|\\s*\\()")
+private val COOKED_PREPARATION=Regex("^(cooked|boiled|roasted|stewed|fried|baked|steamed|grilled|prepared|dry[ -]roasted)\\b")
+private val DRY_PREPARATION=Regex("^(dry|dried|dehydrated)\\b")
 fun foodPreparations(food:Food):Set<FoodPreparation> {
-    val words=food.nameEn.orEmpty().lowercase(Locale.ROOT).split(PREPARATION_WORDS).toSet()
+    // USDA uses comma-separated preparation clauses. A raw onion in a sandwich is not a raw sandwich,
+    // and a soup prepared from dry mix is no longer dry. Unclear names receive no inferred label.
+    val clauses=food.nameEn.orEmpty().lowercase(Locale.ROOT).split(',').map(String::trim)
+    val cooked=clauses.any{COOKED_PREPARATION.containsMatchIn(it)}
     return buildSet {
-        if(words.any{it in setOf("raw","uncooked")})add(FoodPreparation.RAW)
-        if(words.any{it in setOf("cooked","boiled","roasted","stewed","fried","baked","steamed","grilled")})add(FoodPreparation.COOKED)
-        if(words.any{it in setOf("dry","dried","dehydrated")})add(FoodPreparation.DRY)
+        if(cooked)add(FoodPreparation.COOKED)
+        else {
+            if(clauses.any{RAW_PREPARATION.containsMatchIn(it)})add(FoodPreparation.RAW)
+            if(clauses.any{DRY_PREPARATION.containsMatchIn(it)})add(FoodPreparation.DRY)
+        }
     }
 }
 enum class FoodFilter { ALL, FAVORITES, OWN }
