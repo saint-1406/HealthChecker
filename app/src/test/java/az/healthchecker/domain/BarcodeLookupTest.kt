@@ -32,6 +32,16 @@ class BarcodeLookupTest {
         s.lookupOnline();advanceUntilIdle();assertNotNull(s.state.value.label);assertNull(s.state.value.message)
         s.accept("broken");assertNotNull(s.state.value.message);assertEquals("",s.state.value.code)
     }
+    @Test fun anOldPhotoCannotReplaceANewerManualCode()=runTest {
+        val gate=CompletableDeferred<Unit>()
+        val session=BarcodeLookup(this,{null},{label(it)})
+        session.readPhoto({withContext(NonCancellable){gate.await()};raw})
+        runCurrent();assertTrue(session.state.value.readingPhoto)
+        session.accept("3017620422003")
+        gate.complete(Unit);advanceUntilIdle()
+        assertEquals(normalizeBarcode("3017620422003"),session.state.value.code)
+        assertFalse(session.state.value.readingPhoto)
+    }
     @Test fun clientRestrictsEndpointAndDistinguishesHttpErrors() {
         var target=""
         val client=OpenFoodFactsClient {url->target=url;HttpReply(404,"")}

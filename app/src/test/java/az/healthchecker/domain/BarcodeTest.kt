@@ -38,6 +38,17 @@ class BarcodeTest {
         assertNull(OpenFoodFacts.parse("4006381333931","""{"status":"failure","product":null}"""))
         assertThrows(IllegalArgumentException::class.java){OpenFoodFacts.parse("4006381333931","not json")}
     }
+    @Test fun packageUnitsNeverOverrideTheNutritionBasis() {
+        val kcal=n("energy-kcal","60","kcal")
+        val mass=OpenFoodFacts.parse("4006381333931",response(kcal,per="100g",unit="ml"))!!
+        assertEquals(NutritionBasis.MASS,mass.basis);assertNull(mass.packageAmount)
+        assertEquals(60.0,mass.toFood(NutritionBasis.MASS).per100g.kcal!!,0.0)
+        val volume=OpenFoodFacts.parse("4006381333931",response(kcal,per="100ml",unit="g"))!!
+        assertEquals(NutritionBasis.VOLUME,volume.basis);assertNull(volume.packageAmount)
+        val food=volume.toFood(NutritionBasis.VOLUME,103.0)
+        assertTrue(food.portions.isEmpty())
+        assertEquals(120.0,calculate(food,Quantity(200.0,Measure.ML)).nutrients.kcal!!,1e-8)
+    }
     @Test fun volumeLabelRequiresMeasuredDensityAndKeepsCaloriesCorrect() {
         val label=LabelProduct(normalizeBarcode("4006381333931"),"Milk","Brand",Nutrients(60.0,3.0),500.0,NutritionBasis.VOLUME)
         assertThrows(IllegalArgumentException::class.java){label.toFood(NutritionBasis.VOLUME,null)}

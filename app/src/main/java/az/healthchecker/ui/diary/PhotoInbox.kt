@@ -32,6 +32,7 @@ import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.layout.onSizeChanged
 import androidx.compose.ui.platform.testTag
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.semantics.contentDescription
 import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.text.font.FontWeight
@@ -56,10 +57,20 @@ fun photoTime(photo:InboxPhoto):String {
 class PhotoCapture(val shoot:(PhotoKind)->Unit,val pick:()->Unit)
 @Composable fun rememberPhotoCapture(vm:AppViewModel):PhotoCapture {
     var kind by rememberSaveable{mutableStateOf(PhotoKind.FOOD.name)}
+    val context=LocalContext.current
     val camera=rememberLauncherForActivityResult(ActivityResultContracts.TakePicture()){ok->if(ok)vm.keepPhoto(vm.cameraTarget(),PhotoKind.valueOf(kind))}
     val gallery=rememberLauncherForActivityResult(ActivityResultContracts.PickVisualMedia()){uri->uri?.let{vm.keepPhoto(it,PhotoKind.FOOD)}}
-    return remember(camera,gallery){PhotoCapture(
-        shoot={k->kind=k.name;try{camera.launch(vm.cameraTarget())}catch(e:ActivityNotFoundException){vm.error.value=tr("На телефоне нет приложения камеры. Добавьте фото из галереи.","There is no camera app on this phone. Add a photo from the gallery.")}},
+    fun launchPhoto(){
+        try{camera.launch(vm.cameraTarget())}
+        catch(e:ActivityNotFoundException){vm.error.value=tr("На телефоне нет приложения камеры. Добавьте фото из галереи.","There is no camera app on this phone. Add a photo from the gallery.")}
+        catch(e:SecurityException){vm.error.value=tr("Для фотографии нужен доступ к камере. Можно добавить фото из галереи.","Camera access is required to take a photo. You can add one from the gallery.")}
+    }
+    // Declaring CAMERA for the embedded scanner also requires it for delegated IMAGE_CAPTURE.
+    val permission=rememberLauncherForActivityResult(ActivityResultContracts.RequestPermission()){granted->
+        if(granted)launchPhoto()else vm.error.value=tr("Для фотографии нужен доступ к камере. Можно добавить фото из галереи.","Camera access is required to take a photo. You can add one from the gallery.")
+    }
+    return remember(camera,gallery,permission,context){PhotoCapture(
+        shoot={k->kind=k.name;if(context.checkSelfPermission(android.Manifest.permission.CAMERA)==android.content.pm.PackageManager.PERMISSION_GRANTED)launchPhoto()else permission.launch(android.Manifest.permission.CAMERA)},
         pick={gallery.launch(PickVisualMediaRequest(ActivityResultContracts.PickVisualMedia.ImageOnly))})}
 }
 

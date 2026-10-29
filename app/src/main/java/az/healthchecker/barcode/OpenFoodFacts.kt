@@ -42,8 +42,11 @@ object OpenFoodFacts {
         val kcal=if(raw?.get("energy-kcal")!=null)value("energy-kcal","kcal",1000.0)else value("energy-kj","kJ",4184.0)?.div(4.184)
         val packageUnit=p.string("product_quantity_unit").lowercase()
         val factor=when(packageUnit){"g","ml"->1.0;"kg","l"->1000.0;else->null}
-        val amount=factor?.let{p.number("product_quantity")?.times(it)}?.takeIf{it>0&&it<=100000}
-        val basis=if(per=="100ml"||packageUnit in listOf("ml","l"))NutritionBasis.VOLUME else NutritionBasis.MASS
+        val basis=if(per=="100ml")NutritionBasis.VOLUME else NutritionBasis.MASS
+        // A package can be sold by volume while its nutrition is declared by mass (and vice versa).
+        // Do not relabel either measurement; incompatible package quantities need manual confirmation.
+        val compatible=if(basis==NutritionBasis.VOLUME)packageUnit in listOf("ml","l")else packageUnit in listOf("g","kg")
+        val amount=if(compatible)factor?.let{p.number("product_quantity")?.times(it)}?.takeIf{it>0&&it<=100000}else null
         return LabelProduct(code,p.string("product_name").take(150),p.string("brands").take(45),
             Nutrients(kcal,value("proteins","g",100.0),value("fat","g",100.0),value("carbohydrates","g",100.0),value("fiber","g",100.0)),amount,basis,true)
     }

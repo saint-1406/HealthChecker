@@ -39,6 +39,7 @@ dependencies {
     implementation(libs.room.runtime); implementation(libs.room.ktx); ksp(libs.room.compiler)
     implementation("androidx.datastore:datastore-preferences:1.1.7")
     implementation("androidx.documentfile:documentfile:1.0.1")
+    implementation("com.journeyapps:zxing-android-embedded:4.3.0")
     implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.9.0")
     testImplementation("junit:junit:4.13.2")
     testImplementation("org.robolectric:robolectric:4.15.1")

@@ -25,18 +25,18 @@
 - Existing saved meals/history/backup/export: old bytes stable and new barcode restored.
 
 ### Task 1: Domain and data
-- [ ] RED BarcodeTest for check digits, canonical leading zeros, numeric validation, import kJ/null/invalid/basis/density; backup/Room barcode conflicts and roundtrip.
-- [ ] Add domain/Barcode.kt and barcode/OpenFoodFacts.kt (pure parser); Food optional barcode; schema8, validation and transactional unique save.
-- [ ] GREEN full JVM tests and commit.
+- [x] RED BarcodeTest for check digits, canonical leading zeros, numeric validation, import kJ/null/invalid/basis/density; backup/Room barcode conflicts and roundtrip.
+- [x] Add domain/Barcode.kt and barcode/OpenFoodFacts.kt (pure parser); Food optional barcode; schema8, validation and transactional unique save.
+- [x] GREEN full JVM tests and commit.
 
 ### Task 2: Scanner workflow
-- [ ] Add ZXing dependency; test actual generated EAN image decoding; bounded explicit HTTP client with local fake transport tests.
-- [ ] Add barcode state/controller and Compose screen: scan/manual/local/online/review/edit/save, back and cancellation.
-- [ ] Add search entry, route callbacks, permissions and attribution; preserve ingredient/meal/date routes.
-- [ ] Add instrumentation offline-first create/relaunch/lookup/log, edit imported preview/missing fields, invalid code/duplicate, small font viewport.
-- [ ] GREEN debug APK + instrumented tests; fix failures and commit.
+- [x] Add ZXing dependency; test actual generated EAN image decoding; bounded explicit HTTP client with local fake transport tests.
+- [x] Add barcode state/controller and Compose screen: scan/manual/local/online/review/edit/save, back and cancellation.
+- [x] Add search entry, route callbacks, permissions and attribution; preserve ingredient/meal/date routes.
+- [x] Add instrumentation offline-first create/relaunch/lookup/log, edit imported preview/missing fields, invalid code/duplicate, small font viewport.
+- [x] GREEN debug APK + instrumented tests; fix failures and commit.
 
 ### Task 3: Verification and delivery
-- [ ] Fresh review if required by applicable workflow; fix material findings with targeted tests.
-- [ ] Unit/catalog/lint and old UI regressions; real public API read and optical image decode (no live camera claim without device).
-- [ ] Signed v15, same signature, upgrade14→15, backup roundtrip; update README/testing/results and final commit.
+- [x] Fresh review if required by applicable workflow; fix material findings with targeted tests.
+- [x] Unit/catalog/lint and old UI regressions; real public API read and optical image decode (no live camera claim without device).
+- [x] Signed v15, same signature, upgrade14→15, backup roundtrip; update README/testing/results and final commit.

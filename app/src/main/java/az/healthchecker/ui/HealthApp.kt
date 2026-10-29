@@ -54,6 +54,7 @@ import kotlinx.coroutines.delay
     var foodDate by rememberSaveable{mutableStateOf(date)}
     var mealItemId by rememberSaveable{mutableStateOf("")}
     var foodSearchBack by rememberSaveable{mutableStateOf("main")}
+    var barcodeBack by rememberSaveable{mutableStateOf("search")}
     var calendar by rememberSaveable{mutableStateOf(false)}
     var exerciseId by rememberSaveable{mutableStateOf("")}
     var workoutId by rememberSaveable{mutableStateOf("")}
@@ -84,7 +85,7 @@ import kotlinx.coroutines.delay
     fun openDish(existing:Food?,fromInventory:Boolean=false){if(existing!=null||vm.dish.value==null)vm.startDish(existing);dishFromInventory=fromInventory;route="dish"}
     fun editMedication(m:Medication?){medicationId=m?.id?:"";route="medication"}
     fun editIngredient(index:Int){ingredientIndex=index;ingredientFood=vm.dish.value?.ingredients?.getOrNull(index)?.foodId?:"";route="dish-ingredient"}
-    BackHandler(route!="main"){route=when(route){"search"->foodSearchBack;"custom"->"search";"dish"->if(dishFromInventory)"main" else "search";"dish-search","dish-ingredient"->"dish";"workout","exercise-search"->returnTo;"editor"->entryBack;"meal-item"->"meal";"video"->"videos";else->"main"}}
+    BackHandler(route!="main"){route=when(route){"search"->foodSearchBack;"barcode"->barcodeBack;"custom"->"search";"dish"->if(dishFromInventory)"main" else "search";"dish-search","dish-ingredient"->"dish";"workout","exercise-search"->returnTo;"editor"->entryBack;"meal-item"->"meal";"video"->"videos";else->"main"}}
     LaunchedEffect(notice){if(notice!=null){delay(8000);vm.dismissNotice()}}
     val today=remember(lastToday){LocalDate.now()}
     val appearance=settings.appearance
@@ -115,7 +116,8 @@ import kotlinx.coroutines.delay
                 if(!ready)Column(Modifier.align(Alignment.Center),horizontalAlignment=Alignment.CenterHorizontally){CircularProgressIndicator();Spacer(Modifier.height(16.dp));Text(tr("Открываем ваш дневник…","Opening your diary…"))}
                 else if(!snapshot.onboarded)ProfileScreen(vm,true,{folderPicker.launch(null)},{restorePicker.launch(arrayOf("application/json","text/plain"))})
                 else when(route) {
-                    "search" -> FoodSearchScreen(vm,tr("Что вы съели?","What did you eat?"),{route=foodSearchBack},{add(it.id)},{route="custom"},{openDish(null)},{openDish(it)})
+                    "search" -> FoodSearchScreen(vm,tr("Что вы съели?","What did you eat?"),{route=foodSearchBack},{add(it.id)},{route="custom"},{openDish(null)},{openDish(it)},scan={barcodeBack="search";route="barcode"})
+                    "barcode" -> BarcodeScreen(vm,{route=barcodeBack}){food->if(barcodeBack=="dish-search"){ingredientIndex=-1;ingredientFood=food.id;route="dish-ingredient"}else add(food.id)}
                     "meals" -> SavedMealsScreen(vm,snapshot,date,{route="main"}){meal->vm.addSavedMeal(meal,date){route="meal"}}
                     "meal" -> mealDraft?.let{d->MealDraftScreen(vm,d,{route="main"},{foodSearch("meal")},{item->mealItemId=item.id;route="meal-item"}){vm.commitMealDraft{day->date=day;tab=1;route="main"}}}
                         ?:TextButton(onClick={foodSearch()}){Text(tr("Добавить продукт","Add food"))}
@@ -124,7 +126,7 @@ import kotlinx.coroutines.delay
                     }?:TextButton(onClick={route="meal"}){Text(tr("Вернуться к приёму пищи","Back to the meal"))}
                     // Started from the inventory, a saved dish goes back there; from food search it opens straight for eating.
                     "dish" -> DishEditor(vm,{route=if(dishFromInventory)"main" else "search"},{route="dish-search"},::editIngredient){if(dishFromInventory){tab=3;route="main"}else add(it.id)}
-                    "dish-search" -> FoodSearchScreen(vm,tr("Ингредиент блюда","Dish ingredient"),{route="dish"},{ingredientIndex=-1;ingredientFood=it.id;route="dish-ingredient"},null,null,{})
+                    "dish-search" -> FoodSearchScreen(vm,tr("Ингредиент блюда","Dish ingredient"),{route="dish"},{ingredientIndex=-1;ingredientFood=it.id;route="dish-ingredient"},null,null,{},scan={barcodeBack="dish-search";route="barcode"})
                     "dish-ingredient" -> {
                         val existing=vm.dish.collectAsStateWithLifecycle().value?.ingredients?.getOrNull(ingredientIndex)
                         val food=existing?.let(vm::foodForIngredient)?:vm.food(ingredientFood)

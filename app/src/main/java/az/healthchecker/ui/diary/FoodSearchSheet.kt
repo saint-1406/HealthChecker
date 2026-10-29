@@ -16,6 +16,7 @@ import androidx.compose.material.icons.outlined.Edit
 import androidx.compose.material.icons.outlined.Close
 import androidx.compose.material.icons.outlined.Star
 import androidx.compose.material.icons.outlined.StarBorder
+import androidx.compose.material.icons.outlined.QrCodeScanner
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.runtime.saveable.rememberSaveable
@@ -27,7 +28,7 @@ import az.healthchecker.domain.*
 import az.healthchecker.ui.*
 import kotlinx.coroutines.delay
 /** [dish] is null when picking an ingredient: then only the search is shown. */
-@Composable fun FoodSearchScreen(vm:AppViewModel,title:String,back:()->Unit,select:(Food)->Unit,custom:(()->Unit)?,dish:(()->Unit)?,editDish:(Food)->Unit) {
+@Composable fun FoodSearchScreen(vm:AppViewModel,title:String,back:()->Unit,select:(Food)->Unit,custom:(()->Unit)?,dish:(()->Unit)?,editDish:(Food)->Unit,scan:(()->Unit)?=null) {
     var query by rememberSaveable{mutableStateOf("")};var results by remember{mutableStateOf(emptyList<Food>())};var loading by remember{mutableStateOf(true)}
     var filterName by rememberSaveable{mutableStateOf(FoodFilter.ALL.name)}
     val filter=FoodFilter.valueOf(filterName)
@@ -45,6 +46,7 @@ import kotlinx.coroutines.delay
                 trailingIcon=if(query.isNotEmpty())({IconButton(onClick={query=""}){Icon(Icons.Outlined.Close,tr("Очистить поиск","Clear search"))}})else null,
                 keyboardOptions=KeyboardOptions(imeAction=ImeAction.Search),keyboardActions=KeyboardActions(onSearch={keyboard?.hide();focus.clearFocus()}),
                 singleLine=true,modifier=Modifier.weight(1f).testTag("foodSearch"))
+            scan?.let{IconButton(onClick=it,modifier=Modifier.testTag("barcodeAction")){Icon(Icons.Outlined.QrCodeScanner,tr("Сканировать штрихкод","Scan a barcode"))}}
         }
         LazyRow(horizontalArrangement=Arrangement.spacedBy(8.dp),modifier=Modifier.fillMaxWidth()) {
             items(listOf(FoodFilter.ALL to tr("Все","All"),FoodFilter.FAVORITES to tr("Избранное","Favorites"),FoodFilter.OWN to tr("Мои продукты","My foods"))){(value,label)->FilterChip(selected=filter==value,onClick={filterName=value.name},label={Text(label)},modifier=Modifier.heightIn(min=48.dp))}

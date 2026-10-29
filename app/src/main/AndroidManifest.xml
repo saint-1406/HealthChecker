@@ -7,15 +7,18 @@
     <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED"/>
     <!-- Workout timers vibrate when the rest or hold time is over. -->
     <uses-permission android:name="android.permission.VIBRATE"/>
-    <!-- Only the YouTube player of the workout videos goes online, and only after the user taps "Load the video". -->
+    <!-- Explicit YouTube playback and optional public product lookup; never uploads diary or photos. -->
     <uses-permission android:name="android.permission.INTERNET"/>
+    <uses-permission android:name="android.permission.CAMERA"/>
+    <uses-feature android:name="android.hardware.camera" android:required="false"/>
+    <uses-feature android:name="android.hardware.camera.autofocus" android:required="false"/>
     <uses-feature android:name="android.hardware.sensor.stepcounter" android:required="false"/>
     <application android:label="HealthChecker" android:icon="@drawable/ic_launcher" android:allowBackup="false" android:supportsRtl="true" android:theme="@style/Theme.HealthChecker">
         <!-- Compose follows a turned phone without recreating the activity, so a playing workout video keeps going. -->
         <activity android:name=".MainActivity" android:exported="true" android:configChanges="orientation|screenSize|screenLayout|smallestScreenSize|keyboardHidden">
             <intent-filter><action android:name="android.intent.action.MAIN"/><category android:name="android.intent.category.LAUNCHER"/></intent-filter>
         </activity>
-        <!-- Hands the camera app a file to write a "photo for later" into; no camera permission is needed. -->
+        <!-- Shares only the temporary output file with the external camera for a "photo for later". -->
         <provider android:name="androidx.core.content.FileProvider" android:authorities="${applicationId}.photos" android:exported="false" android:grantUriPermissions="true">
             <meta-data android:name="android.support.FILE_PROVIDER_PATHS" android:resource="@xml/photo_paths"/>
         </provider>

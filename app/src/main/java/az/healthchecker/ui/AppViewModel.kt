@@ -356,6 +356,11 @@ class AppViewModel(application:Application):AndroidViewModel(application) {
     fun saveProfile(profile:Profile?,goals:DailyGoals,done:()->kotlin.Unit)=action(done) { profile?.let{repository.saveProfile(it)};repository.saveGoals(goals);repository.finishOnboarding() }
     fun skipOnboarding()=action { repository.finishOnboarding() }
     fun customFood(food:Food,done:()->kotlin.Unit)=action(done){repository.saveFood(food)}
+    fun saveBarcodeFood(food:Food,done:()->kotlin.Unit)=action(done){
+        repository.saveFood(food)
+        // The portion screen opens immediately: expose the committed card before routing there.
+        snapshot.value=repository.exportSnapshot()
+    }
     fun theme(value:String)=action{preferences.theme(value)}
     /** Changes the look and saves it; the screen updates at once, without waiting for the settings file. */
     fun appearance(change:(Appearance)->Appearance) {
