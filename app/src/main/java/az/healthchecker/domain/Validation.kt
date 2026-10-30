@@ -5,6 +5,7 @@ import java.time.ZoneId
 import java.util.UUID
 
 fun validateSnapshot(s:UserSnapshot) {
+    s.explore?.let(::validateExplore)
     require(s.favoriteFoods.size<=10000 && s.favoriteFoods.all{it.length in 1..200} && s.savedMeals.size<=200)
     require(s.savedMeals.map{it.id}.toSet().size==s.savedMeals.size)
     s.savedMeals.forEach(::validateSavedMeal)

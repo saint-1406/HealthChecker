@@ -8,6 +8,10 @@
     <!-- Workout timers vibrate when the rest or hold time is over. -->
     <uses-permission android:name="android.permission.VIBRATE"/>
     <uses-permission android:name="android.permission.CAMERA"/>
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION"/>
+    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION"/>
+    <uses-permission android:name="android.permission.FOREGROUND_SERVICE_LOCATION"/>
+    <uses-feature android:name="android.hardware.location.gps" android:required="false"/>
     <uses-feature android:name="android.hardware.camera" android:required="false"/>
     <uses-feature android:name="android.hardware.camera.autofocus" android:required="false"/>
     <uses-feature android:name="android.hardware.sensor.stepcounter" android:required="false"/>
@@ -21,6 +25,7 @@
             <meta-data android:name="android.support.FILE_PROVIDER_PATHS" android:resource="@xml/photo_paths"/>
         </provider>
         <service android:name=".steps.StepCounterService" android:exported="false" android:foregroundServiceType="health"/>
+        <service android:name=".explore.WalkTrackingService" android:exported="false" android:foregroundServiceType="location"/>
         <receiver android:name=".steps.StepBootReceiver" android:exported="false">
             <intent-filter>
                 <action android:name="android.intent.action.BOOT_COMPLETED"/>

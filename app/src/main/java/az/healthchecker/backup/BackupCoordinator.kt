@@ -10,6 +10,8 @@ interface BackupEnvironment {
     suspend fun savedRevision():Long
     suspend fun recordSaved(folder:String,files:List<String>,revision:Long)
     fun store(folder:String):BackupStore
+    suspend fun writeVerified(folder:String,snapshot:UserSnapshot):String = BackupService(store(folder)).writeVerified(snapshot)
+    suspend fun writeVersioned(folder:String,revision:Long,snapshot:UserSnapshot):Pair<Long,String> = revision to writeVerified(folder,snapshot)
 }
 class BackupCoordinator(private val environment:BackupEnvironment) {
     private val mutex=Mutex()
@@ -21,9 +23,9 @@ class BackupCoordinator(private val environment:BackupEnvironment) {
         val (version,snapshot)=environment.snapshot()
         if(!force && version==environment.savedRevision() && config.lastBackup>0)return@withLock
         val store=environment.store(config.folder)
-        val id=BackupService(store).writeVerified(snapshot)
+        val (savedVersion,id)=environment.writeVersioned(config.folder,version,snapshot)
         val keep=config.files.takeLast(1)+id
-        environment.recordSaved(config.folder,keep,version)
+        environment.recordSaved(config.folder,keep,savedVersion)
         (config.files-keep.toSet()).forEach{runCatching{store.delete(it)}}
     }
 }

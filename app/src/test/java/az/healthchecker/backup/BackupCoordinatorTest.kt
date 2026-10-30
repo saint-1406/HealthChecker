@@ -6,6 +6,26 @@ import org.junit.Test
 import org.junit.Assert.*
 @OptIn(ExperimentalCoroutinesApi::class)
 class BackupCoordinatorTest {
+    @Test fun recordsRevisionActuallyCapturedByArchiveAndSkipsItsNextCopy()=runTest {
+        var version=1L;var saved=-1L;var writes=0
+        var config=BackupConfiguration("A",0,emptyList())
+        val env=object:BackupEnvironment {
+            override suspend fun configuration()=config
+            override suspend fun selectFolder(folder:String){}
+            override suspend fun snapshot()=version to UserSnapshot()
+            override suspend fun savedRevision()=saved
+            override suspend fun recordSaved(folder:String,files:List<String>,revision:Long){saved=revision;config=config.copy(lastBackup=1,files=files)}
+            override fun store(folder:String)=object:BackupStore {
+                override suspend fun writeNew(bytes:ByteArray):String=error("Archive path required")
+                override suspend fun read(id:String):ByteArray=error("Archive path required")
+                override suspend fun delete(id:String){}
+            }
+            override suspend fun writeVersioned(folder:String,revision:Long,snapshot:UserSnapshot):Pair<Long,String>{writes++;version=2;return version to "copy"}
+        }
+        val coordinator=BackupCoordinator(env)
+        coordinator.backup();assertEquals(2L,saved)
+        coordinator.backup();assertEquals(1,writes)
+    }
     @Test fun folderChangeCannotCommitOldFolderMetadataIntoNewFolder()=runTest {
         val started=CompletableDeferred<Unit>();val finish=CompletableDeferred<Unit>()
         val files=mutableMapOf<String,ByteArray>();var config=BackupConfiguration("A",0,emptyList());var saved=-1L

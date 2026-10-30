@@ -4,14 +4,16 @@ import az.healthchecker.domain.*
 import androidx.room.Room
 import androidx.room.withTransaction
 import kotlinx.coroutines.flow.*
+import kotlinx.coroutines.sync.withLock
 import kotlinx.serialization.json.Json
 import kotlinx.serialization.encodeToString
 import kotlinx.serialization.decodeFromString
 import java.time.LocalDate
 class HealthRepository(context: Context, name: String = "healthchecker.db") {
     // The step counter service writes through its own instance; invalidation keeps the screens up to date.
-    private val db=Room.databaseBuilder(context.applicationContext,HealthDatabase::class.java,name).enableMultiInstanceInvalidation().build()
+    private val db=HealthDatabase.open(context,name)
     private val dao=db.dao()
+    private val explore=ExploreStore(context,name,db)
     private val json=Json{encodeDefaults=true}
     private val images=ExerciseImageStore(context)
     private val imageReplacement=ImageReplacement(context.applicationContext.filesDir)
@@ -28,7 +30,7 @@ class HealthRepository(context: Context, name: String = "healthchecker.db") {
     suspend fun saveMeal(meal:SavedMeal)=meals.save(meal)
     suspend fun deleteMeal(id:String)=meals.delete(id)
     suspend fun deleteEntries(ids:List<String>)=meals.deleteEntries(ids)
-    private suspend fun recoverImages()=db.withTransaction{imageReplacement.recover(dao.get("image-generation")?.payload)}
+    private suspend fun recoverImages()=db.withTransaction{imageReplacement.recover(dao.get("image-generation")?.payload);explore.recover()}
     val snapshots:Flow<UserSnapshot> = dao.observe().map{recoverImages();decode(it)}
     val revisions:Flow<Revision> = dao.observeRevision().map{it?:Revision()}
     private fun decode(rows:List<StoredRecord>):UserSnapshot {
@@ -58,8 +60,20 @@ class HealthRepository(context: Context, name: String = "healthchecker.db") {
         return db.withTransaction {
             recoverImages()
             val encoder=java.util.Base64.getEncoder()
-            (dao.revision()?:Revision()).current to decode(dao.all()).copy(exerciseImages=images.all().mapValues{encoder.encodeToString(it.value)})
+            val explored=explore.snapshot().takeIf{it.findings.isNotEmpty()||it.places.isNotEmpty()||it.walks.isNotEmpty()}
+            (dao.revision()?:Revision()).current to decode(dao.all()).copy(exerciseImages=images.all().mapValues{encoder.encodeToString(it.value)},explore=explored)
         }
+    }
+    /** Capture current references under the same lock that pins files while the ZIP is streamed. */
+    suspend fun <T> withCurrentArchive(block:suspend (Long,UserSnapshot,Map<String,java.io.File>)->T):T = explore.lock.withLock {
+        val (version,snapshot,files)=db.withTransaction {
+            val (version,snapshot)=exportVersioned()
+            Triple(version,snapshot,explore.files(snapshot.explore?:ExploreSnapshot()))
+        }
+        // The Room transaction has ended: accepted GPS fixes can append during the stream.
+        val result=block(version,snapshot,files)
+        db.withTransaction { explore.cleanOrphans(explore.snapshot()) }
+        result
     }
     suspend fun imageVersions():Map<String,Long> = db.withTransaction{recoverImages();images.versions()}
     fun imageFile(id:String):java.io.File = images.file(id)
@@ -141,12 +155,14 @@ class HealthRepository(context: Context, name: String = "healthchecker.db") {
         updated
     }
     suspend fun finishOnboarding(){db.withTransaction{dao.put(StoredRecord("onboarded","onboarded","true"));changed()}}
-    suspend fun replaceSnapshot(snapshot:UserSnapshot) {
+    suspend fun replaceSnapshot(snapshot:UserSnapshot,media:Map<String,java.io.File> = emptyMap()) = explore.lock.withLock {
+        az.healthchecker.backup.ArchiveBackupCodec.validateMedia(snapshot,media)
         validateSnapshot(snapshot)
         try { db.withTransaction {
             recoverImages()
             val decoder=java.util.Base64.getDecoder()
             val generation=imageReplacement.prepare(snapshot.exerciseImages.mapValues{decoder.decode(it.value)})
+            val exploreGeneration=explore.replacement.prepare(media)
             dao.clear()
             snapshot.profile?.let{dao.put(StoredRecord("profile","profile",json.encodeToString(it)))}
             snapshot.goals.forEach{dao.put(StoredRecord("goal:${it.effectiveFrom}","goal",json.encodeToString(it)))}
@@ -164,6 +180,9 @@ class HealthRepository(context: Context, name: String = "healthchecker.db") {
             snapshot.videos.forEach{dao.put(StoredRecord("video:${it.id}","video",json.encodeToString(it)))}
             snapshot.favoriteFoods.forEach{dao.put(StoredRecord("favorite:$it","favorite",it))}
             snapshot.savedMeals.forEach{dao.put(StoredRecord("meal:${it.id}","meal",json.encodeToString(it)))}
+            explore.replace(snapshot.explore?:ExploreSnapshot())
+            explore.replacement.activate()
+            dao.put(StoredRecord("explore-generation","internal",exploreGeneration))
             imageReplacement.activate()
             dao.put(StoredRecord("image-generation","internal",generation))
             changed()

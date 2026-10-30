@@ -1,0 +1,14 @@
+{
+  "version": 1,
+  "fileName": "azerbaijan.map",
+  "size": 56377138,
+  "sha256": "d73b652757b34ee61a94a3dd3ac275e6316e098ebd645599520346f7bfef60f5",
+  "parts": [
+    "maps/azerbaijan.map.part00",
+    "maps/azerbaijan.map.part01",
+    "maps/azerbaijan.map.part02",
+    "maps/azerbaijan.map.part03"
+  ],
+  "source": "https://download.mapsforge.org/maps/v5/asia/azerbaijan.map",
+  "date": "2026-09-26"
+}

@@ -73,7 +73,7 @@ import java.time.format.DateTimeFormatter
             }
             Panel {
                 SectionTitle(tr("Резервная копия","Backup"),tr("Чтобы дневник пережил удаление приложения","So the diary survives reinstalling the app"))
-                Text(tr("Выберите папку в памяти телефона. После переустановки откройте сохранённый JSON-файл через «Восстановить». Копия содержит личные данные.","Choose a folder on the phone. After reinstalling, open the saved JSON file with “Restore”. The backup contains personal data."),style=MaterialTheme.typography.bodyMedium)
+                Text(tr("Выберите папку в памяти телефона. После переустановки откройте сохранённый ZIP-файл через «Восстановить». Прежние JSON-копии тоже принимаются. Копия содержит дневник, находки, фото, места и записанные маршруты.","Choose a folder on the phone. After reinstalling, open the saved ZIP file with “Restore”. Older JSON backups are also accepted. Backups include your diary, findings, photos, places and recorded routes."),style=MaterialTheme.typography.bodyMedium)
                 if(settings.folder.isEmpty())Text(tr("Папка ещё не выбрана","No folder chosen yet"),color=MaterialTheme.colorScheme.error)else Text(tr("Папка подключена","Folder connected"),color=MaterialTheme.colorScheme.primary)
                 Text(if(settings.lastBackup==0L)tr("Успешных копий пока нет","No successful backups yet") else tr("Последняя копия: ","Last backup: ")+Instant.ofEpochMilli(settings.lastBackup).atZone(ZoneId.systemDefault()).format(DateTimeFormatter.ofPattern(if(Lang.en)"MMM d, HH:mm" else "d MMM, HH:mm",Lang.locale)),style=MaterialTheme.typography.bodySmall)
                 if(revision.current!=revision.backedUp)Text(tr("Есть изменения без резервной копии","Some changes are not backed up yet"),color=MaterialTheme.colorScheme.error,style=MaterialTheme.typography.bodySmall)
@@ -94,6 +94,11 @@ import java.time.format.DateTimeFormatter
                 Text(tr("Встроенный снимок Open Food Facts от ","Bundled Open Food Facts snapshot: ")+m.snapshotDate+tr(". Сканируйте упаковку и сверьте этикетку. Отсутствующий товар можно добавить вручную с фото.",". Scan a package and verify the label. Missing products can be added manually with a photo."),style=MaterialTheme.typography.bodySmall)
                 Text("Open Food Facts · ODbL 1.0 · DbCL 1.0",style=MaterialTheme.typography.bodySmall)
             }}
+            Panel {
+                SectionTitle(tr("Офлайн-карта Азербайджана","Offline Azerbaijan map"))
+                Text(tr("Карта: OpenStreetMap contributors · ODbL 1.0; снимок Mapsforge от 26.09.2026. Данные карты могут быть неполными. GPS работает по кнопке начала прогулки.\nwww.openstreetmap.org/copyright\ndownload.mapsforge.org/maps/v5/asia/azerbaijan.map", "Map: OpenStreetMap contributors · ODbL 1.0; Mapsforge snapshot dated 26 Sep 2026. Map data may be incomplete. GPS recording starts only when you start a walk.\nwww.openstreetmap.org/copyright\ndownload.mapsforge.org/maps/v5/asia/azerbaijan.map"),style=MaterialTheme.typography.bodySmall)
+                Text("Mapsforge 0.25.0 · LGPL v3 (waiver §4d/e) · github.com/mapsforge/mapsforge\nAndroidSVG 1.4 · Apache 2.0 · © Paul LeBeau, CaveRock Software\n"+tr("Полные лицензии включены в APK: assets/licenses.","Full license texts are bundled in the APK: assets/licenses."),style=MaterialTheme.typography.bodySmall)
+            }
             // Matches the update file's number, so the user can see which update the phone has.
             if(vm.appVersion.isNotBlank())Text("HealthChecker · "+tr("версия ","version ")+vm.appVersion,style=MaterialTheme.typography.bodySmall,color=MaterialTheme.colorScheme.onSurfaceVariant,modifier=Modifier.fillMaxWidth().testTag("appVersion"),textAlign=TextAlign.Center)
         }

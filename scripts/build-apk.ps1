@@ -19,7 +19,7 @@ try {
         $delivered=[int](Get-Content -LiteralPath $versionFile -TotalCount 1)
         if($VersionCode -le $delivered){throw "VersionCode must be greater than the delivered $delivered, otherwise Android refuses to update the installed app."}
     }
-    Invoke-Native 'Build or verification failed' { & .\gradlew.bat :app:testDebugUnitTest :app:lintDebug :app:assembleRelease "-PversionCode=$VersionCode" "-PversionName=$VersionName" --console=plain }
+    Invoke-Native 'Build or verification failed' { & .\gradlew.bat :app:testDebugUnitTest :app:lintDebug :app:assembleRelease "-PversionCode=$VersionCode" "-PversionName=$VersionName" --console=plain --max-workers=1 '-Dorg.gradle.jvmargs=-Xmx2048m -Dfile.encoding=UTF-8' }
     $sdkPath=(Get-Content local.properties | Where-Object {$_ -like 'sdk.dir=*'}) -replace '^sdk.dir=','' -replace '\\:',':' -replace '\\\\','\'
     $buildTools=Join-Path $sdkPath 'build-tools/36.0.0'
     $apk=Join-Path $projectRoot 'app/build/outputs/apk/release/app-release.apk'

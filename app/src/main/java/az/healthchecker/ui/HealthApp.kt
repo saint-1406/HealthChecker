@@ -3,6 +3,7 @@ import androidx.activity.compose.BackHandler
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.*
 import androidx.compose.material.icons.automirrored.outlined.MenuBook
@@ -28,6 +29,7 @@ import az.healthchecker.ui.profile.AppearanceScreen
 import az.healthchecker.ui.profile.ProfileScreen
 import az.healthchecker.ui.training.*
 import az.healthchecker.ui.steps.StepsScreen
+import az.healthchecker.ui.explore.ExploreHomeScreen
 import java.time.LocalDate
 import java.util.UUID
 import kotlinx.coroutines.delay
@@ -96,9 +98,9 @@ import kotlinx.coroutines.delay
         // A transparent container gives no content colour of its own, so text would fall back to black: name it.
         Scaffold(containerColor=Color.Transparent,contentColor=MaterialTheme.colorScheme.onBackground,
             bottomBar={if(ready && snapshot.onboarded && route=="main")NavigationBar(containerColor=MaterialTheme.colorScheme.surface){
-                listOf(tr("Обзор","Overview") to Icons.Outlined.SpaceDashboard,tr("Дневник","Diary") to Icons.AutoMirrored.Outlined.MenuBook,tr("Тренировки","Training") to Icons.Outlined.FitnessCenter,tr("Профиль","Profile") to Icons.Outlined.PersonOutline).forEachIndexed{i,(label,icon)->NavigationBarItem(selected=tab==i,onClick={tab=i},icon={Icon(icon,label)},label={Text(label)})}
+                listOf(Triple(0,tr("Обзор","Overview"),Icons.Outlined.SpaceDashboard),Triple(1,tr("Дневник","Diary"),Icons.AutoMirrored.Outlined.MenuBook),Triple(2,tr("Тренировки","Training"),Icons.Outlined.FitnessCenter),Triple(4,tr("Находки","Findings"),Icons.Outlined.Explore),Triple(3,tr("Профиль","Profile"),Icons.Outlined.PersonOutline)).forEach{(id,label,icon)->NavigationBarItem(selected=tab==id,onClick={tab=id},icon={Icon(icon,label)},label={Text(label)})}
             }},
-            topBar={if(ready && snapshot.onboarded && route=="main" && tab!=3)Column(Modifier.statusBarsPadding().padding(horizontal=24.dp,vertical=if(LocalDensity.current.fontScale>1.3f)8.dp else 16.dp)){
+            topBar={if(ready && snapshot.onboarded && route=="main" && tab!=3 && tab!=4)Column(Modifier.statusBarsPadding().padding(horizontal=24.dp,vertical=if(LocalDensity.current.fontScale>1.3f)8.dp else 16.dp)){
                 if(LocalDensity.current.fontScale<=1.3f)Text("HEALTHCHECKER",style=MaterialTheme.typography.labelMedium,color=MaterialTheme.colorScheme.primary,fontWeight=FontWeight.Bold)
                 Row(Modifier.fillMaxWidth(),verticalAlignment=Alignment.CenterVertically){
                     Text(when(tab){0->tr("Ваш день","Your day");1->tr("Дневник питания","Food diary");else->tr("Тренировки","Training")},style=if(LocalDensity.current.fontScale>1.3f)MaterialTheme.typography.titleLarge else MaterialTheme.typography.headlineLarge,fontWeight=FontWeight.Bold,modifier=Modifier.weight(1f))
@@ -114,7 +116,7 @@ import kotlinx.coroutines.delay
             Column(Modifier.fillMaxSize().padding(padding)) {
               Box(Modifier.fillMaxWidth().weight(1f)) {
                 if(!ready)Column(Modifier.align(Alignment.Center),horizontalAlignment=Alignment.CenterHorizontally){CircularProgressIndicator();Spacer(Modifier.height(16.dp));Text(tr("Открываем ваш дневник…","Opening your diary…"))}
-                else if(!snapshot.onboarded)ProfileScreen(vm,true,{folderPicker.launch(null)},{restorePicker.launch(arrayOf("application/json","text/plain"))})
+                else if(!snapshot.onboarded)ProfileScreen(vm,true,{folderPicker.launch(null)},{restorePicker.launch(arrayOf("application/zip","application/octet-stream","application/json","text/plain"))})
                 else when(route) {
                     "search" -> FoodSearchScreen(vm,tr("Что вы съели?","What did you eat?"),{route=foodSearchBack},{add(it.id)},{route="custom"},{openDish(null)},{openDish(it)},scan={barcodeBack="search";route="barcode"})
                     "barcode" -> BarcodeScreen(vm,{route=barcodeBack}){food->if(barcodeBack=="dish-search"){ingredientIndex=-1;ingredientFood=food.id;route="dish-ingredient"}else add(food.id)}
@@ -162,7 +164,8 @@ import kotlinx.coroutines.delay
                         1 -> DiaryScreen(vm,snapshot,date,{foodSearch()},::edit,{e->add(e.foodId,e.id)},::editMedication,
                             openPhoto={photoName=it.fileName;route="photo"},selectFood={add(it.id)},openMeals={route="meals"},openDraft={route="meal"},openProfile={tab=3},chooseFolder={folderPicker.launch(null)})
                         2 -> TrainingScreen(vm,snapshot,date,rememberTodayPlan(vm,snapshot,date,variant),{leaveFor("exercise-search")},{route="workout-now"},::editWorkout,{tab=3}){route="videos"}
-                        else -> ProfileScreen(vm,false,{folderPicker.launch(null)},{restorePicker.launch(arrayOf("application/json","text/plain"))},date,{openDish(null,true)},{openDish(it,true)}){route="appearance"}
+                        4 -> ExploreHomeScreen()
+                        else -> ProfileScreen(vm,false,{folderPicker.launch(null)},{restorePicker.launch(arrayOf("application/zip","application/octet-stream","application/json","text/plain"))},date,{openDish(null,true)},{openDish(it,true)}){route="appearance"}
                     }
                 }
                 if(busy)LinearProgressIndicator(Modifier.fillMaxWidth().align(Alignment.TopCenter))
@@ -171,7 +174,16 @@ import kotlinx.coroutines.delay
             }
         }
         if(error!=null)AlertDialog(onDismissRequest={vm.error.value=null},title={Text(tr("Не удалось выполнить действие","Something went wrong"))},text={Text(error!!)},confirmButton={TextButton(onClick={vm.error.value=null}){Text(tr("Понятно","OK"))}})
-        if(restore!=null)AlertDialog(onDismissRequest={vm.restorePreview.value=null},title={Text(tr("Восстановить данные?","Restore the data?"))},text={val r=restore!!;Text(tr("В копии ","The backup has ")+count(r.entries.size,"запись","записи","записей","entry","entries")+(r.entries.maxOfOrNull{it.localDate}?.let{tr(" (последняя — "," (latest ")+dayMonth(it,true)+")"}?:"")+tr(" и "," and ")+count(r.customFoods.size,"свой продукт","своих продукта","своих продуктов","own food","own foods")+(if(r.workouts.isNotEmpty())", "+count(r.workouts.size,"упражнение","упражнения","упражнений","exercise","exercises") else "")+(if(r.medications.isNotEmpty())", "+count(r.medications.size,"препарат","препарата","препаратов","medicine card","medicine cards") else "")+tr(". Текущий дневник и профиль будут заменены данными из этого файла. Папку для новых копий потом нужно выбрать заново.",". The current diary and profile will be replaced with this file. Choose the folder for new backups again afterwards."))},confirmButton={TextButton(onClick={vm.confirmRestore()},enabled=!busy){Text(tr("Восстановить","Restore"))}},dismissButton={TextButton(onClick={vm.restorePreview.value=null}){Text(tr("Отмена","Cancel"))}})
+        if(restore!=null)AlertDialog(onDismissRequest={vm.cancelRestore()},title={Text(tr("Восстановить данные?","Restore the data?"))},text={
+            val r=restore!!
+            Column(Modifier.verticalScroll(androidx.compose.foundation.rememberScrollState()),verticalArrangement=Arrangement.spacedBy(8.dp)){
+                Text(tr("Записей питания: ","Diary entries: ")+r.entries.size+tr("; своих продуктов: ","; own foods: ")+r.customFoods.size)
+                Text(tr("Тренировок: ","Workouts: ")+r.workouts.size+tr("; лекарств: ","; medicine cards: ")+r.medications.size)
+                val e=r.explore
+                Text(tr("Находок: ","Findings: ")+(e?.findings?.size?:0)+tr("; мест: ","; places: ")+(e?.places?.size?:0)+tr("; прогулок: ","; walks: ")+(e?.walks?.size?:0))
+                Text(tr("Текущий дневник, профиль, находки, места и прогулки будут заменены данными из этого файла. Папку для новых копий потом нужно выбрать заново.","The current diary, profile, findings, places and walks will be replaced with this file. Choose the folder for new backups again afterwards."))
+            }
+        },confirmButton={TextButton(onClick={vm.confirmRestore()},enabled=!busy){Text(tr("Восстановить","Restore"))}},dismissButton={TextButton(onClick={vm.cancelRestore()},enabled=!busy){Text(tr("Отмена","Cancel"))}})
         if(calendar){val today=LocalDate.now().atStartOfDay(java.time.ZoneOffset.UTC).toInstant().toEpochMilli()
             val state=rememberDatePickerState(initialSelectedDateMillis=LocalDate.parse(date).atStartOfDay(java.time.ZoneOffset.UTC).toInstant().toEpochMilli(),selectableDates=object:SelectableDates{override fun isSelectableDate(utcTimeMillis:Long)=utcTimeMillis<=today})
             DatePickerDialog(onDismissRequest={calendar=false},confirmButton={TextButton(onClick={state.selectedDateMillis?.let{date=java.time.Instant.ofEpochMilli(it).atZone(java.time.ZoneOffset.UTC).toLocalDate().toString()};calendar=false}){Text(tr("Выбрать","Select"))}},dismissButton={TextButton(onClick={calendar=false}){Text(tr("Отмена","Cancel"))}}){DatePicker(state)}}

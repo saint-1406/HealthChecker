@@ -14,7 +14,8 @@ import kotlinx.serialization.EncodeDefault
     /** Exercise pictures as base64 JPEG by exercise id; filled only for backups, the app keeps them as files. */
     val exerciseImages: Map<String, String> = emptyMap(),
     @EncodeDefault(EncodeDefault.Mode.NEVER) val favoriteFoods:Set<String> = emptySet(),
-    @EncodeDefault(EncodeDefault.Mode.NEVER) val savedMeals:List<SavedMeal> = emptyList())
+    @EncodeDefault(EncodeDefault.Mode.NEVER) val savedMeals:List<SavedMeal> = emptyList(),
+    @EncodeDefault(EncodeDefault.Mode.NEVER) val explore:ExploreSnapshot? = null)
 data class DayState(val date: String, val entries: List<DiaryEntry>, val summary: DaySummary, val goals: DailyGoals?, val completed: Boolean)
 fun UserSnapshot.day(date: String): DayState {
     java.time.LocalDate.parse(date)

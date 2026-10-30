@@ -53,6 +53,7 @@ class AppViewModel(application:Application):AndroidViewModel(application) {
     val backupError=MutableStateFlow<String?>(null)
     val revision=MutableStateFlow(Revision())
     val restorePreview=MutableStateFlow<UserSnapshot?>(null)
+    private var stagedRestore:StagedArchive?=null
     val catalogCount=MutableStateFlow(0)
     @Volatile private var catalog:CatalogImporter?=null
     // The diary opens as soon as the database is read; the bundled catalog is parsed in parallel and only
@@ -84,6 +85,7 @@ class AppViewModel(application:Application):AndroidViewModel(application) {
         // Preferences first: the previous file stays listed even if marking the revision fails.
         override suspend fun recordSaved(folder:String,files:List<String>,revision:Long){preferences.saved(files);repository.markBackedUp(revision)}
         override fun store(folder:String)=SafBackupStore(context,Uri.parse(folder))
+        override suspend fun writeVersioned(folder:String,revision:Long,snapshot:UserSnapshot)=ArchiveBackupService(context,repository,store(folder)).writeCurrentVerified()
     })
     init {
         viewModelScope.launch(Dispatchers.IO){imageVersions.value=repository.imageVersions();photos.value=inbox.list()}
@@ -398,13 +400,22 @@ class AppViewModel(application:Application):AndroidViewModel(application) {
         }
         finally{backupBusy.value=runningBackups.decrementAndGet()>0}
     }
+    fun cancelRestore()=action {
+        stagedRestore?.close();stagedRestore=null;restorePreview.value=null
+    }
     fun previewRestore(uri:Uri)=action {
-        val bytes=context.contentResolver.openInputStream(uri)?.use{BackupCodec.readLimited(it)}?:error(tr("Файл недоступен","The file is unavailable"))
-        restorePreview.value=BackupCodec.decode(bytes)
+        stagedRestore?.close();stagedRestore=null;restorePreview.value=null
+        val stage=java.io.File(context.cacheDir,"restore-${UUID.randomUUID()}")
+        val restored=context.contentResolver.openInputStream(uri)?.use{ArchiveBackupCodec.read(it,stage)}?:error(tr("Файл недоступен","The file is unavailable"))
+        stagedRestore=restored;restorePreview.value=restored.snapshot
     }
     fun confirmRestore()=action {
         val s=restorePreview.value?:return@action
-        repository.replaceSnapshot(s);restorePreview.value=null;undo=null;mealDraft.value=null;imageVersions.value=repository.imageVersions()
+        az.healthchecker.explore.WalkTracking.stopForRestore(context)
+        repository.replaceSnapshot(s,stagedRestore?.media.orEmpty())
+        az.healthchecker.explore.WalkTracking.reconcile(context)
+        stagedRestore?.close();stagedRestore=null
+        restorePreview.value=null;undo=null;mealDraft.value=null;imageVersions.value=repository.imageVersions()
         notice.value=Notice(if(settings.value.folder.isEmpty())tr("Данные восстановлены. Выберите папку для новых копий в профиле.","Data restored. Choose a folder for new backups in the profile.") else tr("Данные восстановлены","Data restored"))
     }
     fun saveMedication(medication:Medication,done:()->kotlin.Unit)=action(done){repository.saveMedication(medication)}
