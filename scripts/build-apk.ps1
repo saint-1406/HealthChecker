@@ -1,5 +1,6 @@
-﻿param([ValidateRange(1,2147483647)][int]$VersionCode=1,[ValidatePattern('^[0-9]+(\.[0-9]+){0,2}$')][string]$VersionName='', [switch]$Publish,[string]$Notes='')
+﻿param([ValidateRange(1,2147483647)][int]$VersionCode=1,[ValidatePattern('^[0-9]+(\.[0-9]+){0,2}$')][string]$VersionName='', [switch]$Publish,[string]$Notes='',[string]$NotesFile='')
 # -Publish creates v<VersionName> with the full APK and offline database; needs gh auth login.
+# -NotesFile docs/releases/v<VersionName>.md uses that file as the release description; the APK SHA-256 is appended.
 # and the commit to release already pushed to main.
 $ErrorActionPreference='Stop'
 if(-not $VersionName){$VersionName=$VersionCode.ToString()}
@@ -15,6 +16,7 @@ Push-Location $projectRoot
 try {
     if(-not (Test-Path -LiteralPath 'signing.properties')) {throw 'Create the local signing key and signing.properties first; see README.'}
     $versionFile='dist/HealthChecker.version'
+    if($NotesFile -and -not (Test-Path -LiteralPath $NotesFile)){throw "Release notes file not found: $NotesFile"}
     if(Test-Path -LiteralPath $versionFile) {
         $delivered=[int](Get-Content -LiteralPath $versionFile -TotalCount 1)
         if($VersionCode -le $delivered){throw "VersionCode must be greater than the delivered $delivered, otherwise Android refuses to update the installed app."}
@@ -63,6 +65,7 @@ try {
         $gh=(Get-Command gh -ErrorAction SilentlyContinue).Source
         if(-not $gh){$gh=Join-Path $env:ProgramFiles 'GitHub CLI/gh.exe'}
         if(-not (Test-Path -LiteralPath $gh)){throw 'GitHub CLI is required for -Publish: install it and run gh auth login.'}
+        if($NotesFile){$Notes=(Get-Content -LiteralPath $NotesFile -Raw -Encoding UTF8).TrimEnd()+"`n`nSHA-256 APK: ``$($hash.ToLowerInvariant())``"}
         if(-not $Notes){$Notes="Обновление HealthChecker v$VersionName. Скачайте $name и откройте его поверх установленного приложения — дневник сохранится. SHA-256: $hash"}
         Invoke-Native 'GitHub release failed' { & $gh release create "v$VersionName" @releaseAssets --repo saint-1406/HealthChecker --target main --title "HealthChecker v$VersionName" --notes $Notes --latest }
         Write-Output "Published: https://github.com/saint-1406/HealthChecker/releases/tag/v$VersionName"
