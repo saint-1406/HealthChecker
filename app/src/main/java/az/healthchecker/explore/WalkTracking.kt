@@ -154,7 +154,11 @@ object WalkTracking {
                 add(LocationManager.NETWORK_PROVIDER)
         }
         check(providers.isNotEmpty()) { tr("Включите геолокацию в настройках телефона", "Turn on location in phone settings") }
-        val cached = providers.mapNotNull { runCatching { manager.getLastKnownLocation(it) }.getOrNull() }
+        val cached = providers.mapNotNull {
+            try { manager.getLastKnownLocation(it) }
+            catch (_: SecurityException) { null } // Permission can be revoked after the initial check.
+            catch (_: IllegalArgumentException) { null } // A provider may disappear while locating.
+        }
             .filter { usable(it, CACHED_NANOS) }.minByOrNull { it.accuracy }
         if (cached != null && (cached.accuracy <= ACCURATE_METERS || !fine)) return cached.toTrackPoint()
         val best = AtomicReference<Location?>(null)

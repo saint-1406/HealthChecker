@@ -32,9 +32,12 @@ class QrContentTest {
     }
 
     @Test fun listIsBounded() {
-        val items = (parseQr((1..300).joinToString("\n") { "item $it " + "x".repeat(300) }) as QrContent.ItemList).items
+        val items = (parseQr((1..300).joinToString("\n") { "item $it" }) as QrContent.ItemList).items
         assertEquals(MAX_QR_ITEMS, items.size)
-        assertTrue(items.all { it.length <= MAX_QR_ITEM_LENGTH })
+        // Keep this fixture below the total QR text limit so it independently exercises item truncation.
+        val longItems = (parseQr((1..20).joinToString("\n") { "item $it " + "x".repeat(300) }) as QrContent.ItemList).items
+        assertEquals(20, longItems.size)
+        assertTrue(longItems.all { it.length == MAX_QR_ITEM_LENGTH })
     }
 
     @Test fun linkIsTextWithUrl() {

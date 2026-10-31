@@ -191,7 +191,7 @@ import java.util.UUID
 @Composable private fun WalkControls(vm:ExploreViewModel,state:ExploreSnapshot,recording:WalkRecordingState,busy:Boolean,started:()->Unit) {
     val walk=state.walks.find{it.status==WalkStatus.ACTIVE||it.status==WalkStatus.PAUSED}
     Column(Modifier.fillMaxWidth().padding(12.dp),verticalArrangement=Arrangement.spacedBy(6.dp)){
-        if(walk==null)LocationActionButton(tr("Начать прогулку","Start walk"),!busy,true,Modifier.fillMaxWidth().testTag("walkStart"),{vm.error.value=it}){vm.startWalk(done=started)}
+        if(walk==null)LocationActionButton(tr("Начать прогулку","Start walk"),!busy,true,Modifier.fillMaxWidth().testTag("walkStart"),onDenied={vm.error.value=it}){vm.startWalk(done=started)}
         else {
             Text("${distance(walk.distanceMeters)} · ${duration(if(recording.walkId==walk.id)maxOf(recording.durationMs,walk.durationMs)else walk.durationMs)} · ${walk.status.title()}",style=MaterialTheme.typography.titleMedium,modifier=Modifier.testTag("walkProgress"))
             if(walk.status==WalkStatus.ACTIVE&&recording.waitingForFix)Text(tr("Ждём точный GPS. На улице сигнал лучше.","Waiting for precise GPS. Reception is better outdoors."),style=MaterialTheme.typography.bodySmall)
