@@ -49,7 +49,7 @@ class ExploreViewModel(app:Application):AndroidViewModel(app) {
     fun pauseWalk()=action{WalkTracking.pause(context);snapshot.value=repository.exportSnapshot()}
     fun finishWalk()=action{WalkTracking.finish(context);snapshot.value=repository.exportSnapshot()}
     fun deleteWalk(w:Walk)=action{repository.deleteWalk(w.id);snapshot.value=repository.exportSnapshot()}
-    fun locate(done:(GeoPoint)->Unit)=action{val p=WalkTracking.currentPosition(context);withContext(Dispatchers.Main){done(p)}}
+    fun locate(done:(TrackPoint)->Unit)=action{val p=WalkTracking.currentPosition(context);withContext(Dispatchers.Main){done(p)}}
     fun lookupBarcode(raw:String,done:(Finding,String?)->Unit)=action {
         val code=normalizeBarcode(raw)
         repository.exportSnapshot().findings.find{it.barcode==code}?.let{withContext(Dispatchers.Main){done(it,null)};return@action}

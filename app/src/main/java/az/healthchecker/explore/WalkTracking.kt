@@ -4,8 +4,11 @@ import android.Manifest
 import android.content.Context
 import android.content.Intent
 import android.content.pm.PackageManager
+import android.location.Location
 import android.location.LocationListener
 import android.location.LocationManager
+import android.os.Build
+import android.os.Bundle
 import android.os.Looper
 import android.os.SystemClock
 import az.healthchecker.data.ExploreRepository
@@ -15,6 +18,7 @@ import az.healthchecker.domain.WalkStatus
 import az.healthchecker.domain.tr
 import java.util.concurrent.ConcurrentHashMap
 import java.util.concurrent.atomic.AtomicLong
+import java.util.concurrent.atomic.AtomicReference
 import kotlinx.coroutines.*
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -109,41 +113,84 @@ object WalkTracking {
             throw SecurityException(tr("Разрешите точную геолокацию для GPS", "Allow precise location for GPS"))
     }
 
-    /** Fresh GNSS only. Cancellation/timeout always unregisters the listener; no cached or network fix. */
-    suspend fun currentPosition(context: Context): GeoPoint {
-        requireFineLocation(context)
+    private fun granted(context: Context, permission: String) =
+        context.checkSelfPermission(permission) == PackageManager.PERMISSION_GRANTED
+
+    /** "My location" also works with Android's approximate permission; walk recording still needs precise GPS. */
+    fun hasAnyLocation(context: Context) =
+        granted(context, Manifest.permission.ACCESS_FINE_LOCATION) || granted(context, Manifest.permission.ACCESS_COARSE_LOCATION)
+
+    internal const val LOCATE_TIMEOUT_MS = 20_000L
+    private const val ACCURATE_METERS = 35f
+    private const val FRESH_NANOS = 15_000_000_000L
+    private const val CACHED_NANOS = 120_000_000_000L
+
+    private fun ageNanos(location: Location) = SystemClock.elapsedRealtimeNanos() - location.elapsedRealtimeNanos
+    private fun usable(location: Location, maxAgeNanos: Long) =
+        location.hasAccuracy() && location.accuracy.isFinite() && location.accuracy >= 0f &&
+            location.latitude.isFinite() && location.latitude in -90.0..90.0 &&
+            location.longitude.isFinite() && location.longitude in -180.0..180.0 &&
+            ageNanos(location) in 0..maxAgeNanos
+    private fun Location.toTrackPoint() = TrackPoint(GeoPoint(latitude, longitude), System.currentTimeMillis(), accuracy.toDouble())
+
+    /**
+     * One position for "My location" and place pins. GPS and Wi-Fi/cell (network) providers are queried together.
+     * An accurate fix (≤35 m) or, with approximate permission, the first usable fix returns at once; a recent accurate
+     * cached fix returns without waiting. Otherwise the best fresh fix seen within the timeout is returned with its
+     * accuracy, so indoors the user still gets a point instead of an error. The listener is always unregistered.
+     */
+    suspend fun currentPosition(context: Context): TrackPoint {
         val app = context.applicationContext
+        val fine = granted(app, Manifest.permission.ACCESS_FINE_LOCATION)
+        if (!fine && !granted(app, Manifest.permission.ACCESS_COARSE_LOCATION))
+            throw SecurityException(tr("Разрешите доступ к геолокации", "Allow location access"))
         val manager = app.getSystemService(LocationManager::class.java)
-            ?: error(tr("GPS недоступен", "GPS is unavailable"))
-        check(manager.isProviderEnabled(LocationManager.GPS_PROVIDER)) { tr("Включите GPS в настройках телефона", "Enable GPS in phone settings") }
-        return withTimeoutOrNull(25_000) {
+            ?: error(tr("Геолокация недоступна", "Location is unavailable"))
+        val providers = buildList {
+            // Before Android 12 the GPS provider throws without precise permission; from 12 on it returns fuzzed fixes.
+            if ((fine || Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) && runCatching { manager.isProviderEnabled(LocationManager.GPS_PROVIDER) }.getOrDefault(false))
+                add(LocationManager.GPS_PROVIDER)
+            if (runCatching { manager.isProviderEnabled(LocationManager.NETWORK_PROVIDER) }.getOrDefault(false))
+                add(LocationManager.NETWORK_PROVIDER)
+        }
+        check(providers.isNotEmpty()) { tr("Включите геолокацию в настройках телефона", "Turn on location in phone settings") }
+        val cached = providers.mapNotNull { runCatching { manager.getLastKnownLocation(it) }.getOrNull() }
+            .filter { usable(it, CACHED_NANOS) }.minByOrNull { it.accuracy }
+        if (cached != null && (cached.accuracy <= ACCURATE_METERS || !fine)) return cached.toTrackPoint()
+        val best = AtomicReference<Location?>(null)
+        val found = withTimeoutOrNull(LOCATE_TIMEOUT_MS) {
             withContext(Dispatchers.Main.immediate) {
-                suspendCancellableCoroutine { continuation ->
-                    // Listener identity is captured directly by a holder to allow removal inside its callback.
-                    var registered: LocationListener? = null
-                    val callback = LocationListener { location ->
-                        val age = SystemClock.elapsedRealtimeNanos() - location.elapsedRealtimeNanos
-                        if (location.hasAccuracy() && location.accuracy in 0f..35f && age in 0..15_000_000_000L && continuation.isActive) {
-                            registered?.let(manager::removeUpdates)
-                            continuation.resumeWith(Result.success(GeoPoint(location.latitude, location.longitude)))
+                suspendCancellableCoroutine<Location> { continuation ->
+                    val callback = object : LocationListener {
+                        override fun onLocationChanged(location: Location) {
+                            if (!usable(location, FRESH_NANOS)) return
+                            best.updateAndGet { old -> if (old == null || location.accuracy < old.accuracy) location else old }
+                            if ((location.accuracy <= ACCURATE_METERS || !fine) && continuation.isActive) {
+                                manager.removeUpdates(this)
+                                continuation.resumeWith(Result.success(location))
+                            }
                         }
+                        // Older Android versions call these; without overrides a disabled provider would crash on API < 30.
+                        override fun onProviderEnabled(provider: String) {}
+                        override fun onProviderDisabled(provider: String) {}
+                        @Deprecated("Required on API < 29") override fun onStatusChanged(provider: String?, status: Int, extras: Bundle?) {}
                     }
-                    registered = callback
                     continuation.invokeOnCancellation { manager.removeUpdates(callback) }
                     try {
-                        // Check again at registration: permission may have changed during the dispatch to Main.
-                        if (app.checkSelfPermission(Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED)
-                            throw SecurityException(tr("Разрешите точную геолокацию для GPS", "Allow precise location for GPS"))
-                        manager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 1_000L, 0f, callback, Looper.getMainLooper())
+                        if (!hasAnyLocation(app)) throw SecurityException(tr("Разрешите доступ к геолокации", "Allow location access"))
+                        providers.forEach { manager.requestLocationUpdates(it, 1_000L, 0f, callback, Looper.getMainLooper()) }
                         if (!continuation.isActive) manager.removeUpdates(callback)
                     }
                     catch (denied: SecurityException) {
                         manager.removeUpdates(callback)
-                        if (continuation.isActive) continuation.resumeWith(Result.failure(SecurityException(tr("Разрешите точную геолокацию для GPS", "Allow precise location for GPS"), denied)))
+                        if (continuation.isActive) continuation.resumeWith(Result.failure(SecurityException(tr("Разрешите доступ к геолокации", "Allow location access"), denied)))
                     }
                     catch (error: Exception) { manager.removeUpdates(callback); if (continuation.isActive) continuation.resumeWith(Result.failure(error)) }
                 }
             }
-        } ?: error(tr("GPS не дал точную позицию за 25 секунд. Выйдите на открытое место и повторите.", "No accurate GPS fix in 25 seconds. Move outdoors and try again."))
+        }
+        return (found ?: best.get() ?: cached)?.toTrackPoint()
+            ?: error(tr("Не удалось определить место за 20 секунд. Выйдите на открытое место или включите Wi-Fi и повторите.",
+                "Could not find your location in 20 seconds. Move outdoors or turn on Wi-Fi and try again."))
     }
 }

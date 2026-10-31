@@ -26,10 +26,12 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Dialog
 import androidx.compose.ui.window.DialogProperties
 import az.healthchecker.data.ExploreRepository
+import az.healthchecker.explore.WalkTracking
 import az.healthchecker.domain.*
 import az.healthchecker.ui.*
 import az.healthchecker.ui.diary.ProductPhotoEditor
 import java.util.UUID
+import kotlin.math.roundToInt
 import androidx.compose.runtime.saveable.Saver
 import kotlinx.serialization.json.Json
 import kotlinx.serialization.encodeToString
@@ -48,17 +50,20 @@ fun PlaceKind.title()=when(this){PlaceKind.SHOP->tr("Магазин","Shop");Pla
     }
 }
 
-@Composable fun LocationActionButton(text:String,enabled:Boolean=true,notification:Boolean=false,modifier:Modifier=Modifier,onDenied:(String)->Unit,action:()->Unit) {
+/** precise=true (walk recording) requires precise location; precise=false ("My location", place pins) also accepts approximate. */
+@Composable fun LocationActionButton(text:String,enabled:Boolean=true,notification:Boolean=false,modifier:Modifier=Modifier,precise:Boolean=true,onDenied:(String)->Unit,action:()->Unit) {
     val context=LocalContext.current
     val currentAction by rememberUpdatedState(action)
     val currentDenied by rememberUpdatedState(onDenied)
+    fun allowed()=if(precise)context.checkSelfPermission(Manifest.permission.ACCESS_FINE_LOCATION)==PackageManager.PERMISSION_GRANTED else WalkTracking.hasAnyLocation(context)
     val permission=rememberLauncherForActivityResult(ActivityResultContracts.RequestMultiplePermissions()) {
-        if(context.checkSelfPermission(Manifest.permission.ACCESS_FINE_LOCATION)==PackageManager.PERMISSION_GRANTED)currentAction()
-        else currentDenied(tr("Для GPS нужна точная геолокация. Отметку на карте можно поставить вручную.","GPS needs precise location permission. You can still add a pin manually."))
+        if(allowed())currentAction()
+        else if(precise)currentDenied(tr("Для записи прогулки нужна точная геолокация («Точно» в окне разрешения). Отметку на карте можно поставить вручную.","Walk recording needs precise location (choose Precise in the permission prompt). You can still add a pin manually."))
+        else currentDenied(tr("Нет доступа к геолокации. Разрешите его в настройках приложения или поставьте отметку вручную.","No location access. Allow it in app settings or add a pin manually."))
     }
     Button(onClick={
         val requests=mutableListOf<String>()
-        if(context.checkSelfPermission(Manifest.permission.ACCESS_FINE_LOCATION)!=PackageManager.PERMISSION_GRANTED)requests.addAll(listOf(Manifest.permission.ACCESS_FINE_LOCATION,Manifest.permission.ACCESS_COARSE_LOCATION))
+        if(!allowed())requests.addAll(listOf(Manifest.permission.ACCESS_FINE_LOCATION,Manifest.permission.ACCESS_COARSE_LOCATION))
         if(notification&&Build.VERSION.SDK_INT>=33&&context.checkSelfPermission(Manifest.permission.POST_NOTIFICATIONS)!=PackageManager.PERMISSION_GRANTED)requests.add(Manifest.permission.POST_NOTIFICATIONS)
         if(requests.isEmpty())currentAction()else permission.launch(requests.toTypedArray())
     },enabled=enabled,modifier=modifier.heightIn(min=48.dp)){Text(text)}
@@ -121,6 +126,7 @@ fun PlaceKind.title()=when(this){PlaceKind.SHOP->tr("Магазин","Shop");Pla
     var kind by rememberSaveable(id){mutableStateOf((initial?.kind?:PlaceKind.SHOP).name)}
     var note by rememberSaveable(id){mutableStateOf(initial?.note.orEmpty())}
     var error by remember{mutableStateOf<String?>(null)}
+    var accuracy by remember{mutableStateOf<Double?>(null)}
     val busy by vm.busy.collectAsState()
     Dialog(close,properties=DialogProperties(usePlatformDefaultWidth=false)) {
         Surface(Modifier.fillMaxWidth(.95f).fillMaxHeight(.94f),shape=MaterialTheme.shapes.large){
@@ -129,7 +135,8 @@ fun PlaceKind.title()=when(this){PlaceKind.SHOP->tr("Магазин","Shop");Pla
                 OutlinedTextField(name,{name=it.take(200)},label={Text(tr("Название места","Place name"))},modifier=Modifier.fillMaxWidth().testTag("placeName"))
                 FlowRow(horizontalArrangement=Arrangement.spacedBy(8.dp)){PlaceKind.entries.forEach{k->FilterChip(kind==k.name,{kind=k.name},label={Text(k.title())},modifier=Modifier.heightIn(min=48.dp))}}
                 Text(tr("Точку можно выбрать долгим нажатием на карту или по GPS.","Choose a point by long pressing the map or using GPS."),style=MaterialTheme.typography.bodySmall)
-                LocationActionButton(tr("Использовать моё место","Use my location"),!busy,modifier=Modifier.fillMaxWidth(),onDenied={error=it}){vm.locate{lat=plain(it.latitude);lon=plain(it.longitude)}}
+                LocationActionButton(tr("Использовать моё место","Use my location"),!busy,precise=false,modifier=Modifier.fillMaxWidth(),onDenied={error=it}){vm.locate{lat=plain(it.point.latitude);lon=plain(it.point.longitude);accuracy=it.accuracyMeters}}
+                accuracy?.let{a->Text(tr("Точность ±${a.roundToInt()} м","Accuracy ±${a.roundToInt()} m")+if(a>35)tr(" — проверьте точку на карте"," — check the point on the map")else"",style=MaterialTheme.typography.bodySmall)}
                 OutlinedTextField(lat,{lat=it.take(32)},label={Text(tr("Широта","Latitude"))},singleLine=true,keyboardOptions=KeyboardOptions(keyboardType=KeyboardType.Decimal),modifier=Modifier.fillMaxWidth().testTag("placeLat"))
                 OutlinedTextField(lon,{lon=it.take(32)},label={Text(tr("Долгота","Longitude"))},singleLine=true,keyboardOptions=KeyboardOptions(keyboardType=KeyboardType.Decimal),modifier=Modifier.fillMaxWidth().testTag("placeLon"))
                 OutlinedTextField(note,{note=it.take(10000)},label={Text(tr("Адрес / заметка","Address / notes"))},minLines=2,modifier=Modifier.fillMaxWidth())

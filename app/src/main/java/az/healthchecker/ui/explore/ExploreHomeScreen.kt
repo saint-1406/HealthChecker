@@ -97,7 +97,7 @@ import java.util.UUID
             }
             1->{
                 Row(Modifier.padding(8.dp),horizontalArrangement=Arrangement.spacedBy(8.dp)){
-                    LocationActionButton(tr("Моё место","My location"),!busy,modifier=Modifier.weight(1f),onDenied={vm.error.value=it}){vm.locate{manualPosition=TrackPoint(it,System.currentTimeMillis(),0.0);focus(it)}}
+                    LocationActionButton(tr("Моё место","My location"),!busy,precise=false,modifier=Modifier.weight(1f),onDenied={vm.error.value=it}){vm.locate{manualPosition=it;focus(it.point)}}
                     OutlinedButton(onClick={placeId=null;pinLat=null;pinLon=null;placeEdit=true},enabled=!busy,modifier=Modifier.weight(1f).heightIn(min=48.dp).testTag("placeAdd")){Text(tr("Добавить место","Add place"))}
                 }
                 Text(tr("Долгое нажатие — новая отметка. Подсветка показывает только записанные прогулки.","Long press to add a pin. Shading shows recorded walks only."),style=MaterialTheme.typography.bodySmall,modifier=Modifier.padding(horizontal=12.dp,vertical=4.dp))
