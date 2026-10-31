@@ -1,5 +1,4 @@
 package az.healthchecker.ui.inventory
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -25,7 +24,6 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import az.healthchecker.domain.*
 import az.healthchecker.ui.*
 import java.time.LocalDate
-import java.time.format.DateTimeFormatter
 
 /** Minimal outline pictures a dish can carry in the inventory; the key is stored in the recipe. */
 val DISH_ICONS:List<Triple<String,ImageVector,String>> get() = listOf(

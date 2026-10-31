@@ -62,13 +62,12 @@ fun UserSnapshot.training(date:String):TrainingDay {
 /** WHO 2020: 150 min moderate aerobic activity a week (vigorous minutes count double) and strength work on ≥2 days. */
 const val WHO_AEROBIC_MINUTES=150.0
 const val WHO_STRENGTH_DAYS=2
-data class WeeklyActivity(val aerobicMinutes:Double,val strengthDays:Int,val trainedDays:Int)
+data class WeeklyActivity(val aerobicMinutes:Double,val strengthDays:Int)
 fun weeklyActivity(snapshot:UserSnapshot,endDate:String):WeeklyActivity {
     val end=LocalDate.parse(endDate);val from=end.minusDays(6).toString()
     val week=snapshot.workouts.filter{it.localDate in from..endDate}
     val aerobic=week.filter{it.kind==ExerciseKind.CARDIO}.sumOf{it.minutes*when{it.met>=6->2.0;it.met>=3->1.0;else->0.0}}
-    val marked=snapshot.trainingDays.filter{(d,v)->v&&d in from..endDate}.keys
-    return WeeklyActivity(aerobic,week.filter{it.kind==ExerciseKind.STRENGTH}.map{it.localDate}.toSet().size,(week.map{it.localDate}+marked).toSet().size)
+    return WeeklyActivity(aerobic,week.filter{it.kind==ExerciseKind.STRENGTH}.map{it.localDate}.toSet().size)
 }
 
 data class Prescription(val sets:Int?=null,val reps:Int?=null,val seconds:Int?=null,val minutes:Double?=null)

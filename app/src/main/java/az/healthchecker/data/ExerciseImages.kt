@@ -24,7 +24,6 @@ class ExerciseImageStore(context:Context) {
     }
     fun delete(id:String) { file(id).delete() }
     fun all():Map<String,ByteArray> = versions().keys.mapNotNull{id->read(id)?.let{id to it}}.toMap()
-    fun replaceAll(images:Map<String,ByteArray>) { versions().keys.filter{it !in images}.forEach(::delete);images.forEach{(id,bytes)->write(id,bytes)} }
 }
 
 const val EXERCISE_IMAGE_MAX_PX=1280
@@ -50,5 +49,8 @@ fun encodeImage(context:Context,uri:Uri,maxPx:Int,quality:Int):ByteArray {
     val scale=minOf(1f,maxPx.toFloat()/maxOf(decoded.width,decoded.height))
     val matrix=Matrix().apply{postScale(scale,scale);postRotate(degrees)}
     val upright=if(scale<1f||degrees!=0f)Bitmap.createBitmap(decoded,0,0,decoded.width,decoded.height,matrix,true) else decoded
-    return ByteArrayOutputStream().use{out->upright.compress(Bitmap.CompressFormat.JPEG,quality,out);out.toByteArray()}
+    // Full-size bitmaps are released right away instead of waiting for GC; a few large photos in a row could otherwise run out of memory.
+    if(upright!==decoded)decoded.recycle()
+    try { return ByteArrayOutputStream().use{out->upright.compress(Bitmap.CompressFormat.JPEG,quality,out);out.toByteArray()} }
+    finally { upright.recycle() }
 }
