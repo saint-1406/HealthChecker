@@ -21,12 +21,15 @@ import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.viewmodel.compose.viewModel
+import az.healthchecker.barcode.ScanKind
 import az.healthchecker.barcode.normalizeScannedCode
+import az.healthchecker.barcode.scanOptions
+import az.healthchecker.ui.diary.RECEIPT_NOTE_EN
+import az.healthchecker.ui.diary.RECEIPT_NOTE_RU
 import az.healthchecker.domain.*
 import az.healthchecker.explore.WalkRecordingState
 import az.healthchecker.ui.*
 import com.journeyapps.barcodescanner.ScanContract
-import com.journeyapps.barcodescanner.ScanOptions
 import kotlinx.serialization.encodeToString
 import kotlinx.serialization.json.Json
 import java.time.Instant
@@ -65,6 +68,19 @@ import java.util.UUID
     fun focus(p:GeoPoint){focusLat=p.latitude;focusLon=p.longitude;page=1}
     val scanner=rememberLauncherForActivityResult(ScanContract()){result->
         result.contents?.let{raw->runCatching{normalizeScannedCode(raw,result.formatName)}.onSuccess{barcode=it;lookup(it)}.onFailure{vm.error.value=it.message}}
+    }
+    var qrItems by rememberSaveable{mutableStateOf<List<String>?>(null)}
+    var qrChecked by rememberSaveable{mutableStateOf<List<String>>(emptyList())}
+    var qrAdded by remember{mutableStateOf<Int?>(null)}
+    // QR: a product code is looked up like a barcode, a list becomes several findings, other text opens a prefilled finding.
+    val qrScanner=rememberLauncherForActivityResult(ScanContract()){result->
+        result.contents?.let{raw->runCatching{parseQr(raw)}.onSuccess{c->when(c){
+            is QrContent.Product->{barcode=c.gtin;lookup(c.gtin)}
+            is QrContent.ItemList->{scan=false;val known=state.findings.map{it.name.trim().lowercase()}.toSet();qrItems=c.items;qrChecked=c.items.filter{it.lowercase() !in known}}
+            is QrContent.Text->{scan=false;val now=System.currentTimeMillis()
+                val notes=listOfNotNull(c.text,if(c.receipt)tr(RECEIPT_NOTE_RU,RECEIPT_NOTE_EN)else null).joinToString("\n\n").take(10000)
+                draft=Json.encodeToString(Finding(UUID.randomUUID().toString(),qrTitle(c).take(200),notes=notes,createdAt=now,updatedAt=now));draftPhoto=null}
+        }}.onFailure{vm.error.value=it.message}}
     }
     BackHandler(draft!=null||findingId!=null||placeId!=null||scan){when{draft!=null->{draft=null;draftPhoto=null};scan->scan=false;findingId!=null->findingId=null;else->placeId=null}}
     val initial=draft?.let{Json.decodeFromString<Finding>(it)}
@@ -129,12 +145,31 @@ import java.util.UUID
         TextButton(onClick={placeEdit=true}){Text(tr("Изменить место","Edit place"))};TextButton(onClick={confirmDelete=true}){Text(tr("Удалить место","Delete place"))}
     }},confirmButton={TextButton(onClick={focus(place.point);placeId=null}){Text(tr("На карте","Show on map"))}},dismissButton={TextButton(onClick={placeId=null}){Text(tr("Закрыть","Close"))}})
     if(placeEdit)PlaceEditor(vm,place,pinLat?.let{lat->pinLon?.let{GeoPoint(lat,it)}},{placeEdit=false}){p->placeEdit=false;placeId=null;focus(p.point)}
-    if(scan)AlertDialog(onDismissRequest={scan=false},title={Text(tr("Добавить по штрихкоду","Add by barcode"))},text={Column(verticalArrangement=Arrangement.spacedBy(12.dp)){
+    if(scan)AlertDialog(onDismissRequest={scan=false},title={Text(tr("Добавить по коду","Add by code"))},text={Column(verticalArrangement=Arrangement.spacedBy(12.dp)){
         Text(tr("Поиск в ваших находках и встроенной базе еды. Другие товары можно описать вручную.","Search your findings and the bundled food database. Other products can be described manually."))
         OutlinedTextField(barcode,{barcode=it.take(40)},label={Text(tr("Штрихкод","Barcode"))},modifier=Modifier.testTag("findingScanCode"))
-        Button(onClick={runCatching{scanner.launch(ScanOptions().setDesiredBarcodeFormats(listOf(ScanOptions.EAN_13,ScanOptions.EAN_8,ScanOptions.UPC_A,ScanOptions.UPC_E,ScanOptions.ITF)).setBeepEnabled(false).setOrientationLocked(false).setPrompt(tr("Штрихкод товара","Product barcode")))}.onFailure{vm.error.value=it.message}},enabled=!busy){Text(tr("Открыть камеру","Open camera"))}
+        Text(tr("Что сканируем?","What are you scanning?"))
+        Row(horizontalArrangement=Arrangement.spacedBy(8.dp)){
+            Button(onClick={runCatching{scanner.launch(scanOptions(ScanKind.BARCODE,tr("Штрихкод товара","Product barcode")))}.onFailure{vm.error.value=it.message}},enabled=!busy,modifier=Modifier.weight(1f).heightIn(min=48.dp).testTag("findingScanBarcode")){Text(tr("Штрихкод","Barcode"))}
+            Button(onClick={runCatching{qrScanner.launch(scanOptions(ScanKind.QR))}.onFailure{vm.error.value=it.message}},enabled=!busy,modifier=Modifier.weight(1f).heightIn(min=48.dp).testTag("findingScanQr")){Text(tr("QR-код","QR code"))}
+        }
+        Text(tr("QR со списком создаст несколько находок, ссылка или текст — одну находку с заметкой.","A QR list creates several findings; a link or text creates one finding with a note."),style=MaterialTheme.typography.bodySmall)
         if(busy)LinearProgressIndicator()
     }},confirmButton={TextButton(onClick={lookup(barcode)},enabled=!busy&&barcode.isNotBlank()){Text(tr("Найти / создать","Find / create"))}},dismissButton={TextButton(onClick={scan=false}){Text(tr("Отмена","Cancel"))}})
+    qrItems?.let{items->
+        val known=remember(items,state.findings){state.findings.map{it.name.trim().lowercase()}.toSet()}
+        AlertDialog(onDismissRequest={qrItems=null},title={Text(tr("Список из QR · ${items.size}","QR list · ${items.size}"))},text={Column(Modifier.verticalScroll(rememberScrollState())){
+            Text(tr("Отмеченные пункты станут находками. Уже сохранённые названия пропускаются.","Checked items become findings. Names you already saved are skipped."),style=MaterialTheme.typography.bodySmall)
+            items.forEach{item->val exists=item.lowercase() in known
+                Row(verticalAlignment=Alignment.CenterVertically,modifier=Modifier.fillMaxWidth().testTag("qrListItem")){
+                    Checkbox(item in qrChecked,{on->qrChecked=if(on)qrChecked+item else qrChecked-item},enabled=!exists)
+                    Column(Modifier.weight(1f)){Text(item);if(exists)Text(tr("Уже есть в находках","Already in findings"),style=MaterialTheme.typography.bodySmall)}
+                }
+            }
+        }},confirmButton={TextButton(onClick={val chosen=items.filter{it in qrChecked};vm.addFindings(chosen){n->qrItems=null;qrAdded=n;page=0}},enabled=!busy&&qrChecked.isNotEmpty(),modifier=Modifier.testTag("qrListAdd")){Text(tr("Добавить (${qrChecked.size})","Add (${qrChecked.size})"))}},
+        dismissButton={TextButton(onClick={qrItems=null}){Text(tr("Отмена","Cancel"))}})
+    }
+    qrAdded?.let{n->AlertDialog(onDismissRequest={qrAdded=null},title={Text(tr("Готово","Done"))},text={Text(tr("Добавлено находок: $n","Findings added: $n"))},confirmButton={TextButton(onClick={qrAdded=null}){Text(tr("Понятно","OK"))}})}
     if(confirmDelete)AlertDialog(onDismissRequest={confirmDelete=false},title={Text(tr("Удалить?","Delete?"))},text={Text(if(place!=null)tr("Место исчезнет из карточек. Сами находки останутся.","The location will be removed from cards. Findings will remain.")else tr("Это действие нельзя отменить.","This cannot be undone."))},confirmButton={TextButton(onClick={confirmDelete=false;when{finding!=null->vm.deleteFinding(finding){findingId=null};place!=null->vm.deletePlace(place){placeId=null};else->state.walks.find{it.id==selectedWalk}?.let{vm.deleteWalk(it);selectedWalk=null}}},enabled=!busy){Text(tr("Удалить","Delete"))}},dismissButton={TextButton(onClick={confirmDelete=false}){Text(tr("Отмена","Cancel"))}})
     if(error!=null)AlertDialog(onDismissRequest={vm.error.value=null},title={Text(tr("Не удалось выполнить действие","Could not complete the action"))},text={Text(error!!)},confirmButton={TextButton(onClick={vm.error.value=null}){Text(tr("Понятно","OK"))}})
 }

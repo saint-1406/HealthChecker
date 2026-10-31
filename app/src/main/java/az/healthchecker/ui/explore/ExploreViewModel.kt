@@ -50,6 +50,14 @@ class ExploreViewModel(app:Application):AndroidViewModel(app) {
     fun finishWalk()=action{WalkTracking.finish(context);snapshot.value=repository.exportSnapshot()}
     fun deleteWalk(w:Walk)=action{repository.deleteWalk(w.id);snapshot.value=repository.exportSnapshot()}
     fun locate(done:(TrackPoint)->Unit)=action{val p=WalkTracking.currentPosition(context);withContext(Dispatchers.Main){done(p)}}
+    /** Findings from a scanned QR list; names already saved (case-insensitive) are skipped. */
+    fun addFindings(names:List<String>,done:(Int)->Unit)=action {
+        val existing=repository.exportSnapshot().findings.map{it.name.trim().lowercase()}.toSet()
+        val fresh=names.map{it.trim().take(MAX_QR_ITEM_LENGTH)}.filter{it.isNotEmpty()&&it.lowercase() !in existing}.distinctBy{it.lowercase()}
+        val now=System.currentTimeMillis()
+        fresh.forEachIndexed{i,name->repository.saveFinding(Finding(UUID.randomUUID().toString(),name,notes=tr("Из QR-списка","From a QR list"),createdAt=now+i,updatedAt=now+i))}
+        snapshot.value=repository.exportSnapshot();withContext(Dispatchers.Main){done(fresh.size)}
+    }
     fun lookupBarcode(raw:String,done:(Finding,String?)->Unit)=action {
         val code=normalizeBarcode(raw)
         repository.exportSnapshot().findings.find{it.barcode==code}?.let{withContext(Dispatchers.Main){done(it,null)};return@action}

@@ -12,7 +12,8 @@ import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.outlined.ArrowBack
 import androidx.compose.material.icons.outlined.PhotoLibrary
-import androidx.compose.material.icons.outlined.QrCodeScanner
+import androidx.compose.material.icons.outlined.QrCode2
+import androidx.compose.material.icons.outlined.ViewWeek
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.runtime.saveable.rememberSaveable
@@ -28,7 +29,6 @@ import az.healthchecker.domain.*
 import az.healthchecker.ui.*
 import com.google.zxing.client.android.Intents
 import com.journeyapps.barcodescanner.ScanContract
-import com.journeyapps.barcodescanner.ScanOptions
 import kotlinx.coroutines.*
 import kotlinx.serialization.json.Json
 import kotlinx.serialization.encodeToString
@@ -49,12 +49,20 @@ private val labelStateSaver=Saver<LabelProduct?,String>(
     var review by rememberSaveable(stateSaver=labelStateSaver){mutableStateOf<LabelProduct?>(null)}
     var photoError by remember{mutableStateOf<String?>(null)}
     val reading=state.readingPhoto
-    fun accept(value:String){input=value;submitted=value;photoError=null;review=null;keyboard?.hide();focus.clearFocus();lookup.acceptAndSearch(value)}
+    var qrRaw by rememberSaveable{mutableStateOf<String?>(null)}
+    fun accept(value:String){qrRaw=null;input=value;submitted=value;photoError=null;review=null;keyboard?.hide();focus.clearFocus();lookup.acceptAndSearch(value)}
+    // A QR with a product code goes through the normal barcode lookup; lists and text get their own panels below.
+    fun acceptQr(raw:String){runCatching{parseQr(raw)}.onSuccess{c->if(c is QrContent.Product)accept(c.gtin)else{lookup.cancel();photoError=null;qrRaw=raw}}.onFailure{photoError=it.message}}
+    val cameraDenied=tr("Камера недоступна. Разрешите её в настройках или введите код вручную.","Camera access is unavailable. Allow it in settings or enter the code manually.")
     val scanner=rememberLauncherForActivityResult(ScanContract()){r->
         if(r.contents!=null)runCatching{normalizeScannedCode(r.contents,r.formatName)}.onSuccess{accept(it)}.onFailure{photoError=it.message}
-        else if(r.originalIntent?.hasExtra(Intents.Scan.MISSING_CAMERA_PERMISSION)==true)photoError=tr("Камера недоступна. Разрешите её в настройках или введите код вручную.","Camera access is unavailable. Allow it in settings or enter the code manually.")
+        else if(r.originalIntent?.hasExtra(Intents.Scan.MISSING_CAMERA_PERMISSION)==true)photoError=cameraDenied
     }
-    val picker=rememberLauncherForActivityResult(ActivityResultContracts.PickVisualMedia()){uri->if(uri!=null&&!reading){lookup.readPhoto({readBarcodePhoto(context,uri)}){accept(it)}}}
+    val qrScanner=rememberLauncherForActivityResult(ScanContract()){r->
+        if(r.contents!=null)acceptQr(r.contents)
+        else if(r.originalIntent?.hasExtra(Intents.Scan.MISSING_CAMERA_PERMISSION)==true)photoError=cameraDenied
+    }
+    val picker=rememberLauncherForActivityResult(ActivityResultContracts.PickVisualMedia()){uri->if(uri!=null&&!reading){lookup.readPhoto({readBarcodePhoto(context,uri,null)}){acceptQr(it)}}}
     DisposableEffect(lookup){onDispose{lookup.cancel()}}
     LaunchedEffect(Unit){if(review==null&&submitted.isNotBlank()&&submitted==input)lookup.acceptAndSearch(input)}
     LaunchedEffect(state.food?.id){state.food?.let(select)}
@@ -68,13 +76,16 @@ private val labelStateSaver=Saver<LabelProduct?,String>(
         Row(verticalAlignment=Alignment.CenterVertically){IconButton(onClick=back){Icon(Icons.AutoMirrored.Outlined.ArrowBack,tr("Назад","Back"))};SectionTitle(tr("Сканер товаров","Product scanner"))}
         Text(tr("Наведите камеру на штрихкод упаковки. Можно также выбрать его фотографию или ввести цифры.","Point the camera at the package barcode. You can also choose a barcode photo or enter the digits."))
         Text(tr("Поиск полностью без интернета: сначала ваши товары, затем встроенная база Open Food Facts. При первом поиске подготовка базы может занять немного времени.","Lookup works entirely offline: your products first, then the bundled Open Food Facts database. Preparing the database may take a moment on the first search."),style=MaterialTheme.typography.bodySmall)
-        Button(onClick={
-            lookup.cancel()
-            runCatching{scanner.launch(ScanOptions().setDesiredBarcodeFormats(listOf(ScanOptions.EAN_13,ScanOptions.EAN_8,ScanOptions.UPC_A,ScanOptions.UPC_E,ScanOptions.ITF))
-                .setPrompt(tr("Наведите камеру на штрихкод упаковки","Point the camera at the product barcode")).setBeepEnabled(false).setOrientationLocked(false).setTimeout(60000))}
-                .onFailure{photoError=tr("Не удалось открыть камеру. Введите код вручную.","Could not open the camera. Enter the code manually.")}
-        },enabled=!reading,modifier=Modifier.fillMaxWidth().heightIn(min=54.dp).testTag("barcodeCamera")){Icon(Icons.Outlined.QrCodeScanner,null);Spacer(Modifier.width(8.dp));Text(tr("Сканировать камерой","Scan with camera"))}
-        OutlinedButton(onClick={picker.launch(PickVisualMediaRequest(ActivityResultContracts.PickVisualMedia.ImageOnly))},enabled=!reading,modifier=Modifier.fillMaxWidth().heightIn(min=48.dp)){Icon(Icons.Outlined.PhotoLibrary,null);Spacer(Modifier.width(8.dp));Text(tr("Выбрать фото штрихкода","Choose a barcode photo"))}
+        Text(tr("Что сканируем?","What are you scanning?"),style=MaterialTheme.typography.titleMedium)
+        Row(horizontalArrangement=Arrangement.spacedBy(8.dp)){
+            Button(onClick={lookup.cancel();qrRaw=null;runCatching{scanner.launch(scanOptions(ScanKind.BARCODE))}.onFailure{photoError=tr("Не удалось открыть камеру. Введите код вручную.","Could not open the camera. Enter the code manually.")}},
+                enabled=!reading,modifier=Modifier.weight(1f).heightIn(min=54.dp).testTag("barcodeCamera")){Icon(Icons.Outlined.ViewWeek,null);Spacer(Modifier.width(8.dp));Text(tr("Штрихкод","Barcode"))}
+            Button(onClick={lookup.cancel();qrRaw=null;runCatching{qrScanner.launch(scanOptions(ScanKind.QR))}.onFailure{photoError=tr("Не удалось открыть камеру.","Could not open the camera.")}},
+                enabled=!reading,modifier=Modifier.weight(1f).heightIn(min=54.dp).testTag("qrCamera")){Icon(Icons.Outlined.QrCode2,null);Spacer(Modifier.width(8.dp));Text(tr("QR-код","QR code"))}
+        }
+        Text(tr("QR-код с кодом товара ищется как штрихкод. QR со списком (например, покупок) сопоставляется с каталогом.","A QR code with a product code is looked up like a barcode. A QR list (e.g. shopping) is matched to the catalog."),style=MaterialTheme.typography.bodySmall)
+        OutlinedButton(onClick={picker.launch(PickVisualMediaRequest(ActivityResultContracts.PickVisualMedia.ImageOnly))},enabled=!reading,modifier=Modifier.fillMaxWidth().heightIn(min=48.dp)){Icon(Icons.Outlined.PhotoLibrary,null);Spacer(Modifier.width(8.dp));Text(tr("Выбрать фото штрихкода или QR","Choose a barcode or QR photo"))}
+        qrRaw?.let{raw->QrResultPanel(vm,raw,select){qrRaw=null}}
         OutlinedTextField(input,{input=it.take(40);submitted="";lookup.cancel();photoError=null},label={Text(tr("Цифры штрихкода","Barcode digits"))},singleLine=true,
             keyboardOptions=KeyboardOptions(keyboardType=KeyboardType.Number,imeAction=ImeAction.Search),keyboardActions=KeyboardActions(onSearch={accept(input)}),modifier=Modifier.fillMaxWidth().testTag("barcodeInput"))
         Button(onClick={accept(input)},enabled=input.isNotBlank()&&!reading&&!state.loading,modifier=Modifier.fillMaxWidth().heightIn(min=48.dp).testTag("barcodeFind")){Text(tr("Найти товар","Find product"))}
