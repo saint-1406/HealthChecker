@@ -21,7 +21,7 @@ import org.robolectric.annotation.Config
 
 @OptIn(ExperimentalCoroutinesApi::class)
 @RunWith(RobolectricTestRunner::class)
-@Config(sdk = [35])
+@Config(sdk = [26, 31, 35])
 class CurrentPositionTest {
     private val app get() = ApplicationProvider.getApplicationContext<Application>()
     private val manager get() = app.getSystemService(LocationManager::class.java)
@@ -32,6 +32,7 @@ class CurrentPositionTest {
             setLocationEnabled(true)
             setProviderEnabled(LocationManager.GPS_PROVIDER, false)
             setProviderEnabled(LocationManager.NETWORK_PROVIDER, false)
+            setProviderEnabled(LocationManager.FUSED_PROVIDER, false)
         }
     }
     @After fun resetMain() = Dispatchers.resetMain()
@@ -55,17 +56,18 @@ class CurrentPositionTest {
     private fun noRequestsLeft() {
         assertTrue(shadowOf(manager).getLocationRequests(LocationManager.GPS_PROVIDER).isEmpty())
         assertTrue(shadowOf(manager).getLocationRequests(LocationManager.NETWORK_PROVIDER).isEmpty())
+        assertTrue(shadowOf(manager).getLocationRequests(LocationManager.FUSED_PROVIDER).isEmpty())
     }
 
-    @Test fun noFixReportsAnActionableErrorAfterTwentySeconds() = runTest {
+    @Test fun noFixReportsAnActionableErrorAfterTwoMinutes() = runTest {
         Dispatchers.setMain(StandardTestDispatcher(testScheduler))
         precise()
         var failure: Throwable? = null
         launch { failure = runCatching { WalkTracking.currentPosition(app) }.exceptionOrNull() }
         advanceUntilIdle()
-        assertEquals(WalkTracking.LOCATE_TIMEOUT_MS, currentTime)
+        assertEquals(120_000L, currentTime)
         assertTrue("Timeout must reach the UI error handler, not be treated as caller cancellation: $failure", failure is IllegalStateException && failure !is CancellationException)
-        assertTrue(failure?.message.orEmpty().contains("20"))
+        assertTrue(failure?.message.orEmpty().contains("120"))
         noRequestsLeft()
     }
 
@@ -78,10 +80,58 @@ class CurrentPositionTest {
         deliver(fix(LocationManager.NETWORK_PROVIDER, 80f))
         deliver(fix(LocationManager.NETWORK_PROVIDER, 120f, lat = 40.5))
         runCurrent()
-        assertNull("An inaccurate fix waits for a better GPS fix", result)
-        advanceUntilIdle()
+        assertNotNull("A map pin must not wait for survey-grade accuracy", result)
+        assertEquals(0L, currentTime)
         assertEquals(80.0, result!!.accuracyMeters, 0.01)
         assertEquals(40.41, result!!.point.latitude, 1e-9)
+        noRequestsLeft()
+    }
+
+    @Config(sdk = [31, 35])
+    @Test fun systemFusedProviderWorksWithoutGpsOrNetworkProviders() = runTest {
+        Dispatchers.setMain(StandardTestDispatcher(testScheduler))
+        precise(gps = false, network = false)
+        shadowOf(manager).setProviderEnabled(LocationManager.FUSED_PROVIDER, true)
+        val request = async { runCatching { WalkTracking.currentPosition(app) } }
+        runCurrent()
+        deliver(fix(LocationManager.FUSED_PROVIDER, 18f))
+        runCurrent()
+        assertEquals(18.0, request.await().getOrThrow().accuracyMeters, 0.01)
+        noRequestsLeft()
+    }
+
+    @Test fun firstSatelliteFixAfterTwentySecondsIsNotCancelled() = runTest {
+        Dispatchers.setMain(StandardTestDispatcher(testScheduler))
+        precise()
+        val request = async { runCatching { WalkTracking.currentPosition(app) } }
+        runCurrent()
+        advanceTimeBy(45_000)
+        deliver(fix(LocationManager.GPS_PROVIDER, 12f))
+        runCurrent()
+        assertEquals(12.0, request.await().getOrThrow().accuracyMeters, 0.01)
+        noRequestsLeft()
+    }
+
+    @Test fun recentSystemFixIsNotRejectedBecauseDeliveryWasDelayed() = runTest {
+        Dispatchers.setMain(StandardTestDispatcher(testScheduler))
+        precise()
+        val request = async { runCatching { WalkTracking.currentPosition(app) } }
+        runCurrent()
+        deliver(fix(LocationManager.GPS_PROVIDER, 20f, ageMs = 60_000))
+        runCurrent()
+        assertEquals(20.0, request.await().getOrThrow().accuracyMeters, 0.01)
+        noRequestsLeft()
+    }
+
+    @Test fun recentApproximateCacheReturnsImmediatelyWithOriginalTime() = runTest {
+        Dispatchers.setMain(StandardTestDispatcher(testScheduler))
+        precise()
+        val cached = fix(LocationManager.GPS_PROVIDER, 200f, ageMs = 30_000).apply { time -= 30_000 }
+        shadowOf(manager).setLastKnownLocation(LocationManager.GPS_PROVIDER, cached)
+        val result = WalkTracking.currentPosition(app)
+        assertEquals(0L, currentTime)
+        assertEquals(cached.time, result.timeMillis)
+        assertEquals(200.0, result.accuracyMeters, 0.01)
         noRequestsLeft()
     }
 
@@ -145,11 +195,13 @@ class CurrentPositionTest {
         Dispatchers.setMain(StandardTestDispatcher(testScheduler))
         precise(gps = true, network = true)
         var failure: Throwable? = null
+        val progress = mutableListOf<LocationSearchProgress>()
         val request = launch {
-            try { WalkTracking.currentPosition(app) }
+            try { WalkTracking.currentPosition(app) { progress += it } }
             catch (error: Throwable) { failure = error; throw error }
         }
         runCurrent()
+        assertTrue("A waiting search must publish its progress", progress.isNotEmpty())
         request.cancel()
         request.join()
         assertTrue(failure is CancellationException)

@@ -8,6 +8,7 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.grid.*
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
+import androidx.compose.foundation.text.selection.SelectionContainer
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.outlined.ArrowBack
 import androidx.compose.material.icons.outlined.*
@@ -17,6 +18,7 @@ import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.testTag
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.viewmodel.compose.viewModel
@@ -35,9 +37,12 @@ import java.time.Instant
 import java.time.ZoneId
 import java.time.format.DateTimeFormatter
 import java.util.UUID
+import kotlin.math.roundToInt
 
 @OptIn(ExperimentalMaterial3Api::class,ExperimentalLayoutApi::class)
 @Composable fun ExploreHomeScreen(vm:ExploreViewModel=viewModel()) {
+    val context=LocalContext.current
+    DisposableEffect(vm){onDispose{vm.cancelLocate()}}
     val state by vm.snapshot.collectAsStateWithLifecycle()
     val busy by vm.busy.collectAsStateWithLifecycle()
     val error by vm.error.collectAsStateWithLifecycle()
@@ -88,6 +93,7 @@ import java.util.UUID
     else Column(Modifier.fillMaxSize()) {
         ScrollableTabRow(page,edgePadding=12.dp){listOf(tr("Каталог","Catalog"),tr("Карта","Map"),tr("Прогулки","Walks")).forEachIndexed{i,title->Tab(page==i,{page=i},text={Text(title)},modifier=Modifier.testTag("exploreTab$i"))}}
         if(busy)LinearProgressIndicator(Modifier.fillMaxWidth())
+        LocationSearchFeedback(vm)
         when(page){
             0->{
                 Column(Modifier.padding(horizontal=16.dp),verticalArrangement=Arrangement.spacedBy(8.dp)) {
@@ -115,6 +121,8 @@ import java.util.UUID
                     LocationActionButton(tr("Моё место","My location"),!busy,precise=false,modifier=Modifier.weight(1f),onDenied={vm.error.value=it}){vm.locate{manualPosition=it;focus(it.point)}}
                     OutlinedButton(onClick={placeId=null;pinLat=null;pinLon=null;placeEdit=true},enabled=!busy,modifier=Modifier.weight(1f).heightIn(min=48.dp).testTag("placeAdd")){Text(tr("Добавить место","Add place"))}
                 }
+                (recording.latestPoint?:manualPosition)?.let{p->Text(DateTimeFormatter.ofPattern("HH:mm:ss").withZone(ZoneId.systemDefault()).format(Instant.ofEpochMilli(p.timeMillis))+" · "+tr("Точность ±${p.accuracyMeters.roundToInt()} м","Accuracy ±${p.accuracyMeters.roundToInt()} m")+
+                    if(p.accuracyMeters>35)tr(" — проверьте точку на карте"," — check the point on the map")else"",style=MaterialTheme.typography.bodySmall,modifier=Modifier.padding(horizontal=12.dp).testTag("locationAccuracy"))}
                 Text(tr("Долгое нажатие — новая отметка. Подсветка показывает только записанные прогулки.","Long press to add a pin. Shading shows recorded walks only."),style=MaterialTheme.typography.bodySmall,modifier=Modifier.padding(horizontal=12.dp,vertical=4.dp))
                 OfflineExploreMap(vm.repository,state,recording.latestPoint?:manualPosition,focusLat?.let{lat->focusLon?.let{GeoPoint(lat,it)}},selectedWalk,
                     {placeId=it.id},{pinLat=it.latitude;pinLon=it.longitude;placeId=null;placeEdit=true},Modifier.fillMaxWidth().weight(1f).testTag("offlineExploreMap"))
@@ -170,7 +178,7 @@ import java.util.UUID
     }
     qrAdded?.let{n->AlertDialog(onDismissRequest={qrAdded=null},title={Text(tr("Готово","Done"))},text={Text(tr("Добавлено находок: $n","Findings added: $n"))},confirmButton={TextButton(onClick={qrAdded=null}){Text(tr("Понятно","OK"))}})}
     if(confirmDelete)AlertDialog(onDismissRequest={confirmDelete=false},title={Text(tr("Удалить?","Delete?"))},text={Text(if(place!=null)tr("Место исчезнет из карточек. Сами находки останутся.","The location will be removed from cards. Findings will remain.")else tr("Это действие нельзя отменить.","This cannot be undone."))},confirmButton={TextButton(onClick={confirmDelete=false;when{finding!=null->vm.deleteFinding(finding){findingId=null};place!=null->vm.deletePlace(place){placeId=null};else->state.walks.find{it.id==selectedWalk}?.let{vm.deleteWalk(it);selectedWalk=null}}},enabled=!busy){Text(tr("Удалить","Delete"))}},dismissButton={TextButton(onClick={confirmDelete=false}){Text(tr("Отмена","Cancel"))}})
-    if(error!=null)AlertDialog(onDismissRequest={vm.error.value=null},title={Text(tr("Не удалось выполнить действие","Could not complete the action"))},text={Text(error!!)},confirmButton={TextButton(onClick={vm.error.value=null}){Text(tr("Понятно","OK"))}})
+    if(error!=null)AlertDialog(onDismissRequest={vm.error.value=null},title={Text(tr("Не удалось выполнить действие","Could not complete the action"))},text={SelectionContainer{Text(error!!)}},confirmButton={TextButton(onClick={vm.error.value=null}){Text(tr("Понятно","OK"))}},dismissButton={TextButton(onClick={context.getSystemService(android.content.ClipboardManager::class.java).setPrimaryClip(android.content.ClipData.newPlainText("HealthChecker",error!!))}){Text(tr("Копировать","Copy"))}})
 }
 
 @Composable private fun FindingDetail(vm:ExploreViewModel,f:Finding,state:ExploreSnapshot,back:()->Unit,edit:()->Unit,delete:()->Unit,place:(SavedPlace)->Unit) {

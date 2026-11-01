@@ -8,6 +8,7 @@ import az.healthchecker.data.ExploreRepository
 import az.healthchecker.data.HealthRepository
 import az.healthchecker.domain.*
 import az.healthchecker.explore.WalkTracking
+import az.healthchecker.explore.LocationSearchProgress
 import kotlinx.coroutines.*
 import kotlinx.coroutines.flow.MutableStateFlow
 import java.util.Base64
@@ -20,6 +21,8 @@ class ExploreViewModel(app:Application):AndroidViewModel(app) {
     val busy=MutableStateFlow(false)
     val error=MutableStateFlow<String?>(null)
     val recording=WalkTracking.state
+    val locating=MutableStateFlow<LocationSearchProgress?>(null)
+    @Volatile private var locateJob:Job?=null
     init {
         viewModelScope.launch(Dispatchers.IO){
             try {WalkTracking.reconcile(context);repository.snapshots.collect{snapshot.value=it}}
@@ -49,7 +52,24 @@ class ExploreViewModel(app:Application):AndroidViewModel(app) {
     fun pauseWalk()=action{WalkTracking.pause(context);snapshot.value=repository.exportSnapshot()}
     fun finishWalk()=action{WalkTracking.finish(context);snapshot.value=repository.exportSnapshot()}
     fun deleteWalk(w:Walk)=action{repository.deleteWalk(w.id);snapshot.value=repository.exportSnapshot()}
-    fun locate(done:(TrackPoint)->Unit)=action{val p=WalkTracking.currentPosition(context);withContext(Dispatchers.Main){done(p)}}
+    fun locate(done:(TrackPoint)->Unit) {
+        if(busy.value)return
+        busy.value=true;error.value=null
+        val job=viewModelScope.launch(Dispatchers.IO,start=CoroutineStart.LAZY) {
+            try {
+                val point=WalkTracking.currentPosition(context){locating.value=it}
+                withContext(Dispatchers.Main){done(point)}
+            } catch(e:CancellationException){throw e}
+            catch(e:Exception){error.value=e.message?:tr("Не удалось определить место","Could not find your location")}
+        }
+        locateJob=job
+        // Install cleanup before dispatch: cancellation can happen before the worker enters its body.
+        job.invokeOnCompletion {
+            if(locateJob===job){locating.value=null;locateJob=null;busy.value=false}
+        }
+        job.start()
+    }
+    fun cancelLocate(){locateJob?.cancel()}
     /** Findings from a scanned QR list; names already saved (case-insensitive) are skipped. */
     fun addFindings(names:List<String>,done:(Int)->Unit)=action {
         val existing=repository.exportSnapshot().findings.map{it.name.trim().lowercase()}.toSet()

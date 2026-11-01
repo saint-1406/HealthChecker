@@ -119,6 +119,7 @@ fun PlaceKind.title()=when(this){PlaceKind.SHOP->tr("Магазин","Shop");Pla
 
 @OptIn(ExperimentalLayoutApi::class)
 @Composable fun PlaceEditor(vm:ExploreViewModel,initial:SavedPlace?,point:GeoPoint?,close:()->Unit,saved:(SavedPlace)->Unit) {
+    DisposableEffect(vm){onDispose{vm.cancelLocate()}}
     val id=rememberSaveable(initial?.id){initial?.id?:UUID.randomUUID().toString()}
     var name by rememberSaveable(id){mutableStateOf(initial?.name.orEmpty())}
     var lat by rememberSaveable(id){mutableStateOf((initial?.point?:point)?.latitude?.let(::plain).orEmpty())}
@@ -136,6 +137,7 @@ fun PlaceKind.title()=when(this){PlaceKind.SHOP->tr("Магазин","Shop");Pla
                 FlowRow(horizontalArrangement=Arrangement.spacedBy(8.dp)){PlaceKind.entries.forEach{k->FilterChip(kind==k.name,{kind=k.name},label={Text(k.title())},modifier=Modifier.heightIn(min=48.dp))}}
                 Text(tr("Точку можно выбрать долгим нажатием на карту или по GPS.","Choose a point by long pressing the map or using GPS."),style=MaterialTheme.typography.bodySmall)
                 LocationActionButton(tr("Использовать моё место","Use my location"),!busy,precise=false,modifier=Modifier.fillMaxWidth(),onDenied={error=it}){vm.locate{lat=plain(it.point.latitude);lon=plain(it.point.longitude);accuracy=it.accuracyMeters}}
+                LocationSearchFeedback(vm)
                 accuracy?.let{a->Text(tr("Точность ±${a.roundToInt()} м","Accuracy ±${a.roundToInt()} m")+if(a>35)tr(" — проверьте точку на карте"," — check the point on the map")else"",style=MaterialTheme.typography.bodySmall)}
                 OutlinedTextField(lat,{lat=it.take(32)},label={Text(tr("Широта","Latitude"))},singleLine=true,keyboardOptions=KeyboardOptions(keyboardType=KeyboardType.Decimal),modifier=Modifier.fillMaxWidth().testTag("placeLat"))
                 OutlinedTextField(lon,{lon=it.take(32)},label={Text(tr("Долгота","Longitude"))},singleLine=true,keyboardOptions=KeyboardOptions(keyboardType=KeyboardType.Decimal),modifier=Modifier.fillMaxWidth().testTag("placeLon"))

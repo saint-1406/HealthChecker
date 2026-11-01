@@ -9,6 +9,7 @@ import android.location.Location
 import android.location.LocationListener
 import android.location.LocationManager
 import android.os.Build
+import android.os.Bundle
 import android.os.Looper
 import android.os.SystemClock
 import az.healthchecker.MainActivity
@@ -39,6 +40,8 @@ class WalkTrackingService : Service() {
     private val listener = object : LocationListener {
         override fun onLocationChanged(location: Location) { commands.trySend(Command(fix = location)) }
         override fun onProviderDisabled(provider: String) { commands.trySend(Command(action = LOST)) }
+        override fun onProviderEnabled(provider: String) {}
+        @Deprecated("Required on API < 29") override fun onStatusChanged(provider: String?, status: Int, extras: Bundle?) {}
     }
     private data class Command(val action: String = "", val request: Long = 0, val walkId: String? = null, val fix: Location? = null)
 
