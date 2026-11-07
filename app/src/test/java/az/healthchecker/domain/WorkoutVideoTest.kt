@@ -47,6 +47,36 @@ class WorkoutVideoTest {
         val jog=videoWorkout(UUID.randomUUID().toString(),ex("jog",ExerciseMeasure.MINUTES),VideoWork("jog",2,80),"2026-10-28",now,zone,70.0)
         assertEquals(listOf(null,null,null),listOf(jog.sets,jog.reps,jog.seconds));assertEquals(80/60.0,jog.minutes,1e-9);assertEquals("2026-10-28",jog.localDate)
     }
+    @Test fun unchangedLogItemsLogWhatTheVideoHolds() {
+        val squat=ex("squat",ExerciseMeasure.REPS,3.0)
+        val item=videoLogItem(squat,VideoWork("squat",2,80))
+        assertEquals(listOf(2,13,80,true),listOf(item.sets,item.amount,item.workSeconds,item.done))
+        val a=item.toWorkout("a",squat,"2026-10-28",now,zone,80.0);val b=videoWorkout("b",squat,VideoWork("squat",2,80),"2026-10-28",now,zone,80.0)
+        assertEquals(a.copy(id="b"),b)
+        val jog=videoLogItem(ex("jog",ExerciseMeasure.MINUTES),VideoWork("jog",2,80))
+        assertFalse(jog.hasSets);assertEquals(80,jog.amount);assertEquals(80,jog.workSeconds)
+    }
+    @Test fun editedAmountsChangeTheTimeAndStayInTheDiaryLimits() {
+        val squat=ex("squat",ExerciseMeasure.REPS,3.0)
+        val item=videoLogItem(squat,VideoWork("squat",2,80))
+        // One more set of the same reps: half as much work again.
+        val more=item.withSets(3);assertEquals(120,more.workSeconds)
+        val entry=more.withAmount(20).toWorkout("x",squat,"2026-10-28",now,zone,80.0)
+        assertEquals(listOf(3,20,null),listOf(entry.sets,entry.reps,entry.seconds));assertEquals(80*3*20/(2*13)/60.0,entry.minutes,1e-9)
+        assertEquals(listOf(1,50),listOf(item.withSets(0).sets,item.withSets(99).sets))
+        assertEquals(listOf(1,1000),listOf(item.withAmount(-5).amount,item.withAmount(5000).amount))
+        val jacks=videoLogItem(ex("jacks",ExerciseMeasure.SECONDS),VideoWork("jacks",2,70)).withAmount(50)
+        jacks.toWorkout("y",ex("jacks",ExerciseMeasure.SECONDS),"2026-10-28",now,zone,null).let{assertEquals(listOf(2,null,50),listOf(it.sets,it.reps,it.seconds));assertEquals(100/60.0,it.minutes,1e-9)}
+        val jog=videoLogItem(ex("jog",ExerciseMeasure.MINUTES),VideoWork("jog",1,60))
+        assertSame(jog,jog.withSets(5));assertEquals(MAX_VIDEO_LOG_SECONDS,jog.withAmount(100000).workSeconds)
+    }
+    @Test fun totalsCountOnlyCheckedItems() {
+        val items=listOf(videoLogItem(ex("squat",ExerciseMeasure.REPS,3.0),VideoWork("squat",2,80)),videoLogItem(ex("jacks",ExerciseMeasure.SECONDS),VideoWork("jacks",1,30)).copy(done=false))
+        val met={_:String->4.0}
+        videoLogTotals(items,met,70.0).let{assertEquals(listOf(1,80),listOf(it.count,it.seconds));assertEquals(4.0*70*80/3600,it.kcal!!,1e-9)}
+        assertNull(videoLogTotals(items,met,null).kcal)
+        assertEquals(0,videoLogTotals(items.map{it.copy(done=false)},met,70.0).count)
+    }
     @Test fun ownVideoNeedsANameAndAYouTubeLinkIfAny() {
         val v=makeOwnVideo("video:1"," Утренняя ","https://youtu.be/ml6cT4AZdqI",now)
         assertEquals(listOf("Утренняя","ml6cT4AZdqI","2026-10-28T08:00:00Z"),listOf(v.title,v.youtubeId,v.addedAt));assertTrue(v.own);validateVideo(v)

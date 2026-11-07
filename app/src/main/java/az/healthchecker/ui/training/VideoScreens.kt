@@ -183,6 +183,7 @@ private enum class Source { CLOCK, FILE, YOUTUBE }
     var full by rememberSaveable{mutableStateOf(false)}
     var logging by rememberSaveable{mutableStateOf(false)}
     var editing by rememberSaveable{mutableStateOf(false)}
+    var review by rememberSaveable(stateSaver=VideoLogSaver){mutableStateOf<List<VideoLogItem>?>(null)}
     var position by remember(id){mutableIntStateOf(vm.videoPositions.value[id]?:0)}
     val control=remember(id){PlayerControl()}
     val clock by vm.videoClock.collectAsStateWithLifecycle()
@@ -230,8 +231,13 @@ private enum class Source { CLOCK, FILE, YOUTUBE }
     if(editing)EditVideoDialog(vm,video,vm.videoEdited(id),{editing=false}){editing=false;if(chosen==Source.YOUTUBE)chosen=Source.CLOCK}
     if(logging)LogVideoDialog(vm,video,position,snapshot.bodyWeight(date),{logging=false}){upTo,minutes,vigorous->
         logging=false
-        if(video.segments.isEmpty())vm.logVideoAsWorkout(minutes!!,vigorous,date) else vm.logVideo(video,upTo,date)
+        if(video.segments.isEmpty())vm.logVideoAsWorkout(minutes!!,vigorous,date)
+        else review=vm.videoLogItems(video,upTo).ifEmpty{vm.error.value=tr("В этом отрезке видео ещё нет упражнений","This part of the video has no exercises yet");null}
     }
+    // The exercises are checked and adjusted before they go to the diary; cancel leaves it as it was.
+    review?.let{items->VideoLogEditor(items,{review=it},{vm.exercise(it)?.displayName?:it},{vm.exercise(it)?.met},snapshot.bodyWeight(date),{ExerciseThumb(vm,it,40.dp)},{review=null}){
+        review=null;vm.logVideo(it,date)
+    }}
 }
 
 /** Opens the video in the YouTube app (or a browser) at [second]; false when the phone has nothing to open it with. */
@@ -357,7 +363,7 @@ private fun openYoutube(context:Context,youtubeId:String,second:Int):Boolean =
                 FilterChip(selected=vigorous,onClick={vigorous=true},label={Text(tr("Интенсивно","Vigorous"))})
             }
         }
-    }},confirmButton={TextButton(onClick={confirm(if(upToNow)position else null,typed,vigorous)},enabled=video.segments.isNotEmpty()||typed!=null,modifier=Modifier.testTag("confirmLogVideo")){Text(tr("Записать","Log"))}},
+    }},confirmButton={TextButton(onClick={confirm(if(upToNow)position else null,typed,vigorous)},enabled=video.segments.isNotEmpty()||typed!=null,modifier=Modifier.testTag("confirmLogVideo")){Text(if(video.segments.isNotEmpty())tr("Далее","Next") else tr("Записать","Log"))}},
         dismissButton={TextButton(onClick=close){Text(tr("Отмена","Cancel"))}})
 }
 
