@@ -55,6 +55,7 @@ class DishAndTrainingFlowTest {
     @Test fun inventoryDishCanBeEatenAndDeletedWithoutLosingDiary() {
         launch();waitText("Начать без расчёта");app.onNodeWithText("Начать без расчёта").performClick();waitText("Обзор")
         app.onNodeWithText("Профиль").performClick()
+        app.onNodeWithTag("open-inventory").performScrollTo().performClick()
         app.onNodeWithTag("newDishCell").performScrollTo().performClick()
         app.onNodeWithTag("dishName").performTextInput("Суп")
         ingredient("куриное филе","Куриное филе без кожи, сырое"){app.onNodeWithTag("quantity").performTextReplacement("300")}

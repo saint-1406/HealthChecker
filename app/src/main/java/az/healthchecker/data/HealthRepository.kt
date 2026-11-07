@@ -51,7 +51,8 @@ class HealthRepository(context: Context, name: String = "healthchecker.db") {
         steps=records("steps").map{json.decodeFromString<StepDay>(it.payload)},
         weights=records("weight").map{json.decodeFromString<WeightEntry>(it.payload)},
         videos=records("video").map{json.decodeFromString<WorkoutVideo>(it.payload)}.sortedBy{it.addedAt},
-        favoriteFoods=records("favorite").map{it.payload}.toSet(),savedMeals=records("meal").map{json.decodeFromString<SavedMeal>(it.payload)})
+        favoriteFoods=records("favorite").map{it.payload}.toSet(),savedMeals=records("meal").map{json.decodeFromString<SavedMeal>(it.payload)},
+        setup=records("setup").firstOrNull()?.let{json.decodeFromString<ProgramSetup>(it.payload)})
     }
     private suspend fun changed() { val r=dao.revision()?:Revision();dao.putRevision(r.copy(current=r.current+1)) }
     suspend fun exportSnapshot():UserSnapshot = db.withTransaction{recoverImages();decode(dao.all())}
@@ -154,6 +155,23 @@ class HealthRepository(context: Context, name: String = "healthchecker.db") {
         if(updated>0)changed()
         updated
     }
+    /**
+     * The user confirmed the plan: answers, body parameters, today's goals and training settings change together.
+     * The starting weight is kept, and goals the plan does not set (calories under 18) keep their current values.
+     */
+    suspend fun applySetup(setup:ProgramSetup,goals:DailyGoals) {
+        validateSnapshot(UserSnapshot(goals=listOf(goals),setup=setup))
+        db.withTransaction {
+            val old=dao.get("profile")?.let{json.decodeFromString<Profile>(it.payload)}
+            val profile=setup.toProfile(old);validateSnapshot(UserSnapshot(profile=profile))
+            dao.put(StoredRecord("profile","profile",json.encodeToString(profile)))
+            dao.put(StoredRecord("goal:${goals.effectiveFrom}","goal",json.encodeToString(goals)))
+            dao.put(StoredRecord("trainprefs","trainprefs",json.encodeToString(setup.toTrainingPrefs())))
+            dao.put(StoredRecord("setup","setup",json.encodeToString(setup)))
+            dao.put(StoredRecord("onboarded","onboarded","true"))
+            changed()
+        }
+    }
     suspend fun finishOnboarding(){db.withTransaction{dao.put(StoredRecord("onboarded","onboarded","true"));changed()}}
     suspend fun replaceSnapshot(snapshot:UserSnapshot,media:Map<String,java.io.File> = emptyMap()) = explore.lock.withLock {
         az.healthchecker.backup.ArchiveBackupCodec.validateMedia(snapshot,media)
@@ -180,6 +198,7 @@ class HealthRepository(context: Context, name: String = "healthchecker.db") {
             snapshot.videos.forEach{dao.put(StoredRecord("video:${it.id}","video",json.encodeToString(it)))}
             snapshot.favoriteFoods.forEach{dao.put(StoredRecord("favorite:$it","favorite",it))}
             snapshot.savedMeals.forEach{dao.put(StoredRecord("meal:${it.id}","meal",json.encodeToString(it)))}
+            snapshot.setup?.let{dao.put(StoredRecord("setup","setup",json.encodeToString(it)))}
             explore.replace(snapshot.explore?:ExploreSnapshot())
             explore.replacement.activate()
             dao.put(StoredRecord("explore-generation","internal",exploreGeneration))

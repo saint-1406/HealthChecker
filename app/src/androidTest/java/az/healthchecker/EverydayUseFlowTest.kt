@@ -58,7 +58,9 @@ class EverydayUseFlowTest {
     }
     @Test fun overviewCardsCanBeHiddenWithoutHidingFoodLogging() {
         begin();app.onNodeWithText("Профиль").performClick()
+        app.onNodeWithTag("open-profile-home").performScrollTo().performClick()
         listOf("showWeight","showSteps","showTraining").forEach{tag->app.onNodeWithTag(tag).performScrollTo().performClick();app.waitUntil(30000){runCatching{app.onNodeWithTag(tag).assertIsOff();true}.getOrDefault(false)}}
+        app.onNodeWithTag("back").performClick()
         app.onNodeWithText("Обзор").performClick()
         app.onNodeWithTag("weightCard").assertDoesNotExist();app.onNodeWithTag("stepsCard").assertDoesNotExist();app.onNodeWithTag("trainingCard").assertDoesNotExist()
         app.onNodeWithTag("logFoodButton").performScrollTo().assertIsDisplayed()

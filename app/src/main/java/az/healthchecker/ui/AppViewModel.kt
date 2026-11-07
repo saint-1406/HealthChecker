@@ -357,6 +357,15 @@ class AppViewModel(application:Application):AndroidViewModel(application) {
     }
     fun saveProfile(profile:Profile?,goals:DailyGoals,done:()->kotlin.Unit)=action(done) { profile?.let{repository.saveProfile(it)};repository.saveGoals(goals);repository.finishOnboarding() }
     fun skipOnboarding()=action { repository.finishOnboarding() }
+    /** Profile → body: only the body parameters change; goals stay as they are. */
+    fun saveBody(profile:Profile,done:()->kotlin.Unit)=action(done) { repository.saveProfile(profile) }
+    /** Profile → nutrition targets: only today's goals change. */
+    fun saveGoals(goals:DailyGoals,done:()->kotlin.Unit)=action(done) { repository.saveGoals(goals) }
+    /** The confirmed plan becomes today's targets; values the plan leaves open keep the current goal. */
+    fun applySetup(plan:ProgramPlan,done:()->kotlin.Unit)=action(done) {
+        val today=LocalDate.now().toString();val current=snapshot.value.day(today).goals;val n=plan.nutrition
+        repository.applySetup(plan.setup.copy(appliedOn=today),DailyGoals(today,n.kcal?:current?.kcal,n.protein?:current?.protein,n.waterMl,manual=false,fat=n.fat?:current?.fat,carbs=n.carbs?:current?.carbs))
+    }
     fun customFood(food:Food,done:()->kotlin.Unit)=action(done){repository.saveFood(food)}
     fun saveBarcodeFood(food:Food,done:()->kotlin.Unit)=action(done){
         repository.saveFood(food)

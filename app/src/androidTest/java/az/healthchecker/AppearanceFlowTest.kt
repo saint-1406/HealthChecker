@@ -28,6 +28,7 @@ class AppearanceFlowTest {
     @Test fun paletteHolidayThemeDecorationsAndResetAreChosenInAppearance() {
         skipOnboarding()
         app.onNodeWithText("Профиль").performClick()
+        app.onNodeWithTag("open-profile-look").performScrollTo().performClick()
         app.onNodeWithTag("openAppearance").performScrollTo().performClick()
         // On a holiday its theme is on by itself; otherwise the original mint look.
         val holiday=when(seasonOn(LocalDate.now())){Season.HALLOWEEN->"Хэллоуин";Season.NEW_YEAR->"Новый год";null->null}
