@@ -33,6 +33,9 @@ import az.healthchecker.ui.explore.ExploreHomeScreen
 import java.time.LocalDate
 import java.util.UUID
 import kotlinx.coroutines.delay
+import az.healthchecker.update.UpdateViewModel
+import az.healthchecker.ui.update.UpdateBanner
+import az.healthchecker.ui.update.UpdateEffects
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable fun HealthApp(vm:AppViewModel=viewModel()) {
@@ -45,6 +48,8 @@ import kotlinx.coroutines.delay
     val notice by vm.notice.collectAsStateWithLifecycle()
     val restore by vm.restorePreview.collectAsStateWithLifecycle()
     val backupError by vm.backupError.collectAsStateWithLifecycle()
+    val updates:UpdateViewModel=viewModel()
+    var showUpdates by rememberSaveable{mutableStateOf(false)}
     var tab by rememberSaveable{mutableIntStateOf(0)}
     var route by rememberSaveable{mutableStateOf("main")}
     var date by rememberSaveable{mutableStateOf(LocalDate.now().toString())}
@@ -88,6 +93,7 @@ import kotlinx.coroutines.delay
     fun editMedication(m:Medication?){medicationId=m?.id?:"";route="medication"}
     fun editIngredient(index:Int){ingredientIndex=index;ingredientFood=vm.dish.value?.ingredients?.getOrNull(index)?.foodId?:"";route="dish-ingredient"}
     BackHandler(route!="main"){route=when(route){"search"->foodSearchBack;"barcode"->barcodeBack;"custom"->"search";"dish"->if(dishFromInventory)"main" else "search";"dish-search","dish-ingredient"->"dish";"workout","exercise-search"->returnTo;"editor"->entryBack;"meal-item"->"meal";"video"->"videos";else->"main"}}
+    UpdateEffects(updates,ready&&snapshot.onboarded)
     LaunchedEffect(notice){if(notice!=null){delay(8000);vm.dismissNotice()}}
     val today=remember(lastToday){LocalDate.now()}
     val appearance=settings.appearance
@@ -114,6 +120,7 @@ import kotlinx.coroutines.delay
             }}
         ){padding->
             Column(Modifier.fillMaxSize().padding(padding)) {
+              if(ready&&snapshot.onboarded&&route=="main"&&tab!=3)UpdateBanner(updates){tab=3;showUpdates=true}
               Box(Modifier.fillMaxWidth().weight(1f)) {
                 if(!ready)Column(Modifier.align(Alignment.Center),horizontalAlignment=Alignment.CenterHorizontally){CircularProgressIndicator();Spacer(Modifier.height(16.dp));Text(tr("Открываем ваш дневник…","Opening your diary…"))}
                 else if(!snapshot.onboarded)ProfileScreen(vm,true,{folderPicker.launch(null)},{restorePicker.launch(arrayOf("application/zip","application/octet-stream","application/json","text/plain"))})
@@ -165,7 +172,7 @@ import kotlinx.coroutines.delay
                             openPhoto={photoName=it.fileName;route="photo"},selectFood={add(it.id)},openMeals={route="meals"},openDraft={route="meal"},openProfile={tab=3},chooseFolder={folderPicker.launch(null)})
                         2 -> TrainingScreen(vm,snapshot,date,rememberTodayPlan(vm,snapshot,date,variant),{leaveFor("exercise-search")},{route="workout-now"},::editWorkout,{tab=3}){route="videos"}
                         4 -> ExploreHomeScreen()
-                        else -> ProfileScreen(vm,false,{folderPicker.launch(null)},{restorePicker.launch(arrayOf("application/zip","application/octet-stream","application/json","text/plain"))},date,{openDish(null,true)},{openDish(it,true)}){route="appearance"}
+                        else -> ProfileScreen(vm,false,{folderPicker.launch(null)},{restorePicker.launch(arrayOf("application/zip","application/octet-stream","application/json","text/plain"))},date,{openDish(null,true)},{openDish(it,true)},{route="appearance"},showUpdates){showUpdates=false}
                     }
                 }
                 if(busy)LinearProgressIndicator(Modifier.fillMaxWidth().align(Alignment.TopCenter))

@@ -1,0 +1,5 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- The downloaded, checked update waits here until Android's installer has read it (UpdateFileProvider). -->
+<paths>
+    <cache-path name="updates" path="updates/"/>
+</paths>

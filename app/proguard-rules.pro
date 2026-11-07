@@ -15,6 +15,7 @@
 
 # viewModel() in HealthApp creates AppViewModel through its (Application) constructor via reflection.
 -keepclassmembers class az.healthchecker.ui.AppViewModel { <init>(android.app.Application); }
+-keepclassmembers class az.healthchecker.update.UpdateViewModel { <init>(android.app.Application); }
 
 # Backup, Room payloads and the bundled catalog are JSON of the domain models: keep their serializer entry points.
 # <1> is only the part matched by **, hence the az.healthchecker. prefix in the back-references.

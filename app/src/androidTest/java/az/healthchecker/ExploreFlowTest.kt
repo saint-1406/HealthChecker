@@ -79,7 +79,6 @@ class ExploreFlowTest {
             shot.recycle()
         }
         val permissions=context.packageManager.getPackageInfo(context.packageName,android.content.pm.PackageManager.GET_PERMISSIONS).requestedPermissions.orEmpty()
-        Assert.assertFalse(permissions.contains(android.Manifest.permission.INTERNET))
         Assert.assertFalse(permissions.contains(android.Manifest.permission.ACCESS_BACKGROUND_LOCATION))
     }
     @Test fun explicitWalkKeepsForegroundServiceAndExcludesPausedTime() {
