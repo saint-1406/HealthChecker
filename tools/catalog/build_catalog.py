@@ -6,6 +6,7 @@ extra-foods.json adds estimated dishes whose derivation is recorded in the item 
 """
 import json, math, hashlib, re
 from pathlib import Path
+from curation import hidden_ids, fresh_name, clean_name
 
 HERE=Path(__file__).parent
 
@@ -20,11 +21,18 @@ def fiber_or_zero(fiber, carbs):
     return 0.0 if fiber is None and carbs==0 else fiber
 
 def normalize_record(record, source):
-    if source=='usda':
+    if source=='fndds':
+        # FNDDS (USDA Survey Foods, foods "as eaten"): portions are already household measures with gram weights.
+        nutrients={str(n.get('nutrient',{}).get('id')):n.get('amount') for n in record.get('foodNutrients',[])}
+        values=[number(nutrients.get('1008'))]+[number(nutrients.get(k),100) for k in ('1003','1004','1005','1079')]
+        name=record.get('description','').strip();ident=str(record.get('fdcId',''));category=record.get('foodCategory','')
+        portions=[{'name':p['name'],'grams':p['grams']} for p in record.get('portions',[])];aliases=[]
+    elif source=='usda':
         nutrients={str(n.get('nutrient',{}).get('id')):n.get('amount') for n in record.get('foodNutrients',[])}
         kcal=number(nutrients.get('1008'))
         values=[kcal]+[number(nutrients.get(k),100) for k in ('1003','1004','1005','1079')]
         name=record.get('description','').strip(); ident=str(record.get('fdcId',''))
+        category=record.get('foodCategory','')
         portions=[]
         for p in record.get('foodPortions',[]):
             mass=number(p.get('gramWeight'),100000)
@@ -41,12 +49,12 @@ def normalize_record(record, source):
         values=[kcal]+[number(n.get(k+'_100g'),100) for k in ('proteins','fat','carbohydrates','fiber')]
         name=(record.get('product_name_ru') or record.get('product_name') or '').strip()
         if record.get('brands'):name+=' · '+record['brands']
-        ident=str(record.get('code',''));portions=[];aliases=[]
+        ident=str(record.get('code',''));portions=[];aliases=[];category=''
         # OFF values may be per 100 ml: without an explicit mass basis do not pretend they are per 100 g.
         if record.get('nutrition_data_per') not in (None,'100g'):return None
     if not name or not ident or values[0] is None:return None
     values[4]=fiber_or_zero(values[4],values[3])
-    return {'id':source+':'+ident,'name':name,'aliases':aliases,'per100g':dict(zip(('kcal','protein','fat','carbs','fiber'),values)), 'portions':portions,'density':None,'source':('USDA FoodData Central · '+ident if source=='usda' else 'Open Food Facts · '+ident),'isWater':False}
+    return {'id':source+':'+ident,'name':name,'aliases':aliases,'per100g':dict(zip(('kcal','protein','fat','carbs','fiber'),values)), 'portions':portions,'density':None,'source':{'usda':'USDA FoodData Central · '+ident,'fndds':'USDA FNDDS 2021–2023 · '+ident}.get(source,'Open Food Facts · '+ident),'isWater':False,'_category':category}
 
 def extra_food(item, foods):
     """Estimated dish: kcal, protein and fat for a known weight; carbohydrate and fibre are derived as the item says."""
@@ -54,6 +62,9 @@ def extra_food(item, foods):
           'density':item.get('density'),'source':item['source'],'sourceEn':item.get('sourceEn'),'isWater':False,'common':True}
     if 'base' in item:
         food['per100g']=dict(foods[item['base']]['per100g']);return food
+    if 'per100g' in item:
+        # Label medians (stores/typical.py) or store products with their Open Food Facts label values.
+        food['per100g']=dict(item['per100g']);food['common']=item.get('common',True);return food
     b=item['basis']
     def usda(ident,key):
         value=foods[ident]['per100g'][key]
@@ -93,20 +104,20 @@ def build_catalog(inputs, output, translations=HERE/'i18n'):
     foods={}; rejected=0; hashes={}
     for p in inputs:
         p=Path(p);data=json.loads(p.read_text(encoding='utf-8'));hashes[p.name]=hashlib.sha256(p.read_bytes()).hexdigest()
-        source='off' if 'products' in data else 'usda'
+        source='off' if 'products' in data else 'fndds' if 'SurveyFoods' in data else 'usda'
         records=data.get('products',[]) if source=='off' else next(iter(data.values()))
         for record in records:
             food=normalize_record(record,source)
             if food:foods[food['id']]=food
             else:rejected+=1
     aliases=load_json(HERE/'aliases.json',{})
-    names_ru=load_json(translations/'food-names-ru.json',{})
+    names_ru=load_json(translations/'food-names-ru.json',{})|load_json(translations/'fndds-names-ru.json',{})
     portions_ru=load_json(translations/'portion-names-ru.json',{})
     missing=[]
     for f in foods.values():
-        if not f['id'].startswith('usda:'):continue
+        if not f['id'].startswith(('usda:','fndds:')):continue
         local=aliases.get(f['id'],{})
-        f['nameEn']=f['name'];f['name']=local.get('name') or names_ru.get(f['id'])
+        f['nameEn']=clean_name(f['name']);f['name']=local.get('name') or names_ru.get(f['id'])
         if not f['name']:missing.append(f['id'])
         f['aliases']=list(local.get('aliases',[]))
         f['portions']=[{'name':portions_ru.get(p['name']),'nameEn':p['name'],'grams':p['grams']} for p in f['portions']]
@@ -114,20 +125,25 @@ def build_catalog(inputs, output, translations=HERE/'i18n'):
         for key in ('portions','density','isWater'):
             if key in local:f[key]=local[key]
         f['common']=f['id'] in aliases
+        if not local.get('name'):f['name']=fresh_name(f['name'],f['_category'])
     if missing:raise ValueError(f'{len(missing)} untranslated names, e.g. {missing[:5]}')
-    for item in load_json(HERE/'extra-foods.json',[])+load_json(HERE/'sushi-foods.json',[]):
+    usda={i:f for i,f in foods.items() if i.startswith('usda:')}
+    for i in hidden_ids(usda,{i:f['_category'] for i,f in usda.items()}):
+        if not foods[i]['common']:foods[i]['hidden']=True
+    for f in foods.values():f.pop('_category',None)
+    for item in load_json(HERE/'extra-foods.json',[])+load_json(HERE/'sushi-foods.json',[])+load_json(HERE/'dish-foods.json',[])+load_json(HERE/'typical-foods.json',[])+load_json(HERE/'store-foods.json',[]):
         foods[item['id']]=extra_food(item,foods)
     search_aliases=load_json(HERE/'search-aliases.json',{})
     for f in foods.values():
         original=' '.join([f.get('nameEn') or '',f['name']]+f['aliases']).lower()
         extra=[value for key,value in search_aliases.items() if re.search(r'\b'+re.escape(key)+r'\b',original)]
         f['aliases']+=extra
-    ordered=sorted(foods.values(),key=lambda f:(not f.get('common'),f['name']))
+    ordered=sorted(foods.values(),key=lambda f:(not f.get('common'),bool(f.get('hidden')),f['name']))
     output=Path(output);output.parent.mkdir(parents=True,exist_ok=True)
     output.write_text(json.dumps(ordered,ensure_ascii=False,separators=(',',':')),encoding='utf-8')
     report={'retrieved':'2026-10-18','count':len(foods),'localized':sum(i in foods for i in aliases),'translated':sum(i in foods for i in names_ru),
-            'estimated_dishes':sum(1 for f in foods.values() if f['id'].startswith('local:')),'with_fiber':sum(f['per100g']['fiber'] is not None for f in foods.values()),
-            'excluded_missing_or_invalid_data':rejected,'sources':{s:sum(f['id'].startswith(s+':') for f in ordered) for s in ('usda','off','local')},'input_sha256':hashes,'catalog_sha256':hashlib.sha256(output.read_bytes()).hexdigest()}
+            'estimated_dishes':sum(1 for f in foods.values() if f['id'].startswith('local:')),'hidden_from_search':sum(1 for f in foods.values() if f.get('hidden')),'with_fiber':sum(f['per100g']['fiber'] is not None for f in foods.values()),
+            'excluded_missing_or_invalid_data':rejected,'sources':{s:sum(f['id'].startswith(s+':') for f in ordered) for s in ('usda','fndds','off','local','store')},'input_sha256':hashes,'catalog_sha256':hashlib.sha256(output.read_bytes()).hexdigest()}
     output.with_name('report.json').write_text(json.dumps(report,ensure_ascii=False,indent=2),encoding='utf-8')
     return report
 

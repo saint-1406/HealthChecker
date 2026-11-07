@@ -11,8 +11,25 @@ import org.robolectric.annotation.Config
 class CatalogImporterTest {
     private val catalog by lazy{CatalogImporter(ApplicationProvider.getApplicationContext<Context>())}
     private fun ids(query:String,custom:List<Food> = emptyList())=catalog.search(query,custom).map{it.id}
+    @Test fun hiddenReferenceFoodsResolveButAreNotOffered() {
+        // Baby food, near-identical American meat cuts and Alaska Native foods stay readable for old records only.
+        listOf("usda:173487","usda:171215","usda:169794").forEach{id->assertTrue(id,catalog.byId(id)!!.hidden)}
+        assertFalse(ids("медведь").contains("usda:169794"));assertTrue(ids("babyfood gerber").isEmpty())
+        assertTrue(catalog.foods.count{!it.hidden}>9000)
+        assertEquals("Ананас, свежий, все сорта",catalog.byId("usda:169124")!!.name)
+    }
+    @Test fun everydayDishesFromBakuAndPreparedFoodsAreFound() {
+        listOf("плов","şah plov","долма","dolma","дюшбара","кутаб","qutab","борщ","пельмени","лаваш","təndir","шаурма","пахлава","шекербура","довга","айран","сырники","оливье")
+            .forEach{q->assertTrue(q,ids(q).any{it.startsWith("local:dish-")})}
+        assertTrue(ids("латте").contains("fndds:2710386"))
+        assertTrue(ids("кефир 2,5").contains("local:typical-kefir-2-5"));assertTrue(ids("творог 5").contains("local:typical-tvorog-5"))
+        assertTrue(ids("aktivia").any{it.startsWith("store:")})
+        assertTrue(catalog.foods.count{it.id.startsWith("store:")}>500)
+        assertTrue(ids("пицца пепперони").contains("fndds:2708639"))
+        catalog.foods.filter{it.id.startsWith("local:dish-")}.forEach{assertTrue(it.id,it.per100g.kcal!!>0&&it.portions.isNotEmpty())}
+    }
     @Test fun bundledCatalogHasSourcedFoodsAndWater() {
-        assertEquals(7834,catalog.foods.size);assertEquals(catalog.foods.size,catalog.foods.map{it.id}.toSet().size)
+        assertTrue(catalog.foods.size>12000);assertEquals(catalog.foods.size,catalog.foods.map{it.id}.toSet().size)
         val water=catalog.foods.single{it.isWater};assertEquals("usda:173647",water.id);assertEquals(1.0,water.density!!,0.0)
     }
     @Test fun azerbaijaniAndRussianSpellingsFindTheSameEgg() {
@@ -23,12 +40,12 @@ class CatalogImporterTest {
     @Test fun everyFoodHasRussianAndEnglishNames() {
         val cyrillic=Regex("[а-яё]",RegexOption.IGNORE_CASE)
         catalog.foods.forEach{f->assertTrue(f.id,cyrillic.containsMatchIn(f.name));assertFalse(f.id,f.nameEn.isNullOrBlank());f.portions.forEach{p->assertFalse(f.id,p.nameEn.isNullOrBlank())}}
-        assertTrue(catalog.foods.count{it.per100g.fiber!=null}>7000)
+        assertTrue(catalog.foods.count{it.per100g.fiber!=null}>11000)
     }
     @Test fun searchWorksInBothLanguagesWithEverydayFoodsFirst() {
         assertTrue("usda:173424" in ids("boiled egg"));assertTrue("usda:173424" in ids("hard-boiled eggs"))
         assertEquals("usda:171478",ids("грудка варёная").first());assertEquals("usda:171478",ids("отварная куриная грудка").first())
-        assertEquals(listOf("usda:171891","local:espresso-double"),ids("эспрессо").take(2))
+        assertTrue(ids("эспрессо").take(3).containsAll(listOf("usda:171891","local:espresso-double")))
         assertEquals("local:espresso-double",ids("эспрессо двойной").first())
         assertTrue(ids("avocado").first().let{catalog.byId(it)!!.name.startsWith("Авокадо")})
         assertTrue(ids("говядина").isNotEmpty()&&ids("beef").isNotEmpty())

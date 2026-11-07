@@ -59,6 +59,8 @@ Path('tools/catalog/aliases.json').write_text(json.dumps(aliases,ensure_ascii=Fa
 slim=[]
 for f in foods:
     slim.append({k:f[k] for k in ('fdcId','description','foodNutrients','foodPortions') if k in f})
+    # The USDA food group decides what search hides (curation.py) and where "raw" means fresh.
+    slim[-1]['foodCategory']=f.get('foodCategory',{}).get('description','')
 for f in slim:
     f['foodNutrients']=[{'nutrient':{'id':n['nutrient']['id']},'amount':n.get('amount')} for n in f['foodNutrients'] if n['nutrient']['id'] in (1008,1003,1004,1005,1079)]
 Path('tools/catalog/raw/usda-slim.json').write_text(json.dumps({'SRLegacyFoods':slim}),encoding='utf-8')

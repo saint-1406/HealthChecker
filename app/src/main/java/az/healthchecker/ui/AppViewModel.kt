@@ -58,7 +58,7 @@ class AppViewModel(application:Application):AndroidViewModel(application) {
     @Volatile private var catalog:CatalogImporter?=null
     // The diary opens as soon as the database is read; the bundled catalog is parsed in parallel and only
     // search and quick water wait for it.
-    private val catalogLoad=viewModelScope.async(Dispatchers.IO){CatalogImporter.shared(context).also{catalog=it;catalogCount.value=it.foods.size}}
+    private val catalogLoad=viewModelScope.async(Dispatchers.IO){CatalogImporter.shared(context).also{catalog=it;catalogCount.value=it.foods.count{f->!f.hidden}}}
     val exercises=MutableStateFlow<List<Exercise>>(emptyList())
     @Volatile private var exerciseCatalog:ExerciseCatalog?=null
     private val exerciseLoad=viewModelScope.async(Dispatchers.IO){ExerciseCatalog.shared(context).also{exerciseCatalog=it;exercises.value=it.exercises}}
@@ -120,7 +120,7 @@ class AppViewModel(application:Application):AndroidViewModel(application) {
         val loaded=try{catalogLoad.await()}catch(e:CancellationException){throw e}catch(e:Exception){null}
         val custom=snapshot.value.customFoods;val own=custom.map{it.id}.toSet()
         return withContext(Dispatchers.Default){
-            val pool=if(query.isBlank())custom+(loaded?.foods?.filter{wholeCatalog||it.common}?:emptyList())
+            val pool=if(query.isBlank())custom+(loaded?.foods?.filter{!it.hidden&&(wholeCatalog||it.common)}?:emptyList())
                 else (loaded?.search(query,custom,1000)?:custom).filter{wholeCatalog||it.common||it.id in own}
             proteinFoods(pool,grams,match,sort)
         }

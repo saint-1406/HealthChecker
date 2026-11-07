@@ -17,6 +17,7 @@ enum class FoodPreparation { RAW, COOKED, DRY }
 private val RAW_PREPARATION=Regex("^(raw|uncooked)(?=$|\\s*\\()")
 private val COOKED_PREPARATION=Regex("^(cooked|boiled|roasted|stewed|fried|baked|steamed|grilled|prepared|dry[ -]roasted)\\b")
 private val DRY_PREPARATION=Regex("^(dry|dried|dehydrated)\\b")
+private val FRESH_RU=Regex("свеж(ий|ая|ее|ие)")
 fun foodPreparations(food:Food):Set<FoodPreparation> {
     // USDA uses comma-separated preparation clauses. A raw onion in a sandwich is not a raw sandwich,
     // and a soup prepared from dry mix is no longer dry. Unclear names receive no inferred label.
@@ -25,7 +26,8 @@ fun foodPreparations(food:Food):Set<FoodPreparation> {
     return buildSet {
         if(cooked)add(FoodPreparation.COOKED)
         else {
-            if(clauses.any{RAW_PREPARATION.containsMatchIn(it)})add(FoodPreparation.RAW)
+            // USDA "raw" fruit and vegetables are named "свежий" (fresh) in Russian: they are not food to cook first.
+            if(clauses.any{RAW_PREPARATION.containsMatchIn(it)}&&!FRESH_RU.containsMatchIn(food.name.lowercase(Locale.ROOT)))add(FoodPreparation.RAW)
             if(clauses.any{DRY_PREPARATION.containsMatchIn(it)})add(FoodPreparation.DRY)
         }
     }

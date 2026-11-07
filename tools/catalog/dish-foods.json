@@ -1,0 +1,7378 @@
+[
+ {
+  "id": "local:dish-shah-plov",
+  "name": "Шах-плов (Şah plov)",
+  "nameEn": "Shah plov in lavash crust (Şah plov)",
+  "aliases": [
+   "şah plov shah plov шах плов плов лаваш"
+  ],
+  "basis": {
+   "ingredients": [
+    [
+     "usda:168878",
+     1250
+    ],
+    [
+     "usda:173412",
+     150
+    ],
+    [
+     "usda:172545",
+     600
+    ],
+    [
+     "usda:170000",
+     200
+    ],
+    [
+     "usda:173941",
+     100
+    ],
+    [
+     "usda:170190",
+     100
+    ],
+    [
+     "usda:168165",
+     80
+    ],
+    [
+     "usda:169761",
+     120
+    ],
+    [
+     "usda:173647",
+     60
+    ],
+    [
+     "usda:170934",
+     0.5
+    ]
+   ],
+   "grams": 2300
+  },
+  "portions": [
+   {
+    "name": "Порция (≈350 г)",
+    "nameEn": "Portion (~350 g)",
+    "grams": 350
+   },
+   {
+    "name": "Весь рецепт (≈2300 г)",
+    "nameEn": "Whole recipe (~2300 g)",
+    "grams": 2300
+   }
+  ],
+  "source": "Расчёт по рецепту из ингредиентов USDA SR Legacy: рис варёный 1250 г, топлёное масло 150 г, баранина 600 г, лук 200 г, курага 100 г, каштаны 100 г, изюм 80 г, мука 120 г, вода 60 г, шафран 0,5 г; выход готового блюда ≈2300 г. Корочка — тонкий лаваш на масле.",
+  "sourceEn": "Recipe estimate from USDA SR Legacy ingredients: cooked rice 1250 g, ghee 150 g, lamb 600 g, onion 200 g, dried apricots 100 g, chestnuts 100 g, raisins 80 g, flour 120 g, water 60 g, saffron 0.5 g; cooked weight ~2300 g."
+ },
+ {
+  "id": "local:dish-plov-qovurma",
+  "name": "Плов с бараниной и каштанами (Plov, qovurma)",
+  "nameEn": "Plov with lamb qovurma and chestnuts",
+  "aliases": [
+   "plov qovurma ət plovu плов баранина каштаны qara"
+  ],
+  "basis": {
+   "ingredients": [
+    [
+     "usda:168878",
+     1000
+    ],
+    [
+     "usda:173412",
+     100
+    ],
+    [
+     "usda:172545",
+     500
+    ],
+    [
+     "usda:170000",
+     200
+    ],
+    [
+     "usda:170190",
+     100
+    ],
+    [
+     "usda:173941",
+     60
+    ],
+    [
+     "usda:168165",
+     60
+    ],
+    [
+     "usda:173410",
+     30
+    ],
+    [
+     "usda:170934",
+     0.5
+    ]
+   ],
+   "grams": 1850
+  },
+  "portions": [
+   {
+    "name": "Порция (≈350 г)",
+    "nameEn": "Portion (~350 g)",
+    "grams": 350
+   },
+   {
+    "name": "Весь рецепт (≈1850 г)",
+    "nameEn": "Whole recipe (~1850 g)",
+    "grams": 1850
+   }
+  ],
+  "source": "Расчёт по рецепту из ингредиентов USDA SR Legacy: рис варёный 1000 г, топлёное масло 100 г, баранина 500 г, лук 200 г, каштаны 100 г, курага 60 г, изюм 60 г, сливочное масло 30 г, шафран 0,5 г; выход готового блюда ≈1850 г.",
+  "sourceEn": "Recipe estimate from USDA SR Legacy ingredients: cooked rice 1000 g, ghee 100 g, lamb 500 g, onion 200 g, chestnuts 100 g, dried apricots 60 g, raisins 60 g, butter 30 g, saffron 0.5 g; cooked weight ~1850 g."
+ },
+ {
+  "id": "local:dish-plov-toyuq",
+  "name": "Плов с курицей (Toyuq plovu)",
+  "nameEn": "Chicken plov (Toyuq plovu)",
+  "aliases": [
+   "toyuq plovu plov плов курица"
+  ],
+  "basis": {
+   "ingredients": [
+    [
+     "usda:168878",
+     1000
+    ],
+    [
+     "usda:173412",
+     80
+    ],
+    [
+     "usda:171447",
+     600
+    ],
+    [
+     "usda:170000",
+     150
+    ],
+    [
+     "usda:173941",
+     60
+    ],
+    [
+     "usda:168165",
+     60
+    ],
+    [
+     "usda:170934",
+     0.5
+    ]
+   ],
+   "grams": 1750
+  },
+  "portions": [
+   {
+    "name": "Порция (≈350 г)",
+    "nameEn": "Portion (~350 g)",
+    "grams": 350
+   },
+   {
+    "name": "Весь рецепт (≈1750 г)",
+    "nameEn": "Whole recipe (~1750 g)",
+    "grams": 1750
+   }
+  ],
+  "source": "Расчёт по рецепту из ингредиентов USDA SR Legacy: рис варёный 1000 г, топлёное масло 80 г, курица с кожей 600 г, лук 150 г, курага 60 г, изюм 60 г, шафран 0,5 г; выход готового блюда ≈1750 г.",
+  "sourceEn": "Recipe estimate from USDA SR Legacy ingredients: cooked rice 1000 g, ghee 80 g, chicken with skin 600 g, onion 150 g, dried apricots 60 g, raisins 60 g, saffron 0.5 g; cooked weight ~1750 g."
+ },
+ {
+  "id": "local:dish-plov-ag",
+  "name": "Рис для плова с маслом и шафраном (Süzmə plov)",
+  "nameEn": "Plov rice with butter and saffron (Süzmə plov)",
+  "aliases": [
+   "süzmə plov ağ plov düyü плов рис шафран"
+  ],
+  "basis": {
+   "ingredients": [
+    [
+     "usda:168878",
+     1000
+    ],
+    [
+     "usda:173412",
+     80
+    ],
+    [
+     "usda:170934",
+     0.5
+    ]
+   ],
+   "grams": 1050
+  },
+  "portions": [
+   {
+    "name": "Порция (≈250 г)",
+    "nameEn": "Portion (~250 g)",
+    "grams": 250
+   },
+   {
+    "name": "Весь рецепт (≈1050 г)",
+    "nameEn": "Whole recipe (~1050 g)",
+    "grams": 1050
+   }
+  ],
+  "source": "Расчёт по рецепту из ингредиентов USDA SR Legacy: рис варёный 1000 г, топлёное масло 80 г, шафран 0,5 г; выход готового блюда ≈1050 г.",
+  "sourceEn": "Recipe estimate from USDA SR Legacy ingredients: cooked rice 1000 g, ghee 80 g, saffron 0.5 g; cooked weight ~1050 g."
+ },
+ {
+  "id": "local:dish-plov-uzbek",
+  "name": "Плов узбекский",
+  "nameEn": "Uzbek plov",
+  "aliases": [
+   "özbək plovu uzbek plov плов узбекский морковь"
+  ],
+  "basis": {
+   "ingredients": [
+    [
+     "usda:168878",
+     1100
+    ],
+    [
+     "usda:171206",
+     500
+    ],
+    [
+     "usda:170393",
+     500
+    ],
+    [
+     "usda:170000",
+     200
+    ],
+    [
+     "usda:171025",
+     150
+    ],
+    [
+     "usda:173756",
+     50
+    ],
+    [
+     "usda:169230",
+     40
+    ]
+   ],
+   "grams": 2300
+  },
+  "portions": [
+   {
+    "name": "Порция (≈350 г)",
+    "nameEn": "Portion (~350 g)",
+    "grams": 350
+   },
+   {
+    "name": "Весь рецепт (≈2300 г)",
+    "nameEn": "Whole recipe (~2300 g)",
+    "grams": 2300
+   }
+  ],
+  "source": "Расчёт по рецепту из ингредиентов USDA SR Legacy: рис варёный 1100 г, говядина 500 г, морковь 500 г, лук 200 г, подсолнечное масло 150 г, нут 50 г, чеснок 40 г; выход готового блюда ≈2300 г.",
+  "sourceEn": "Recipe estimate from USDA SR Legacy ingredients: cooked rice 1100 g, beef 500 g, carrots 500 g, onion 200 g, sunflower oil 150 g, chickpeas 50 g, garlic 40 g; cooked weight ~2300 g."
+ },
+ {
+  "id": "local:dish-plov-sebzi",
+  "name": "Плов с зеленью и рыбой (Sabzi plov)",
+  "nameEn": "Herb plov with fish",
+  "aliases": [
+   "sabzi plov səbzi plov балыг плов зелень рыба"
+  ],
+  "basis": {
+   "ingredients": [
+    [
+     "usda:168878",
+     1000
+    ],
+    [
+     "usda:173412",
+     80
+    ],
+    [
+     "usda:172233",
+     60
+    ],
+    [
+     "usda:169997",
+     40
+    ],
+    [
+     "usda:171952",
+     400
+    ],
+    [
+     "usda:171025",
+     30
+    ]
+   ],
+   "grams": 1500
+  },
+  "portions": [
+   {
+    "name": "Порция (≈350 г)",
+    "nameEn": "Portion (~350 g)",
+    "grams": 350
+   },
+   {
+    "name": "Весь рецепт (≈1500 г)",
+    "nameEn": "Whole recipe (~1500 g)",
+    "grams": 1500
+   }
+  ],
+  "source": "Расчёт по рецепту из ингредиентов USDA SR Legacy: рис варёный 1000 г, топлёное масло 80 г, укроп 60 г, кинза 40 г, кутум/сазан 400 г, подсолнечное масло 30 г; выход готового блюда ≈1500 г.",
+  "sourceEn": "Recipe estimate from USDA SR Legacy ingredients: cooked rice 1000 g, ghee 80 g, dill 60 g, cilantro 40 g, kutum or carp 400 g, sunflower oil 30 g; cooked weight ~1500 g."
+ },
+ {
+  "id": "local:dish-dolma-yarpaq",
+  "name": "Долма в виноградных листьях (Yarpaq dolması)",
+  "nameEn": "Grape leaf dolma (Yarpaq dolması)",
+  "aliases": [
+   "yarpaq dolması dolma долма толма виноградные листья"
+  ],
+  "basis": {
+   "ingredients": [
+    [
+     "usda:169393",
+     150
+    ],
+    [
+     "usda:174370",
+     500
+    ],
+    [
+     "usda:168877",
+     100
+    ],
+    [
+     "usda:170000",
+     150
+    ],
+    [
+     "usda:172233",
+     20
+    ],
+    [
+     "usda:169997",
+     20
+    ],
+    [
+     "usda:173475",
+     10
+    ],
+    [
+     "usda:173410",
+     30
+    ],
+    [
+     "usda:173647",
+     200
+    ]
+   ],
+   "grams": 1050
+  },
+  "portions": [
+   {
+    "name": "1 долмачка (≈25 г)",
+    "nameEn": "1 roll (~25 g)",
+    "grams": 25
+   },
+   {
+    "name": "Порция (≈250 г)",
+    "nameEn": "Portion (~250 g)",
+    "grams": 250
+   },
+   {
+    "name": "Весь рецепт (≈1050 г)",
+    "nameEn": "Whole recipe (~1050 g)",
+    "grams": 1050
+   }
+  ],
+  "source": "Расчёт по рецепту из ингредиентов USDA SR Legacy: виноградные листья 150 г, бараний фарш 500 г, рис 100 г, лук 150 г, укроп 20 г, кинза 20 г, мята 10 г, сливочное масло 30 г, вода 200 г; выход готового блюда ≈1050 г. Без катыка: его стоит записать отдельно.",
+  "sourceEn": "Recipe estimate from USDA SR Legacy ingredients: grape leaves 150 g, ground lamb 500 g, rice 100 g, onion 150 g, dill 20 g, cilantro 20 g, mint 10 g, butter 30 g, water 200 g; cooked weight ~1050 g."
+ },
+ {
+  "id": "local:dish-dolma-kelem",
+  "name": "Долма в капустных листьях (Kələm dolması)",
+  "nameEn": "Cabbage dolma (Kələm dolması)",
+  "aliases": [
+   "kələm dolması kelem dolma долма капуста голубцы"
+  ],
+  "basis": {
+   "ingredients": [
+    [
+     "usda:169975",
+     400
+    ],
+    [
+     "usda:174036",
+     400
+    ],
+    [
+     "usda:168877",
+     80
+    ],
+    [
+     "usda:170000",
+     120
+    ],
+    [
+     "usda:170459",
+     30
+    ],
+    [
+     "usda:169655",
+     15
+    ],
+    [
+     "usda:170190",
+     50
+    ],
+    [
+     "usda:173410",
+     30
+    ],
+    [
+     "usda:173647",
+     150
+    ]
+   ],
+   "grams": 1150
+  },
+  "portions": [
+   {
+    "name": "1 шт. (≈60 г)",
+    "nameEn": "1 piece (~60 g)",
+    "grams": 60
+   },
+   {
+    "name": "Порция (≈300 г)",
+    "nameEn": "Portion (~300 g)",
+    "grams": 300
+   },
+   {
+    "name": "Весь рецепт (≈1150 г)",
+    "nameEn": "Whole recipe (~1150 g)",
+    "grams": 1150
+   }
+  ],
+  "source": "Расчёт по рецепту из ингредиентов USDA SR Legacy: капуста 400 г, говяжий фарш 400 г, рис 80 г, лук 120 г, томатная паста 30 г, сахар 15 г, каштаны 50 г, сливочное масло 30 г, вода 150 г; выход готового блюда ≈1150 г.",
+  "sourceEn": "Recipe estimate from USDA SR Legacy ingredients: cabbage 400 g, ground beef 400 g, rice 80 g, onion 120 g, tomato paste 30 g, sugar 15 g, chestnuts 50 g, butter 30 g, water 150 g; cooked weight ~1150 g."
+ },
+ {
+  "id": "local:dish-dolma-uc-baci",
+  "name": "Долма «Три сестры» (Üç bacı dolması)",
+  "nameEn": "Three sisters dolma: eggplant, tomato, pepper",
+  "aliases": [
+   "üç bacı dolması uc baci dolma долма три сестры баклажан перец помидор"
+  ],
+  "basis": {
+   "ingredients": [
+    [
+     "usda:169228",
+     300
+    ],
+    [
+     "usda:170457",
+     300
+    ],
+    [
+     "usda:170427",
+     300
+    ],
+    [
+     "usda:174370",
+     500
+    ],
+    [
+     "usda:170000",
+     150
+    ],
+    [
+     "usda:168877",
+     60
+    ],
+    [
+     "usda:172233",
+     20
+    ],
+    [
+     "usda:169997",
+     20
+    ],
+    [
+     "usda:173410",
+     40
+    ],
+    [
+     "usda:173647",
+     100
+    ]
+   ],
+   "grams": 1550
+  },
+  "portions": [
+   {
+    "name": "Порция (≈350 г)",
+    "nameEn": "Portion (~350 g)",
+    "grams": 350
+   },
+   {
+    "name": "Весь рецепт (≈1550 г)",
+    "nameEn": "Whole recipe (~1550 g)",
+    "grams": 1550
+   }
+  ],
+  "source": "Расчёт по рецепту из ингредиентов USDA SR Legacy: баклажаны 300 г, помидоры 300 г, сладкий перец 300 г, бараний фарш 500 г, лук 150 г, рис 60 г, укроп 20 г, кинза 20 г, сливочное масло 40 г, вода 100 г; выход готового блюда ≈1550 г.",
+  "sourceEn": "Recipe estimate from USDA SR Legacy ingredients: eggplant 300 g, tomatoes 300 g, bell pepper 300 g, ground lamb 500 g, onion 150 g, rice 60 g, dill 20 g, cilantro 20 g, butter 40 g, water 100 g; cooked weight ~1550 g."
+ },
+ {
+  "id": "local:dish-dolma-biber",
+  "name": "Фаршированный перец (Bibər dolması)",
+  "nameEn": "Stuffed peppers (Bibər dolması)",
+  "aliases": [
+   "bibər dolması biber dolma фаршированный перец долма"
+  ],
+  "basis": {
+   "ingredients": [
+    [
+     "usda:170427",
+     600
+    ],
+    [
+     "usda:174036",
+     400
+    ],
+    [
+     "usda:168877",
+     80
+    ],
+    [
+     "usda:170000",
+     100
+    ],
+    [
+     "usda:170459",
+     30
+    ],
+    [
+     "usda:173647",
+     150
+    ]
+   ],
+   "grams": 1300
+  },
+  "portions": [
+   {
+    "name": "1 шт. (≈160 г)",
+    "nameEn": "1 piece (~160 g)",
+    "grams": 160
+   },
+   {
+    "name": "Порция (≈320 г)",
+    "nameEn": "Portion (~320 g)",
+    "grams": 320
+   },
+   {
+    "name": "Весь рецепт (≈1300 г)",
+    "nameEn": "Whole recipe (~1300 g)",
+    "grams": 1300
+   }
+  ],
+  "source": "Расчёт по рецепту из ингредиентов USDA SR Legacy: сладкий перец 600 г, говяжий фарш 400 г, рис 80 г, лук 100 г, томатная паста 30 г, вода 150 г; выход готового блюда ≈1300 г.",
+  "sourceEn": "Recipe estimate from USDA SR Legacy ingredients: bell pepper 600 g, ground beef 400 g, rice 80 g, onion 100 g, tomato paste 30 g, water 150 g; cooked weight ~1300 g."
+ },
+ {
+  "id": "local:dish-lule-kebab",
+  "name": "Люля-кебаб из баранины (Lülə kabab)",
+  "nameEn": "Lamb lula kebab (Lülə kabab)",
+  "aliases": [
+   "lülə kabab lule kebab люля кебаб шашлык фарш"
+  ],
+  "basis": {
+   "ingredients": [
+    [
+     "usda:174370",
+     1000
+    ],
+    [
+     "usda:170000",
+     200
+    ],
+    [
+     "usda:171400",
+     30
+    ]
+   ],
+   "grams": 850
+  },
+  "portions": [
+   {
+    "name": "1 шампур (≈90 г)",
+    "nameEn": "1 skewer (~90 g)",
+    "grams": 90
+   },
+   {
+    "name": "Порция (≈250 г)",
+    "nameEn": "Portion (~250 g)",
+    "grams": 250
+   },
+   {
+    "name": "Весь рецепт (≈850 г)",
+    "nameEn": "Whole recipe (~850 g)",
+    "grams": 850
+   }
+  ],
+  "source": "Расчёт по рецепту из ингредиентов USDA SR Legacy: бараний фарш 1000 г, лук 200 г, курдючный жир 30 г; выход готового блюда ≈850 г.",
+  "sourceEn": "Recipe estimate from USDA SR Legacy ingredients: ground lamb 1000 g, onion 200 g, tail fat 30 g; cooked weight ~850 g."
+ },
+ {
+  "id": "local:dish-lule-kebab-toyuq",
+  "name": "Люля-кебаб из курицы (Toyuq lülə)",
+  "nameEn": "Chicken lula kebab",
+  "aliases": [
+   "toyuq lülə kabab люля кебаб курица"
+  ],
+  "basis": {
+   "ingredients": [
+    [
+     "usda:171067",
+     1000
+    ],
+    [
+     "usda:170000",
+     200
+    ],
+    [
+     "usda:173410",
+     30
+    ]
+   ],
+   "grams": 820
+  },
+  "portions": [
+   {
+    "name": "1 шампур (≈90 г)",
+    "nameEn": "1 skewer (~90 g)",
+    "grams": 90
+   },
+   {
+    "name": "Весь рецепт (≈820 г)",
+    "nameEn": "Whole recipe (~820 g)",
+    "grams": 820
+   }
+  ],
+  "source": "Расчёт по рецепту из ингредиентов USDA SR Legacy: куриное бедро 1000 г, лук 200 г, сливочное масло 30 г; выход готового блюда ≈820 г.",
+  "sourceEn": "Recipe estimate from USDA SR Legacy ingredients: chicken thigh 1000 g, onion 200 g, butter 30 g; cooked weight ~820 g."
+ },
+ {
+  "id": "local:dish-tike-kebab",
+  "name": "Шашлык из баранины (Tikə kabab)",
+  "nameEn": "Lamb shish kebab (Tikə kabab)",
+  "aliases": [
+   "tikə kabab tike kebab шашлык баранина antrikot basdırma"
+  ],
+  "basis": {
+   "ingredients": [
+    [
+     "usda:172545",
+     1000
+    ],
+    [
+     "usda:170000",
+     60
+    ]
+   ],
+   "grams": 700
+  },
+  "portions": [
+   {
+    "name": "1 шампур (≈120 г)",
+    "nameEn": "1 skewer (~120 g)",
+    "grams": 120
+   },
+   {
+    "name": "Порция (≈250 г)",
+    "nameEn": "Portion (~250 g)",
+    "grams": 250
+   },
+   {
+    "name": "Весь рецепт (≈700 г)",
+    "nameEn": "Whole recipe (~700 g)",
+    "grams": 700
+   }
+  ],
+  "source": "Расчёт по рецепту из ингредиентов USDA SR Legacy: баранина 1000 г, лук 60 г; выход готового блюда ≈700 г.",
+  "sourceEn": "Recipe estimate from USDA SR Legacy ingredients: lamb 1000 g, onion 60 g; cooked weight ~700 g."
+ },
+ {
+  "id": "local:dish-tike-kebab-lean",
+  "name": "Шашлык из постной баранины (Basdırma)",
+  "nameEn": "Lean lamb kebab (Basdırma)",
+  "aliases": [
+   "basdırma basdirma шашлык бастурма баранина"
+  ],
+  "basis": {
+   "ingredients": [
+    [
+     "usda:172508",
+     1000
+    ],
+    [
+     "usda:170000",
+     60
+    ]
+   ],
+   "grams": 700
+  },
+  "portions": [
+   {
+    "name": "1 шампур (≈120 г)",
+    "nameEn": "1 skewer (~120 g)",
+    "grams": 120
+   },
+   {
+    "name": "Весь рецепт (≈700 г)",
+    "nameEn": "Whole recipe (~700 g)",
+    "grams": 700
+   }
+  ],
+  "source": "Расчёт по рецепту из ингредиентов USDA SR Legacy: баранина для шашлыка 1000 г, лук 60 г; выход готового блюда ≈700 г.",
+  "sourceEn": "Recipe estimate from USDA SR Legacy ingredients: lamb for kebab 1000 g, onion 60 g; cooked weight ~700 g."
+ },
+ {
+  "id": "local:dish-toyuq-kebab",
+  "name": "Шашлык из куриного филе (Toyuq kababı)",
+  "nameEn": "Chicken breast kebab",
+  "aliases": [
+   "toyuq kababı toyuq kebab шашлык курица филе"
+  ],
+  "basis": {
+   "ingredients": [
+    [
+     "usda:171077",
+     1000
+    ],
+    [
+     "usda:171025",
+     20
+    ],
+    [
+     "usda:170000",
+     40
+    ]
+   ],
+   "grams": 740
+  },
+  "portions": [
+   {
+    "name": "1 шампур (≈120 г)",
+    "nameEn": "1 skewer (~120 g)",
+    "grams": 120
+   },
+   {
+    "name": "Весь рецепт (≈740 г)",
+    "nameEn": "Whole recipe (~740 g)",
+    "grams": 740
+   }
+  ],
+  "source": "Расчёт по рецепту из ингредиентов USDA SR Legacy: куриное филе 1000 г, подсолнечное масло 20 г, лук 40 г; выход готового блюда ≈740 г.",
+  "sourceEn": "Recipe estimate from USDA SR Legacy ingredients: chicken breast 1000 g, sunflower oil 20 g, onion 40 g; cooked weight ~740 g."
+ },
+ {
+  "id": "local:dish-toyuq-kebab-dark",
+  "name": "Шашлык из куриных бёдер",
+  "nameEn": "Chicken thigh kebab",
+  "aliases": [
+   "toyuq budu kabab шашлык курица бедро"
+  ],
+  "basis": {
+   "ingredients": [
+    [
+     "usda:171067",
+     1000
+    ],
+    [
+     "usda:171025",
+     20
+    ],
+    [
+     "usda:170000",
+     40
+    ]
+   ],
+   "grams": 720
+  },
+  "portions": [
+   {
+    "name": "1 шампур (≈120 г)",
+    "nameEn": "1 skewer (~120 g)",
+    "grams": 120
+   },
+   {
+    "name": "Весь рецепт (≈720 г)",
+    "nameEn": "Whole recipe (~720 g)",
+    "grams": 720
+   }
+  ],
+  "source": "Расчёт по рецепту из ингредиентов USDA SR Legacy: куриное бедро 1000 г, подсолнечное масло 20 г, лук 40 г; выход готового блюда ≈720 г.",
+  "sourceEn": "Recipe estimate from USDA SR Legacy ingredients: chicken thigh 1000 g, sunflower oil 20 g, onion 40 g; cooked weight ~720 g."
+ },
+ {
+  "id": "local:dish-shashlyk-pork",
+  "name": "Шашлык из свинины",
+  "nameEn": "Pork shish kebab",
+  "aliases": [
+   "donuz kababı шашлык свинина свиной"
+  ],
+  "basis": {
+   "ingredients": [
+    [
+     "usda:167843",
+     1000
+    ],
+    [
+     "usda:170000",
+     100
+    ],
+    [
+     "usda:172237",
+     20
+    ]
+   ],
+   "grams": 700
+  },
+  "portions": [
+   {
+    "name": "1 шампур (≈130 г)",
+    "nameEn": "1 skewer (~130 g)",
+    "grams": 130
+   },
+   {
+    "name": "Весь рецепт (≈700 г)",
+    "nameEn": "Whole recipe (~700 g)",
+    "grams": 700
+   }
+  ],
+  "source": "Расчёт по рецепту из ингредиентов USDA SR Legacy: свиная лопатка 1000 г, лук 100 г, уксус 20 г; выход готового блюда ≈700 г.",
+  "sourceEn": "Recipe estimate from USDA SR Legacy ingredients: pork shoulder 1000 g, onion 100 g, vinegar 20 g; cooked weight ~700 g."
+ },
+ {
+  "id": "local:dish-ciyer-kebab",
+  "name": "Шашлык из печени с курдюком (Ciyər kababı)",
+  "nameEn": "Lamb liver kebab with tail fat",
+  "aliases": [
+   "ciyər kababı ciyer печень шашлык курдюк"
+  ],
+  "basis": {
+   "ingredients": [
+    [
+     "usda:172531",
+     600
+    ],
+    [
+     "usda:171400",
+     100
+    ]
+   ],
+   "grams": 520
+  },
+  "portions": [
+   {
+    "name": "1 шампур (≈100 г)",
+    "nameEn": "1 skewer (~100 g)",
+    "grams": 100
+   },
+   {
+    "name": "Весь рецепт (≈520 г)",
+    "nameEn": "Whole recipe (~520 g)",
+    "grams": 520
+   }
+  ],
+  "source": "Расчёт по рецепту из ингредиентов USDA SR Legacy: баранья печень 600 г, курдючный жир 100 г; выход готового блюда ≈520 г.",
+  "sourceEn": "Recipe estimate from USDA SR Legacy ingredients: lamb liver 600 g, tail fat 100 g; cooked weight ~520 g."
+ },
+ {
+  "id": "local:dish-sturgeon-kebab",
+  "name": "Шашлык из осетрины (Nərə kababı)",
+  "nameEn": "Sturgeon kebab",
+  "aliases": [
+   "nərə kababı nere осетрина шашлык рыба"
+  ],
+  "basis": {
+   "ingredients": [
+    [
+     "usda:173701",
+     1000
+    ],
+    [
+     "usda:173410",
+     30
+    ]
+   ],
+   "grams": 780
+  },
+  "portions": [
+   {
+    "name": "1 шампур (≈150 г)",
+    "nameEn": "1 skewer (~150 g)",
+    "grams": 150
+   },
+   {
+    "name": "Весь рецепт (≈780 г)",
+    "nameEn": "Whole recipe (~780 g)",
+    "grams": 780
+   }
+  ],
+  "source": "Расчёт по рецепту из ингредиентов USDA SR Legacy: осётр 1000 г, сливочное масло 30 г; выход готового блюда ≈780 г.",
+  "sourceEn": "Recipe estimate from USDA SR Legacy ingredients: sturgeon 1000 g, butter 30 g; cooked weight ~780 g."
+ },
+ {
+  "id": "local:dish-tava-kebab",
+  "name": "Тава-кебаб (Tava kabab)",
+  "nameEn": "Tava kebab: lamb patties with egg",
+  "aliases": [
+   "tava kabab тава кебаб"
+  ],
+  "basis": {
+   "ingredients": [
+    [
+     "usda:174370",
+     500
+    ],
+    [
+     "usda:170000",
+     100
+    ],
+    [
+     "usda:171287",
+     200
+    ],
+    [
+     "usda:173410",
+     40
+    ]
+   ],
+   "grams": 700
+  },
+  "portions": [
+   {
+    "name": "Порция (≈250 г)",
+    "nameEn": "Portion (~250 g)",
+    "grams": 250
+   },
+   {
+    "name": "Весь рецепт (≈700 г)",
+    "nameEn": "Whole recipe (~700 g)",
+    "grams": 700
+   }
+  ],
+  "source": "Расчёт по рецепту из ингредиентов USDA SR Legacy: бараний фарш 500 г, лук 100 г, яйца 200 г, сливочное масло 40 г; выход готового блюда ≈700 г.",
+  "sourceEn": "Recipe estimate from USDA SR Legacy ingredients: ground lamb 500 g, onion 100 g, eggs 200 g, butter 40 g; cooked weight ~700 g."
+ },
+ {
+  "id": "local:dish-qovurma",
+  "name": "Говурма из баранины (Ət qovurma)",
+  "nameEn": "Fried lamb with onion (Qovurma)",
+  "aliases": [
+   "qovurma ət qovurması говурма жаркое баранина"
+  ],
+  "basis": {
+   "ingredients": [
+    [
+     "usda:172545",
+     1000
+    ],
+    [
+     "usda:170000",
+     300
+    ],
+    [
+     "usda:173410",
+     50
+    ]
+   ],
+   "grams": 900
+  },
+  "portions": [
+   {
+    "name": "Порция (≈250 г)",
+    "nameEn": "Portion (~250 g)",
+    "grams": 250
+   },
+   {
+    "name": "Весь рецепт (≈900 г)",
+    "nameEn": "Whole recipe (~900 g)",
+    "grams": 900
+   }
+  ],
+  "source": "Расчёт по рецепту из ингредиентов USDA SR Legacy: баранина 1000 г, лук 300 г, сливочное масло 50 г; выход готового блюда ≈900 г.",
+  "sourceEn": "Recipe estimate from USDA SR Legacy ingredients: lamb 1000 g, onion 300 g, butter 50 g; cooked weight ~900 g."
+ },
+ {
+  "id": "local:dish-tursu-qovurma",
+  "name": "Туршу-говурма (Turşu qovurma)",
+  "nameEn": "Sour qovurma with dried fruit and chestnuts",
+  "aliases": [
+   "turşu qovurma tursu qovurma туршу говурма"
+  ],
+  "basis": {
+   "ingredients": [
+    [
+     "usda:172545",
+     600
+    ],
+    [
+     "usda:170000",
+     150
+    ],
+    [
+     "usda:173941",
+     80
+    ],
+    [
+     "usda:170190",
+     80
+    ],
+    [
+     "usda:169949",
+     60
+    ],
+    [
+     "usda:173410",
+     50
+    ]
+   ],
+   "grams": 900
+  },
+  "portions": [
+   {
+    "name": "Порция (≈250 г)",
+    "nameEn": "Portion (~250 g)",
+    "grams": 250
+   },
+   {
+    "name": "Весь рецепт (≈900 г)",
+    "nameEn": "Whole recipe (~900 g)",
+    "grams": 900
+   }
+  ],
+  "source": "Расчёт по рецепту из ингредиентов USDA SR Legacy: баранина 600 г, лук 150 г, курага 80 г, каштаны 80 г, алыча 60 г, сливочное масло 50 г; выход готового блюда ≈900 г.",
+  "sourceEn": "Recipe estimate from USDA SR Legacy ingredients: lamb 600 g, onion 150 g, dried apricots 80 g, chestnuts 80 g, sour plums 60 g, butter 50 g; cooked weight ~900 g."
+ },
+ {
+  "id": "local:dish-sebzi-qovurma",
+  "name": "Сабзи-говурма (Səbzi qovurma)",
+  "nameEn": "Lamb with herbs (Səbzi qovurma)",
+  "aliases": [
+   "səbzi qovurma sebzi сабзи говурма зелень"
+  ],
+  "basis": {
+   "ingredients": [
+    [
+     "usda:172545",
+     600
+    ],
+    [
+     "usda:168462",
+     300
+    ],
+    [
+     "usda:172233",
+     100
+    ],
+    [
+     "usda:169997",
+     100
+    ],
+    [
+     "usda:170005",
+     100
+    ],
+    [
+     "usda:170000",
+     150
+    ],
+    [
+     "usda:169949",
+     50
+    ],
+    [
+     "usda:173410",
+     60
+    ]
+   ],
+   "grams": 1050
+  },
+  "portions": [
+   {
+    "name": "Порция (≈250 г)",
+    "nameEn": "Portion (~250 g)",
+    "grams": 250
+   },
+   {
+    "name": "Весь рецепт (≈1050 г)",
+    "nameEn": "Whole recipe (~1050 g)",
+    "grams": 1050
+   }
+  ],
+  "source": "Расчёт по рецепту из ингредиентов USDA SR Legacy: баранина 600 г, шпинат 300 г, укроп 100 г, кинза 100 г, зелёный лук 100 г, лук 150 г, алыча 50 г, сливочное масло 60 г; выход готового блюда ≈1050 г.",
+  "sourceEn": "Recipe estimate from USDA SR Legacy ingredients: lamb 600 g, spinach 300 g, dill 100 g, cilantro 100 g, spring onion 100 g, onion 150 g, sour plums 50 g, butter 60 g; cooked weight ~1050 g."
+ },
+ {
+  "id": "local:dish-bozartma",
+  "name": "Бозартма из баранины (Bozartma)",
+  "nameEn": "Lamb stewed with tomato (Bozartma)",
+  "aliases": [
+   "bozartma бозартма баранина томат"
+  ],
+  "basis": {
+   "ingredients": [
+    [
+     "usda:172545",
+     800
+    ],
+    [
+     "usda:170000",
+     300
+    ],
+    [
+     "usda:170457",
+     400
+    ],
+    [
+     "usda:173410",
+     50
+    ]
+   ],
+   "grams": 1250
+  },
+  "portions": [
+   {
+    "name": "Порция (≈300 г)",
+    "nameEn": "Portion (~300 g)",
+    "grams": 300
+   },
+   {
+    "name": "Весь рецепт (≈1250 г)",
+    "nameEn": "Whole recipe (~1250 g)",
+    "grams": 1250
+   }
+  ],
+  "source": "Расчёт по рецепту из ингредиентов USDA SR Legacy: баранина 800 г, лук 300 г, помидоры 400 г, сливочное масло 50 г; выход готового блюда ≈1250 г.",
+  "sourceEn": "Recipe estimate from USDA SR Legacy ingredients: lamb 800 g, onion 300 g, tomatoes 400 g, butter 50 g; cooked weight ~1250 g."
+ },
+ {
+  "id": "local:dish-toyuq-bozartma",
+  "name": "Бозартма из курицы",
+  "nameEn": "Chicken bozartma",
+  "aliases": [
+   "toyuq bozartma бозартма курица"
+  ],
+  "basis": {
+   "ingredients": [
+    [
+     "usda:171447",
+     1000
+    ],
+    [
+     "usda:170000",
+     300
+    ],
+    [
+     "usda:170457",
+     400
+    ],
+    [
+     "usda:173410",
+     40
+    ]
+   ],
+   "grams": 1350
+  },
+  "portions": [
+   {
+    "name": "Порция (≈300 г)",
+    "nameEn": "Portion (~300 g)",
+    "grams": 300
+   },
+   {
+    "name": "Весь рецепт (≈1350 г)",
+    "nameEn": "Whole recipe (~1350 g)",
+    "grams": 1350
+   }
+  ],
+  "source": "Расчёт по рецепту из ингредиентов USDA SR Legacy: курица с кожей 1000 г, лук 300 г, помидоры 400 г, сливочное масло 40 г; выход готового блюда ≈1350 г.",
+  "sourceEn": "Recipe estimate from USDA SR Legacy ingredients: chicken with skin 1000 g, onion 300 g, tomatoes 400 g, butter 40 g; cooked weight ~1350 g."
+ },
+ {
+  "id": "local:dish-cigirtma-toyuq",
+  "name": "Чыгыртма из курицы (Toyuq çığırtma)",
+  "nameEn": "Chicken chygyrtma with eggs and tomato",
+  "aliases": [
+   "çığırtma toyuq cigirtma чыгыртма курица яйца"
+  ],
+  "basis": {
+   "ingredients": [
+    [
+     "usda:171447",
+     800
+    ],
+    [
+     "usda:170000",
+     200
+    ],
+    [
+     "usda:170457",
+     300
+    ],
+    [
+     "usda:171287",
+     200
+    ],
+    [
+     "usda:173410",
+     60
+    ]
+   ],
+   "grams": 1300
+  },
+  "portions": [
+   {
+    "name": "Порция (≈300 г)",
+    "nameEn": "Portion (~300 g)",
+    "grams": 300
+   },
+   {
+    "name": "Весь рецепт (≈1300 г)",
+    "nameEn": "Whole recipe (~1300 g)",
+    "grams": 1300
+   }
+  ],
+  "source": "Расчёт по рецепту из ингредиентов USDA SR Legacy: курица с кожей 800 г, лук 200 г, помидоры 300 г, яйца 200 г, сливочное масло 60 г; выход готового блюда ≈1300 г.",
+  "sourceEn": "Recipe estimate from USDA SR Legacy ingredients: chicken with skin 800 g, onion 200 g, tomatoes 300 g, eggs 200 g, butter 60 g; cooked weight ~1300 g."
+ },
+ {
+  "id": "local:dish-pomidor-yumurta",
+  "name": "Яичница с помидорами (Pomidor-yumurta)",
+  "nameEn": "Eggs with tomatoes (Pomidor-yumurta)",
+  "aliases": [
+   "pomidor yumurta pomidorlu yumurta яичница помидоры"
+  ],
+  "basis": {
+   "ingredients": [
+    [
+     "usda:170457",
+     400
+    ],
+    [
+     "usda:171287",
+     300
+    ],
+    [
+     "usda:173410",
+     30
+    ],
+    [
+     "usda:170000",
+     50
+    ]
+   ],
+   "grams": 700
+  },
+  "portions": [
+   {
+    "name": "Порция (≈250 г)",
+    "nameEn": "Portion (~250 g)",
+    "grams": 250
+   },
+   {
+    "name": "Весь рецепт (≈700 г)",
+    "nameEn": "Whole recipe (~700 g)",
+    "grams": 700
+   }
+  ],
+  "source": "Расчёт по рецепту из ингредиентов USDA SR Legacy: помидоры 400 г, яйца 300 г, сливочное масло 30 г, лук 50 г; выход готового блюда ≈700 г.",
+  "sourceEn": "Recipe estimate from USDA SR Legacy ingredients: tomatoes 400 g, eggs 300 g, butter 30 g, onion 50 g; cooked weight ~700 g."
+ },
+ {
+  "id": "local:dish-qayganaq",
+  "name": "Гайганаг — яйца на сливочном масле (Qayğanaq)",
+  "nameEn": "Eggs scrambled in butter (Qayğanaq)",
+  "aliases": [
+   "qayğanaq qayganaq гайганаг яичница"
+  ],
+  "basis": {
+   "ingredients": [
+    [
+     "usda:171287",
+     300
+    ],
+    [
+     "usda:173410",
+     30
+    ],
+    [
+     "usda:171265",
+     50
+    ]
+   ],
+   "grams": 350
+  },
+  "portions": [
+   {
+    "name": "Порция (≈180 г)",
+    "nameEn": "Portion (~180 g)",
+    "grams": 180
+   },
+   {
+    "name": "Весь рецепт (≈350 г)",
+    "nameEn": "Whole recipe (~350 g)",
+    "grams": 350
+   }
+  ],
+  "source": "Расчёт по рецепту из ингредиентов USDA SR Legacy: яйца 300 г, сливочное масло 30 г, молоко 50 г; выход готового блюда ≈350 г.",
+  "sourceEn": "Recipe estimate from USDA SR Legacy ingredients: eggs 300 g, butter 30 g, milk 50 g; cooked weight ~350 g."
+ },
+ {
+  "id": "local:dish-kuku-goyerti",
+  "name": "Кюкю из зелени (Göyərti kükü)",
+  "nameEn": "Herb frittata (Kükü)",
+  "aliases": [
+   "kükü göyərti kükü kuku кюкю зелень яйца"
+  ],
+  "basis": {
+   "ingredients": [
+    [
+     "usda:168462",
+     200
+    ],
+    [
+     "usda:172233",
+     100
+    ],
+    [
+     "usda:169997",
+     100
+    ],
+    [
+     "usda:170005",
+     60
+    ],
+    [
+     "usda:171287",
+     300
+    ],
+    [
+     "usda:173410",
+     40
+    ],
+    [
+     "usda:170187",
+     30
+    ],
+    [
+     "usda:169761",
+     20
+    ]
+   ],
+   "grams": 650
+  },
+  "portions": [
+   {
+    "name": "1 кусок (≈100 г)",
+    "nameEn": "1 slice (~100 g)",
+    "grams": 100
+   },
+   {
+    "name": "Весь рецепт (≈650 г)",
+    "nameEn": "Whole recipe (~650 g)",
+    "grams": 650
+   }
+  ],
+  "source": "Расчёт по рецепту из ингредиентов USDA SR Legacy: шпинат 200 г, укроп 100 г, кинза 100 г, зелёный лук 60 г, яйца 300 г, сливочное масло 40 г, грецкий орех 30 г, мука 20 г; выход готового блюда ≈650 г.",
+  "sourceEn": "Recipe estimate from USDA SR Legacy ingredients: spinach 200 g, dill 100 g, cilantro 100 g, spring onion 60 g, eggs 300 g, butter 40 g, walnuts 30 g, flour 20 g; cooked weight ~650 g."
+ },
+ {
+  "id": "local:dish-ajabsandal",
+  "name": "Аджапсандал (Ajabsandal)",
+  "nameEn": "Vegetable stew with eggplant (Ajabsandal)",
+  "aliases": [
+   "ajabsandal ajapsandal аджапсандал аджап сандал овощи"
+  ],
+  "basis": {
+   "ingredients": [
+    [
+     "usda:169228",
+     500
+    ],
+    [
+     "usda:170026",
+     300
+    ],
+    [
+     "usda:170457",
+     300
+    ],
+    [
+     "usda:170427",
+     200
+    ],
+    [
+     "usda:170000",
+     100
+    ],
+    [
+     "usda:171025",
+     80
+    ]
+   ],
+   "grams": 1250
+  },
+  "portions": [
+   {
+    "name": "Порция (≈300 г)",
+    "nameEn": "Portion (~300 g)",
+    "grams": 300
+   },
+   {
+    "name": "Весь рецепт (≈1250 г)",
+    "nameEn": "Whole recipe (~1250 g)",
+    "grams": 1250
+   }
+  ],
+  "source": "Расчёт по рецепту из ингредиентов USDA SR Legacy: баклажаны 500 г, картофель 300 г, помидоры 300 г, сладкий перец 200 г, лук 100 г, подсолнечное масло 80 г; выход готового блюда ≈1250 г.",
+  "sourceEn": "Recipe estimate from USDA SR Legacy ingredients: eggplant 500 g, potatoes 300 g, tomatoes 300 g, bell pepper 200 g, onion 100 g, sunflower oil 80 g; cooked weight ~1250 g."
+ },
+ {
+  "id": "local:dish-sac-ici",
+  "name": "Садж-ичи с бараниной (Sac içi)",
+  "nameEn": "Saj with lamb and vegetables (Sac içi)",
+  "aliases": [
+   "sac içi saj sac садж мясо овощи"
+  ],
+  "basis": {
+   "ingredients": [
+    [
+     "usda:172545",
+     500
+    ],
+    [
+     "usda:170026",
+     400
+    ],
+    [
+     "usda:169228",
+     300
+    ],
+    [
+     "usda:170457",
+     200
+    ],
+    [
+     "usda:170427",
+     200
+    ],
+    [
+     "usda:170000",
+     100
+    ],
+    [
+     "usda:171025",
+     100
+    ]
+   ],
+   "grams": 1400
+  },
+  "portions": [
+   {
+    "name": "Порция (≈350 г)",
+    "nameEn": "Portion (~350 g)",
+    "grams": 350
+   },
+   {
+    "name": "Весь рецепт (≈1400 г)",
+    "nameEn": "Whole recipe (~1400 g)",
+    "grams": 1400
+   }
+  ],
+  "source": "Расчёт по рецепту из ингредиентов USDA SR Legacy: баранина 500 г, картофель 400 г, баклажаны 300 г, помидоры 200 г, сладкий перец 200 г, лук 100 г, подсолнечное масло 100 г; выход готового блюда ≈1400 г.",
+  "sourceEn": "Recipe estimate from USDA SR Legacy ingredients: lamb 500 g, potatoes 400 g, eggplant 300 g, tomatoes 200 g, bell pepper 200 g, onion 100 g, sunflower oil 100 g; cooked weight ~1400 g."
+ },
+ {
+  "id": "local:dish-sac-toyuq",
+  "name": "Садж с курицей (Toyuq sacı)",
+  "nameEn": "Saj with chicken and vegetables",
+  "aliases": [
+   "toyuq sacı sac saj садж курица"
+  ],
+  "basis": {
+   "ingredients": [
+    [
+     "usda:171067",
+     600
+    ],
+    [
+     "usda:170026",
+     400
+    ],
+    [
+     "usda:169228",
+     300
+    ],
+    [
+     "usda:170457",
+     200
+    ],
+    [
+     "usda:170427",
+     200
+    ],
+    [
+     "usda:170000",
+     100
+    ],
+    [
+     "usda:171025",
+     100
+    ]
+   ],
+   "grams": 1450
+  },
+  "portions": [
+   {
+    "name": "Порция (≈350 г)",
+    "nameEn": "Portion (~350 g)",
+    "grams": 350
+   },
+   {
+    "name": "Весь рецепт (≈1450 г)",
+    "nameEn": "Whole recipe (~1450 g)",
+    "grams": 1450
+   }
+  ],
+  "source": "Расчёт по рецепту из ингредиентов USDA SR Legacy: куриное бедро 600 г, картофель 400 г, баклажаны 300 г, помидоры 200 г, сладкий перец 200 г, лук 100 г, подсолнечное масло 100 г; выход готового блюда ≈1450 г.",
+  "sourceEn": "Recipe estimate from USDA SR Legacy ingredients: chicken thigh 600 g, potatoes 400 g, eggplant 300 g, tomatoes 200 g, bell pepper 200 g, onion 100 g, sunflower oil 100 g; cooked weight ~1450 g."
+ },
+ {
+  "id": "local:dish-levengi-toyuq",
+  "name": "Лявянги из курицы (Toyuq ləvəngisi)",
+  "nameEn": "Chicken stuffed with walnut (Ləvəngi)",
+  "aliases": [
+   "toyuq ləvəngi levengi лявянги курица орехи"
+  ],
+  "basis": {
+   "ingredients": [
+    [
+     "usda:171447",
+     1200
+    ],
+    [
+     "usda:170187",
+     200
+    ],
+    [
+     "usda:170000",
+     200
+    ],
+    [
+     "usda:169949",
+     60
+    ],
+    [
+     "usda:173410",
+     30
+    ]
+   ],
+   "grams": 1350
+  },
+  "portions": [
+   {
+    "name": "Порция (≈300 г)",
+    "nameEn": "Portion (~300 g)",
+    "grams": 300
+   },
+   {
+    "name": "Весь рецепт (≈1350 г)",
+    "nameEn": "Whole recipe (~1350 g)",
+    "grams": 1350
+   }
+  ],
+  "source": "Расчёт по рецепту из ингредиентов USDA SR Legacy: курица с кожей 1200 г, грецкий орех 200 г, лук 200 г, алыча 60 г, сливочное масло 30 г; выход готового блюда ≈1350 г.",
+  "sourceEn": "Recipe estimate from USDA SR Legacy ingredients: chicken with skin 1200 g, walnuts 200 g, onion 200 g, sour plums 60 g, butter 30 g; cooked weight ~1350 g."
+ },
+ {
+  "id": "local:dish-levengi-baliq",
+  "name": "Лявянги из рыбы (Balıq ləvəngisi)",
+  "nameEn": "Fish stuffed with walnut (Balıq ləvəngi)",
+  "aliases": [
+   "balıq ləvəngi baliq levengi лявянги рыба кутум"
+  ],
+  "basis": {
+   "ingredients": [
+    [
+     "usda:171952",
+     1000
+    ],
+    [
+     "usda:170187",
+     150
+    ],
+    [
+     "usda:170000",
+     150
+    ],
+    [
+     "usda:169949",
+     50
+    ],
+    [
+     "usda:171025",
+     20
+    ]
+   ],
+   "grams": 1100
+  },
+  "portions": [
+   {
+    "name": "Порция (≈300 г)",
+    "nameEn": "Portion (~300 g)",
+    "grams": 300
+   },
+   {
+    "name": "Весь рецепт (≈1100 г)",
+    "nameEn": "Whole recipe (~1100 g)",
+    "grams": 1100
+   }
+  ],
+  "source": "Расчёт по рецепту из ингредиентов USDA SR Legacy: кутум/сазан 1000 г, грецкий орех 150 г, лук 150 г, алыча 50 г, подсолнечное масло 20 г; выход готового блюда ≈1100 г.",
+  "sourceEn": "Recipe estimate from USDA SR Legacy ingredients: kutum or carp 1000 g, walnuts 150 g, onion 150 g, sour plums 50 g, sunflower oil 20 g; cooked weight ~1100 g."
+ },
+ {
+  "id": "local:dish-kutum-fried",
+  "name": "Кутум жареный (Qızardılmış kütüm)",
+  "nameEn": "Fried kutum fish",
+  "aliases": [
+   "kütüm qızardılmış kutum кутум рыба жареная"
+  ],
+  "basis": {
+   "ingredients": [
+    [
+     "usda:171952",
+     1000
+    ],
+    [
+     "usda:169761",
+     40
+    ],
+    [
+     "usda:171025",
+     70
+    ]
+   ],
+   "grams": 830
+  },
+  "portions": [
+   {
+    "name": "Порция (≈250 г)",
+    "nameEn": "Portion (~250 g)",
+    "grams": 250
+   },
+   {
+    "name": "Весь рецепт (≈830 г)",
+    "nameEn": "Whole recipe (~830 g)",
+    "grams": 830
+   }
+  ],
+  "source": "Расчёт по рецепту из ингредиентов USDA SR Legacy: кутум/сазан 1000 г, мука 40 г, подсолнечное масло 70 г; выход готового блюда ≈830 г.",
+  "sourceEn": "Recipe estimate from USDA SR Legacy ingredients: kutum or carp 1000 g, flour 40 g, sunflower oil 70 g; cooked weight ~830 g."
+ },
+ {
+  "id": "local:dish-badimcan-ikra",
+  "name": "Баклажанная икра (Badımcan ikrası)",
+  "nameEn": "Eggplant caviar",
+  "aliases": [
+   "badımcan ikrası badimcan икра баклажанная"
+  ],
+  "basis": {
+   "ingredients": [
+    [
+     "usda:169228",
+     600
+    ],
+    [
+     "usda:170427",
+     150
+    ],
+    [
+     "usda:170457",
+     150
+    ],
+    [
+     "usda:170000",
+     80
+    ],
+    [
+     "usda:171025",
+     50
+    ],
+    [
+     "usda:169230",
+     10
+    ]
+   ],
+   "grams": 750
+  },
+  "portions": [
+   {
+    "name": "Порция (≈100 г)",
+    "nameEn": "Portion (~100 g)",
+    "grams": 100
+   },
+   {
+    "name": "Весь рецепт (≈750 г)",
+    "nameEn": "Whole recipe (~750 g)",
+    "grams": 750
+   }
+  ],
+  "source": "Расчёт по рецепту из ингредиентов USDA SR Legacy: баклажаны 600 г, сладкий перец 150 г, помидоры 150 г, лук 80 г, подсолнечное масло 50 г, чеснок 10 г; выход готового блюда ≈750 г.",
+  "sourceEn": "Recipe estimate from USDA SR Legacy ingredients: eggplant 600 g, bell pepper 150 g, tomatoes 150 g, onion 80 g, sunflower oil 50 g, garlic 10 g; cooked weight ~750 g."
+ },
+ {
+  "id": "local:dish-badimcan-qizardilmis",
+  "name": "Баклажаны жареные",
+  "nameEn": "Fried eggplant slices",
+  "aliases": [
+   "badımcan qızardılmış баклажаны жареные"
+  ],
+  "basis": {
+   "ingredients": [
+    [
+     "usda:169228",
+     600
+    ],
+    [
+     "usda:171025",
+     90
+    ],
+    [
+     "usda:169230",
+     10
+    ]
+   ],
+   "grams": 500
+  },
+  "portions": [
+   {
+    "name": "Порция (≈150 г)",
+    "nameEn": "Portion (~150 g)",
+    "grams": 150
+   },
+   {
+    "name": "Весь рецепт (≈500 г)",
+    "nameEn": "Whole recipe (~500 g)",
+    "grams": 500
+   }
+  ],
+  "source": "Расчёт по рецепту из ингредиентов USDA SR Legacy: баклажаны 600 г, подсолнечное масло 90 г, чеснок 10 г; выход готового блюда ≈500 г.",
+  "sourceEn": "Recipe estimate from USDA SR Legacy ingredients: eggplant 600 g, sunflower oil 90 g, garlic 10 g; cooked weight ~500 g."
+ },
+ {
+  "id": "local:dish-qutab-et",
+  "name": "Кутабы с мясом (Ət qutabı)",
+  "nameEn": "Qutab with meat",
+  "aliases": [
+   "ət qutabı qutab kutab кутаб кутабы мясо"
+  ],
+  "basis": {
+   "ingredients": [
+    [
+     "usda:169761",
+     300
+    ],
+    [
+     "usda:173647",
+     150
+    ],
+    [
+     "usda:174370",
+     300
+    ],
+    [
+     "usda:170000",
+     100
+    ],
+    [
+     "usda:169134",
+     30
+    ],
+    [
+     "usda:173410",
+     50
+    ]
+   ],
+   "grams": 780
+  },
+  "portions": [
+   {
+    "name": "1 кутаб (≈65 г)",
+    "nameEn": "1 qutab (~65 g)",
+    "grams": 65
+   },
+   {
+    "name": "Весь рецепт (≈780 г)",
+    "nameEn": "Whole recipe (~780 g)",
+    "grams": 780
+   }
+  ],
+  "source": "Расчёт по рецепту из ингредиентов USDA SR Legacy: мука 300 г, вода 150 г, бараний фарш 300 г, лук 100 г, гранат 30 г, сливочное масло 50 г; выход готового блюда ≈780 г.",
+  "sourceEn": "Recipe estimate from USDA SR Legacy ingredients: flour 300 g, water 150 g, ground lamb 300 g, onion 100 g, pomegranate 30 g, butter 50 g; cooked weight ~780 g."
+ },
+ {
+  "id": "local:dish-qutab-goyerti",
+  "name": "Кутабы с зеленью (Göyərti qutabı)",
+  "nameEn": "Qutab with greens",
+  "aliases": [
+   "göyərti qutabı qutab kutab кутаб зелень"
+  ],
+  "basis": {
+   "ingredients": [
+    [
+     "usda:169761",
+     300
+    ],
+    [
+     "usda:173647",
+     150
+    ],
+    [
+     "usda:168462",
+     300
+    ],
+    [
+     "usda:172233",
+     50
+    ],
+    [
+     "usda:169997",
+     50
+    ],
+    [
+     "usda:170005",
+     50
+    ],
+    [
+     "usda:173410",
+     60
+    ]
+   ],
+   "grams": 780
+  },
+  "portions": [
+   {
+    "name": "1 кутаб (≈65 г)",
+    "nameEn": "1 qutab (~65 g)",
+    "grams": 65
+   },
+   {
+    "name": "Весь рецепт (≈780 г)",
+    "nameEn": "Whole recipe (~780 g)",
+    "grams": 780
+   }
+  ],
+  "source": "Расчёт по рецепту из ингредиентов USDA SR Legacy: мука 300 г, вода 150 г, шпинат 300 г, укроп 50 г, кинза 50 г, зелёный лук 50 г, сливочное масло 60 г; выход готового блюда ≈780 г.",
+  "sourceEn": "Recipe estimate from USDA SR Legacy ingredients: flour 300 g, water 150 g, spinach 300 g, dill 50 g, cilantro 50 g, spring onion 50 g, butter 60 g; cooked weight ~780 g."
+ },
+ {
+  "id": "local:dish-qutab-balqabaq",
+  "name": "Кутабы с тыквой (Balqabaq qutabı)",
+  "nameEn": "Qutab with pumpkin",
+  "aliases": [
+   "balqabaq qutabı qutab kutab кутаб тыква"
+  ],
+  "basis": {
+   "ingredients": [
+    [
+     "usda:169761",
+     300
+    ],
+    [
+     "usda:173647",
+     150
+    ],
+    [
+     "usda:168448",
+     400
+    ],
+    [
+     "usda:170000",
+     50
+    ],
+    [
+     "usda:169134",
+     50
+    ],
+    [
+     "usda:169655",
+     10
+    ],
+    [
+     "usda:173410",
+     60
+    ]
+   ],
+   "grams": 820
+  },
+  "portions": [
+   {
+    "name": "1 кутаб (≈70 г)",
+    "nameEn": "1 qutab (~70 g)",
+    "grams": 70
+   },
+   {
+    "name": "Весь рецепт (≈820 г)",
+    "nameEn": "Whole recipe (~820 g)",
+    "grams": 820
+   }
+  ],
+  "source": "Расчёт по рецепту из ингредиентов USDA SR Legacy: мука 300 г, вода 150 г, тыква 400 г, лук 50 г, гранат 50 г, сахар 10 г, сливочное масло 60 г; выход готового блюда ≈820 г.",
+  "sourceEn": "Recipe estimate from USDA SR Legacy ingredients: flour 300 g, water 150 g, pumpkin 400 g, onion 50 g, pomegranate 50 g, sugar 10 g, butter 60 g; cooked weight ~820 g."
+ },
+ {
+  "id": "local:dish-qutab-pendir",
+  "name": "Кутабы с сыром",
+  "nameEn": "Qutab with cheese",
+  "aliases": [
+   "pendirli qutab qutab кутаб сыр"
+  ],
+  "basis": {
+   "ingredients": [
+    [
+     "usda:169761",
+     300
+    ],
+    [
+     "usda:173647",
+     150
+    ],
+    [
+     "usda:173420",
+     200
+    ],
+    [
+     "usda:170845",
+     100
+    ],
+    [
+     "usda:173410",
+     50
+    ]
+   ],
+   "grams": 760
+  },
+  "portions": [
+   {
+    "name": "1 кутаб (≈65 г)",
+    "nameEn": "1 qutab (~65 g)",
+    "grams": 65
+   },
+   {
+    "name": "Весь рецепт (≈760 г)",
+    "nameEn": "Whole recipe (~760 g)",
+    "grams": 760
+   }
+  ],
+  "source": "Расчёт по рецепту из ингредиентов USDA SR Legacy: мука 300 г, вода 150 г, брынза 200 г, сулугуни/моцарелла 100 г, сливочное масло 50 г; выход готового блюда ≈760 г.",
+  "sourceEn": "Recipe estimate from USDA SR Legacy ingredients: flour 300 g, water 150 g, white cheese 200 g, suluguni or mozzarella 100 g, butter 50 g; cooked weight ~760 g."
+ },
+ {
+  "id": "local:dish-qurze",
+  "name": "Гурзэ — пельмени по-бакински (Qurzə)",
+  "nameEn": "Qurze dumplings",
+  "aliases": [
+   "qurzə qurze гурзе гурза пельмени"
+  ],
+  "basis": {
+   "ingredients": [
+    [
+     "usda:169761",
+     300
+    ],
+    [
+     "usda:173647",
+     140
+    ],
+    [
+     "usda:171287",
+     50
+    ],
+    [
+     "usda:174370",
+     400
+    ],
+    [
+     "usda:170000",
+     120
+    ],
+    [
+     "usda:173410",
+     30
+    ]
+   ],
+   "grams": 1000
+  },
+  "portions": [
+   {
+    "name": "1 гурзэ (≈25 г)",
+    "nameEn": "1 dumpling (~25 g)",
+    "grams": 25
+   },
+   {
+    "name": "Порция (≈250 г)",
+    "nameEn": "Portion (~250 g)",
+    "grams": 250
+   },
+   {
+    "name": "Весь рецепт (≈1000 г)",
+    "nameEn": "Whole recipe (~1000 g)",
+    "grams": 1000
+   }
+  ],
+  "source": "Расчёт по рецепту из ингредиентов USDA SR Legacy: мука 300 г, вода 140 г, яйца 50 г, бараний фарш 400 г, лук 120 г, сливочное масло 30 г; выход готового блюда ≈1000 г.",
+  "sourceEn": "Recipe estimate from USDA SR Legacy ingredients: flour 300 g, water 140 g, eggs 50 g, ground lamb 400 g, onion 120 g, butter 30 g; cooked weight ~1000 g."
+ },
+ {
+  "id": "local:dish-xengel-qurut",
+  "name": "Хангял с говурмой и катыком (Xəngəl)",
+  "nameEn": "Khangal: noodles with qovurma and yogurt",
+  "aliases": [
+   "xəngəl xengel хангял хингал катык"
+  ],
+  "basis": {
+   "ingredients": [
+    [
+     "usda:169761",
+     400
+    ],
+    [
+     "usda:173647",
+     180
+    ],
+    [
+     "usda:171287",
+     50
+    ],
+    [
+     "usda:172545",
+     300
+    ],
+    [
+     "usda:170000",
+     200
+    ],
+    [
+     "usda:173410",
+     60
+    ],
+    [
+     "usda:171284",
+     150
+    ],
+    [
+     "usda:169230",
+     10
+    ]
+   ],
+   "grams": 1300
+  },
+  "portions": [
+   {
+    "name": "Порция (≈350 г)",
+    "nameEn": "Portion (~350 g)",
+    "grams": 350
+   },
+   {
+    "name": "Весь рецепт (≈1300 г)",
+    "nameEn": "Whole recipe (~1300 g)",
+    "grams": 1300
+   }
+  ],
+  "source": "Расчёт по рецепту из ингредиентов USDA SR Legacy: мука 400 г, вода 180 г, яйца 50 г, баранина 300 г, лук 200 г, сливочное масло 60 г, катык 150 г, чеснок 10 г; выход готового блюда ≈1300 г.",
+  "sourceEn": "Recipe estimate from USDA SR Legacy ingredients: flour 400 g, water 180 g, eggs 50 g, lamb 300 g, onion 200 g, butter 60 g, plain yogurt 150 g, garlic 10 g; cooked weight ~1300 g."
+ },
+ {
+  "id": "local:dish-khash",
+  "name": "Хаш (Xaş)",
+  "nameEn": "Khash: tripe and shank soup",
+  "aliases": [
+   "xaş xas хаш суп"
+  ],
+  "basis": {
+   "ingredients": [
+    [
+     "usda:170599",
+     600
+    ],
+    [
+     "usda:169441",
+     300
+    ],
+    [
+     "usda:173647",
+     2000
+    ],
+    [
+     "usda:169230",
+     30
+    ]
+   ],
+   "grams": 2200
+  },
+  "portions": [
+   {
+    "name": "Тарелка (≈450 г)",
+    "nameEn": "Bowl (~450 g)",
+    "grams": 450
+   },
+   {
+    "name": "Весь рецепт (≈2200 г)",
+    "nameEn": "Whole recipe (~2200 g)",
+    "grams": 2200
+   }
+  ],
+  "source": "Расчёт по рецепту из ингредиентов USDA SR Legacy: рубец 600 г, говяжья голяшка 300 г, вода 2000 г, чеснок 30 г; выход готового блюда ≈2200 г. Наваристость сильно зависит от костей и ножек.",
+  "sourceEn": "Recipe estimate from USDA SR Legacy ingredients: tripe 600 g, beef shank 300 g, water 2000 g, garlic 30 g; cooked weight ~2200 g."
+ },
+ {
+  "id": "local:dish-dusbere",
+  "name": "Дюшбара — суп с пельменями (Düşbərə)",
+  "nameEn": "Dushbara dumpling soup (Düşbərə)",
+  "aliases": [
+   "düşbərə dusbere дюшбара душбара суп пельмени"
+  ],
+  "basis": {
+   "ingredients": [
+    [
+     "usda:169761",
+     200
+    ],
+    [
+     "usda:173647",
+     1590
+    ],
+    [
+     "usda:171287",
+     50
+    ],
+    [
+     "usda:174370",
+     300
+    ],
+    [
+     "usda:170000",
+     80
+    ],
+    [
+     "usda:171400",
+     10
+    ]
+   ],
+   "grams": 2100
+  },
+  "portions": [
+   {
+    "name": "Тарелка (≈350 г)",
+    "nameEn": "Bowl (~350 g)",
+    "grams": 350
+   },
+   {
+    "name": "Весь рецепт (≈2100 г)",
+    "nameEn": "Whole recipe (~2100 g)",
+    "grams": 2100
+   }
+  ],
+  "source": "Расчёт по рецепту из ингредиентов USDA SR Legacy: мука 200 г, вода 1590 г, яйца 50 г, бараний фарш 300 г, лук 80 г, курдючный жир 10 г; выход готового блюда ≈2100 г.",
+  "sourceEn": "Recipe estimate from USDA SR Legacy ingredients: flour 200 g, water 1590 g, eggs 50 g, ground lamb 300 g, onion 80 g, tail fat 10 g; cooked weight ~2100 g."
+ },
+ {
+  "id": "local:dish-piti",
+  "name": "Пити (Piti)",
+  "nameEn": "Piti: lamb and chickpea pot soup",
+  "aliases": [
+   "piti пити шекинский суп баранина нут"
+  ],
+  "basis": {
+   "ingredients": [
+    [
+     "usda:172545",
+     500
+    ],
+    [
+     "usda:173756",
+     100
+    ],
+    [
+     "usda:170026",
+     300
+    ],
+    [
+     "usda:170190",
+     80
+    ],
+    [
+     "usda:171400",
+     80
+    ],
+    [
+     "usda:170000",
+     100
+    ],
+    [
+     "usda:170934",
+     0.3
+    ],
+    [
+     "usda:173647",
+     1200
+    ]
+   ],
+   "grams": 1900
+  },
+  "portions": [
+   {
+    "name": "Тарелка (≈450 г)",
+    "nameEn": "Bowl (~450 g)",
+    "grams": 450
+   },
+   {
+    "name": "Весь рецепт (≈1900 г)",
+    "nameEn": "Whole recipe (~1900 g)",
+    "grams": 1900
+   }
+  ],
+  "source": "Расчёт по рецепту из ингредиентов USDA SR Legacy: баранина 500 г, нут 100 г, картофель 300 г, каштаны 80 г, курдючный жир 80 г, лук 100 г, шафран 0,3 г, вода 1200 г; выход готового блюда ≈1900 г.",
+  "sourceEn": "Recipe estimate from USDA SR Legacy ingredients: lamb 500 g, chickpeas 100 g, potatoes 300 g, chestnuts 80 g, tail fat 80 g, onion 100 g, saffron 0.3 g, water 1200 g; cooked weight ~1900 g."
+ },
+ {
+  "id": "local:dish-kufte-bozbas",
+  "name": "Кюфта-бозбаш (Küftə bozbaş)",
+  "nameEn": "Kufta bozbash: meatball soup",
+  "aliases": [
+   "küftə bozbaş kufte bozbash кюфта бозбаш"
+  ],
+  "basis": {
+   "ingredients": [
+    [
+     "usda:174370",
+     600
+    ],
+    [
+     "usda:168877",
+     60
+    ],
+    [
+     "usda:170000",
+     150
+    ],
+    [
+     "usda:173756",
+     100
+    ],
+    [
+     "usda:170026",
+     400
+    ],
+    [
+     "usda:169949",
+     50
+    ],
+    [
+     "usda:173410",
+     30
+    ],
+    [
+     "usda:173647",
+     1800
+    ]
+   ],
+   "grams": 2700
+  },
+  "portions": [
+   {
+    "name": "Тарелка (≈450 г)",
+    "nameEn": "Bowl (~450 g)",
+    "grams": 450
+   },
+   {
+    "name": "Весь рецепт (≈2700 г)",
+    "nameEn": "Whole recipe (~2700 g)",
+    "grams": 2700
+   }
+  ],
+  "source": "Расчёт по рецепту из ингредиентов USDA SR Legacy: бараний фарш 600 г, рис 60 г, лук 150 г, нут 100 г, картофель 400 г, алыча 50 г, сливочное масло 30 г, вода 1800 г; выход готового блюда ≈2700 г.",
+  "sourceEn": "Recipe estimate from USDA SR Legacy ingredients: ground lamb 600 g, rice 60 g, onion 150 g, chickpeas 100 g, potatoes 400 g, sour plums 50 g, butter 30 g, water 1800 g; cooked weight ~2700 g."
+ },
+ {
+  "id": "local:dish-parca-bozbas",
+  "name": "Бозбаш с кусками баранины (Parça bozbaş)",
+  "nameEn": "Bozbash with lamb pieces",
+  "aliases": [
+   "parça bozbaş bozbash бозбаш баранина нут"
+  ],
+  "basis": {
+   "ingredients": [
+    [
+     "usda:172545",
+     600
+    ],
+    [
+     "usda:173756",
+     100
+    ],
+    [
+     "usda:170026",
+     400
+    ],
+    [
+     "usda:170000",
+     100
+    ],
+    [
+     "usda:170457",
+     150
+    ],
+    [
+     "usda:173647",
+     1800
+    ]
+   ],
+   "grams": 2600
+  },
+  "portions": [
+   {
+    "name": "Тарелка (≈450 г)",
+    "nameEn": "Bowl (~450 g)",
+    "grams": 450
+   },
+   {
+    "name": "Весь рецепт (≈2600 г)",
+    "nameEn": "Whole recipe (~2600 g)",
+    "grams": 2600
+   }
+  ],
+  "source": "Расчёт по рецепту из ингредиентов USDA SR Legacy: баранина 600 г, нут 100 г, картофель 400 г, лук 100 г, помидоры 150 г, вода 1800 г; выход готового блюда ≈2600 г.",
+  "sourceEn": "Recipe estimate from USDA SR Legacy ingredients: lamb 600 g, chickpeas 100 g, potatoes 400 g, onion 100 g, tomatoes 150 g, water 1800 g; cooked weight ~2600 g."
+ },
+ {
+  "id": "local:dish-dovga",
+  "name": "Довга (Dovğa)",
+  "nameEn": "Dovga: warm yogurt soup with herbs",
+  "aliases": [
+   "dovğa dovga довга"
+  ],
+  "basis": {
+   "ingredients": [
+    [
+     "usda:171284",
+     1000
+    ],
+    [
+     "usda:173647",
+     500
+    ],
+    [
+     "usda:168877",
+     50
+    ],
+    [
+     "usda:171287",
+     50
+    ],
+    [
+     "usda:169761",
+     20
+    ],
+    [
+     "usda:168462",
+     150
+    ],
+    [
+     "usda:172233",
+     50
+    ],
+    [
+     "usda:169997",
+     50
+    ],
+    [
+     "usda:173475",
+     20
+    ]
+   ],
+   "grams": 1800
+  },
+  "portions": [
+   {
+    "name": "Тарелка (≈300 г)",
+    "nameEn": "Bowl (~300 g)",
+    "grams": 300
+   },
+   {
+    "name": "Весь рецепт (≈1800 г)",
+    "nameEn": "Whole recipe (~1800 g)",
+    "grams": 1800
+   }
+  ],
+  "source": "Расчёт по рецепту из ингредиентов USDA SR Legacy: катык 1000 г, вода 500 г, рис 50 г, яйца 50 г, мука 20 г, шпинат 150 г, укроп 50 г, кинза 50 г, мята 20 г; выход готового блюда ≈1800 г.",
+  "sourceEn": "Recipe estimate from USDA SR Legacy ingredients: plain yogurt 1000 g, water 500 g, rice 50 g, eggs 50 g, flour 20 g, spinach 150 g, dill 50 g, cilantro 50 g, mint 20 g; cooked weight ~1800 g."
+ },
+ {
+  "id": "local:dish-mercimek",
+  "name": "Суп из красной чечевицы (Mərci şorbası)",
+  "nameEn": "Red lentil soup",
+  "aliases": [
+   "mərci şorbası mercimek merci суп чечевица"
+  ],
+  "basis": {
+   "ingredients": [
+    [
+     "usda:174284",
+     250
+    ],
+    [
+     "usda:170000",
+     100
+    ],
+    [
+     "usda:170393",
+     100
+    ],
+    [
+     "usda:173410",
+     40
+    ],
+    [
+     "usda:169761",
+     15
+    ],
+    [
+     "usda:170459",
+     20
+    ],
+    [
+     "usda:173647",
+     1800
+    ]
+   ],
+   "grams": 2000
+  },
+  "portions": [
+   {
+    "name": "Тарелка (≈300 г)",
+    "nameEn": "Bowl (~300 g)",
+    "grams": 300
+   },
+   {
+    "name": "Весь рецепт (≈2000 г)",
+    "nameEn": "Whole recipe (~2000 g)",
+    "grams": 2000
+   }
+  ],
+  "source": "Расчёт по рецепту из ингредиентов USDA SR Legacy: красная чечевица 250 г, лук 100 г, морковь 100 г, сливочное масло 40 г, мука 15 г, томатная паста 20 г, вода 1800 г; выход готового блюда ≈2000 г.",
+  "sourceEn": "Recipe estimate from USDA SR Legacy ingredients: red lentils 250 g, onion 100 g, carrots 100 g, butter 40 g, flour 15 g, tomato paste 20 g, water 1800 g; cooked weight ~2000 g."
+ },
+ {
+  "id": "local:dish-eriste",
+  "name": "Суп с домашней лапшой (Əriştə şorbası)",
+  "nameEn": "Homemade noodle soup (Əriştə)",
+  "aliases": [
+   "əriştə şorbası eriste суп лапша"
+  ],
+  "basis": {
+   "ingredients": [
+    [
+     "usda:169731",
+     150
+    ],
+    [
+     "usda:172545",
+     200
+    ],
+    [
+     "usda:173756",
+     60
+    ],
+    [
+     "usda:170000",
+     80
+    ],
+    [
+     "usda:173410",
+     20
+    ],
+    [
+     "usda:173647",
+     1500
+    ]
+   ],
+   "grams": 1800
+  },
+  "portions": [
+   {
+    "name": "Тарелка (≈350 г)",
+    "nameEn": "Bowl (~350 g)",
+    "grams": 350
+   },
+   {
+    "name": "Весь рецепт (≈1800 г)",
+    "nameEn": "Whole recipe (~1800 g)",
+    "grams": 1800
+   }
+  ],
+  "source": "Расчёт по рецепту из ингредиентов USDA SR Legacy: яичная лапша 150 г, баранина 200 г, нут 60 г, лук 80 г, сливочное масло 20 г, вода 1500 г; выход готового блюда ≈1800 г.",
+  "sourceEn": "Recipe estimate from USDA SR Legacy ingredients: egg noodles 150 g, lamb 200 g, chickpeas 60 g, onion 80 g, butter 20 g, water 1500 g; cooked weight ~1800 g."
+ },
+ {
+  "id": "local:dish-toyuq-sorba",
+  "name": "Куриный суп с лапшой (Toyuq şorbası)",
+  "nameEn": "Chicken noodle soup",
+  "aliases": [
+   "toyuq şorbası куриный суп лапша бульон"
+  ],
+  "basis": {
+   "ingredients": [
+    [
+     "usda:171447",
+     500
+    ],
+    [
+     "usda:169731",
+     100
+    ],
+    [
+     "usda:170026",
+     200
+    ],
+    [
+     "usda:170393",
+     100
+    ],
+    [
+     "usda:170000",
+     80
+    ],
+    [
+     "usda:173647",
+     2000
+    ]
+   ],
+   "grams": 2700
+  },
+  "portions": [
+   {
+    "name": "Тарелка (≈350 г)",
+    "nameEn": "Bowl (~350 g)",
+    "grams": 350
+   },
+   {
+    "name": "Весь рецепт (≈2700 г)",
+    "nameEn": "Whole recipe (~2700 g)",
+    "grams": 2700
+   }
+  ],
+  "source": "Расчёт по рецепту из ингредиентов USDA SR Legacy: курица с кожей 500 г, яичная лапша 100 г, картофель 200 г, морковь 100 г, лук 80 г, вода 2000 г; выход готового блюда ≈2700 г.",
+  "sourceEn": "Recipe estimate from USDA SR Legacy ingredients: chicken with skin 500 g, egg noodles 100 g, potatoes 200 g, carrots 100 g, onion 80 g, water 2000 g; cooked weight ~2700 g."
+ },
+ {
+  "id": "local:dish-borsch",
+  "name": "Борщ с говядиной",
+  "nameEn": "Borscht with beef",
+  "aliases": [
+   "борщ borsch borscht"
+  ],
+  "basis": {
+   "ingredients": [
+    [
+     "usda:171206",
+     400
+    ],
+    [
+     "usda:169145",
+     300
+    ],
+    [
+     "usda:169975",
+     300
+    ],
+    [
+     "usda:170026",
+     300
+    ],
+    [
+     "usda:170393",
+     100
+    ],
+    [
+     "usda:170000",
+     100
+    ],
+    [
+     "usda:170459",
+     40
+    ],
+    [
+     "usda:171025",
+     30
+    ],
+    [
+     "usda:173647",
+     2000
+    ]
+   ],
+   "grams": 3300
+  },
+  "portions": [
+   {
+    "name": "Тарелка (≈350 г)",
+    "nameEn": "Bowl (~350 g)",
+    "grams": 350
+   },
+   {
+    "name": "Весь рецепт (≈3300 г)",
+    "nameEn": "Whole recipe (~3300 g)",
+    "grams": 3300
+   }
+  ],
+  "source": "Расчёт по рецепту из ингредиентов USDA SR Legacy: говядина 400 г, свёкла 300 г, капуста 300 г, картофель 300 г, морковь 100 г, лук 100 г, томатная паста 40 г, подсолнечное масло 30 г, вода 2000 г; выход готового блюда ≈3300 г. Без сметаны: её стоит записать отдельно.",
+  "sourceEn": "Recipe estimate from USDA SR Legacy ingredients: beef 400 g, beetroot 300 g, cabbage 300 g, potatoes 300 g, carrots 100 g, onion 100 g, tomato paste 40 g, sunflower oil 30 g, water 2000 g; cooked weight ~3300 g."
+ },
+ {
+  "id": "local:dish-shchi",
+  "name": "Щи из свежей капусты",
+  "nameEn": "Cabbage soup (shchi)",
+  "aliases": [
+   "щи shchi kələm şorbası"
+  ],
+  "basis": {
+   "ingredients": [
+    [
+     "usda:171206",
+     300
+    ],
+    [
+     "usda:169975",
+     400
+    ],
+    [
+     "usda:170026",
+     300
+    ],
+    [
+     "usda:170393",
+     100
+    ],
+    [
+     "usda:170000",
+     80
+    ],
+    [
+     "usda:171025",
+     20
+    ],
+    [
+     "usda:173647",
+     2000
+    ]
+   ],
+   "grams": 3000
+  },
+  "portions": [
+   {
+    "name": "Тарелка (≈350 г)",
+    "nameEn": "Bowl (~350 g)",
+    "grams": 350
+   },
+   {
+    "name": "Весь рецепт (≈3000 г)",
+    "nameEn": "Whole recipe (~3000 g)",
+    "grams": 3000
+   }
+  ],
+  "source": "Расчёт по рецепту из ингредиентов USDA SR Legacy: говядина 300 г, капуста 400 г, картофель 300 г, морковь 100 г, лук 80 г, подсолнечное масло 20 г, вода 2000 г; выход готового блюда ≈3000 г.",
+  "sourceEn": "Recipe estimate from USDA SR Legacy ingredients: beef 300 g, cabbage 400 g, potatoes 300 g, carrots 100 g, onion 80 g, sunflower oil 20 g, water 2000 g; cooked weight ~3000 g."
+ },
+ {
+  "id": "local:dish-solyanka",
+  "name": "Солянка сборная мясная",
+  "nameEn": "Mixed meat solyanka",
+  "aliases": [
+   "солянка solyanka"
+  ],
+  "basis": {
+   "ingredients": [
+    [
+     "usda:171206",
+     200
+    ],
+    [
+     "usda:173864",
+     150
+    ],
+    [
+     "usda:172954",
+     150
+    ],
+    [
+     "usda:173875",
+     100
+    ],
+    [
+     "usda:169379",
+     150
+    ],
+    [
+     "usda:169096",
+     50
+    ],
+    [
+     "usda:170000",
+     100
+    ],
+    [
+     "usda:170459",
+     50
+    ],
+    [
+     "usda:171025",
+     30
+    ],
+    [
+     "usda:167747",
+     20
+    ],
+    [
+     "usda:173647",
+     1500
+    ]
+   ],
+   "grams": 2300
+  },
+  "portions": [
+   {
+    "name": "Тарелка (≈350 г)",
+    "nameEn": "Bowl (~350 g)",
+    "grams": 350
+   },
+   {
+    "name": "Весь рецепт (≈2300 г)",
+    "nameEn": "Whole recipe (~2300 g)",
+    "grams": 2300
+   }
+  ],
+  "source": "Расчёт по рецепту из ингредиентов USDA SR Legacy: говядина 200 г, ветчина 150 г, копчёная колбаса 150 г, сосиски 100 г, солёные огурцы 150 г, оливки 50 г, лук 100 г, томатная паста 50 г, подсолнечное масло 30 г, лимонный сок 20 г, вода 1500 г; выход готового блюда ≈2300 г.",
+  "sourceEn": "Recipe estimate from USDA SR Legacy ingredients: beef 200 g, ham 150 g, smoked sausage 150 g, frankfurters 100 g, pickles 150 g, olives 50 g, onion 100 g, tomato paste 50 g, sunflower oil 30 g, lemon juice 20 g, water 1500 g; cooked weight ~2300 g."
+ },
+ {
+  "id": "local:dish-okroshka",
+  "name": "Окрошка на кефире",
+  "nameEn": "Okroshka on kefir",
+  "aliases": [
+   "окрошка okroshka"
+  ],
+  "basis": {
+   "ingredients": [
+    [
+     "usda:170026",
+     300
+    ],
+    [
+     "usda:171287",
+     200
+    ],
+    [
+     "usda:168409",
+     250
+    ],
+    [
+     "usda:169276",
+     150
+    ],
+    [
+     "usda:172013",
+     200
+    ],
+    [
+     "usda:172233",
+     20
+    ],
+    [
+     "usda:170005",
+     30
+    ],
+    [
+     "usda:170904",
+     1000
+    ]
+   ],
+   "grams": 2100
+  },
+  "portions": [
+   {
+    "name": "Тарелка (≈350 г)",
+    "nameEn": "Bowl (~350 g)",
+    "grams": 350
+   },
+   {
+    "name": "Весь рецепт (≈2100 г)",
+    "nameEn": "Whole recipe (~2100 g)",
+    "grams": 2100
+   }
+  ],
+  "source": "Расчёт по рецепту из ингредиентов USDA SR Legacy: картофель 300 г, яйца 200 г, огурцы 250 г, редис 150 г, варёная колбаса 200 г, укроп 20 г, зелёный лук 30 г, кефир 1000 г; выход готового блюда ≈2100 г.",
+  "sourceEn": "Recipe estimate from USDA SR Legacy ingredients: potatoes 300 g, eggs 200 g, cucumbers 250 g, radish 150 g, bologna sausage 200 g, dill 20 g, spring onion 30 g, kefir 1000 g; cooked weight ~2100 g."
+ },
+ {
+  "id": "local:dish-ukha",
+  "name": "Уха",
+  "nameEn": "Fish soup (ukha)",
+  "aliases": [
+   "уха balıq şorbası рыбный суп"
+  ],
+  "basis": {
+   "ingredients": [
+    [
+     "usda:171952",
+     500
+    ],
+    [
+     "usda:170026",
+     300
+    ],
+    [
+     "usda:170393",
+     80
+    ],
+    [
+     "usda:170000",
+     80
+    ],
+    [
+     "usda:172233",
+     10
+    ],
+    [
+     "usda:173647",
+     1800
+    ]
+   ],
+   "grams": 2600
+  },
+  "portions": [
+   {
+    "name": "Тарелка (≈350 г)",
+    "nameEn": "Bowl (~350 g)",
+    "grams": 350
+   },
+   {
+    "name": "Весь рецепт (≈2600 г)",
+    "nameEn": "Whole recipe (~2600 g)",
+    "grams": 2600
+   }
+  ],
+  "source": "Расчёт по рецепту из ингредиентов USDA SR Legacy: кутум/сазан 500 г, картофель 300 г, морковь 80 г, лук 80 г, укроп 10 г, вода 1800 г; выход готового блюда ≈2600 г.",
+  "sourceEn": "Recipe estimate from USDA SR Legacy ingredients: kutum or carp 500 g, potatoes 300 g, carrots 80 g, onion 80 g, dill 10 g, water 1800 g; cooked weight ~2600 g."
+ },
+ {
+  "id": "local:dish-gorohovy",
+  "name": "Гороховый суп с копчёностями",
+  "nameEn": "Pea soup with smoked meat",
+  "aliases": [
+   "гороховый суп noxud şorbası"
+  ],
+  "basis": {
+   "ingredients": [
+    [
+     "usda:174284",
+     250
+    ],
+    [
+     "usda:170026",
+     300
+    ],
+    [
+     "usda:170393",
+     80
+    ],
+    [
+     "usda:170000",
+     80
+    ],
+    [
+     "usda:172954",
+     200
+    ],
+    [
+     "usda:171025",
+     20
+    ],
+    [
+     "usda:173647",
+     2000
+    ]
+   ],
+   "grams": 2600
+  },
+  "portions": [
+   {
+    "name": "Тарелка (≈350 г)",
+    "nameEn": "Bowl (~350 g)",
+    "grams": 350
+   },
+   {
+    "name": "Весь рецепт (≈2600 г)",
+    "nameEn": "Whole recipe (~2600 g)",
+    "grams": 2600
+   }
+  ],
+  "source": "Расчёт по рецепту из ингредиентов USDA SR Legacy: красная чечевица 250 г, картофель 300 г, морковь 80 г, лук 80 г, копчёная колбаса 200 г, подсолнечное масло 20 г, вода 2000 г; выход готового блюда ≈2600 г. Колотый горох заменён по составу близкой чечевицей USDA.",
+  "sourceEn": "Recipe estimate from USDA SR Legacy ingredients: red lentils 250 g, potatoes 300 g, carrots 80 g, onion 80 g, smoked sausage 200 g, sunflower oil 20 g, water 2000 g; cooked weight ~2600 g."
+ },
+ {
+  "id": "local:dish-pelmeni",
+  "name": "Пельмени (говядина и свинина)",
+  "nameEn": "Pelmeni dumplings, beef and pork",
+  "aliases": [
+   "пельмени pelmeni pelmen"
+  ],
+  "basis": {
+   "ingredients": [
+    [
+     "usda:169761",
+     300
+    ],
+    [
+     "usda:173647",
+     140
+    ],
+    [
+     "usda:171287",
+     50
+    ],
+    [
+     "usda:174036",
+     200
+    ],
+    [
+     "usda:167902",
+     200
+    ],
+    [
+     "usda:170000",
+     100
+    ]
+   ],
+   "grams": 1000
+  },
+  "portions": [
+   {
+    "name": "1 пельмень (≈12 г)",
+    "nameEn": "1 dumpling (~12 g)",
+    "grams": 12
+   },
+   {
+    "name": "Порция (≈250 г)",
+    "nameEn": "Portion (~250 g)",
+    "grams": 250
+   },
+   {
+    "name": "Весь рецепт (≈1000 г)",
+    "nameEn": "Whole recipe (~1000 g)",
+    "grams": 1000
+   }
+  ],
+  "source": "Расчёт по рецепту из ингредиентов USDA SR Legacy: мука 300 г, вода 140 г, яйца 50 г, говяжий фарш 200 г, свиной фарш 200 г, лук 100 г; выход готового блюда ≈1000 г.",
+  "sourceEn": "Recipe estimate from USDA SR Legacy ingredients: flour 300 g, water 140 g, eggs 50 g, ground beef 200 g, ground pork 200 g, onion 100 g; cooked weight ~1000 g."
+ },
+ {
+  "id": "local:dish-pelmeni-beef",
+  "name": "Пельмени говяжьи",
+  "nameEn": "Beef pelmeni",
+  "aliases": [
+   "пельмени говяжьи pelmeni mal əti"
+  ],
+  "basis": {
+   "ingredients": [
+    [
+     "usda:169761",
+     300
+    ],
+    [
+     "usda:173647",
+     140
+    ],
+    [
+     "usda:171287",
+     50
+    ],
+    [
+     "usda:174036",
+     400
+    ],
+    [
+     "usda:170000",
+     100
+    ]
+   ],
+   "grams": 1000
+  },
+  "portions": [
+   {
+    "name": "1 пельмень (≈12 г)",
+    "nameEn": "1 dumpling (~12 g)",
+    "grams": 12
+   },
+   {
+    "name": "Порция (≈250 г)",
+    "nameEn": "Portion (~250 g)",
+    "grams": 250
+   },
+   {
+    "name": "Весь рецепт (≈1000 г)",
+    "nameEn": "Whole recipe (~1000 g)",
+    "grams": 1000
+   }
+  ],
+  "source": "Расчёт по рецепту из ингредиентов USDA SR Legacy: мука 300 г, вода 140 г, яйца 50 г, говяжий фарш 400 г, лук 100 г; выход готового блюда ≈1000 г.",
+  "sourceEn": "Recipe estimate from USDA SR Legacy ingredients: flour 300 g, water 140 g, eggs 50 g, ground beef 400 g, onion 100 g; cooked weight ~1000 g."
+ },
+ {
+  "id": "local:dish-pelmeni-chicken",
+  "name": "Пельмени куриные",
+  "nameEn": "Chicken pelmeni",
+  "aliases": [
+   "пельмени куриные pelmeni toyuq"
+  ],
+  "basis": {
+   "ingredients": [
+    [
+     "usda:169761",
+     300
+    ],
+    [
+     "usda:173647",
+     140
+    ],
+    [
+     "usda:171287",
+     50
+    ],
+    [
+     "usda:171067",
+     400
+    ],
+    [
+     "usda:170000",
+     100
+    ]
+   ],
+   "grams": 1000
+  },
+  "portions": [
+   {
+    "name": "1 пельмень (≈12 г)",
+    "nameEn": "1 dumpling (~12 g)",
+    "grams": 12
+   },
+   {
+    "name": "Порция (≈250 г)",
+    "nameEn": "Portion (~250 g)",
+    "grams": 250
+   },
+   {
+    "name": "Весь рецепт (≈1000 г)",
+    "nameEn": "Whole recipe (~1000 g)",
+    "grams": 1000
+   }
+  ],
+  "source": "Расчёт по рецепту из ингредиентов USDA SR Legacy: мука 300 г, вода 140 г, яйца 50 г, куриное бедро 400 г, лук 100 г; выход готового блюда ≈1000 г.",
+  "sourceEn": "Recipe estimate from USDA SR Legacy ingredients: flour 300 g, water 140 g, eggs 50 g, chicken thigh 400 g, onion 100 g; cooked weight ~1000 g."
+ },
+ {
+  "id": "local:dish-vareniki-potato",
+  "name": "Вареники с картошкой",
+  "nameEn": "Vareniki with potato",
+  "aliases": [
+   "вареники картошка vareniki"
+  ],
+  "basis": {
+   "ingredients": [
+    [
+     "usda:169761",
+     300
+    ],
+    [
+     "usda:173647",
+     150
+    ],
+    [
+     "usda:170026",
+     500
+    ],
+    [
+     "usda:170000",
+     100
+    ],
+    [
+     "usda:171025",
+     40
+    ]
+   ],
+   "grams": 1000
+  },
+  "portions": [
+   {
+    "name": "1 вареник (≈25 г)",
+    "nameEn": "1 dumpling (~25 g)",
+    "grams": 25
+   },
+   {
+    "name": "Порция (≈250 г)",
+    "nameEn": "Portion (~250 g)",
+    "grams": 250
+   },
+   {
+    "name": "Весь рецепт (≈1000 г)",
+    "nameEn": "Whole recipe (~1000 g)",
+    "grams": 1000
+   }
+  ],
+  "source": "Расчёт по рецепту из ингредиентов USDA SR Legacy: мука 300 г, вода 150 г, картофель 500 г, лук 100 г, подсолнечное масло 40 г; выход готового блюда ≈1000 г.",
+  "sourceEn": "Recipe estimate from USDA SR Legacy ingredients: flour 300 g, water 150 g, potatoes 500 g, onion 100 g, sunflower oil 40 g; cooked weight ~1000 g."
+ },
+ {
+  "id": "local:dish-vareniki-tvorog",
+  "name": "Вареники с творогом",
+  "nameEn": "Vareniki with cottage cheese",
+  "aliases": [
+   "вареники творог vareniki kəsmik"
+  ],
+  "basis": {
+   "ingredients": [
+    [
+     "usda:169761",
+     300
+    ],
+    [
+     "usda:173647",
+     150
+    ],
+    [
+     "usda:171287",
+     100
+    ],
+    [
+     "usda:172179",
+     500
+    ],
+    [
+     "usda:169655",
+     40
+    ]
+   ],
+   "grams": 1080
+  },
+  "portions": [
+   {
+    "name": "1 вареник (≈25 г)",
+    "nameEn": "1 dumpling (~25 g)",
+    "grams": 25
+   },
+   {
+    "name": "Порция (≈250 г)",
+    "nameEn": "Portion (~250 g)",
+    "grams": 250
+   },
+   {
+    "name": "Весь рецепт (≈1080 г)",
+    "nameEn": "Whole recipe (~1080 g)",
+    "grams": 1080
+   }
+  ],
+  "source": "Расчёт по рецепту из ингредиентов USDA SR Legacy: мука 300 г, вода 150 г, яйца 100 г, творог 500 г, сахар 40 г; выход готового блюда ≈1080 г.",
+  "sourceEn": "Recipe estimate from USDA SR Legacy ingredients: flour 300 g, water 150 g, eggs 100 g, cottage cheese 500 g, sugar 40 g; cooked weight ~1080 g."
+ },
+ {
+  "id": "local:dish-vareniki-cherry",
+  "name": "Вареники с вишней",
+  "nameEn": "Vareniki with cherries",
+  "aliases": [
+   "вареники вишня vareniki albalı"
+  ],
+  "basis": {
+   "ingredients": [
+    [
+     "usda:169761",
+     300
+    ],
+    [
+     "usda:173647",
+     150
+    ],
+    [
+     "usda:171287",
+     50
+    ],
+    [
+     "usda:173954",
+     450
+    ],
+    [
+     "usda:169655",
+     80
+    ]
+   ],
+   "grams": 1000
+  },
+  "portions": [
+   {
+    "name": "1 вареник (≈25 г)",
+    "nameEn": "1 dumpling (~25 g)",
+    "grams": 25
+   },
+   {
+    "name": "Порция (≈250 г)",
+    "nameEn": "Portion (~250 g)",
+    "grams": 250
+   },
+   {
+    "name": "Весь рецепт (≈1000 г)",
+    "nameEn": "Whole recipe (~1000 g)",
+    "grams": 1000
+   }
+  ],
+  "source": "Расчёт по рецепту из ингредиентов USDA SR Legacy: мука 300 г, вода 150 г, яйца 50 г, вишня 450 г, сахар 80 г; выход готового блюда ≈1000 г.",
+  "sourceEn": "Recipe estimate from USDA SR Legacy ingredients: flour 300 g, water 150 g, eggs 50 g, sour cherries 450 g, sugar 80 g; cooked weight ~1000 g."
+ },
+ {
+  "id": "local:dish-manty",
+  "name": "Манты с бараниной",
+  "nameEn": "Manti with lamb",
+  "aliases": [
+   "манты manti mantı"
+  ],
+  "basis": {
+   "ingredients": [
+    [
+     "usda:169761",
+     400
+    ],
+    [
+     "usda:173647",
+     180
+    ],
+    [
+     "usda:174370",
+     500
+    ],
+    [
+     "usda:170000",
+     300
+    ],
+    [
+     "usda:171400",
+     50
+    ]
+   ],
+   "grams": 1350
+  },
+  "portions": [
+   {
+    "name": "1 манта (≈50 г)",
+    "nameEn": "1 manti (~50 g)",
+    "grams": 50
+   },
+   {
+    "name": "Порция (≈300 г)",
+    "nameEn": "Portion (~300 g)",
+    "grams": 300
+   },
+   {
+    "name": "Весь рецепт (≈1350 г)",
+    "nameEn": "Whole recipe (~1350 g)",
+    "grams": 1350
+   }
+  ],
+  "source": "Расчёт по рецепту из ингредиентов USDA SR Legacy: мука 400 г, вода 180 г, бараний фарш 500 г, лук 300 г, курдючный жир 50 г; выход готового блюда ≈1350 г.",
+  "sourceEn": "Recipe estimate from USDA SR Legacy ingredients: flour 400 g, water 180 g, ground lamb 500 g, onion 300 g, tail fat 50 g; cooked weight ~1350 g."
+ },
+ {
+  "id": "local:dish-chebureki",
+  "name": "Чебуреки с мясом",
+  "nameEn": "Chebureki: fried meat pasties",
+  "aliases": [
+   "чебурек чебуреки çebürek cheburek"
+  ],
+  "basis": {
+   "ingredients": [
+    [
+     "usda:169761",
+     400
+    ],
+    [
+     "usda:173647",
+     200
+    ],
+    [
+     "usda:174036",
+     300
+    ],
+    [
+     "usda:170000",
+     100
+    ],
+    [
+     "usda:171025",
+     110
+    ]
+   ],
+   "grams": 1080
+  },
+  "portions": [
+   {
+    "name": "1 чебурек (≈120 г)",
+    "nameEn": "1 pasty (~120 g)",
+    "grams": 120
+   },
+   {
+    "name": "Весь рецепт (≈1080 г)",
+    "nameEn": "Whole recipe (~1080 g)",
+    "grams": 1080
+   }
+  ],
+  "source": "Расчёт по рецепту из ингредиентов USDA SR Legacy: мука 400 г, вода 200 г, говяжий фарш 300 г, лук 100 г, подсолнечное масло 110 г; выход готового блюда ≈1080 г. В масле учтено ≈80 г, впитавшихся при жарке.",
+  "sourceEn": "Recipe estimate from USDA SR Legacy ingredients: flour 400 g, water 200 g, ground beef 300 g, onion 100 g, sunflower oil 110 g; cooked weight ~1080 g."
+ },
+ {
+  "id": "local:dish-belyashi",
+  "name": "Беляши",
+  "nameEn": "Belyashi: fried meat buns",
+  "aliases": [
+   "беляши беляш belyash"
+  ],
+  "basis": {
+   "ingredients": [
+    [
+     "usda:169761",
+     400
+    ],
+    [
+     "usda:171265",
+     200
+    ],
+    [
+     "usda:175042",
+     10
+    ],
+    [
+     "usda:169655",
+     10
+    ],
+    [
+     "usda:174036",
+     350
+    ],
+    [
+     "usda:170000",
+     100
+    ],
+    [
+     "usda:171025",
+     100
+    ]
+   ],
+   "grams": 1100
+  },
+  "portions": [
+   {
+    "name": "1 беляш (≈100 г)",
+    "nameEn": "1 bun (~100 g)",
+    "grams": 100
+   },
+   {
+    "name": "Весь рецепт (≈1100 г)",
+    "nameEn": "Whole recipe (~1100 g)",
+    "grams": 1100
+   }
+  ],
+  "source": "Расчёт по рецепту из ингредиентов USDA SR Legacy: мука 400 г, молоко 200 г, дрожжи 10 г, сахар 10 г, говяжий фарш 350 г, лук 100 г, подсолнечное масло 100 г; выход готового блюда ≈1100 г.",
+  "sourceEn": "Recipe estimate from USDA SR Legacy ingredients: flour 400 g, milk 200 g, yeast 10 g, sugar 10 g, ground beef 350 g, onion 100 g, sunflower oil 100 g; cooked weight ~1100 g."
+ },
+ {
+  "id": "local:dish-pirozhki-potato",
+  "name": "Пирожки жареные с картошкой",
+  "nameEn": "Fried pirozhki with potato",
+  "aliases": [
+   "пирожки пирожок картошка piroq kartoflu"
+  ],
+  "basis": {
+   "ingredients": [
+    [
+     "usda:169761",
+     400
+    ],
+    [
+     "usda:171265",
+     200
+    ],
+    [
+     "usda:175042",
+     10
+    ],
+    [
+     "usda:169655",
+     15
+    ],
+    [
+     "usda:171287",
+     50
+    ],
+    [
+     "usda:170026",
+     500
+    ],
+    [
+     "usda:170000",
+     80
+    ],
+    [
+     "usda:171025",
+     110
+    ]
+   ],
+   "grams": 1250
+  },
+  "portions": [
+   {
+    "name": "1 пирожок (≈80 г)",
+    "nameEn": "1 pirozhok (~80 g)",
+    "grams": 80
+   },
+   {
+    "name": "Весь рецепт (≈1250 г)",
+    "nameEn": "Whole recipe (~1250 g)",
+    "grams": 1250
+   }
+  ],
+  "source": "Расчёт по рецепту из ингредиентов USDA SR Legacy: мука 400 г, молоко 200 г, дрожжи 10 г, сахар 15 г, яйца 50 г, картофель 500 г, лук 80 г, подсолнечное масло 110 г; выход готового блюда ≈1250 г.",
+  "sourceEn": "Recipe estimate from USDA SR Legacy ingredients: flour 400 g, milk 200 g, yeast 10 g, sugar 15 g, eggs 50 g, potatoes 500 g, onion 80 g, sunflower oil 110 g; cooked weight ~1250 g."
+ },
+ {
+  "id": "local:dish-pirozhki-cabbage",
+  "name": "Пирожки печёные с капустой",
+  "nameEn": "Baked pirozhki with cabbage",
+  "aliases": [
+   "пирожки пирожок капуста piroq kələmli"
+  ],
+  "basis": {
+   "ingredients": [
+    [
+     "usda:169761",
+     400
+    ],
+    [
+     "usda:171265",
+     200
+    ],
+    [
+     "usda:175042",
+     10
+    ],
+    [
+     "usda:169655",
+     15
+    ],
+    [
+     "usda:171287",
+     100
+    ],
+    [
+     "usda:169975",
+     600
+    ],
+    [
+     "usda:170000",
+     80
+    ],
+    [
+     "usda:171025",
+     50
+    ]
+   ],
+   "grams": 1250
+  },
+  "portions": [
+   {
+    "name": "1 пирожок (≈80 г)",
+    "nameEn": "1 pirozhok (~80 g)",
+    "grams": 80
+   },
+   {
+    "name": "Весь рецепт (≈1250 г)",
+    "nameEn": "Whole recipe (~1250 g)",
+    "grams": 1250
+   }
+  ],
+  "source": "Расчёт по рецепту из ингредиентов USDA SR Legacy: мука 400 г, молоко 200 г, дрожжи 10 г, сахар 15 г, яйца 100 г, капуста 600 г, лук 80 г, подсолнечное масло 50 г; выход готового блюда ≈1250 г.",
+  "sourceEn": "Recipe estimate from USDA SR Legacy ingredients: flour 400 g, milk 200 g, yeast 10 g, sugar 15 g, eggs 100 g, cabbage 600 g, onion 80 g, sunflower oil 50 g; cooked weight ~1250 g."
+ },
+ {
+  "id": "local:dish-pirozhki-meat",
+  "name": "Пирожки печёные с мясом",
+  "nameEn": "Baked pirozhki with meat",
+  "aliases": [
+   "пирожки пирожок мясо piroq ətli"
+  ],
+  "basis": {
+   "ingredients": [
+    [
+     "usda:169761",
+     400
+    ],
+    [
+     "usda:171265",
+     200
+    ],
+    [
+     "usda:175042",
+     10
+    ],
+    [
+     "usda:169655",
+     15
+    ],
+    [
+     "usda:171287",
+     100
+    ],
+    [
+     "usda:174036",
+     400
+    ],
+    [
+     "usda:170000",
+     100
+    ],
+    [
+     "usda:171025",
+     40
+    ]
+   ],
+   "grams": 1150
+  },
+  "portions": [
+   {
+    "name": "1 пирожок (≈80 г)",
+    "nameEn": "1 pirozhok (~80 g)",
+    "grams": 80
+   },
+   {
+    "name": "Весь рецепт (≈1150 г)",
+    "nameEn": "Whole recipe (~1150 g)",
+    "grams": 1150
+   }
+  ],
+  "source": "Расчёт по рецепту из ингредиентов USDA SR Legacy: мука 400 г, молоко 200 г, дрожжи 10 г, сахар 15 г, яйца 100 г, говяжий фарш 400 г, лук 100 г, подсолнечное масло 40 г; выход готового блюда ≈1150 г.",
+  "sourceEn": "Recipe estimate from USDA SR Legacy ingredients: flour 400 g, milk 200 g, yeast 10 g, sugar 15 g, eggs 100 g, ground beef 400 g, onion 100 g, sunflower oil 40 g; cooked weight ~1150 g."
+ },
+ {
+  "id": "local:dish-blini",
+  "name": "Блины на молоке",
+  "nameEn": "Thin pancakes (blini)",
+  "aliases": [
+   "блины блин blini pancake"
+  ],
+  "basis": {
+   "ingredients": [
+    [
+     "usda:169761",
+     250
+    ],
+    [
+     "usda:171265",
+     500
+    ],
+    [
+     "usda:171287",
+     100
+    ],
+    [
+     "usda:169655",
+     25
+    ],
+    [
+     "usda:171025",
+     30
+    ],
+    [
+     "usda:173410",
+     20
+    ]
+   ],
+   "grams": 850
+  },
+  "portions": [
+   {
+    "name": "1 блин (≈45 г)",
+    "nameEn": "1 pancake (~45 g)",
+    "grams": 45
+   },
+   {
+    "name": "Весь рецепт (≈850 г)",
+    "nameEn": "Whole recipe (~850 g)",
+    "grams": 850
+   }
+  ],
+  "source": "Расчёт по рецепту из ингредиентов USDA SR Legacy: мука 250 г, молоко 500 г, яйца 100 г, сахар 25 г, подсолнечное масло 30 г, сливочное масло 20 г; выход готового блюда ≈850 г.",
+  "sourceEn": "Recipe estimate from USDA SR Legacy ingredients: flour 250 g, milk 500 g, eggs 100 g, sugar 25 g, sunflower oil 30 g, butter 20 g; cooked weight ~850 g."
+ },
+ {
+  "id": "local:dish-blini-meat",
+  "name": "Блинчики с мясом",
+  "nameEn": "Blini filled with meat",
+  "aliases": [
+   "блинчики с мясом блины мясо"
+  ],
+  "basis": {
+   "ingredients": [
+    [
+     "usda:169761",
+     250
+    ],
+    [
+     "usda:171265",
+     500
+    ],
+    [
+     "usda:171287",
+     100
+    ],
+    [
+     "usda:171025",
+     50
+    ],
+    [
+     "usda:174036",
+     500
+    ],
+    [
+     "usda:170000",
+     100
+    ]
+   ],
+   "grams": 1300
+  },
+  "portions": [
+   {
+    "name": "1 блинчик (≈90 г)",
+    "nameEn": "1 pancake (~90 g)",
+    "grams": 90
+   },
+   {
+    "name": "Весь рецепт (≈1300 г)",
+    "nameEn": "Whole recipe (~1300 g)",
+    "grams": 1300
+   }
+  ],
+  "source": "Расчёт по рецепту из ингредиентов USDA SR Legacy: мука 250 г, молоко 500 г, яйца 100 г, подсолнечное масло 50 г, говяжий фарш 500 г, лук 100 г; выход готового блюда ≈1300 г.",
+  "sourceEn": "Recipe estimate from USDA SR Legacy ingredients: flour 250 g, milk 500 g, eggs 100 g, sunflower oil 50 g, ground beef 500 g, onion 100 g; cooked weight ~1300 g."
+ },
+ {
+  "id": "local:dish-blini-tvorog",
+  "name": "Блинчики с творогом",
+  "nameEn": "Blini filled with cottage cheese",
+  "aliases": [
+   "блинчики с творогом блины творог"
+  ],
+  "basis": {
+   "ingredients": [
+    [
+     "usda:169761",
+     250
+    ],
+    [
+     "usda:171265",
+     500
+    ],
+    [
+     "usda:171287",
+     150
+    ],
+    [
+     "usda:171025",
+     40
+    ],
+    [
+     "usda:172179",
+     500
+    ],
+    [
+     "usda:169655",
+     60
+    ]
+   ],
+   "grams": 1350
+  },
+  "portions": [
+   {
+    "name": "1 блинчик (≈90 г)",
+    "nameEn": "1 pancake (~90 g)",
+    "grams": 90
+   },
+   {
+    "name": "Весь рецепт (≈1350 г)",
+    "nameEn": "Whole recipe (~1350 g)",
+    "grams": 1350
+   }
+  ],
+  "source": "Расчёт по рецепту из ингредиентов USDA SR Legacy: мука 250 г, молоко 500 г, яйца 150 г, подсолнечное масло 40 г, творог 500 г, сахар 60 г; выход готового блюда ≈1350 г.",
+  "sourceEn": "Recipe estimate from USDA SR Legacy ingredients: flour 250 g, milk 500 g, eggs 150 g, sunflower oil 40 g, cottage cheese 500 g, sugar 60 g; cooked weight ~1350 g."
+ },
+ {
+  "id": "local:dish-oladi",
+  "name": "Оладьи на кефире",
+  "nameEn": "Kefir fritters (oladyi)",
+  "aliases": [
+   "оладьи оладушки oladi"
+  ],
+  "basis": {
+   "ingredients": [
+    [
+     "usda:169761",
+     250
+    ],
+    [
+     "usda:170904",
+     500
+    ],
+    [
+     "usda:171287",
+     50
+    ],
+    [
+     "usda:169655",
+     30
+    ],
+    [
+     "usda:171025",
+     60
+    ]
+   ],
+   "grams": 800
+  },
+  "portions": [
+   {
+    "name": "1 оладья (≈40 г)",
+    "nameEn": "1 fritter (~40 g)",
+    "grams": 40
+   },
+   {
+    "name": "Весь рецепт (≈800 г)",
+    "nameEn": "Whole recipe (~800 g)",
+    "grams": 800
+   }
+  ],
+  "source": "Расчёт по рецепту из ингредиентов USDA SR Legacy: мука 250 г, кефир 500 г, яйца 50 г, сахар 30 г, подсолнечное масло 60 г; выход готового блюда ≈800 г.",
+  "sourceEn": "Recipe estimate from USDA SR Legacy ingredients: flour 250 g, kefir 500 g, eggs 50 g, sugar 30 g, sunflower oil 60 g; cooked weight ~800 g."
+ },
+ {
+  "id": "local:dish-syrniki",
+  "name": "Сырники",
+  "nameEn": "Syrniki: cottage cheese pancakes",
+  "aliases": [
+   "сырники syrniki kəsmik"
+  ],
+  "basis": {
+   "ingredients": [
+    [
+     "usda:172179",
+     500
+    ],
+    [
+     "usda:171287",
+     50
+    ],
+    [
+     "usda:169761",
+     60
+    ],
+    [
+     "usda:169655",
+     40
+    ],
+    [
+     "usda:171025",
+     30
+    ]
+   ],
+   "grams": 620
+  },
+  "portions": [
+   {
+    "name": "1 сырник (≈50 г)",
+    "nameEn": "1 pancake (~50 g)",
+    "grams": 50
+   },
+   {
+    "name": "Весь рецепт (≈620 г)",
+    "nameEn": "Whole recipe (~620 g)",
+    "grams": 620
+   }
+  ],
+  "source": "Расчёт по рецепту из ингредиентов USDA SR Legacy: творог 500 г, яйца 50 г, мука 60 г, сахар 40 г, подсолнечное масло 30 г; выход готового блюда ≈620 г.",
+  "sourceEn": "Recipe estimate from USDA SR Legacy ingredients: cottage cheese 500 g, eggs 50 g, flour 60 g, sugar 40 g, sunflower oil 30 g; cooked weight ~620 g."
+ },
+ {
+  "id": "local:dish-zapekanka",
+  "name": "Творожная запеканка",
+  "nameEn": "Baked cottage cheese pudding",
+  "aliases": [
+   "запеканка творожная kəsmik"
+  ],
+  "basis": {
+   "ingredients": [
+    [
+     "usda:172179",
+     500
+    ],
+    [
+     "usda:171287",
+     100
+    ],
+    [
+     "usda:168933",
+     50
+    ],
+    [
+     "usda:169655",
+     60
+    ],
+    [
+     "usda:171257",
+     50
+    ],
+    [
+     "usda:173410",
+     10
+    ]
+   ],
+   "grams": 700
+  },
+  "portions": [
+   {
+    "name": "1 кусок (≈150 г)",
+    "nameEn": "1 slice (~150 g)",
+    "grams": 150
+   },
+   {
+    "name": "Весь рецепт (≈700 г)",
+    "nameEn": "Whole recipe (~700 g)",
+    "grams": 700
+   }
+  ],
+  "source": "Расчёт по рецепту из ингредиентов USDA SR Legacy: творог 500 г, яйца 100 г, манка 50 г, сахар 60 г, сметана 50 г, сливочное масло 10 г; выход готового блюда ≈700 г.",
+  "sourceEn": "Recipe estimate from USDA SR Legacy ingredients: cottage cheese 500 g, eggs 100 g, semolina 50 g, sugar 60 g, sour cream 50 g, butter 10 g; cooked weight ~700 g."
+ },
+ {
+  "id": "local:dish-kotlety",
+  "name": "Котлеты домашние (говядина и свинина)",
+  "nameEn": "Homemade meat patties (kotlety)",
+  "aliases": [
+   "котлеты котлета kotlet kotlet"
+  ],
+  "basis": {
+   "ingredients": [
+    [
+     "usda:174036",
+     300
+    ],
+    [
+     "usda:167902",
+     200
+    ],
+    [
+     "usda:174924",
+     80
+    ],
+    [
+     "usda:171265",
+     80
+    ],
+    [
+     "usda:170000",
+     80
+    ],
+    [
+     "usda:171287",
+     50
+    ],
+    [
+     "usda:174928",
+     30
+    ],
+    [
+     "usda:171025",
+     30
+    ]
+   ],
+   "grams": 700
+  },
+  "portions": [
+   {
+    "name": "1 котлета (≈80 г)",
+    "nameEn": "1 patty (~80 g)",
+    "grams": 80
+   },
+   {
+    "name": "Весь рецепт (≈700 г)",
+    "nameEn": "Whole recipe (~700 g)",
+    "grams": 700
+   }
+  ],
+  "source": "Расчёт по рецепту из ингредиентов USDA SR Legacy: говяжий фарш 300 г, свиной фарш 200 г, белый хлеб 80 г, молоко 80 г, лук 80 г, яйца 50 г, панировка 30 г, подсолнечное масло 30 г; выход готового блюда ≈700 г.",
+  "sourceEn": "Recipe estimate from USDA SR Legacy ingredients: ground beef 300 g, ground pork 200 g, white bread 80 g, milk 80 g, onion 80 g, eggs 50 g, bread crumbs 30 g, sunflower oil 30 g; cooked weight ~700 g."
+ },
+ {
+  "id": "local:dish-kotlety-beef",
+  "name": "Котлеты говяжьи",
+  "nameEn": "Beef patties",
+  "aliases": [
+   "котлеты говяжьи kotlet mal əti"
+  ],
+  "basis": {
+   "ingredients": [
+    [
+     "usda:174036",
+     500
+    ],
+    [
+     "usda:174924",
+     80
+    ],
+    [
+     "usda:171265",
+     80
+    ],
+    [
+     "usda:170000",
+     80
+    ],
+    [
+     "usda:171287",
+     50
+    ],
+    [
+     "usda:174928",
+     30
+    ],
+    [
+     "usda:171025",
+     30
+    ]
+   ],
+   "grams": 700
+  },
+  "portions": [
+   {
+    "name": "1 котлета (≈80 г)",
+    "nameEn": "1 patty (~80 g)",
+    "grams": 80
+   },
+   {
+    "name": "Весь рецепт (≈700 г)",
+    "nameEn": "Whole recipe (~700 g)",
+    "grams": 700
+   }
+  ],
+  "source": "Расчёт по рецепту из ингредиентов USDA SR Legacy: говяжий фарш 500 г, белый хлеб 80 г, молоко 80 г, лук 80 г, яйца 50 г, панировка 30 г, подсолнечное масло 30 г; выход готового блюда ≈700 г.",
+  "sourceEn": "Recipe estimate from USDA SR Legacy ingredients: ground beef 500 g, white bread 80 g, milk 80 g, onion 80 g, eggs 50 g, bread crumbs 30 g, sunflower oil 30 g; cooked weight ~700 g."
+ },
+ {
+  "id": "local:dish-kotlety-chicken",
+  "name": "Котлеты куриные",
+  "nameEn": "Chicken patties",
+  "aliases": [
+   "котлеты куриные toyuq kotleti"
+  ],
+  "basis": {
+   "ingredients": [
+    [
+     "usda:171077",
+     500
+    ],
+    [
+     "usda:174924",
+     60
+    ],
+    [
+     "usda:171265",
+     60
+    ],
+    [
+     "usda:170000",
+     60
+    ],
+    [
+     "usda:171287",
+     50
+    ],
+    [
+     "usda:171025",
+     30
+    ]
+   ],
+   "grams": 640
+  },
+  "portions": [
+   {
+    "name": "1 котлета (≈75 г)",
+    "nameEn": "1 patty (~75 g)",
+    "grams": 75
+   },
+   {
+    "name": "Весь рецепт (≈640 г)",
+    "nameEn": "Whole recipe (~640 g)",
+    "grams": 640
+   }
+  ],
+  "source": "Расчёт по рецепту из ингредиентов USDA SR Legacy: куриное филе 500 г, белый хлеб 60 г, молоко 60 г, лук 60 г, яйца 50 г, подсолнечное масло 30 г; выход готового блюда ≈640 г.",
+  "sourceEn": "Recipe estimate from USDA SR Legacy ingredients: chicken breast 500 g, white bread 60 g, milk 60 g, onion 60 g, eggs 50 g, sunflower oil 30 g; cooked weight ~640 g."
+ },
+ {
+  "id": "local:dish-tefteli",
+  "name": "Тефтели в томатном соусе",
+  "nameEn": "Meatballs in tomato sauce",
+  "aliases": [
+   "тефтели tefteli küftə"
+  ],
+  "basis": {
+   "ingredients": [
+    [
+     "usda:174036",
+     400
+    ],
+    [
+     "usda:168877",
+     60
+    ],
+    [
+     "usda:170000",
+     100
+    ],
+    [
+     "usda:171287",
+     50
+    ],
+    [
+     "usda:170459",
+     50
+    ],
+    [
+     "usda:171257",
+     50
+    ],
+    [
+     "usda:169761",
+     20
+    ],
+    [
+     "usda:173647",
+     300
+    ]
+   ],
+   "grams": 1000
+  },
+  "portions": [
+   {
+    "name": "Порция (≈250 г)",
+    "nameEn": "Portion (~250 g)",
+    "grams": 250
+   },
+   {
+    "name": "Весь рецепт (≈1000 г)",
+    "nameEn": "Whole recipe (~1000 g)",
+    "grams": 1000
+   }
+  ],
+  "source": "Расчёт по рецепту из ингредиентов USDA SR Legacy: говяжий фарш 400 г, рис 60 г, лук 100 г, яйца 50 г, томатная паста 50 г, сметана 50 г, мука 20 г, вода 300 г; выход готового блюда ≈1000 г.",
+  "sourceEn": "Recipe estimate from USDA SR Legacy ingredients: ground beef 400 g, rice 60 g, onion 100 g, eggs 50 g, tomato paste 50 g, sour cream 50 g, flour 20 g, water 300 g; cooked weight ~1000 g."
+ },
+ {
+  "id": "local:dish-golubtsy",
+  "name": "Голубцы",
+  "nameEn": "Cabbage rolls (golubtsy)",
+  "aliases": [
+   "голубцы golubtsy"
+  ],
+  "basis": {
+   "ingredients": [
+    [
+     "usda:169975",
+     600
+    ],
+    [
+     "usda:174036",
+     300
+    ],
+    [
+     "usda:168877",
+     80
+    ],
+    [
+     "usda:170000",
+     100
+    ],
+    [
+     "usda:170393",
+     80
+    ],
+    [
+     "usda:170459",
+     40
+    ],
+    [
+     "usda:171257",
+     50
+    ],
+    [
+     "usda:173647",
+     300
+    ]
+   ],
+   "grams": 1400
+  },
+  "portions": [
+   {
+    "name": "1 голубец (≈130 г)",
+    "nameEn": "1 roll (~130 g)",
+    "grams": 130
+   },
+   {
+    "name": "Весь рецепт (≈1400 г)",
+    "nameEn": "Whole recipe (~1400 g)",
+    "grams": 1400
+   }
+  ],
+  "source": "Расчёт по рецепту из ингредиентов USDA SR Legacy: капуста 600 г, говяжий фарш 300 г, рис 80 г, лук 100 г, морковь 80 г, томатная паста 40 г, сметана 50 г, вода 300 г; выход готового блюда ≈1400 г.",
+  "sourceEn": "Recipe estimate from USDA SR Legacy ingredients: cabbage 600 g, ground beef 300 g, rice 80 g, onion 100 g, carrots 80 g, tomato paste 40 g, sour cream 50 g, water 300 g; cooked weight ~1400 g."
+ },
+ {
+  "id": "local:dish-zharkoe",
+  "name": "Жаркое: картофель с говядиной",
+  "nameEn": "Potato and beef stew (zharkoye)",
+  "aliases": [
+   "жаркое картошка с мясом"
+  ],
+  "basis": {
+   "ingredients": [
+    [
+     "usda:171206",
+     500
+    ],
+    [
+     "usda:170026",
+     800
+    ],
+    [
+     "usda:170000",
+     150
+    ],
+    [
+     "usda:170393",
+     100
+    ],
+    [
+     "usda:171025",
+     40
+    ],
+    [
+     "usda:173647",
+     200
+    ]
+   ],
+   "grams": 1600
+  },
+  "portions": [
+   {
+    "name": "Порция (≈350 г)",
+    "nameEn": "Portion (~350 g)",
+    "grams": 350
+   },
+   {
+    "name": "Весь рецепт (≈1600 г)",
+    "nameEn": "Whole recipe (~1600 g)",
+    "grams": 1600
+   }
+  ],
+  "source": "Расчёт по рецепту из ингредиентов USDA SR Legacy: говядина 500 г, картофель 800 г, лук 150 г, морковь 100 г, подсолнечное масло 40 г, вода 200 г; выход готового блюда ≈1600 г.",
+  "sourceEn": "Recipe estimate from USDA SR Legacy ingredients: beef 500 g, potatoes 800 g, onion 150 g, carrots 100 g, sunflower oil 40 g, water 200 g; cooked weight ~1600 g."
+ },
+ {
+  "id": "local:dish-gulyash",
+  "name": "Гуляш из говядины",
+  "nameEn": "Beef goulash",
+  "aliases": [
+   "гуляш gulyas goulash"
+  ],
+  "basis": {
+   "ingredients": [
+    [
+     "usda:171206",
+     600
+    ],
+    [
+     "usda:170000",
+     200
+    ],
+    [
+     "usda:170459",
+     50
+    ],
+    [
+     "usda:169761",
+     20
+    ],
+    [
+     "usda:171025",
+     30
+    ],
+    [
+     "usda:173647",
+     400
+    ]
+   ],
+   "grams": 1000
+  },
+  "portions": [
+   {
+    "name": "Порция (≈200 г)",
+    "nameEn": "Portion (~200 g)",
+    "grams": 200
+   },
+   {
+    "name": "Весь рецепт (≈1000 г)",
+    "nameEn": "Whole recipe (~1000 g)",
+    "grams": 1000
+   }
+  ],
+  "source": "Расчёт по рецепту из ингредиентов USDA SR Legacy: говядина 600 г, лук 200 г, томатная паста 50 г, мука 20 г, подсолнечное масло 30 г, вода 400 г; выход готового блюда ≈1000 г.",
+  "sourceEn": "Recipe estimate from USDA SR Legacy ingredients: beef 600 g, onion 200 g, tomato paste 50 g, flour 20 g, sunflower oil 30 g, water 400 g; cooked weight ~1000 g."
+ },
+ {
+  "id": "local:dish-befstroganov",
+  "name": "Бефстроганов",
+  "nameEn": "Beef stroganoff",
+  "aliases": [
+   "бефстроганов stroganoff"
+  ],
+  "basis": {
+   "ingredients": [
+    [
+     "usda:171206",
+     600
+    ],
+    [
+     "usda:170000",
+     150
+    ],
+    [
+     "usda:171257",
+     200
+    ],
+    [
+     "usda:169761",
+     15
+    ],
+    [
+     "usda:173410",
+     30
+    ]
+   ],
+   "grams": 850
+  },
+  "portions": [
+   {
+    "name": "Порция (≈200 г)",
+    "nameEn": "Portion (~200 g)",
+    "grams": 200
+   },
+   {
+    "name": "Весь рецепт (≈850 г)",
+    "nameEn": "Whole recipe (~850 g)",
+    "grams": 850
+   }
+  ],
+  "source": "Расчёт по рецепту из ингредиентов USDA SR Legacy: говядина 600 г, лук 150 г, сметана 200 г, мука 15 г, сливочное масло 30 г; выход готового блюда ≈850 г.",
+  "sourceEn": "Recipe estimate from USDA SR Legacy ingredients: beef 600 g, onion 150 g, sour cream 200 g, flour 15 g, butter 30 g; cooked weight ~850 g."
+ },
+ {
+  "id": "local:dish-kartoshka-fried",
+  "name": "Картошка жареная с луком",
+  "nameEn": "Pan-fried potatoes with onion",
+  "aliases": [
+   "жареная картошка qızardılmış kartof"
+  ],
+  "basis": {
+   "ingredients": [
+    [
+     "usda:170026",
+     1000
+    ],
+    [
+     "usda:171025",
+     80
+    ],
+    [
+     "usda:170000",
+     100
+    ]
+   ],
+   "grams": 700
+  },
+  "portions": [
+   {
+    "name": "Порция (≈250 г)",
+    "nameEn": "Portion (~250 g)",
+    "grams": 250
+   },
+   {
+    "name": "Весь рецепт (≈700 г)",
+    "nameEn": "Whole recipe (~700 g)",
+    "grams": 700
+   }
+  ],
+  "source": "Расчёт по рецепту из ингредиентов USDA SR Legacy: картофель 1000 г, подсолнечное масло 80 г, лук 100 г; выход готового блюда ≈700 г.",
+  "sourceEn": "Recipe estimate from USDA SR Legacy ingredients: potatoes 1000 g, sunflower oil 80 g, onion 100 g; cooked weight ~700 g."
+ },
+ {
+  "id": "local:dish-pyure",
+  "name": "Картофельное пюре на молоке с маслом",
+  "nameEn": "Mashed potatoes with milk and butter",
+  "aliases": [
+   "пюре картофельное kartof püresi"
+  ],
+  "basis": {
+   "ingredients": [
+    [
+     "usda:170026",
+     1000
+    ],
+    [
+     "usda:171265",
+     150
+    ],
+    [
+     "usda:173410",
+     50
+    ]
+   ],
+   "grams": 1100
+  },
+  "portions": [
+   {
+    "name": "Порция (≈200 г)",
+    "nameEn": "Portion (~200 g)",
+    "grams": 200
+   },
+   {
+    "name": "Весь рецепт (≈1100 г)",
+    "nameEn": "Whole recipe (~1100 g)",
+    "grams": 1100
+   }
+  ],
+  "source": "Расчёт по рецепту из ингредиентов USDA SR Legacy: картофель 1000 г, молоко 150 г, сливочное масло 50 г; выход готового блюда ≈1100 г.",
+  "sourceEn": "Recipe estimate from USDA SR Legacy ingredients: potatoes 1000 g, milk 150 g, butter 50 g; cooked weight ~1100 g."
+ },
+ {
+  "id": "local:dish-kartoshka-boiled-dill",
+  "name": "Картофель отварной с маслом и укропом",
+  "nameEn": "Boiled potatoes with butter and dill",
+  "aliases": [
+   "картошка отварная qaynadılmış kartof"
+  ],
+  "basis": {
+   "ingredients": [
+    [
+     "usda:170026",
+     1000
+    ],
+    [
+     "usda:173410",
+     30
+    ],
+    [
+     "usda:172233",
+     10
+    ]
+   ],
+   "grams": 1000
+  },
+  "portions": [
+   {
+    "name": "Порция (≈200 г)",
+    "nameEn": "Portion (~200 g)",
+    "grams": 200
+   },
+   {
+    "name": "Весь рецепт (≈1000 г)",
+    "nameEn": "Whole recipe (~1000 g)",
+    "grams": 1000
+   }
+  ],
+  "source": "Расчёт по рецепту из ингредиентов USDA SR Legacy: картофель 1000 г, сливочное масло 30 г, укроп 10 г; выход готового блюда ≈1000 г.",
+  "sourceEn": "Recipe estimate from USDA SR Legacy ingredients: potatoes 1000 g, butter 30 g, dill 10 g; cooked weight ~1000 g."
+ },
+ {
+  "id": "local:dish-grechka-butter",
+  "name": "Гречка с маслом",
+  "nameEn": "Buckwheat with butter",
+  "aliases": [
+   "гречка с маслом qarabaşaq"
+  ],
+  "basis": {
+   "ingredients": [
+    [
+     "usda:170686",
+     500
+    ],
+    [
+     "usda:173410",
+     15
+    ]
+   ],
+   "grams": 515
+  },
+  "portions": [
+   {
+    "name": "Порция (≈200 г)",
+    "nameEn": "Portion (~200 g)",
+    "grams": 200
+   },
+   {
+    "name": "Весь рецепт (≈515 г)",
+    "nameEn": "Whole recipe (~515 g)",
+    "grams": 515
+   }
+  ],
+  "source": "Расчёт по рецепту из ингредиентов USDA SR Legacy: гречка варёная 500 г, сливочное масло 15 г; выход готового блюда ≈515 г.",
+  "sourceEn": "Recipe estimate from USDA SR Legacy ingredients: cooked buckwheat 500 g, butter 15 g; cooked weight ~515 g."
+ },
+ {
+  "id": "local:dish-grechka-kupecheski",
+  "name": "Гречка по-купечески",
+  "nameEn": "Buckwheat with meat and vegetables",
+  "aliases": [
+   "гречка по-купечески"
+  ],
+  "basis": {
+   "ingredients": [
+    [
+     "usda:170686",
+     600
+    ],
+    [
+     "usda:167902",
+     300
+    ],
+    [
+     "usda:170000",
+     100
+    ],
+    [
+     "usda:170393",
+     100
+    ],
+    [
+     "usda:171025",
+     30
+    ],
+    [
+     "usda:170459",
+     20
+    ]
+   ],
+   "grams": 1050
+  },
+  "portions": [
+   {
+    "name": "Порция (≈250 г)",
+    "nameEn": "Portion (~250 g)",
+    "grams": 250
+   },
+   {
+    "name": "Весь рецепт (≈1050 г)",
+    "nameEn": "Whole recipe (~1050 g)",
+    "grams": 1050
+   }
+  ],
+  "source": "Расчёт по рецепту из ингредиентов USDA SR Legacy: гречка варёная 600 г, свиной фарш 300 г, лук 100 г, морковь 100 г, подсолнечное масло 30 г, томатная паста 20 г; выход готового блюда ≈1050 г.",
+  "sourceEn": "Recipe estimate from USDA SR Legacy ingredients: cooked buckwheat 600 g, ground pork 300 g, onion 100 g, carrots 100 g, sunflower oil 30 g, tomato paste 20 g; cooked weight ~1050 g."
+ },
+ {
+  "id": "local:dish-makarony-flotski",
+  "name": "Макароны по-флотски",
+  "nameEn": "Navy-style pasta with ground beef",
+  "aliases": [
+   "макароны по-флотски makaron"
+  ],
+  "basis": {
+   "ingredients": [
+    [
+     "usda:169737",
+     600
+    ],
+    [
+     "usda:174036",
+     300
+    ],
+    [
+     "usda:170000",
+     100
+    ],
+    [
+     "usda:171025",
+     20
+    ]
+   ],
+   "grams": 950
+  },
+  "portions": [
+   {
+    "name": "Порция (≈300 г)",
+    "nameEn": "Portion (~300 g)",
+    "grams": 300
+   },
+   {
+    "name": "Весь рецепт (≈950 г)",
+    "nameEn": "Whole recipe (~950 g)",
+    "grams": 950
+   }
+  ],
+  "source": "Расчёт по рецепту из ингредиентов USDA SR Legacy: макароны варёные 600 г, говяжий фарш 300 г, лук 100 г, подсолнечное масло 20 г; выход готового блюда ≈950 г.",
+  "sourceEn": "Recipe estimate from USDA SR Legacy ingredients: cooked pasta 600 g, ground beef 300 g, onion 100 g, sunflower oil 20 g; cooked weight ~950 g."
+ },
+ {
+  "id": "local:dish-makarony-cheese",
+  "name": "Макароны с сыром и маслом",
+  "nameEn": "Pasta with cheese and butter",
+  "aliases": [
+   "макароны с сыром makaron pendirli"
+  ],
+  "basis": {
+   "ingredients": [
+    [
+     "usda:169737",
+     500
+    ],
+    [
+     "usda:173414",
+     60
+    ],
+    [
+     "usda:173410",
+     20
+    ]
+   ],
+   "grams": 580
+  },
+  "portions": [
+   {
+    "name": "Порция (≈250 г)",
+    "nameEn": "Portion (~250 g)",
+    "grams": 250
+   },
+   {
+    "name": "Весь рецепт (≈580 г)",
+    "nameEn": "Whole recipe (~580 g)",
+    "grams": 580
+   }
+  ],
+  "source": "Расчёт по рецепту из ингредиентов USDA SR Legacy: макароны варёные 500 г, твёрдый сыр 60 г, сливочное масло 20 г; выход готового блюда ≈580 г.",
+  "sourceEn": "Recipe estimate from USDA SR Legacy ingredients: cooked pasta 500 g, hard cheese 60 g, butter 20 g; cooked weight ~580 g."
+ },
+ {
+  "id": "local:dish-ovsyanka-milk",
+  "name": "Овсяная каша на молоке",
+  "nameEn": "Oatmeal porridge with milk",
+  "aliases": [
+   "овсянка овсяная каша на молоке yulaf sıyığı"
+  ],
+  "basis": {
+   "ingredients": [
+    [
+     "usda:173904",
+     50
+    ],
+    [
+     "usda:171265",
+     250
+    ]
+   ],
+   "grams": 280
+  },
+  "portions": [
+   {
+    "name": "Порция (≈280 г)",
+    "nameEn": "Portion (~280 g)",
+    "grams": 280
+   },
+   {
+    "name": "Весь рецепт (≈280 г)",
+    "nameEn": "Whole recipe (~280 g)",
+    "grams": 280
+   }
+  ],
+  "source": "Расчёт по рецепту из ингредиентов USDA SR Legacy: овсяные хлопья 50 г, молоко 250 г; выход готового блюда ≈280 г.",
+  "sourceEn": "Recipe estimate from USDA SR Legacy ingredients: rolled oats 50 g, milk 250 g; cooked weight ~280 g."
+ },
+ {
+  "id": "local:dish-ovsyanka-milk-sugar",
+  "name": "Овсяная каша на молоке с сахаром и маслом",
+  "nameEn": "Oatmeal with milk, sugar and butter",
+  "aliases": [
+   "овсянка с сахаром маслом yulaf sıyığı"
+  ],
+  "basis": {
+   "ingredients": [
+    [
+     "usda:173904",
+     50
+    ],
+    [
+     "usda:171265",
+     250
+    ],
+    [
+     "usda:169655",
+     10
+    ],
+    [
+     "usda:173410",
+     5
+    ]
+   ],
+   "grams": 295
+  },
+  "portions": [
+   {
+    "name": "Порция (≈295 г)",
+    "nameEn": "Portion (~295 g)",
+    "grams": 295
+   },
+   {
+    "name": "Весь рецепт (≈295 г)",
+    "nameEn": "Whole recipe (~295 g)",
+    "grams": 295
+   }
+  ],
+  "source": "Расчёт по рецепту из ингредиентов USDA SR Legacy: овсяные хлопья 50 г, молоко 250 г, сахар 10 г, сливочное масло 5 г; выход готового блюда ≈295 г.",
+  "sourceEn": "Recipe estimate from USDA SR Legacy ingredients: rolled oats 50 g, milk 250 g, sugar 10 g, butter 5 g; cooked weight ~295 g."
+ },
+ {
+  "id": "local:dish-manka",
+  "name": "Манная каша на молоке",
+  "nameEn": "Semolina porridge with milk",
+  "aliases": [
+   "манная каша манка irmik sıyığı"
+  ],
+  "basis": {
+   "ingredients": [
+    [
+     "usda:168933",
+     50
+    ],
+    [
+     "usda:171265",
+     400
+    ],
+    [
+     "usda:169655",
+     15
+    ],
+    [
+     "usda:173410",
+     10
+    ]
+   ],
+   "grams": 450
+  },
+  "portions": [
+   {
+    "name": "Порция (≈250 г)",
+    "nameEn": "Portion (~250 g)",
+    "grams": 250
+   },
+   {
+    "name": "Весь рецепт (≈450 г)",
+    "nameEn": "Whole recipe (~450 g)",
+    "grams": 450
+   }
+  ],
+  "source": "Расчёт по рецепту из ингредиентов USDA SR Legacy: манка 50 г, молоко 400 г, сахар 15 г, сливочное масло 10 г; выход готового блюда ≈450 г.",
+  "sourceEn": "Recipe estimate from USDA SR Legacy ingredients: semolina 50 g, milk 400 g, sugar 15 g, butter 10 g; cooked weight ~450 g."
+ },
+ {
+  "id": "local:dish-rice-porridge",
+  "name": "Рисовая каша на молоке",
+  "nameEn": "Rice porridge with milk",
+  "aliases": [
+   "рисовая каша на молоке südlü düyü sıyığı şirin plov"
+  ],
+  "basis": {
+   "ingredients": [
+    [
+     "usda:168877",
+     80
+    ],
+    [
+     "usda:171265",
+     500
+    ],
+    [
+     "usda:173647",
+     100
+    ],
+    [
+     "usda:169655",
+     20
+    ],
+    [
+     "usda:173410",
+     10
+    ]
+   ],
+   "grams": 650
+  },
+  "portions": [
+   {
+    "name": "Порция (≈250 г)",
+    "nameEn": "Portion (~250 g)",
+    "grams": 250
+   },
+   {
+    "name": "Весь рецепт (≈650 г)",
+    "nameEn": "Whole recipe (~650 g)",
+    "grams": 650
+   }
+  ],
+  "source": "Расчёт по рецепту из ингредиентов USDA SR Legacy: рис 80 г, молоко 500 г, вода 100 г, сахар 20 г, сливочное масло 10 г; выход готового блюда ≈650 г.",
+  "sourceEn": "Recipe estimate from USDA SR Legacy ingredients: rice 80 g, milk 500 g, water 100 g, sugar 20 g, butter 10 g; cooked weight ~650 g."
+ },
+ {
+  "id": "local:dish-millet-porridge",
+  "name": "Пшённая каша на молоке",
+  "nameEn": "Millet porridge with milk",
+  "aliases": [
+   "пшённая каша пшенка darı sıyığı"
+  ],
+  "basis": {
+   "ingredients": [
+    [
+     "usda:169702",
+     100
+    ],
+    [
+     "usda:171265",
+     400
+    ],
+    [
+     "usda:173647",
+     200
+    ],
+    [
+     "usda:173410",
+     10
+    ],
+    [
+     "usda:169655",
+     10
+    ]
+   ],
+   "grams": 650
+  },
+  "portions": [
+   {
+    "name": "Порция (≈250 г)",
+    "nameEn": "Portion (~250 g)",
+    "grams": 250
+   },
+   {
+    "name": "Весь рецепт (≈650 г)",
+    "nameEn": "Whole recipe (~650 g)",
+    "grams": 650
+   }
+  ],
+  "source": "Расчёт по рецепту из ингредиентов USDA SR Legacy: пшено 100 г, молоко 400 г, вода 200 г, сливочное масло 10 г, сахар 10 г; выход готового блюда ≈650 г.",
+  "sourceEn": "Recipe estimate from USDA SR Legacy ingredients: millet 100 g, milk 400 g, water 200 g, butter 10 g, sugar 10 g; cooked weight ~650 g."
+ },
+ {
+  "id": "local:dish-omlet",
+  "name": "Омлет на молоке",
+  "nameEn": "Omelette with milk",
+  "aliases": [
+   "омлет omlet"
+  ],
+  "basis": {
+   "ingredients": [
+    [
+     "usda:171287",
+     200
+    ],
+    [
+     "usda:171265",
+     60
+    ],
+    [
+     "usda:173410",
+     10
+    ]
+   ],
+   "grams": 250
+  },
+  "portions": [
+   {
+    "name": "Порция (≈150 г)",
+    "nameEn": "Portion (~150 g)",
+    "grams": 150
+   },
+   {
+    "name": "Весь рецепт (≈250 г)",
+    "nameEn": "Whole recipe (~250 g)",
+    "grams": 250
+   }
+  ],
+  "source": "Расчёт по рецепту из ингредиентов USDA SR Legacy: яйца 200 г, молоко 60 г, сливочное масло 10 г; выход готового блюда ≈250 г.",
+  "sourceEn": "Recipe estimate from USDA SR Legacy ingredients: eggs 200 g, milk 60 g, butter 10 g; cooked weight ~250 g."
+ },
+ {
+  "id": "local:dish-yaichnica",
+  "name": "Яичница из 2 яиц на масле",
+  "nameEn": "Two fried eggs",
+  "aliases": [
+   "яичница глазунья qayğanaq yumurta"
+  ],
+  "basis": {
+   "ingredients": [
+    [
+     "usda:171287",
+     100
+    ],
+    [
+     "usda:173410",
+     7
+    ]
+   ],
+   "grams": 100
+  },
+  "portions": [
+   {
+    "name": "2 яйца (≈100 г)",
+    "nameEn": "2 eggs (~100 g)",
+    "grams": 100
+   },
+   {
+    "name": "Весь рецепт (≈100 г)",
+    "nameEn": "Whole recipe (~100 g)",
+    "grams": 100
+   }
+  ],
+  "source": "Расчёт по рецепту из ингредиентов USDA SR Legacy: яйца 100 г, сливочное масло 7 г; выход готового блюда ≈100 г.",
+  "sourceEn": "Recipe estimate from USDA SR Legacy ingredients: eggs 100 g, butter 7 g; cooked weight ~100 g."
+ },
+ {
+  "id": "local:dish-lagman",
+  "name": "Лагман",
+  "nameEn": "Lagman noodle stew",
+  "aliases": [
+   "лагман lagman"
+  ],
+  "basis": {
+   "ingredients": [
+    [
+     "usda:171206",
+     400
+    ],
+    [
+     "usda:169737",
+     750
+    ],
+    [
+     "usda:170427",
+     200
+    ],
+    [
+     "usda:170457",
+     200
+    ],
+    [
+     "usda:170000",
+     150
+    ],
+    [
+     "usda:170393",
+     100
+    ],
+    [
+     "usda:169230",
+     20
+    ],
+    [
+     "usda:171025",
+     60
+    ],
+    [
+     "usda:173647",
+     800
+    ]
+   ],
+   "grams": 2500
+  },
+  "portions": [
+   {
+    "name": "Тарелка (≈450 г)",
+    "nameEn": "Bowl (~450 g)",
+    "grams": 450
+   },
+   {
+    "name": "Весь рецепт (≈2500 г)",
+    "nameEn": "Whole recipe (~2500 g)",
+    "grams": 2500
+   }
+  ],
+  "source": "Расчёт по рецепту из ингредиентов USDA SR Legacy: говядина 400 г, макароны варёные 750 г, сладкий перец 200 г, помидоры 200 г, лук 150 г, морковь 100 г, чеснок 20 г, подсолнечное масло 60 г, вода 800 г; выход готового блюда ≈2500 г.",
+  "sourceEn": "Recipe estimate from USDA SR Legacy ingredients: beef 400 g, cooked pasta 750 g, bell pepper 200 g, tomatoes 200 g, onion 150 g, carrots 100 g, garlic 20 g, sunflower oil 60 g, water 800 g; cooked weight ~2500 g."
+ },
+ {
+  "id": "local:dish-kurica-zapechennaya",
+  "name": "Курица запечённая с картофелем",
+  "nameEn": "Roast chicken with potatoes",
+  "aliases": [
+   "курица с картошкой в духовке"
+  ],
+  "basis": {
+   "ingredients": [
+    [
+     "usda:171447",
+     1000
+    ],
+    [
+     "usda:170026",
+     800
+    ],
+    [
+     "usda:170000",
+     100
+    ],
+    [
+     "usda:171025",
+     30
+    ],
+    [
+     "usda:171009",
+     30
+    ]
+   ],
+   "grams": 1500
+  },
+  "portions": [
+   {
+    "name": "Порция (≈350 г)",
+    "nameEn": "Portion (~350 g)",
+    "grams": 350
+   },
+   {
+    "name": "Весь рецепт (≈1500 г)",
+    "nameEn": "Whole recipe (~1500 g)",
+    "grams": 1500
+   }
+  ],
+  "source": "Расчёт по рецепту из ингредиентов USDA SR Legacy: курица с кожей 1000 г, картофель 800 г, лук 100 г, подсолнечное масло 30 г, майонез 30 г; выход готового блюда ≈1500 г.",
+  "sourceEn": "Recipe estimate from USDA SR Legacy ingredients: chicken with skin 1000 g, potatoes 800 g, onion 100 g, sunflower oil 30 g, mayonnaise 30 g; cooked weight ~1500 g."
+ },
+ {
+  "id": "local:dish-coban",
+  "name": "Салат «Чобан» (Çoban salatı)",
+  "nameEn": "Shepherd salad (Çoban salatı)",
+  "aliases": [
+   "çoban salatı coban чобан салат помидоры огурцы"
+  ],
+  "basis": {
+   "ingredients": [
+    [
+     "usda:170457",
+     300
+    ],
+    [
+     "usda:168409",
+     300
+    ],
+    [
+     "usda:170427",
+     100
+    ],
+    [
+     "usda:170000",
+     50
+    ],
+    [
+     "usda:170416",
+     30
+    ],
+    [
+     "usda:171025",
+     30
+    ],
+    [
+     "usda:167747",
+     15
+    ]
+   ],
+   "grams": 815
+  },
+  "portions": [
+   {
+    "name": "Порция (≈200 г)",
+    "nameEn": "Portion (~200 g)",
+    "grams": 200
+   },
+   {
+    "name": "Весь рецепт (≈815 г)",
+    "nameEn": "Whole recipe (~815 g)",
+    "grams": 815
+   }
+  ],
+  "source": "Расчёт по рецепту из ингредиентов USDA SR Legacy: помидоры 300 г, огурцы 300 г, сладкий перец 100 г, лук 50 г, петрушка 30 г, подсолнечное масло 30 г, лимонный сок 15 г; выход готового блюда ≈815 г.",
+  "sourceEn": "Recipe estimate from USDA SR Legacy ingredients: tomatoes 300 g, cucumbers 300 g, bell pepper 100 g, onion 50 g, parsley 30 g, sunflower oil 30 g, lemon juice 15 g; cooked weight ~815 g."
+ },
+ {
+  "id": "local:dish-tomato-cucumber-sour-cream",
+  "name": "Салат из помидоров и огурцов со сметаной",
+  "nameEn": "Tomato and cucumber salad with sour cream",
+  "aliases": [
+   "салат помидоры огурцы сметана"
+  ],
+  "basis": {
+   "ingredients": [
+    [
+     "usda:170457",
+     300
+    ],
+    [
+     "usda:168409",
+     300
+    ],
+    [
+     "usda:170000",
+     30
+    ],
+    [
+     "usda:172233",
+     15
+    ],
+    [
+     "usda:171257",
+     100
+    ]
+   ],
+   "grams": 745
+  },
+  "portions": [
+   {
+    "name": "Порция (≈200 г)",
+    "nameEn": "Portion (~200 g)",
+    "grams": 200
+   },
+   {
+    "name": "Весь рецепт (≈745 г)",
+    "nameEn": "Whole recipe (~745 g)",
+    "grams": 745
+   }
+  ],
+  "source": "Расчёт по рецепту из ингредиентов USDA SR Legacy: помидоры 300 г, огурцы 300 г, лук 30 г, укроп 15 г, сметана 100 г; выход готового блюда ≈745 г.",
+  "sourceEn": "Recipe estimate from USDA SR Legacy ingredients: tomatoes 300 g, cucumbers 300 g, onion 30 g, dill 15 g, sour cream 100 g; cooked weight ~745 g."
+ },
+ {
+  "id": "local:dish-paytaxt",
+  "name": "Салат «Пайтахт» / Оливье с курицей (Paytaxt salatı)",
+  "nameEn": "Capital salad / Olivier with chicken (Paytaxt)",
+  "aliases": [
+   "paytaxt salatı paytaxt пайтахт столичный оливье курица"
+  ],
+  "basis": {
+   "ingredients": [
+    [
+     "usda:170026",
+     400
+    ],
+    [
+     "usda:171477",
+     300
+    ],
+    [
+     "usda:171287",
+     200
+    ],
+    [
+     "usda:169379",
+     150
+    ],
+    [
+     "usda:170104",
+     150
+    ],
+    [
+     "usda:170393",
+     100
+    ],
+    [
+     "usda:171009",
+     200
+    ]
+   ],
+   "grams": 1450
+  },
+  "portions": [
+   {
+    "name": "Порция (≈200 г)",
+    "nameEn": "Portion (~200 g)",
+    "grams": 200
+   },
+   {
+    "name": "Весь рецепт (≈1450 г)",
+    "nameEn": "Whole recipe (~1450 g)",
+    "grams": 1450
+   }
+  ],
+  "source": "Расчёт по рецепту из ингредиентов USDA SR Legacy: картофель 400 г, куриная грудка запечённая 300 г, яйца 200 г, солёные огурцы 150 г, зелёный горошек 150 г, морковь 100 г, майонез 200 г; выход готового блюда ≈1450 г.",
+  "sourceEn": "Recipe estimate from USDA SR Legacy ingredients: potatoes 400 g, roasted chicken breast 300 g, eggs 200 g, pickles 150 g, green peas 150 g, carrots 100 g, mayonnaise 200 g; cooked weight ~1450 g."
+ },
+ {
+  "id": "local:dish-olivier",
+  "name": "Салат «Оливье» с колбасой",
+  "nameEn": "Olivier salad with bologna",
+  "aliases": [
+   "оливье olivye salatı olivier"
+  ],
+  "basis": {
+   "ingredients": [
+    [
+     "usda:170026",
+     400
+    ],
+    [
+     "usda:172013",
+     300
+    ],
+    [
+     "usda:171287",
+     200
+    ],
+    [
+     "usda:169379",
+     150
+    ],
+    [
+     "usda:170104",
+     150
+    ],
+    [
+     "usda:170393",
+     100
+    ],
+    [
+     "usda:171009",
+     200
+    ]
+   ],
+   "grams": 1450
+  },
+  "portions": [
+   {
+    "name": "Порция (≈200 г)",
+    "nameEn": "Portion (~200 g)",
+    "grams": 200
+   },
+   {
+    "name": "Весь рецепт (≈1450 г)",
+    "nameEn": "Whole recipe (~1450 g)",
+    "grams": 1450
+   }
+  ],
+  "source": "Расчёт по рецепту из ингредиентов USDA SR Legacy: картофель 400 г, варёная колбаса 300 г, яйца 200 г, солёные огурцы 150 г, зелёный горошек 150 г, морковь 100 г, майонез 200 г; выход готового блюда ≈1450 г.",
+  "sourceEn": "Recipe estimate from USDA SR Legacy ingredients: potatoes 400 g, bologna sausage 300 g, eggs 200 g, pickles 150 g, green peas 150 g, carrots 100 g, mayonnaise 200 g; cooked weight ~1450 g."
+ },
+ {
+  "id": "local:dish-vinegret",
+  "name": "Винегрет",
+  "nameEn": "Vinegret beet salad",
+  "aliases": [
+   "винегрет vineqret"
+  ],
+  "basis": {
+   "ingredients": [
+    [
+     "usda:169145",
+     300
+    ],
+    [
+     "usda:170026",
+     300
+    ],
+    [
+     "usda:170393",
+     150
+    ],
+    [
+     "usda:169379",
+     150
+    ],
+    [
+     "usda:169279",
+     150
+    ],
+    [
+     "usda:170104",
+     100
+    ],
+    [
+     "usda:171025",
+     50
+    ],
+    [
+     "usda:170000",
+     50
+    ]
+   ],
+   "grams": 1200
+  },
+  "portions": [
+   {
+    "name": "Порция (≈200 г)",
+    "nameEn": "Portion (~200 g)",
+    "grams": 200
+   },
+   {
+    "name": "Весь рецепт (≈1200 г)",
+    "nameEn": "Whole recipe (~1200 g)",
+    "grams": 1200
+   }
+  ],
+  "source": "Расчёт по рецепту из ингредиентов USDA SR Legacy: свёкла 300 г, картофель 300 г, морковь 150 г, солёные огурцы 150 г, квашеная капуста 150 г, зелёный горошек 100 г, подсолнечное масло 50 г, лук 50 г; выход готового блюда ≈1200 г.",
+  "sourceEn": "Recipe estimate from USDA SR Legacy ingredients: beetroot 300 g, potatoes 300 g, carrots 150 g, pickles 150 g, sauerkraut 150 g, green peas 100 g, sunflower oil 50 g, onion 50 g; cooked weight ~1200 g."
+ },
+ {
+  "id": "local:dish-shuba",
+  "name": "Сельдь под шубой",
+  "nameEn": "Herring under a fur coat",
+  "aliases": [
+   "шуба сельдь под шубой şuba"
+  ],
+  "basis": {
+   "ingredients": [
+    [
+     "usda:175118",
+     300
+    ],
+    [
+     "usda:170026",
+     300
+    ],
+    [
+     "usda:170393",
+     200
+    ],
+    [
+     "usda:169145",
+     300
+    ],
+    [
+     "usda:171287",
+     150
+    ],
+    [
+     "usda:171009",
+     200
+    ],
+    [
+     "usda:170000",
+     50
+    ]
+   ],
+   "grams": 1450
+  },
+  "portions": [
+   {
+    "name": "Порция (≈200 г)",
+    "nameEn": "Portion (~200 g)",
+    "grams": 200
+   },
+   {
+    "name": "Весь рецепт (≈1450 г)",
+    "nameEn": "Whole recipe (~1450 g)",
+    "grams": 1450
+   }
+  ],
+  "source": "Расчёт по рецепту из ингредиентов USDA SR Legacy: сельдь 300 г, картофель 300 г, морковь 200 г, свёкла 300 г, яйца 150 г, майонез 200 г, лук 50 г; выход готового блюда ≈1450 г.",
+  "sourceEn": "Recipe estimate from USDA SR Legacy ingredients: herring 300 g, potatoes 300 g, carrots 200 g, beetroot 300 g, eggs 150 g, mayonnaise 200 g, onion 50 g; cooked weight ~1450 g."
+ },
+ {
+  "id": "local:dish-mimoza",
+  "name": "Салат «Мимоза»",
+  "nameEn": "Mimosa salad",
+  "aliases": [
+   "мимоза mimoza"
+  ],
+  "basis": {
+   "ingredients": [
+    [
+     "usda:173709",
+     300
+    ],
+    [
+     "usda:171287",
+     250
+    ],
+    [
+     "usda:170026",
+     300
+    ],
+    [
+     "usda:170393",
+     150
+    ],
+    [
+     "usda:171009",
+     150
+    ],
+    [
+     "usda:170000",
+     50
+    ],
+    [
+     "usda:173414",
+     100
+    ]
+   ],
+   "grams": 1250
+  },
+  "portions": [
+   {
+    "name": "Порция (≈200 г)",
+    "nameEn": "Portion (~200 g)",
+    "grams": 200
+   },
+   {
+    "name": "Весь рецепт (≈1250 г)",
+    "nameEn": "Whole recipe (~1250 g)",
+    "grams": 1250
+   }
+  ],
+  "source": "Расчёт по рецепту из ингредиентов USDA SR Legacy: тунец консервированный 300 г, яйца 250 г, картофель 300 г, морковь 150 г, майонез 150 г, лук 50 г, твёрдый сыр 100 г; выход готового блюда ≈1250 г.",
+  "sourceEn": "Recipe estimate from USDA SR Legacy ingredients: canned tuna 300 g, eggs 250 g, potatoes 300 g, carrots 150 g, mayonnaise 150 g, onion 50 g, hard cheese 100 g; cooked weight ~1250 g."
+ },
+ {
+  "id": "local:dish-krabovy",
+  "name": "Крабовый салат",
+  "nameEn": "Crab stick salad",
+  "aliases": [
+   "крабовый салат krab salatı"
+  ],
+  "basis": {
+   "ingredients": [
+    [
+     "usda:171973",
+     250
+    ],
+    [
+     "usda:169214",
+     300
+    ],
+    [
+     "usda:171287",
+     200
+    ],
+    [
+     "usda:168878",
+     200
+    ],
+    [
+     "usda:168409",
+     150
+    ],
+    [
+     "usda:171009",
+     150
+    ]
+   ],
+   "grams": 1250
+  },
+  "portions": [
+   {
+    "name": "Порция (≈200 г)",
+    "nameEn": "Portion (~200 g)",
+    "grams": 200
+   },
+   {
+    "name": "Весь рецепт (≈1250 г)",
+    "nameEn": "Whole recipe (~1250 g)",
+    "grams": 1250
+   }
+  ],
+  "source": "Расчёт по рецепту из ингредиентов USDA SR Legacy: крабовые палочки 250 г, кукуруза 300 г, яйца 200 г, рис варёный 200 г, огурцы 150 г, майонез 150 г; выход готового блюда ≈1250 г.",
+  "sourceEn": "Recipe estimate from USDA SR Legacy ingredients: crab sticks 250 g, sweet corn 300 g, eggs 200 g, cooked rice 200 g, cucumbers 150 g, mayonnaise 150 g; cooked weight ~1250 g."
+ },
+ {
+  "id": "local:dish-caesar",
+  "name": "Салат «Цезарь» с курицей",
+  "nameEn": "Caesar salad with chicken",
+  "aliases": [
+   "цезарь sezar caesar"
+  ],
+  "basis": {
+   "ingredients": [
+    [
+     "usda:169247",
+     200
+    ],
+    [
+     "usda:171477",
+     200
+    ],
+    [
+     "usda:172751",
+     60
+    ],
+    [
+     "usda:171247",
+     30
+    ],
+    [
+     "usda:171009",
+     60
+    ],
+    [
+     "usda:167747",
+     10
+    ],
+    [
+     "usda:170457",
+     80
+    ]
+   ],
+   "grams": 640
+  },
+  "portions": [
+   {
+    "name": "Порция (≈250 г)",
+    "nameEn": "Portion (~250 g)",
+    "grams": 250
+   },
+   {
+    "name": "Весь рецепт (≈640 г)",
+    "nameEn": "Whole recipe (~640 g)",
+    "grams": 640
+   }
+  ],
+  "source": "Расчёт по рецепту из ингредиентов USDA SR Legacy: салат ромэн 200 г, куриная грудка запечённая 200 г, сухарики 60 г, пармезан 30 г, майонез 60 г, лимонный сок 10 г, помидоры 80 г; выход готового блюда ≈640 г.",
+  "sourceEn": "Recipe estimate from USDA SR Legacy ingredients: romaine 200 g, roasted chicken breast 200 g, croutons 60 g, parmesan 30 g, mayonnaise 60 g, lemon juice 10 g, tomatoes 80 g; cooked weight ~640 g."
+ },
+ {
+  "id": "local:dish-greek",
+  "name": "Греческий салат",
+  "nameEn": "Greek salad",
+  "aliases": [
+   "греческий салат yunan salatı"
+  ],
+  "basis": {
+   "ingredients": [
+    [
+     "usda:170457",
+     250
+    ],
+    [
+     "usda:168409",
+     250
+    ],
+    [
+     "usda:170427",
+     120
+    ],
+    [
+     "usda:170000",
+     60
+    ],
+    [
+     "usda:169096",
+     60
+    ],
+    [
+     "usda:173420",
+     150
+    ],
+    [
+     "usda:171413",
+     40
+    ]
+   ],
+   "grams": 930
+  },
+  "portions": [
+   {
+    "name": "Порция (≈250 г)",
+    "nameEn": "Portion (~250 g)",
+    "grams": 250
+   },
+   {
+    "name": "Весь рецепт (≈930 г)",
+    "nameEn": "Whole recipe (~930 g)",
+    "grams": 930
+   }
+  ],
+  "source": "Расчёт по рецепту из ингредиентов USDA SR Legacy: помидоры 250 г, огурцы 250 г, сладкий перец 120 г, лук 60 г, оливки 60 г, брынза 150 г, оливковое масло 40 г; выход готового блюда ≈930 г.",
+  "sourceEn": "Recipe estimate from USDA SR Legacy ingredients: tomatoes 250 g, cucumbers 250 g, bell pepper 120 g, onion 60 g, olives 60 g, white cheese 150 g, olive oil 40 g; cooked weight ~930 g."
+ },
+ {
+  "id": "local:dish-mangal-salad",
+  "name": "Мангал-салат (Mangal salatı)",
+  "nameEn": "Grilled vegetable salad (Mangal salatı)",
+  "aliases": [
+   "mangal salatı mangal манга салат печёные овощи"
+  ],
+  "basis": {
+   "ingredients": [
+    [
+     "usda:169228",
+     300
+    ],
+    [
+     "usda:170457",
+     250
+    ],
+    [
+     "usda:170427",
+     200
+    ],
+    [
+     "usda:170000",
+     60
+    ],
+    [
+     "usda:171025",
+     30
+    ],
+    [
+     "usda:169230",
+     10
+    ],
+    [
+     "usda:169997",
+     20
+    ]
+   ],
+   "grams": 650
+  },
+  "portions": [
+   {
+    "name": "Порция (≈200 г)",
+    "nameEn": "Portion (~200 g)",
+    "grams": 200
+   },
+   {
+    "name": "Весь рецепт (≈650 г)",
+    "nameEn": "Whole recipe (~650 g)",
+    "grams": 650
+   }
+  ],
+  "source": "Расчёт по рецепту из ингредиентов USDA SR Legacy: баклажаны 300 г, помидоры 250 г, сладкий перец 200 г, лук 60 г, подсолнечное масло 30 г, чеснок 10 г, кинза 20 г; выход готового блюда ≈650 г.",
+  "sourceEn": "Recipe estimate from USDA SR Legacy ingredients: eggplant 300 g, tomatoes 250 g, bell pepper 200 g, onion 60 g, sunflower oil 30 g, garlic 10 g, cilantro 20 g; cooked weight ~650 g."
+ },
+ {
+  "id": "local:dish-gavurdag",
+  "name": "Салат «Гавурдаг» (Gavurdağı salatı)",
+  "nameEn": "Gavurdag salad with walnuts and pomegranate",
+  "aliases": [
+   "gavurdağı gavurdag гавурдаг салат"
+  ],
+  "basis": {
+   "ingredients": [
+    [
+     "usda:170457",
+     300
+    ],
+    [
+     "usda:170000",
+     60
+    ],
+    [
+     "usda:170427",
+     80
+    ],
+    [
+     "usda:170187",
+     60
+    ],
+    [
+     "usda:167787",
+     30
+    ],
+    [
+     "usda:171413",
+     30
+    ],
+    [
+     "usda:170416",
+     30
+    ]
+   ],
+   "grams": 590
+  },
+  "portions": [
+   {
+    "name": "Порция (≈200 г)",
+    "nameEn": "Portion (~200 g)",
+    "grams": 200
+   },
+   {
+    "name": "Весь рецепт (≈590 г)",
+    "nameEn": "Whole recipe (~590 g)",
+    "grams": 590
+   }
+  ],
+  "source": "Расчёт по рецепту из ингредиентов USDA SR Legacy: помидоры 300 г, лук 60 г, сладкий перец 80 г, грецкий орех 60 г, гранатовый сок/наршараб 30 г, оливковое масло 30 г, петрушка 30 г; выход готового блюда ≈590 г.",
+  "sourceEn": "Recipe estimate from USDA SR Legacy ingredients: tomatoes 300 g, onion 60 g, bell pepper 80 g, walnuts 60 g, pomegranate juice 30 g, olive oil 30 g, parsley 30 g; cooked weight ~590 g."
+ },
+ {
+  "id": "local:dish-cabbage-salad",
+  "name": "Салат из капусты с морковью",
+  "nameEn": "Cabbage and carrot slaw",
+  "aliases": [
+   "салат из капусты kələm salatı витаминный"
+  ],
+  "basis": {
+   "ingredients": [
+    [
+     "usda:169975",
+     400
+    ],
+    [
+     "usda:170393",
+     100
+    ],
+    [
+     "usda:171025",
+     30
+    ],
+    [
+     "usda:172237",
+     10
+    ],
+    [
+     "usda:169655",
+     5
+    ]
+   ],
+   "grams": 545
+  },
+  "portions": [
+   {
+    "name": "Порция (≈150 г)",
+    "nameEn": "Portion (~150 g)",
+    "grams": 150
+   },
+   {
+    "name": "Весь рецепт (≈545 г)",
+    "nameEn": "Whole recipe (~545 g)",
+    "grams": 545
+   }
+  ],
+  "source": "Расчёт по рецепту из ингредиентов USDA SR Legacy: капуста 400 г, морковь 100 г, подсолнечное масло 30 г, уксус 10 г, сахар 5 г; выход готового блюда ≈545 г.",
+  "sourceEn": "Recipe estimate from USDA SR Legacy ingredients: cabbage 400 g, carrots 100 g, sunflower oil 30 g, vinegar 10 g, sugar 5 g; cooked weight ~545 g."
+ },
+ {
+  "id": "local:dish-beet-garlic",
+  "name": "Свёкла с чесноком и майонезом",
+  "nameEn": "Beet salad with garlic and mayonnaise",
+  "aliases": [
+   "свекла с чесноком çuğundur salatı"
+  ],
+  "basis": {
+   "ingredients": [
+    [
+     "usda:169145",
+     500
+    ],
+    [
+     "usda:169230",
+     10
+    ],
+    [
+     "usda:171009",
+     60
+    ],
+    [
+     "usda:170187",
+     30
+    ]
+   ],
+   "grams": 560
+  },
+  "portions": [
+   {
+    "name": "Порция (≈150 г)",
+    "nameEn": "Portion (~150 g)",
+    "grams": 150
+   },
+   {
+    "name": "Весь рецепт (≈560 г)",
+    "nameEn": "Whole recipe (~560 g)",
+    "grams": 560
+   }
+  ],
+  "source": "Расчёт по рецепту из ингредиентов USDA SR Legacy: свёкла 500 г, чеснок 10 г, майонез 60 г, грецкий орех 30 г; выход готового блюда ≈560 г.",
+  "sourceEn": "Recipe estimate from USDA SR Legacy ingredients: beetroot 500 g, garlic 10 g, mayonnaise 60 g, walnuts 30 g; cooked weight ~560 g."
+ },
+ {
+  "id": "local:dish-lobio",
+  "name": "Лобио",
+  "nameEn": "Lobio: red beans with walnuts",
+  "aliases": [
+   "лобио lobio"
+  ],
+  "basis": {
+   "ingredients": [
+    [
+     "usda:175194",
+     600
+    ],
+    [
+     "usda:170000",
+     150
+    ],
+    [
+     "usda:170187",
+     60
+    ],
+    [
+     "usda:169997",
+     40
+    ],
+    [
+     "usda:171025",
+     30
+    ],
+    [
+     "usda:169230",
+     10
+    ]
+   ],
+   "grams": 860
+  },
+  "portions": [
+   {
+    "name": "Порция (≈200 г)",
+    "nameEn": "Portion (~200 g)",
+    "grams": 200
+   },
+   {
+    "name": "Весь рецепт (≈860 г)",
+    "nameEn": "Whole recipe (~860 g)",
+    "grams": 860
+   }
+  ],
+  "source": "Расчёт по рецепту из ингредиентов USDA SR Legacy: красная фасоль варёная 600 г, лук 150 г, грецкий орех 60 г, кинза 40 г, подсолнечное масло 30 г, чеснок 10 г; выход готового блюда ≈860 г.",
+  "sourceEn": "Recipe estimate from USDA SR Legacy ingredients: cooked red beans 600 g, onion 150 g, walnuts 60 g, cilantro 40 g, sunflower oil 30 g, garlic 10 g; cooked weight ~860 g."
+ },
+ {
+  "id": "local:dish-lavash",
+  "name": "Лаваш тонкий",
+  "nameEn": "Thin lavash bread",
+  "aliases": [
+   "lavaş lavash лаваш"
+  ],
+  "basis": {
+   "ingredients": [
+    [
+     "usda:169761",
+     600
+    ],
+    [
+     "usda:173647",
+     330
+    ],
+    [
+     "usda:173468",
+     10
+    ]
+   ],
+   "grams": 800
+  },
+  "portions": [
+   {
+    "name": "1 лист (≈60 г)",
+    "nameEn": "1 sheet (~60 g)",
+    "grams": 60
+   },
+   {
+    "name": "Весь рецепт (≈800 г)",
+    "nameEn": "Whole recipe (~800 g)",
+    "grams": 800
+   }
+  ],
+  "source": "Расчёт по рецепту из ингредиентов USDA SR Legacy: мука 600 г, вода 330 г, соль 10 г; выход готового блюда ≈800 г.",
+  "sourceEn": "Recipe estimate from USDA SR Legacy ingredients: flour 600 g, water 330 g, salt 10 g; cooked weight ~800 g."
+ },
+ {
+  "id": "local:dish-tendir",
+  "name": "Тандырный хлеб (Təndir çörəyi)",
+  "nameEn": "Tandir bread (Təndir çörəyi)",
+  "aliases": [
+   "təndir çörəyi tendir тандыр хлеб чурек"
+  ],
+  "basis": {
+   "ingredients": [
+    [
+     "usda:169761",
+     1000
+    ],
+    [
+     "usda:173647",
+     650
+    ],
+    [
+     "usda:175042",
+     10
+    ],
+    [
+     "usda:173468",
+     18
+    ]
+   ],
+   "grams": 1450
+  },
+  "portions": [
+   {
+    "name": "1 хлеб (≈350 г)",
+    "nameEn": "1 loaf (~350 g)",
+    "grams": 350
+   },
+   {
+    "name": "Ломоть (≈50 г)",
+    "nameEn": "Slice (~50 g)",
+    "grams": 50
+   },
+   {
+    "name": "Весь рецепт (≈1450 г)",
+    "nameEn": "Whole recipe (~1450 g)",
+    "grams": 1450
+   }
+  ],
+  "source": "Расчёт по рецепту из ингредиентов USDA SR Legacy: мука 1000 г, вода 650 г, дрожжи 10 г, соль 18 г; выход готового блюда ≈1450 г.",
+  "sourceEn": "Recipe estimate from USDA SR Legacy ingredients: flour 1000 g, water 650 g, yeast 10 g, salt 18 g; cooked weight ~1450 g."
+ },
+ {
+  "id": "local:dish-corek",
+  "name": "Хлеб домашний (Çörək)",
+  "nameEn": "Homemade bread (Çörək)",
+  "aliases": [
+   "çörək corek хлеб домашний"
+  ],
+  "basis": {
+   "ingredients": [
+    [
+     "usda:169761",
+     1000
+    ],
+    [
+     "usda:173647",
+     600
+    ],
+    [
+     "usda:175042",
+     15
+    ],
+    [
+     "usda:173468",
+     18
+    ],
+    [
+     "usda:171025",
+     30
+    ]
+   ],
+   "grams": 1450
+  },
+  "portions": [
+   {
+    "name": "Ломоть (≈40 г)",
+    "nameEn": "Slice (~40 g)",
+    "grams": 40
+   },
+   {
+    "name": "Весь рецепт (≈1450 г)",
+    "nameEn": "Whole recipe (~1450 g)",
+    "grams": 1450
+   }
+  ],
+  "source": "Расчёт по рецепту из ингредиентов USDA SR Legacy: мука 1000 г, вода 600 г, дрожжи 15 г, соль 18 г, подсолнечное масло 30 г; выход готового блюда ≈1450 г.",
+  "sourceEn": "Recipe estimate from USDA SR Legacy ingredients: flour 1000 g, water 600 g, yeast 15 g, salt 18 g, sunflower oil 30 g; cooked weight ~1450 g."
+ },
+ {
+  "id": "local:dish-shaurma-chicken",
+  "name": "Шаурма с курицей в лаваше",
+  "nameEn": "Chicken shawarma in lavash",
+  "aliases": [
+   "şaurma shaurma шаурма шаверма курица дюрум"
+  ],
+  "basis": {
+   "ingredients": [
+    [
+     "local:dish-lavash",
+     120
+    ],
+    [
+     "usda:172388",
+     150
+    ],
+    [
+     "usda:169975",
+     50
+    ],
+    [
+     "usda:170457",
+     40
+    ],
+    [
+     "usda:168409",
+     40
+    ],
+    [
+     "usda:171009",
+     25
+    ],
+    [
+     "usda:171284",
+     25
+    ]
+   ],
+   "grams": 450
+  },
+  "portions": [
+   {
+    "name": "1 шаурма (≈450 г)",
+    "nameEn": "1 wrap (~450 g)",
+    "grams": 450
+   },
+   {
+    "name": "Весь рецепт (≈450 г)",
+    "nameEn": "Whole recipe (~450 g)",
+    "grams": 450
+   }
+  ],
+  "source": "Расчёт по рецепту из ингредиентов USDA SR Legacy: лаваш 120 г, курица жареная 150 г, капуста 50 г, помидоры 40 г, огурцы 40 г, майонез 25 г, катык 25 г; выход готового блюда ≈450 г.",
+  "sourceEn": "Recipe estimate from USDA SR Legacy ingredients: lavash 120 g, roasted chicken 150 g, cabbage 50 g, tomatoes 40 g, cucumbers 40 g, mayonnaise 25 g, plain yogurt 25 g; cooked weight ~450 g."
+ },
+ {
+  "id": "local:dish-shaurma-chicken-fries",
+  "name": "Шаурма с курицей и картофелем фри",
+  "nameEn": "Chicken shawarma with fries",
+  "aliases": [
+   "şaurma kartof shaurma шаурма фри курица"
+  ],
+  "basis": {
+   "ingredients": [
+    [
+     "local:dish-lavash",
+     120
+    ],
+    [
+     "usda:172388",
+     130
+    ],
+    [
+     "usda:170698",
+     60
+    ],
+    [
+     "usda:169975",
+     40
+    ],
+    [
+     "usda:170457",
+     40
+    ],
+    [
+     "usda:168409",
+     40
+    ],
+    [
+     "usda:171009",
+     30
+    ],
+    [
+     "usda:171284",
+     20
+    ]
+   ],
+   "grams": 480
+  },
+  "portions": [
+   {
+    "name": "1 шаурма (≈480 г)",
+    "nameEn": "1 wrap (~480 g)",
+    "grams": 480
+   },
+   {
+    "name": "Весь рецепт (≈480 г)",
+    "nameEn": "Whole recipe (~480 g)",
+    "grams": 480
+   }
+  ],
+  "source": "Расчёт по рецепту из ингредиентов USDA SR Legacy: лаваш 120 г, курица жареная 130 г, картофель фри 60 г, капуста 40 г, помидоры 40 г, огурцы 40 г, майонез 30 г, катык 20 г; выход готового блюда ≈480 г.",
+  "sourceEn": "Recipe estimate from USDA SR Legacy ingredients: lavash 120 g, roasted chicken 130 g, french fries 60 g, cabbage 40 g, tomatoes 40 g, cucumbers 40 g, mayonnaise 30 g, plain yogurt 20 g; cooked weight ~480 g."
+ },
+ {
+  "id": "local:dish-doner-beef",
+  "name": "Донер с говядиной в лаваше",
+  "nameEn": "Beef doner in lavash",
+  "aliases": [
+   "dönər doner донер дёнер говядина"
+  ],
+  "basis": {
+   "ingredients": [
+    [
+     "local:dish-lavash",
+     120
+    ],
+    [
+     "usda:174036",
+     160
+    ],
+    [
+     "usda:169975",
+     50
+    ],
+    [
+     "usda:170457",
+     40
+    ],
+    [
+     "usda:170000",
+     20
+    ],
+    [
+     "usda:171009",
+     25
+    ],
+    [
+     "usda:171284",
+     25
+    ]
+   ],
+   "grams": 420
+  },
+  "portions": [
+   {
+    "name": "1 донер (≈420 г)",
+    "nameEn": "1 wrap (~420 g)",
+    "grams": 420
+   },
+   {
+    "name": "Весь рецепт (≈420 г)",
+    "nameEn": "Whole recipe (~420 g)",
+    "grams": 420
+   }
+  ],
+  "source": "Расчёт по рецепту из ингредиентов USDA SR Legacy: лаваш 120 г, говяжий фарш 160 г, капуста 50 г, помидоры 40 г, лук 20 г, майонез 25 г, катык 25 г; выход готового блюда ≈420 г. Мясо донера взято как жареный говяжий фарш 80/20.",
+  "sourceEn": "Recipe estimate from USDA SR Legacy ingredients: lavash 120 g, ground beef 160 g, cabbage 50 g, tomatoes 40 g, onion 20 g, mayonnaise 25 g, plain yogurt 25 g; cooked weight ~420 g."
+ },
+ {
+  "id": "local:dish-doner-bread",
+  "name": "Донер с курицей в тандырном хлебе",
+  "nameEn": "Chicken doner in tandir bread",
+  "aliases": [
+   "dönər çörəkdə doner çörək донер хлеб"
+  ],
+  "basis": {
+   "ingredients": [
+    [
+     "local:dish-tendir",
+     150
+    ],
+    [
+     "usda:172388",
+     150
+    ],
+    [
+     "usda:169975",
+     40
+    ],
+    [
+     "usda:170457",
+     40
+    ],
+    [
+     "usda:168409",
+     30
+    ],
+    [
+     "usda:171009",
+     25
+    ]
+   ],
+   "grams": 435
+  },
+  "portions": [
+   {
+    "name": "1 донер (≈435 г)",
+    "nameEn": "1 doner (~435 g)",
+    "grams": 435
+   },
+   {
+    "name": "Весь рецепт (≈435 г)",
+    "nameEn": "Whole recipe (~435 g)",
+    "grams": 435
+   }
+  ],
+  "source": "Расчёт по рецепту из ингредиентов USDA SR Legacy: тандырный хлеб 150 г, курица жареная 150 г, капуста 40 г, помидоры 40 г, огурцы 30 г, майонез 25 г; выход готового блюда ≈435 г.",
+  "sourceEn": "Recipe estimate from USDA SR Legacy ingredients: tandir bread 150 g, roasted chicken 150 g, cabbage 40 g, tomatoes 40 g, cucumbers 30 g, mayonnaise 25 g; cooked weight ~435 g."
+ },
+ {
+  "id": "local:dish-lahmacun",
+  "name": "Лахмаджун (Lahmacun)",
+  "nameEn": "Lahmacun flatbread with minced meat",
+  "aliases": [
+   "lahmacun lahmajun лахмаджун"
+  ],
+  "basis": {
+   "ingredients": [
+    [
+     "usda:169761",
+     200
+    ],
+    [
+     "usda:173647",
+     120
+    ],
+    [
+     "usda:174036",
+     150
+    ],
+    [
+     "usda:170457",
+     100
+    ],
+    [
+     "usda:170427",
+     50
+    ],
+    [
+     "usda:170000",
+     50
+    ],
+    [
+     "usda:170416",
+     20
+    ],
+    [
+     "usda:171025",
+     15
+    ]
+   ],
+   "grams": 580
+  },
+  "portions": [
+   {
+    "name": "1 лахмаджун (≈145 г)",
+    "nameEn": "1 piece (~145 g)",
+    "grams": 145
+   },
+   {
+    "name": "Весь рецепт (≈580 г)",
+    "nameEn": "Whole recipe (~580 g)",
+    "grams": 580
+   }
+  ],
+  "source": "Расчёт по рецепту из ингредиентов USDA SR Legacy: мука 200 г, вода 120 г, говяжий фарш 150 г, помидоры 100 г, сладкий перец 50 г, лук 50 г, петрушка 20 г, подсолнечное масло 15 г; выход готового блюда ≈580 г.",
+  "sourceEn": "Recipe estimate from USDA SR Legacy ingredients: flour 200 g, water 120 g, ground beef 150 g, tomatoes 100 g, bell pepper 50 g, onion 50 g, parsley 20 g, sunflower oil 15 g; cooked weight ~580 g."
+ },
+ {
+  "id": "local:dish-pide-cheese",
+  "name": "Пиде с сыром",
+  "nameEn": "Cheese pide",
+  "aliases": [
+   "pide pendirli pide пиде сыр"
+  ],
+  "basis": {
+   "ingredients": [
+    [
+     "usda:169761",
+     250
+    ],
+    [
+     "usda:173647",
+     150
+    ],
+    [
+     "usda:170845",
+     150
+    ],
+    [
+     "usda:171287",
+     50
+    ],
+    [
+     "usda:173410",
+     20
+    ]
+   ],
+   "grams": 560
+  },
+  "portions": [
+   {
+    "name": "1 пиде (≈280 г)",
+    "nameEn": "1 pide (~280 g)",
+    "grams": 280
+   },
+   {
+    "name": "Весь рецепт (≈560 г)",
+    "nameEn": "Whole recipe (~560 g)",
+    "grams": 560
+   }
+  ],
+  "source": "Расчёт по рецепту из ингредиентов USDA SR Legacy: мука 250 г, вода 150 г, сулугуни/моцарелла 150 г, яйца 50 г, сливочное масло 20 г; выход готового блюда ≈560 г.",
+  "sourceEn": "Recipe estimate from USDA SR Legacy ingredients: flour 250 g, water 150 g, suluguni or mozzarella 150 g, eggs 50 g, butter 20 g; cooked weight ~560 g."
+ },
+ {
+  "id": "local:dish-pide-meat",
+  "name": "Пиде с мясом",
+  "nameEn": "Meat pide",
+  "aliases": [
+   "pide ətli pide пиде мясо"
+  ],
+  "basis": {
+   "ingredients": [
+    [
+     "usda:169761",
+     250
+    ],
+    [
+     "usda:173647",
+     150
+    ],
+    [
+     "usda:174036",
+     200
+    ],
+    [
+     "usda:170000",
+     50
+    ],
+    [
+     "usda:170457",
+     60
+    ],
+    [
+     "usda:173410",
+     20
+    ]
+   ],
+   "grams": 620
+  },
+  "portions": [
+   {
+    "name": "1 пиде (≈310 г)",
+    "nameEn": "1 pide (~310 g)",
+    "grams": 310
+   },
+   {
+    "name": "Весь рецепт (≈620 г)",
+    "nameEn": "Whole recipe (~620 g)",
+    "grams": 620
+   }
+  ],
+  "source": "Расчёт по рецепту из ингредиентов USDA SR Legacy: мука 250 г, вода 150 г, говяжий фарш 200 г, лук 50 г, помидоры 60 г, сливочное масло 20 г; выход готового блюда ≈620 г.",
+  "sourceEn": "Recipe estimate from USDA SR Legacy ingredients: flour 250 g, water 150 g, ground beef 200 g, onion 50 g, tomatoes 60 g, butter 20 g; cooked weight ~620 g."
+ },
+ {
+  "id": "local:dish-khachapuri-adjarian",
+  "name": "Хачапури по-аджарски",
+  "nameEn": "Adjarian khachapuri",
+  "aliases": [
+   "хачапури аджарский xaçapuri acarski"
+  ],
+  "basis": {
+   "ingredients": [
+    [
+     "usda:169761",
+     250
+    ],
+    [
+     "usda:171265",
+     150
+    ],
+    [
+     "usda:175042",
+     5
+    ],
+    [
+     "usda:171025",
+     15
+    ],
+    [
+     "usda:170845",
+     200
+    ],
+    [
+     "usda:173420",
+     100
+    ],
+    [
+     "usda:171287",
+     50
+    ],
+    [
+     "usda:173410",
+     30
+    ]
+   ],
+   "grams": 760
+  },
+  "portions": [
+   {
+    "name": "1 лодочка (≈380 г)",
+    "nameEn": "1 boat (~380 g)",
+    "grams": 380
+   },
+   {
+    "name": "Весь рецепт (≈760 г)",
+    "nameEn": "Whole recipe (~760 g)",
+    "grams": 760
+   }
+  ],
+  "source": "Расчёт по рецепту из ингредиентов USDA SR Legacy: мука 250 г, молоко 150 г, дрожжи 5 г, подсолнечное масло 15 г, сулугуни/моцарелла 200 г, брынза 100 г, яйца 50 г, сливочное масло 30 г; выход готового блюда ≈760 г.",
+  "sourceEn": "Recipe estimate from USDA SR Legacy ingredients: flour 250 g, milk 150 g, yeast 5 g, sunflower oil 15 g, suluguni or mozzarella 200 g, white cheese 100 g, eggs 50 g, butter 30 g; cooked weight ~760 g."
+ },
+ {
+  "id": "local:dish-khachapuri-imeruli",
+  "name": "Хачапури по-имеретински",
+  "nameEn": "Imeretian khachapuri",
+  "aliases": [
+   "хачапури имерули xaçapuri"
+  ],
+  "basis": {
+   "ingredients": [
+    [
+     "usda:169761",
+     400
+    ],
+    [
+     "usda:171284",
+     250
+    ],
+    [
+     "usda:171287",
+     50
+    ],
+    [
+     "usda:173410",
+     30
+    ],
+    [
+     "usda:170845",
+     300
+    ],
+    [
+     "usda:173420",
+     200
+    ]
+   ],
+   "grams": 1180
+  },
+  "portions": [
+   {
+    "name": "1 кусок (1/8) (≈150 г)",
+    "nameEn": "1 slice (1/8) (~150 g)",
+    "grams": 150
+   },
+   {
+    "name": "Весь рецепт (≈1180 г)",
+    "nameEn": "Whole recipe (~1180 g)",
+    "grams": 1180
+   }
+  ],
+  "source": "Расчёт по рецепту из ингредиентов USDA SR Legacy: мука 400 г, катык 250 г, яйца 50 г, сливочное масло 30 г, сулугуни/моцарелла 300 г, брынза 200 г; выход готового блюда ≈1180 г.",
+  "sourceEn": "Recipe estimate from USDA SR Legacy ingredients: flour 400 g, plain yogurt 250 g, eggs 50 g, butter 30 g, suluguni or mozzarella 300 g, white cheese 200 g; cooked weight ~1180 g."
+ },
+ {
+  "id": "local:dish-chakhokhbili",
+  "name": "Чахохбили",
+  "nameEn": "Chakhokhbili chicken stew",
+  "aliases": [
+   "чахохбили chaxoxbili"
+  ],
+  "basis": {
+   "ingredients": [
+    [
+     "usda:171447",
+     1000
+    ],
+    [
+     "usda:170457",
+     600
+    ],
+    [
+     "usda:170000",
+     300
+    ],
+    [
+     "usda:173410",
+     40
+    ],
+    [
+     "usda:169997",
+     30
+    ],
+    [
+     "usda:169230",
+     15
+    ]
+   ],
+   "grams": 1600
+  },
+  "portions": [
+   {
+    "name": "Порция (≈300 г)",
+    "nameEn": "Portion (~300 g)",
+    "grams": 300
+   },
+   {
+    "name": "Весь рецепт (≈1600 г)",
+    "nameEn": "Whole recipe (~1600 g)",
+    "grams": 1600
+   }
+  ],
+  "source": "Расчёт по рецепту из ингредиентов USDA SR Legacy: курица с кожей 1000 г, помидоры 600 г, лук 300 г, сливочное масло 40 г, кинза 30 г, чеснок 15 г; выход готового блюда ≈1600 г.",
+  "sourceEn": "Recipe estimate from USDA SR Legacy ingredients: chicken with skin 1000 g, tomatoes 600 g, onion 300 g, butter 40 g, cilantro 30 g, garlic 15 g; cooked weight ~1600 g."
+ },
+ {
+  "id": "local:dish-chkmeruli",
+  "name": "Чкмерули",
+  "nameEn": "Chkmeruli: chicken in garlic cream",
+  "aliases": [
+   "чкмерули shkmeruli"
+  ],
+  "basis": {
+   "ingredients": [
+    [
+     "usda:171447",
+     1000
+    ],
+    [
+     "usda:170857",
+     300
+    ],
+    [
+     "usda:169230",
+     40
+    ],
+    [
+     "usda:173410",
+     40
+    ]
+   ],
+   "grams": 1150
+  },
+  "portions": [
+   {
+    "name": "Порция (≈300 г)",
+    "nameEn": "Portion (~300 g)",
+    "grams": 300
+   },
+   {
+    "name": "Весь рецепт (≈1150 г)",
+    "nameEn": "Whole recipe (~1150 g)",
+    "grams": 1150
+   }
+  ],
+  "source": "Расчёт по рецепту из ингредиентов USDA SR Legacy: курица с кожей 1000 г, сливки 300 г, чеснок 40 г, сливочное масло 40 г; выход готового блюда ≈1150 г.",
+  "sourceEn": "Recipe estimate from USDA SR Legacy ingredients: chicken with skin 1000 g, cream 300 g, garlic 40 g, butter 40 g; cooked weight ~1150 g."
+ },
+ {
+  "id": "local:dish-burger-home",
+  "name": "Бургер с говяжьей котлетой",
+  "nameEn": "Beef burger",
+  "aliases": [
+   "burger бургер гамбургер"
+  ],
+  "basis": {
+   "ingredients": [
+    [
+     "usda:174924",
+     80
+    ],
+    [
+     "usda:174036",
+     150
+    ],
+    [
+     "usda:173414",
+     20
+    ],
+    [
+     "usda:169247",
+     15
+    ],
+    [
+     "usda:170457",
+     30
+    ],
+    [
+     "usda:170000",
+     10
+    ],
+    [
+     "usda:171009",
+     15
+    ]
+   ],
+   "grams": 290
+  },
+  "portions": [
+   {
+    "name": "1 бургер (≈290 г)",
+    "nameEn": "1 burger (~290 g)",
+    "grams": 290
+   },
+   {
+    "name": "Весь рецепт (≈290 г)",
+    "nameEn": "Whole recipe (~290 g)",
+    "grams": 290
+   }
+  ],
+  "source": "Расчёт по рецепту из ингредиентов USDA SR Legacy: белый хлеб 80 г, говяжий фарш 150 г, твёрдый сыр 20 г, салат ромэн 15 г, помидоры 30 г, лук 10 г, майонез 15 г; выход готового блюда ≈290 г.",
+  "sourceEn": "Recipe estimate from USDA SR Legacy ingredients: white bread 80 g, ground beef 150 g, hard cheese 20 g, romaine 15 g, tomatoes 30 g, onion 10 g, mayonnaise 15 g; cooked weight ~290 g."
+ },
+ {
+  "id": "local:dish-hot-dog",
+  "name": "Хот-дог",
+  "nameEn": "Hot dog",
+  "aliases": [
+   "hot dog хот-дог сосиска в булке"
+  ],
+  "basis": {
+   "ingredients": [
+    [
+     "usda:174924",
+     60
+    ],
+    [
+     "usda:173875",
+     50
+    ],
+    [
+     "usda:171009",
+     10
+    ],
+    [
+     "usda:169379",
+     15
+    ]
+   ],
+   "grams": 135
+  },
+  "portions": [
+   {
+    "name": "1 хот-дог (≈135 г)",
+    "nameEn": "1 hot dog (~135 g)",
+    "grams": 135
+   },
+   {
+    "name": "Весь рецепт (≈135 г)",
+    "nameEn": "Whole recipe (~135 g)",
+    "grams": 135
+   }
+  ],
+  "source": "Расчёт по рецепту из ингредиентов USDA SR Legacy: белый хлеб 60 г, сосиски 50 г, майонез 10 г, солёные огурцы 15 г; выход готового блюда ≈135 г.",
+  "sourceEn": "Recipe estimate from USDA SR Legacy ingredients: white bread 60 g, frankfurters 50 g, mayonnaise 10 g, pickles 15 g; cooked weight ~135 g."
+ },
+ {
+  "id": "local:dish-paxlava",
+  "name": "Пахлава бакинская (Bakı paxlavası)",
+  "nameEn": "Baku pakhlava",
+  "aliases": [
+   "paxlava pakhlava baklava пахлава пахлава бакинская"
+  ],
+  "basis": {
+   "ingredients": [
+    [
+     "usda:169761",
+     500
+    ],
+    [
+     "usda:171265",
+     200
+    ],
+    [
+     "usda:171287",
+     50
+    ],
+    [
+     "usda:173410",
+     350
+    ],
+    [
+     "usda:170581",
+     500
+    ],
+    [
+     "usda:169655",
+     700
+    ],
+    [
+     "usda:169640",
+     300
+    ],
+    [
+     "usda:173647",
+     200
+    ],
+    [
+     "usda:170919",
+     5
+    ],
+    [
+     "usda:170934",
+     0.5
+    ]
+   ],
+   "grams": 2600
+  },
+  "portions": [
+   {
+    "name": "1 ромбик (≈45 г)",
+    "nameEn": "1 piece (~45 g)",
+    "grams": 45
+   },
+   {
+    "name": "Весь рецепт (≈2600 г)",
+    "nameEn": "Whole recipe (~2600 g)",
+    "grams": 2600
+   }
+  ],
+  "source": "Расчёт по рецепту из ингредиентов USDA SR Legacy: мука 500 г, молоко 200 г, яйца 50 г, сливочное масло 350 г, фундук 500 г, сахар 700 г, мёд 300 г, вода 200 г, кардамон 5 г, шафран 0,5 г; выход готового блюда ≈2600 г.",
+  "sourceEn": "Recipe estimate from USDA SR Legacy ingredients: flour 500 g, milk 200 g, eggs 50 g, butter 350 g, hazelnuts 500 g, sugar 700 g, honey 300 g, water 200 g, cardamom 5 g, saffron 0.5 g; cooked weight ~2600 g."
+ },
+ {
+  "id": "local:dish-sekerbura",
+  "name": "Шекербура (Şəkərbura)",
+  "nameEn": "Shekerbura almond pastry",
+  "aliases": [
+   "şəkərbura sekerbura шекербура"
+  ],
+  "basis": {
+   "ingredients": [
+    [
+     "usda:169761",
+     500
+    ],
+    [
+     "usda:173410",
+     200
+    ],
+    [
+     "usda:171257",
+     100
+    ],
+    [
+     "usda:172184",
+     40
+    ],
+    [
+     "usda:171265",
+     100
+    ],
+    [
+     "usda:170567",
+     400
+    ],
+    [
+     "usda:169656",
+     400
+    ],
+    [
+     "usda:170919",
+     5
+    ]
+   ],
+   "grams": 1600
+  },
+  "portions": [
+   {
+    "name": "1 шекербура (≈40 г)",
+    "nameEn": "1 piece (~40 g)",
+    "grams": 40
+   },
+   {
+    "name": "Весь рецепт (≈1600 г)",
+    "nameEn": "Whole recipe (~1600 g)",
+    "grams": 1600
+   }
+  ],
+  "source": "Расчёт по рецепту из ингредиентов USDA SR Legacy: мука 500 г, сливочное масло 200 г, сметана 100 г, желтки 40 г, молоко 100 г, миндаль 400 г, сахарная пудра 400 г, кардамон 5 г; выход готового блюда ≈1600 г.",
+  "sourceEn": "Recipe estimate from USDA SR Legacy ingredients: flour 500 g, butter 200 g, sour cream 100 g, egg yolks 40 g, milk 100 g, almonds 400 g, powdered sugar 400 g, cardamom 5 g; cooked weight ~1600 g."
+ },
+ {
+  "id": "local:dish-badambura",
+  "name": "Бадамбура (Badambura)",
+  "nameEn": "Badambura almond roll",
+  "aliases": [
+   "badambura бадамбура"
+  ],
+  "basis": {
+   "ingredients": [
+    [
+     "usda:169761",
+     500
+    ],
+    [
+     "usda:173410",
+     250
+    ],
+    [
+     "usda:171257",
+     150
+    ],
+    [
+     "usda:175042",
+     10
+    ],
+    [
+     "usda:170567",
+     300
+    ],
+    [
+     "usda:169655",
+     300
+    ]
+   ],
+   "grams": 1450
+  },
+  "portions": [
+   {
+    "name": "1 шт. (≈40 г)",
+    "nameEn": "1 piece (~40 g)",
+    "grams": 40
+   },
+   {
+    "name": "Весь рецепт (≈1450 г)",
+    "nameEn": "Whole recipe (~1450 g)",
+    "grams": 1450
+   }
+  ],
+  "source": "Расчёт по рецепту из ингредиентов USDA SR Legacy: мука 500 г, сливочное масло 250 г, сметана 150 г, дрожжи 10 г, миндаль 300 г, сахар 300 г; выход готового блюда ≈1450 г.",
+  "sourceEn": "Recipe estimate from USDA SR Legacy ingredients: flour 500 g, butter 250 g, sour cream 150 g, yeast 10 g, almonds 300 g, sugar 300 g; cooked weight ~1450 g."
+ },
+ {
+  "id": "local:dish-qogal",
+  "name": "Гогал (Qoğal)",
+  "nameEn": "Gogal: flaky Novruz bun",
+  "aliases": [
+   "qoğal qogal гогал"
+  ],
+  "basis": {
+   "ingredients": [
+    [
+     "usda:169761",
+     500
+    ],
+    [
+     "usda:173410",
+     250
+    ],
+    [
+     "usda:171284",
+     150
+    ],
+    [
+     "usda:171287",
+     50
+    ],
+    [
+     "usda:175042",
+     10
+    ],
+    [
+     "usda:172231",
+     2
+    ],
+    [
+     "usda:171323",
+     5
+    ]
+   ],
+   "grams": 900
+  },
+  "portions": [
+   {
+    "name": "1 гогал (≈70 г)",
+    "nameEn": "1 bun (~70 g)",
+    "grams": 70
+   },
+   {
+    "name": "Весь рецепт (≈900 г)",
+    "nameEn": "Whole recipe (~900 g)",
+    "grams": 900
+   }
+  ],
+  "source": "Расчёт по рецепту из ингредиентов USDA SR Legacy: мука 500 г, сливочное масло 250 г, катык 150 г, яйца 50 г, дрожжи 10 г, куркума 2 г, фенхель 5 г; выход готового блюда ≈900 г.",
+  "sourceEn": "Recipe estimate from USDA SR Legacy ingredients: flour 500 g, butter 250 g, plain yogurt 150 g, eggs 50 g, yeast 10 g, turmeric 2 g, fennel seed 5 g; cooked weight ~900 g."
+ },
+ {
+  "id": "local:dish-fesali",
+  "name": "Фясали (Fəsəli)",
+  "nameEn": "Fesali flaky flatbread",
+  "aliases": [
+   "fəsəli fesali фясали"
+  ],
+  "basis": {
+   "ingredients": [
+    [
+     "usda:169761",
+     500
+    ],
+    [
+     "usda:173647",
+     250
+    ],
+    [
+     "usda:173410",
+     200
+    ]
+   ],
+   "grams": 850
+  },
+  "portions": [
+   {
+    "name": "1 фясали (≈170 г)",
+    "nameEn": "1 flatbread (~170 g)",
+    "grams": 170
+   },
+   {
+    "name": "Весь рецепт (≈850 г)",
+    "nameEn": "Whole recipe (~850 g)",
+    "grams": 850
+   }
+  ],
+  "source": "Расчёт по рецепту из ингредиентов USDA SR Legacy: мука 500 г, вода 250 г, сливочное масло 200 г; выход готового блюда ≈850 г.",
+  "sourceEn": "Recipe estimate from USDA SR Legacy ingredients: flour 500 g, water 250 g, butter 200 g; cooked weight ~850 g."
+ },
+ {
+  "id": "local:dish-un-halvasi",
+  "name": "Халва мучная (Un halvası)",
+  "nameEn": "Flour halva",
+  "aliases": [
+   "un halvası halva халва мучная"
+  ],
+  "basis": {
+   "ingredients": [
+    [
+     "usda:169761",
+     300
+    ],
+    [
+     "usda:173410",
+     200
+    ],
+    [
+     "usda:169655",
+     250
+    ],
+    [
+     "usda:173647",
+     200
+    ],
+    [
+     "usda:170934",
+     0.3
+    ]
+   ],
+   "grams": 800
+  },
+  "portions": [
+   {
+    "name": "Порция (≈60 г)",
+    "nameEn": "Portion (~60 g)",
+    "grams": 60
+   },
+   {
+    "name": "Весь рецепт (≈800 г)",
+    "nameEn": "Whole recipe (~800 g)",
+    "grams": 800
+   }
+  ],
+  "source": "Расчёт по рецепту из ингредиентов USDA SR Legacy: мука 300 г, сливочное масло 200 г, сахар 250 г, вода 200 г, шафран 0,3 г; выход готового блюда ≈800 г.",
+  "sourceEn": "Recipe estimate from USDA SR Legacy ingredients: flour 300 g, butter 200 g, sugar 250 g, water 200 g, saffron 0.3 g; cooked weight ~800 g."
+ },
+ {
+  "id": "local:dish-seker-corek",
+  "name": "Шекер-чурек (Şəkər çörəyi)",
+  "nameEn": "Sugar shortbread (Şəkər çörəyi)",
+  "aliases": [
+   "şəkər çörəyi seker corek шекер чурек печенье"
+  ],
+  "basis": {
+   "ingredients": [
+    [
+     "usda:169761",
+     500
+    ],
+    [
+     "usda:173410",
+     250
+    ],
+    [
+     "usda:169656",
+     200
+    ],
+    [
+     "usda:172184",
+     40
+    ]
+   ],
+   "grams": 950
+  },
+  "portions": [
+   {
+    "name": "1 печенье (≈30 г)",
+    "nameEn": "1 cookie (~30 g)",
+    "grams": 30
+   },
+   {
+    "name": "Весь рецепт (≈950 г)",
+    "nameEn": "Whole recipe (~950 g)",
+    "grams": 950
+   }
+  ],
+  "source": "Расчёт по рецепту из ингредиентов USDA SR Legacy: мука 500 г, сливочное масло 250 г, сахарная пудра 200 г, желтки 40 г; выход готового блюда ≈950 г.",
+  "sourceEn": "Recipe estimate from USDA SR Legacy ingredients: flour 500 g, butter 250 g, powdered sugar 200 g, egg yolks 40 g; cooked weight ~950 g."
+ },
+ {
+  "id": "local:dish-napoleon",
+  "name": "Торт «Наполеон»",
+  "nameEn": "Napoleon cake",
+  "aliases": [
+   "наполеон napoleon tort"
+  ],
+  "basis": {
+   "ingredients": [
+    [
+     "usda:172790",
+     600
+    ],
+    [
+     "usda:171265",
+     1000
+    ],
+    [
+     "usda:169655",
+     200
+    ],
+    [
+     "usda:171287",
+     100
+    ],
+    [
+     "usda:169761",
+     60
+    ],
+    [
+     "usda:173410",
+     150
+    ]
+   ],
+   "grams": 1950
+  },
+  "portions": [
+   {
+    "name": "1 кусок (≈120 г)",
+    "nameEn": "1 slice (~120 g)",
+    "grams": 120
+   },
+   {
+    "name": "Весь рецепт (≈1950 г)",
+    "nameEn": "Whole recipe (~1950 g)",
+    "grams": 1950
+   }
+  ],
+  "source": "Расчёт по рецепту из ингредиентов USDA SR Legacy: слоёное тесто 600 г, молоко 1000 г, сахар 200 г, яйца 100 г, мука 60 г, сливочное масло 150 г; выход готового блюда ≈1950 г.",
+  "sourceEn": "Recipe estimate from USDA SR Legacy ingredients: puff pastry 600 g, milk 1000 g, sugar 200 g, eggs 100 g, flour 60 g, butter 150 g; cooked weight ~1950 g."
+ },
+ {
+  "id": "local:dish-medovik",
+  "name": "Торт «Медовик»",
+  "nameEn": "Honey cake (medovik)",
+  "aliases": [
+   "медовик medovik ballı tort"
+  ],
+  "basis": {
+   "ingredients": [
+    [
+     "usda:169761",
+     450
+    ],
+    [
+     "usda:169640",
+     100
+    ],
+    [
+     "usda:169655",
+     350
+    ],
+    [
+     "usda:173410",
+     100
+    ],
+    [
+     "usda:171287",
+     150
+    ],
+    [
+     "usda:171257",
+     800
+    ]
+   ],
+   "grams": 1850
+  },
+  "portions": [
+   {
+    "name": "1 кусок (≈120 г)",
+    "nameEn": "1 slice (~120 g)",
+    "grams": 120
+   },
+   {
+    "name": "Весь рецепт (≈1850 г)",
+    "nameEn": "Whole recipe (~1850 g)",
+    "grams": 1850
+   }
+  ],
+  "source": "Расчёт по рецепту из ингредиентов USDA SR Legacy: мука 450 г, мёд 100 г, сахар 350 г, сливочное масло 100 г, яйца 150 г, сметана 800 г; выход готового блюда ≈1850 г.",
+  "sourceEn": "Recipe estimate from USDA SR Legacy ingredients: flour 450 g, honey 100 g, sugar 350 g, butter 100 g, eggs 150 g, sour cream 800 g; cooked weight ~1850 g."
+ },
+ {
+  "id": "local:dish-ponchiki",
+  "name": "Пончики жареные",
+  "nameEn": "Fried doughnuts (ponchiki)",
+  "aliases": [
+   "пончики пышки ponçik"
+  ],
+  "basis": {
+   "ingredients": [
+    [
+     "usda:169761",
+     500
+    ],
+    [
+     "usda:171265",
+     250
+    ],
+    [
+     "usda:175042",
+     10
+    ],
+    [
+     "usda:169655",
+     50
+    ],
+    [
+     "usda:171287",
+     50
+    ],
+    [
+     "usda:171025",
+     120
+    ]
+   ],
+   "grams": 950
+  },
+  "portions": [
+   {
+    "name": "1 пончик (≈50 г)",
+    "nameEn": "1 doughnut (~50 g)",
+    "grams": 50
+   },
+   {
+    "name": "Весь рецепт (≈950 г)",
+    "nameEn": "Whole recipe (~950 g)",
+    "grams": 950
+   }
+  ],
+  "source": "Расчёт по рецепту из ингредиентов USDA SR Legacy: мука 500 г, молоко 250 г, дрожжи 10 г, сахар 50 г, яйца 50 г, подсолнечное масло 120 г; выход готового блюда ≈950 г.",
+  "sourceEn": "Recipe estimate from USDA SR Legacy ingredients: flour 500 g, milk 250 g, yeast 10 g, sugar 50 g, eggs 50 g, sunflower oil 120 g; cooked weight ~950 g."
+ },
+ {
+  "id": "local:dish-sharlotka",
+  "name": "Пирог-шарлотка с яблоками",
+  "nameEn": "Apple sharlotka cake",
+  "aliases": [
+   "шарлотка alma piroqu"
+  ],
+  "basis": {
+   "ingredients": [
+    [
+     "usda:169761",
+     160
+    ],
+    [
+     "usda:169655",
+     200
+    ],
+    [
+     "usda:171287",
+     200
+    ],
+    [
+     "usda:171688",
+     500
+    ]
+   ],
+   "grams": 950
+  },
+  "portions": [
+   {
+    "name": "1 кусок (≈110 г)",
+    "nameEn": "1 slice (~110 g)",
+    "grams": 110
+   },
+   {
+    "name": "Весь рецепт (≈950 г)",
+    "nameEn": "Whole recipe (~950 g)",
+    "grams": 950
+   }
+  ],
+  "source": "Расчёт по рецепту из ингредиентов USDA SR Legacy: мука 160 г, сахар 200 г, яйца 200 г, яблоки 500 г; выход готового блюда ≈950 г.",
+  "sourceEn": "Recipe estimate from USDA SR Legacy ingredients: flour 160 g, sugar 200 g, eggs 200 g, apples 500 g; cooked weight ~950 g."
+ },
+ {
+  "id": "local:dish-ayran",
+  "name": "Айран домашний (Ayran)",
+  "nameEn": "Homemade ayran",
+  "aliases": [
+   "ayran айран тан"
+  ],
+  "basis": {
+   "ingredients": [
+    [
+     "usda:171284",
+     500
+    ],
+    [
+     "usda:173647",
+     500
+    ],
+    [
+     "usda:173468",
+     5
+    ]
+   ],
+   "grams": 1005
+  },
+  "portions": [
+   {
+    "name": "Стакан (250 мл)",
+    "nameEn": "Glass (250 ml)",
+    "grams": 250
+   },
+   {
+    "name": "Весь рецепт (≈1005 г)",
+    "nameEn": "Whole recipe (~1005 g)",
+    "grams": 1005
+   }
+  ],
+  "source": "Расчёт по рецепту из ингредиентов USDA SR Legacy: катык 500 г, вода 500 г, соль 5 г; выход готового блюда ≈1005 г.",
+  "sourceEn": "Recipe estimate from USDA SR Legacy ingredients: plain yogurt 500 g, water 500 g, salt 5 g; cooked weight ~1005 g."
+ },
+ {
+  "id": "local:dish-tea-sugar",
+  "name": "Чай чёрный с 1 ч. л. сахара",
+  "nameEn": "Black tea with 1 teaspoon of sugar",
+  "aliases": [
+   "çay şəkərli чай с сахаром"
+  ],
+  "basis": {
+   "ingredients": [
+    [
+     "usda:173227",
+     200
+    ],
+    [
+     "usda:169655",
+     5
+    ]
+   ],
+   "grams": 205
+  },
+  "portions": [
+   {
+    "name": "Стакан армуду (≈100 мл)",
+    "nameEn": "Armudu glass (~100 ml)",
+    "grams": 100
+   },
+   {
+    "name": "Чашка (≈205 мл)",
+    "nameEn": "Cup (~205 ml)",
+    "grams": 205
+   },
+   {
+    "name": "Весь рецепт (≈205 г)",
+    "nameEn": "Whole recipe (~205 g)",
+    "grams": 205
+   }
+  ],
+  "source": "Расчёт по рецепту из ингредиентов USDA SR Legacy: чай 200 г, сахар 5 г; выход готового блюда ≈205 г.",
+  "sourceEn": "Recipe estimate from USDA SR Legacy ingredients: tea 200 g, sugar 5 g; cooked weight ~205 g."
+ },
+ {
+  "id": "local:dish-kompot-dried",
+  "name": "Компот из сухофруктов",
+  "nameEn": "Dried fruit compote",
+  "aliases": [
+   "компот kompot quru meyvə"
+  ],
+  "basis": {
+   "ingredients": [
+    [
+     "usda:173941",
+     100
+    ],
+    [
+     "usda:168162",
+     50
+    ],
+    [
+     "usda:168165",
+     50
+    ],
+    [
+     "usda:169655",
+     100
+    ],
+    [
+     "usda:173647",
+     2000
+    ]
+   ],
+   "grams": 2100
+  },
+  "portions": [
+   {
+    "name": "Стакан (250 мл)",
+    "nameEn": "Glass (250 ml)",
+    "grams": 250
+   },
+   {
+    "name": "Весь рецепт (≈2100 г)",
+    "nameEn": "Whole recipe (~2100 g)",
+    "grams": 2100
+   }
+  ],
+  "source": "Расчёт по рецепту из ингредиентов USDA SR Legacy: курага 100 г, чернослив 50 г, изюм 50 г, сахар 100 г, вода 2000 г; выход готового блюда ≈2100 г.",
+  "sourceEn": "Recipe estimate from USDA SR Legacy ingredients: dried apricots 100 g, prunes 50 g, raisins 50 g, sugar 100 g, water 2000 g; cooked weight ~2100 g."
+ },
+ {
+  "id": "local:dish-kompot-cherry",
+  "name": "Компот вишнёвый",
+  "nameEn": "Sour cherry compote",
+  "aliases": [
+   "компот вишня albalı kompotu"
+  ],
+  "basis": {
+   "ingredients": [
+    [
+     "usda:173954",
+     400
+    ],
+    [
+     "usda:169655",
+     200
+    ],
+    [
+     "usda:173647",
+     2000
+    ]
+   ],
+   "grams": 2400
+  },
+  "portions": [
+   {
+    "name": "Стакан (250 мл)",
+    "nameEn": "Glass (250 ml)",
+    "grams": 250
+   },
+   {
+    "name": "Весь рецепт (≈2400 г)",
+    "nameEn": "Whole recipe (~2400 g)",
+    "grams": 2400
+   }
+  ],
+  "source": "Расчёт по рецепту из ингредиентов USDA SR Legacy: вишня 400 г, сахар 200 г, вода 2000 г; выход готового блюда ≈2400 г.",
+  "sourceEn": "Recipe estimate from USDA SR Legacy ingredients: sour cherries 400 g, sugar 200 g, water 2000 g; cooked weight ~2400 g."
+ },
+ {
+  "id": "local:dish-serbet",
+  "name": "Шербет (Şərbət)",
+  "nameEn": "Sherbet drink",
+  "aliases": [
+   "şərbət serbet шербет"
+  ],
+  "basis": {
+   "ingredients": [
+    [
+     "usda:169655",
+     150
+    ],
+    [
+     "usda:173647",
+     1000
+    ],
+    [
+     "usda:167747",
+     30
+    ],
+    [
+     "usda:170934",
+     0.2
+    ]
+   ],
+   "grams": 1180
+  },
+  "portions": [
+   {
+    "name": "Стакан (250 мл)",
+    "nameEn": "Glass (250 ml)",
+    "grams": 250
+   },
+   {
+    "name": "Весь рецепт (≈1180 г)",
+    "nameEn": "Whole recipe (~1180 g)",
+    "grams": 1180
+   }
+  ],
+  "source": "Расчёт по рецепту из ингредиентов USDA SR Legacy: сахар 150 г, вода 1000 г, лимонный сок 30 г, шафран 0,2 г; выход готового блюда ≈1180 г.",
+  "sourceEn": "Recipe estimate from USDA SR Legacy ingredients: sugar 150 g, water 1000 g, lemon juice 30 g, saffron 0.2 g; cooked weight ~1180 g."
+ }
+]

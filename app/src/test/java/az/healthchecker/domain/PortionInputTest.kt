@@ -21,6 +21,8 @@ class PortionInputTest {
         assertEquals(setOf(FoodPreparation.COOKED),foodPreparations(egg.copy(nameEn="Egg, cooked, hard-boiled")))
         assertEquals(setOf(FoodPreparation.DRY),foodPreparations(egg.copy(nameEn="Oats, dry")))
         assertTrue(foodPreparations(egg.copy(nameEn="Strawberries")).isEmpty())
+        // Fresh fruit is "raw" in USDA English but not food to cook first.
+        assertTrue(foodPreparations(egg.copy(name="Ананас, свежий",nameEn="Pineapple, raw")).isEmpty())
     }
     @Test fun preparationDescribesTheFoodRatherThanItsIngredients() {
         assertEquals(setOf(FoodPreparation.COOKED),foodPreparations(egg.copy(nameEn="Soup, vegetable, prepared from dry mix")))

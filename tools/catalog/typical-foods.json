@@ -1,0 +1,982 @@
+[
+ {
+  "id": "local:typical-kefir-1",
+  "name": "Кефир 1%",
+  "nameEn": "Kefir 1%",
+  "aliases": [
+   "kefir кефир 1 нежирный"
+  ],
+  "per100g": {
+   "kcal": 37.0,
+   "protein": 3.0,
+   "fat": 1.0,
+   "carbs": 4.0,
+   "fiber": 0.0
+  },
+  "density": 1.0,
+  "portions": [
+   {
+    "name": "Стакан (250 мл)",
+    "nameEn": "Glass (250 ml)",
+    "grams": 250
+   }
+  ],
+  "source": "Типичные значения: медиана 41 этикеток товаров Open Food Facts из Азербайджана и соседних стран (на 100 мл, плотность принята ≈1 г/мл). У конкретной марки цифры могут отличаться — точнее отсканировать штрихкод.",
+  "sourceEn": "Typical values: median of 41 Open Food Facts labels from Azerbaijan and neighbouring markets (per 100 ml, density ~1 g/ml). A given brand may differ; scanning its barcode is more precise."
+ },
+ {
+  "id": "local:typical-kefir-2-5",
+  "name": "Кефир 2,5%",
+  "nameEn": "Kefir 2.5%",
+  "aliases": [
+   "kefir кефир 2,5 2.5"
+  ],
+  "per100g": {
+   "kcal": 50.5,
+   "protein": 2.9,
+   "fat": 2.5,
+   "carbs": 4.0,
+   "fiber": 0.0
+  },
+  "density": 1.0,
+  "portions": [
+   {
+    "name": "Стакан (250 мл)",
+    "nameEn": "Glass (250 ml)",
+    "grams": 250
+   }
+  ],
+  "source": "Типичные значения: медиана 61 этикеток товаров Open Food Facts из Азербайджана и соседних стран (на 100 мл, плотность принята ≈1 г/мл). У конкретной марки цифры могут отличаться — точнее отсканировать штрихкод.",
+  "sourceEn": "Typical values: median of 61 Open Food Facts labels from Azerbaijan and neighbouring markets (per 100 ml, density ~1 g/ml). A given brand may differ; scanning its barcode is more precise."
+ },
+ {
+  "id": "local:typical-kefir-3-2",
+  "name": "Кефир 3,2%",
+  "nameEn": "Kefir 3.2%",
+  "aliases": [
+   "kefir кефир 3,2 3.2 жирный"
+  ],
+  "per100g": {
+   "kcal": 57.2,
+   "protein": 3.0,
+   "fat": 3.2,
+   "carbs": 4.0,
+   "fiber": 0.0
+  },
+  "density": 1.0,
+  "portions": [
+   {
+    "name": "Стакан (250 мл)",
+    "nameEn": "Glass (250 ml)",
+    "grams": 250
+   }
+  ],
+  "source": "Типичные значения: медиана 37 этикеток товаров Open Food Facts из Азербайджана и соседних стран (на 100 мл, плотность принята ≈1 г/мл). У конкретной марки цифры могут отличаться — точнее отсканировать штрихкод.",
+  "sourceEn": "Typical values: median of 37 Open Food Facts labels from Azerbaijan and neighbouring markets (per 100 ml, density ~1 g/ml). A given brand may differ; scanning its barcode is more precise."
+ },
+ {
+  "id": "local:typical-ryazhenka",
+  "name": "Ряженка",
+  "nameEn": "Ryazhenka (baked fermented milk)",
+  "aliases": [
+   "ряженка ryazhenka"
+  ],
+  "per100g": {
+   "kcal": 59.0,
+   "protein": 3.0,
+   "fat": 3.2,
+   "carbs": 4.2,
+   "fiber": 0.0
+  },
+  "density": 1.0,
+  "portions": [
+   {
+    "name": "Стакан (250 мл)",
+    "nameEn": "Glass (250 ml)",
+    "grams": 250
+   }
+  ],
+  "source": "Типичные значения: медиана 25 этикеток товаров Open Food Facts из Азербайджана и соседних стран (на 100 мл, плотность принята ≈1 г/мл). У конкретной марки цифры могут отличаться — точнее отсканировать штрихкод.",
+  "sourceEn": "Typical values: median of 25 Open Food Facts labels from Azerbaijan and neighbouring markets (per 100 ml, density ~1 g/ml). A given brand may differ; scanning its barcode is more precise."
+ },
+ {
+  "id": "local:typical-ayran-store",
+  "name": "Айран магазинный",
+  "nameEn": "Store-bought ayran",
+  "aliases": [
+   "ayran айран тан tan"
+  ],
+  "per100g": {
+   "kcal": 33.0,
+   "protein": 2.0,
+   "fat": 1.8,
+   "carbs": 2.1,
+   "fiber": 0.0
+  },
+  "density": 1.0,
+  "portions": [
+   {
+    "name": "Бутылочка (250 мл)",
+    "nameEn": "Bottle (250 ml)",
+    "grams": 250
+   }
+  ],
+  "source": "Типичные значения: медиана 90 этикеток товаров Open Food Facts из Азербайджана и соседних стран (на 100 мл, плотность принята ≈1 г/мл). У конкретной марки цифры могут отличаться — точнее отсканировать штрихкод.",
+  "sourceEn": "Typical values: median of 90 Open Food Facts labels from Azerbaijan and neighbouring markets (per 100 ml, density ~1 g/ml). A given brand may differ; scanning its barcode is more precise."
+ },
+ {
+  "id": "local:typical-milk-1-5",
+  "name": "Молоко 1,5%",
+  "nameEn": "Milk 1.5%",
+  "aliases": [
+   "süd молоко 1,5 1.5"
+  ],
+  "per100g": {
+   "kcal": 44.0,
+   "protein": 3.0,
+   "fat": 1.5,
+   "carbs": 4.7,
+   "fiber": 0.0
+  },
+  "density": 1.0,
+  "portions": [
+   {
+    "name": "Стакан (250 мл)",
+    "nameEn": "Glass (250 ml)",
+    "grams": 250
+   }
+  ],
+  "source": "Типичные значения: медиана 74 этикеток товаров Open Food Facts из Азербайджана и соседних стран (на 100 мл, плотность принята ≈1 г/мл). У конкретной марки цифры могут отличаться — точнее отсканировать штрихкод.",
+  "sourceEn": "Typical values: median of 74 Open Food Facts labels from Azerbaijan and neighbouring markets (per 100 ml, density ~1 g/ml). A given brand may differ; scanning its barcode is more precise."
+ },
+ {
+  "id": "local:typical-milk-2-5",
+  "name": "Молоко 2,5%",
+  "nameEn": "Milk 2.5%",
+  "aliases": [
+   "süd молоко 2,5 2.5"
+  ],
+  "per100g": {
+   "kcal": 53.0,
+   "protein": 3.0,
+   "fat": 2.5,
+   "carbs": 4.7,
+   "fiber": 0.0
+  },
+  "density": 1.0,
+  "portions": [
+   {
+    "name": "Стакан (250 мл)",
+    "nameEn": "Glass (250 ml)",
+    "grams": 250
+   }
+  ],
+  "source": "Типичные значения: медиана 150 этикеток товаров Open Food Facts из Азербайджана и соседних стран (на 100 мл, плотность принята ≈1 г/мл). У конкретной марки цифры могут отличаться — точнее отсканировать штрихкод.",
+  "sourceEn": "Typical values: median of 150 Open Food Facts labels from Azerbaijan and neighbouring markets (per 100 ml, density ~1 g/ml). A given brand may differ; scanning its barcode is more precise."
+ },
+ {
+  "id": "local:typical-milk-3-2",
+  "name": "Молоко 3,2%",
+  "nameEn": "Milk 3.2%",
+  "aliases": [
+   "süd молоко 3,2 3.2"
+  ],
+  "per100g": {
+   "kcal": 60.0,
+   "protein": 3.0,
+   "fat": 3.2,
+   "carbs": 4.7,
+   "fiber": 0.0
+  },
+  "density": 1.0,
+  "portions": [
+   {
+    "name": "Стакан (250 мл)",
+    "nameEn": "Glass (250 ml)",
+    "grams": 250
+   }
+  ],
+  "source": "Типичные значения: медиана 165 этикеток товаров Open Food Facts из Азербайджана и соседних стран (на 100 мл, плотность принята ≈1 г/мл). У конкретной марки цифры могут отличаться — точнее отсканировать штрихкод.",
+  "sourceEn": "Typical values: median of 165 Open Food Facts labels from Azerbaijan and neighbouring markets (per 100 ml, density ~1 g/ml). A given brand may differ; scanning its barcode is more precise."
+ },
+ {
+  "id": "local:typical-tvorog-0",
+  "name": "Творог обезжиренный (0–1,8%)",
+  "nameEn": "Fat-free cottage cheese (tvorog 0–1.8%)",
+  "aliases": [
+   "творог kəsmik обезжиренный нежирный"
+  ],
+  "per100g": {
+   "kcal": 84.0,
+   "protein": 17.0,
+   "fat": 0.5,
+   "carbs": 3.3,
+   "fiber": 0.0
+  },
+  "density": null,
+  "portions": [
+   {
+    "name": "Пачка (180 г)",
+    "nameEn": "Pack (180 g)",
+    "grams": 180
+   }
+  ],
+  "source": "Типичные значения: медиана 107 этикеток товаров Open Food Facts из Азербайджана и соседних стран (на 100 г). У конкретной марки цифры могут отличаться — точнее отсканировать штрихкод.",
+  "sourceEn": "Typical values: median of 107 Open Food Facts labels from Azerbaijan and neighbouring markets (per 100 g). A given brand may differ; scanning its barcode is more precise."
+ },
+ {
+  "id": "local:typical-tvorog-5",
+  "name": "Творог 5%",
+  "nameEn": "Cottage cheese (tvorog) 5%",
+  "aliases": [
+   "творог kəsmik 5"
+  ],
+  "per100g": {
+   "kcal": 120.0,
+   "protein": 15.0,
+   "fat": 5.0,
+   "carbs": 3.0,
+   "fiber": 0.0
+  },
+  "density": null,
+  "portions": [
+   {
+    "name": "Пачка (180 г)",
+    "nameEn": "Pack (180 g)",
+    "grams": 180
+   }
+  ],
+  "source": "Типичные значения: медиана 209 этикеток товаров Open Food Facts из Азербайджана и соседних стран (на 100 г). У конкретной марки цифры могут отличаться — точнее отсканировать штрихкод.",
+  "sourceEn": "Typical values: median of 209 Open Food Facts labels from Azerbaijan and neighbouring markets (per 100 g). A given brand may differ; scanning its barcode is more precise."
+ },
+ {
+  "id": "local:typical-tvorog-9",
+  "name": "Творог 9%",
+  "nameEn": "Cottage cheese (tvorog) 9%",
+  "aliases": [
+   "творог kəsmik 9"
+  ],
+  "per100g": {
+   "kcal": 157.0,
+   "protein": 16.0,
+   "fat": 9.0,
+   "carbs": 3.0,
+   "fiber": 0.0
+  },
+  "density": null,
+  "portions": [
+   {
+    "name": "Пачка (180 г)",
+    "nameEn": "Pack (180 g)",
+    "grams": 180
+   }
+  ],
+  "source": "Типичные значения: медиана 66 этикеток товаров Open Food Facts из Азербайджана и соседних стран (на 100 г). У конкретной марки цифры могут отличаться — точнее отсканировать штрихкод.",
+  "sourceEn": "Typical values: median of 66 Open Food Facts labels from Azerbaijan and neighbouring markets (per 100 g). A given brand may differ; scanning its barcode is more precise."
+ },
+ {
+  "id": "local:typical-smetana-15",
+  "name": "Сметана 15%",
+  "nameEn": "Sour cream (smetana) 15%",
+  "aliases": [
+   "сметана xama 15"
+  ],
+  "per100g": {
+   "kcal": 160.0,
+   "protein": 2.6,
+   "fat": 15.0,
+   "carbs": 3.6,
+   "fiber": 0.0
+  },
+  "density": null,
+  "portions": [
+   {
+    "name": "Ст. ложка (20 г)",
+    "nameEn": "Tablespoon (20 g)",
+    "grams": 20
+   }
+  ],
+  "source": "Типичные значения: медиана 68 этикеток товаров Open Food Facts из Азербайджана и соседних стран (на 100 г). У конкретной марки цифры могут отличаться — точнее отсканировать штрихкод.",
+  "sourceEn": "Typical values: median of 68 Open Food Facts labels from Azerbaijan and neighbouring markets (per 100 g). A given brand may differ; scanning its barcode is more precise."
+ },
+ {
+  "id": "local:typical-smetana-20",
+  "name": "Сметана 20%",
+  "nameEn": "Sour cream (smetana) 20%",
+  "aliases": [
+   "сметана xama 20"
+  ],
+  "per100g": {
+   "kcal": 204.0,
+   "protein": 2.5,
+   "fat": 20.0,
+   "carbs": 3.4,
+   "fiber": 0.0
+  },
+  "density": null,
+  "portions": [
+   {
+    "name": "Ст. ложка (20 г)",
+    "nameEn": "Tablespoon (20 g)",
+    "grams": 20
+   }
+  ],
+  "source": "Типичные значения: медиана 63 этикеток товаров Open Food Facts из Азербайджана и соседних стран (на 100 г). У конкретной марки цифры могут отличаться — точнее отсканировать штрихкод.",
+  "sourceEn": "Typical values: median of 63 Open Food Facts labels from Azerbaijan and neighbouring markets (per 100 g). A given brand may differ; scanning its barcode is more precise."
+ },
+ {
+  "id": "local:typical-smetana-25",
+  "name": "Сметана 25–30%",
+  "nameEn": "Sour cream (smetana) 25–30%",
+  "aliases": [
+   "сметана xama 25 30 жирная"
+  ],
+  "per100g": {
+   "kcal": 290.8,
+   "protein": 2.4,
+   "fat": 29.0,
+   "carbs": 3.1,
+   "fiber": 0.0
+  },
+  "density": null,
+  "portions": [
+   {
+    "name": "Ст. ложка (20 г)",
+    "nameEn": "Tablespoon (20 g)",
+    "grams": 20
+   }
+  ],
+  "source": "Типичные значения: медиана 8 этикеток товаров Open Food Facts из Азербайджана и соседних стран (на 100 г). У конкретной марки цифры могут отличаться — точнее отсканировать штрихкод.",
+  "sourceEn": "Typical values: median of 8 Open Food Facts labels from Azerbaijan and neighbouring markets (per 100 g). A given brand may differ; scanning its barcode is more precise."
+ },
+ {
+  "id": "local:typical-syrok",
+  "name": "Сырок творожный глазированный",
+  "nameEn": "Glazed curd snack (syrok)",
+  "aliases": [
+   "сырок глазированный творожный"
+  ],
+  "per100g": {
+   "kcal": 384.41,
+   "protein": 8.5,
+   "fat": 23.2,
+   "carbs": 32.8,
+   "fiber": null
+  },
+  "density": null,
+  "portions": [
+   {
+    "name": "1 сырок (≈45 г)",
+    "nameEn": "1 bar (~45 g)",
+    "grams": 45
+   }
+  ],
+  "source": "Типичные значения: медиана 126 этикеток товаров Open Food Facts из Азербайджана и соседних стран (на 100 г). У конкретной марки цифры могут отличаться — точнее отсканировать штрихкод.",
+  "sourceEn": "Typical values: median of 126 Open Food Facts labels from Azerbaijan and neighbouring markets (per 100 g). A given brand may differ; scanning its barcode is more precise."
+ },
+ {
+  "id": "local:typical-yogurt-drink",
+  "name": "Йогурт питьевой",
+  "nameEn": "Drinking yogurt",
+  "aliases": [
+   "йогурт питьевой içməli yoqurt"
+  ],
+  "per100g": {
+   "kcal": 70.0,
+   "protein": 2.9,
+   "fat": 1.5,
+   "carbs": 11.0,
+   "fiber": 0.0
+  },
+  "density": 1.0,
+  "portions": [
+   {
+    "name": "Бутылочка (290 г)",
+    "nameEn": "Bottle (290 g)",
+    "grams": 290
+   }
+  ],
+  "source": "Типичные значения: медиана 58 этикеток товаров Open Food Facts из Азербайджана и соседних стран (на 100 мл, плотность принята ≈1 г/мл). У конкретной марки цифры могут отличаться — точнее отсканировать штрихкод.",
+  "sourceEn": "Typical values: median of 58 Open Food Facts labels from Azerbaijan and neighbouring markets (per 100 ml, density ~1 g/ml). A given brand may differ; scanning its barcode is more precise."
+ },
+ {
+  "id": "local:typical-brynza",
+  "name": "Брынза (белый сыр)",
+  "nameEn": "Brynza white cheese",
+  "aliases": [
+   "брынза ağ pendir pendir белый сыр"
+  ],
+  "per100g": {
+   "kcal": 248.0,
+   "protein": 16.0,
+   "fat": 23.0,
+   "carbs": 3.5,
+   "fiber": 0.0
+  },
+  "density": null,
+  "portions": [
+   {
+    "name": "Ломтик (30 г)",
+    "nameEn": "Slice (30 g)",
+    "grams": 30
+   }
+  ],
+  "source": "Типичные значения: медиана 9 этикеток товаров Open Food Facts из Азербайджана и соседних стран (на 100 г). У конкретной марки цифры могут отличаться — точнее отсканировать штрихкод.",
+  "sourceEn": "Typical values: median of 9 Open Food Facts labels from Azerbaijan and neighbouring markets (per 100 g). A given brand may differ; scanning its barcode is more precise."
+ },
+ {
+  "id": "local:typical-suluguni",
+  "name": "Сулугуни",
+  "nameEn": "Suluguni cheese",
+  "aliases": [
+   "сулугуни suluquni suluguni"
+  ],
+  "per100g": {
+   "kcal": 304.0,
+   "protein": 25.0,
+   "fat": 22.5,
+   "carbs": 0.2,
+   "fiber": 0.0
+  },
+  "density": null,
+  "portions": [
+   {
+    "name": "Ломтик (30 г)",
+    "nameEn": "Slice (30 g)",
+    "grams": 30
+   }
+  ],
+  "source": "Типичные значения: медиана 7 этикеток товаров Open Food Facts из Азербайджана и соседних стран (на 100 г). У конкретной марки цифры могут отличаться — точнее отсканировать штрихкод.",
+  "sourceEn": "Typical values: median of 7 Open Food Facts labels from Azerbaijan and neighbouring markets (per 100 g). A given brand may differ; scanning its barcode is more precise."
+ },
+ {
+  "id": "local:typical-lavash-store",
+  "name": "Лаваш магазинный",
+  "nameEn": "Store-bought lavash",
+  "aliases": [
+   "lavaş lavash лаваш"
+  ],
+  "per100g": {
+   "kcal": 273.82,
+   "protein": 8.5,
+   "fat": 1.1,
+   "carbs": 54.0,
+   "fiber": null
+  },
+  "density": null,
+  "portions": [
+   {
+    "name": "1 лист (≈60 г)",
+    "nameEn": "1 sheet (~60 g)",
+    "grams": 60
+   }
+  ],
+  "source": "Типичные значения: медиана 71 этикеток товаров Open Food Facts из Азербайджана и соседних стран (на 100 г). У конкретной марки цифры могут отличаться — точнее отсканировать штрихкод.",
+  "sourceEn": "Typical values: median of 71 Open Food Facts labels from Azerbaijan and neighbouring markets (per 100 g). A given brand may differ; scanning its barcode is more precise."
+ },
+ {
+  "id": "local:typical-baton",
+  "name": "Батон нарезной",
+  "nameEn": "Sliced white loaf (baton)",
+  "aliases": [
+   "батон нарезной хлеб çörək"
+  ],
+  "per100g": {
+   "kcal": 265.0,
+   "protein": 7.7,
+   "fat": 2.8,
+   "carbs": 51.4,
+   "fiber": null
+  },
+  "density": null,
+  "portions": [
+   {
+    "name": "Ломтик (25 г)",
+    "nameEn": "Slice (25 g)",
+    "grams": 25
+   }
+  ],
+  "source": "Типичные значения: медиана 79 этикеток товаров Open Food Facts из Азербайджана и соседних стран (на 100 г). У конкретной марки цифры могут отличаться — точнее отсканировать штрихкод.",
+  "sourceEn": "Typical values: median of 79 Open Food Facts labels from Azerbaijan and neighbouring markets (per 100 g). A given brand may differ; scanning its barcode is more precise."
+ },
+ {
+  "id": "local:typical-pelmeni-store",
+  "name": "Пельмени замороженные магазинные",
+  "nameEn": "Frozen store-bought pelmeni",
+  "aliases": [
+   "пельмени замороженные pelmeni"
+  ],
+  "per100g": {
+   "kcal": 230.5,
+   "protein": 10.11,
+   "fat": 10.0,
+   "carbs": 26.15,
+   "fiber": null
+  },
+  "density": null,
+  "portions": [
+   {
+    "name": "Порция (≈200 г)",
+    "nameEn": "Portion (~200 g)",
+    "grams": 200
+   }
+  ],
+  "source": "Типичные значения: медиана 130 этикеток товаров Open Food Facts из Азербайджана и соседних стран (на 100 г). У конкретной марки цифры могут отличаться — точнее отсканировать штрихкод.",
+  "sourceEn": "Typical values: median of 130 Open Food Facts labels from Azerbaijan and neighbouring markets (per 100 g). A given brand may differ; scanning its barcode is more precise."
+ },
+ {
+  "id": "local:typical-vareniki-store",
+  "name": "Вареники замороженные магазинные",
+  "nameEn": "Frozen store-bought vareniki",
+  "aliases": [
+   "вареники замороженные"
+  ],
+  "per100g": {
+   "kcal": 186.55,
+   "protein": 5.5,
+   "fat": 2.95,
+   "carbs": 32.1,
+   "fiber": null
+  },
+  "density": null,
+  "portions": [
+   {
+    "name": "Порция (≈200 г)",
+    "nameEn": "Portion (~200 g)",
+    "grams": 200
+   }
+  ],
+  "source": "Типичные значения: медиана 54 этикеток товаров Open Food Facts из Азербайджана и соседних стран (на 100 г). У конкретной марки цифры могут отличаться — точнее отсканировать штрихкод.",
+  "sourceEn": "Typical values: median of 54 Open Food Facts labels from Azerbaijan and neighbouring markets (per 100 g). A given brand may differ; scanning its barcode is more precise."
+ },
+ {
+  "id": "local:typical-sosiski-store",
+  "name": "Сосиски молочные (магазинные)",
+  "nameEn": "Milk sausages (frankfurters), store-bought",
+  "aliases": [
+   "сосиски молочные sosiska"
+  ],
+  "per100g": {
+   "kcal": 216.42,
+   "protein": 11.3,
+   "fat": 17.2,
+   "carbs": 2.0,
+   "fiber": 0.0
+  },
+  "density": null,
+  "portions": [
+   {
+    "name": "1 сосиска (≈45 г)",
+    "nameEn": "1 sausage (~45 g)",
+    "grams": 45
+   }
+  ],
+  "source": "Типичные значения: медиана 121 этикеток товаров Open Food Facts из Азербайджана и соседних стран (на 100 г). У конкретной марки цифры могут отличаться — точнее отсканировать штрихкод.",
+  "sourceEn": "Typical values: median of 121 Open Food Facts labels from Azerbaijan and neighbouring markets (per 100 g). A given brand may differ; scanning its barcode is more precise."
+ },
+ {
+  "id": "local:typical-servelat",
+  "name": "Сервелат варёно-копчёный",
+  "nameEn": "Cervelat smoked sausage",
+  "aliases": [
+   "сервелат колбаса копчёная"
+  ],
+  "per100g": {
+   "kcal": 263.0,
+   "protein": 13.0,
+   "fat": 22.5,
+   "carbs": 1.75,
+   "fiber": 0.0
+  },
+  "density": null,
+  "portions": [
+   {
+    "name": "Ломтик (10 г)",
+    "nameEn": "Slice (10 g)",
+    "grams": 10
+   }
+  ],
+  "source": "Типичные значения: медиана 14 этикеток товаров Open Food Facts из Азербайджана и соседних стран (на 100 г). У конкретной марки цифры могут отличаться — точнее отсканировать штрихкод.",
+  "sourceEn": "Typical values: median of 14 Open Food Facts labels from Azerbaijan and neighbouring markets (per 100 g). A given brand may differ; scanning its barcode is more precise."
+ },
+ {
+  "id": "local:typical-halva",
+  "name": "Халва подсолнечная",
+  "nameEn": "Sunflower halva",
+  "aliases": [
+   "халва halva подсолнечная"
+  ],
+  "per100g": {
+   "kcal": 535.0,
+   "protein": 12.4,
+   "fat": 31.0,
+   "carbs": 48.0,
+   "fiber": null
+  },
+  "density": null,
+  "portions": [
+   {
+    "name": "Кусочек (30 г)",
+    "nameEn": "Piece (30 g)",
+    "grams": 30
+   }
+  ],
+  "source": "Типичные значения: медиана 49 этикеток товаров Open Food Facts из Азербайджана и соседних стран (на 100 г). У конкретной марки цифры могут отличаться — точнее отсканировать штрихкод.",
+  "sourceEn": "Typical values: median of 49 Open Food Facts labels from Azerbaijan and neighbouring markets (per 100 g). A given brand may differ; scanning its barcode is more precise."
+ },
+ {
+  "id": "local:typical-sguschenka",
+  "name": "Сгущённое молоко с сахаром",
+  "nameEn": "Sweetened condensed milk",
+  "aliases": [
+   "сгущёнка сгущенка сгущённое молоко"
+  ],
+  "per100g": {
+   "kcal": 330.0,
+   "protein": 7.2,
+   "fat": 8.5,
+   "carbs": 56.0,
+   "fiber": 0.0
+  },
+  "density": null,
+  "portions": [
+   {
+    "name": "Ст. ложка (25 г)",
+    "nameEn": "Tablespoon (25 g)",
+    "grams": 25
+   }
+  ],
+  "source": "Типичные значения: медиана 38 этикеток товаров Open Food Facts из Азербайджана и соседних стран (на 100 г). У конкретной марки цифры могут отличаться — точнее отсканировать штрихкод.",
+  "sourceEn": "Typical values: median of 38 Open Food Facts labels from Azerbaijan and neighbouring markets (per 100 g). A given brand may differ; scanning its barcode is more precise."
+ },
+ {
+  "id": "local:typical-plombir",
+  "name": "Мороженое пломбир",
+  "nameEn": "Plombir ice cream",
+  "aliases": [
+   "пломбир мороженое dondurma"
+  ],
+  "per100g": {
+   "kcal": 257.25,
+   "protein": 4.0,
+   "fat": 14.32,
+   "carbs": 26.0,
+   "fiber": 0.0
+  },
+  "density": null,
+  "portions": [
+   {
+    "name": "Стаканчик (≈80 г)",
+    "nameEn": "Cup (~80 g)",
+    "grams": 80
+   }
+  ],
+  "source": "Типичные значения: медиана 66 этикеток товаров Open Food Facts из Азербайджана и соседних стран (на 100 г). У конкретной марки цифры могут отличаться — точнее отсканировать штрихкод.",
+  "sourceEn": "Typical values: median of 66 Open Food Facts labels from Azerbaijan and neighbouring markets (per 100 g). A given brand may differ; scanning its barcode is more precise."
+ },
+ {
+  "id": "local:typical-pryanik",
+  "name": "Пряники",
+  "nameEn": "Pryaniki spice cakes",
+  "aliases": [
+   "пряник пряники"
+  ],
+  "per100g": {
+   "kcal": 370.0,
+   "protein": 5.5,
+   "fat": 6.8,
+   "carbs": 71.9,
+   "fiber": null
+  },
+  "density": null,
+  "portions": [
+   {
+    "name": "1 пряник (≈35 г)",
+    "nameEn": "1 piece (~35 g)",
+    "grams": 35
+   }
+  ],
+  "source": "Типичные значения: медиана 53 этикеток товаров Open Food Facts из Азербайджана и соседних стран (на 100 г). У конкретной марки цифры могут отличаться — точнее отсканировать штрихкод.",
+  "sourceEn": "Typical values: median of 53 Open Food Facts labels from Azerbaijan and neighbouring markets (per 100 g). A given brand may differ; scanning its barcode is more precise."
+ },
+ {
+  "id": "local:typical-sushki",
+  "name": "Сушки и баранки",
+  "nameEn": "Sushki and baranki rings",
+  "aliases": [
+   "сушки баранки"
+  ],
+  "per100g": {
+   "kcal": 376.26,
+   "protein": 9.7,
+   "fat": 6.0,
+   "carbs": 70.0,
+   "fiber": null
+  },
+  "density": null,
+  "portions": [
+   {
+    "name": "1 сушка (≈8 г)",
+    "nameEn": "1 ring (~8 g)",
+    "grams": 8
+   }
+  ],
+  "source": "Типичные значения: медиана 31 этикеток товаров Open Food Facts из Азербайджана и соседних стран (на 100 г). У конкретной марки цифры могут отличаться — точнее отсканировать штрихкод.",
+  "sourceEn": "Typical values: median of 31 Open Food Facts labels from Azerbaijan and neighbouring markets (per 100 g). A given brand may differ; scanning its barcode is more precise."
+ },
+ {
+  "id": "local:typical-zefir",
+  "name": "Зефир",
+  "nameEn": "Zefir (marshmallow)",
+  "aliases": [
+   "зефир zefir"
+  ],
+  "per100g": {
+   "kcal": 325.07,
+   "protein": 1.0,
+   "fat": 0.07,
+   "carbs": 78.55,
+   "fiber": 0.0
+  },
+  "density": null,
+  "portions": [
+   {
+    "name": "1 зефирина (≈35 г)",
+    "nameEn": "1 piece (~35 g)",
+    "grams": 35
+   }
+  ],
+  "source": "Типичные значения: медиана 40 этикеток товаров Open Food Facts из Азербайджана и соседних стран (на 100 г). У конкретной марки цифры могут отличаться — точнее отсканировать штрихкод.",
+  "sourceEn": "Typical values: median of 40 Open Food Facts labels from Azerbaijan and neighbouring markets (per 100 g). A given brand may differ; scanning its barcode is more precise."
+ },
+ {
+  "id": "local:typical-vafli",
+  "name": "Вафли с начинкой",
+  "nameEn": "Filled wafers",
+  "aliases": [
+   "вафли vafli"
+  ],
+  "per100g": {
+   "kcal": 510.5,
+   "protein": 5.7,
+   "fat": 26.39,
+   "carbs": 60.0,
+   "fiber": 2.4
+  },
+  "density": null,
+  "portions": [
+   {
+    "name": "1 вафля (≈20 г)",
+    "nameEn": "1 wafer (~20 g)",
+    "grams": 20
+   }
+  ],
+  "source": "Типичные значения: медиана 160 этикеток товаров Open Food Facts из Азербайджана и соседних стран (на 100 г). У конкретной марки цифры могут отличаться — точнее отсканировать штрихкод.",
+  "sourceEn": "Typical values: median of 160 Open Food Facts labels from Azerbaijan and neighbouring markets (per 100 g). A given brand may differ; scanning its barcode is more precise."
+ },
+ {
+  "id": "local:typical-kvass",
+  "name": "Квас",
+  "nameEn": "Kvass",
+  "aliases": [
+   "квас kvas"
+  ],
+  "per100g": {
+   "kcal": 35.5,
+   "protein": 0.45,
+   "fat": 0.0,
+   "carbs": 8.0,
+   "fiber": null
+  },
+  "density": 1.0,
+  "portions": [
+   {
+    "name": "Стакан (250 мл)",
+    "nameEn": "Glass (250 ml)",
+    "grams": 250
+   }
+  ],
+  "source": "Типичные значения: медиана 50 этикеток товаров Open Food Facts из Азербайджана и соседних стран (на 100 мл, плотность принята ≈1 г/мл). У конкретной марки цифры могут отличаться — точнее отсканировать штрихкод.",
+  "sourceEn": "Typical values: median of 50 Open Food Facts labels from Azerbaijan and neighbouring markets (per 100 ml, density ~1 g/ml). A given brand may differ; scanning its barcode is more precise."
+ },
+ {
+  "id": "local:typical-mayo-67",
+  "name": "Майонез 67%",
+  "nameEn": "Mayonnaise 67%",
+  "aliases": [
+   "майонез mayonez 67"
+  ],
+  "per100g": {
+   "kcal": 616.0,
+   "protein": 0.4,
+   "fat": 67.0,
+   "carbs": 2.65,
+   "fiber": 0.0
+  },
+  "density": null,
+  "portions": [
+   {
+    "name": "Ст. ложка (15 г)",
+    "nameEn": "Tablespoon (15 g)",
+    "grams": 15
+   }
+  ],
+  "source": "Типичные значения: медиана 80 этикеток товаров Open Food Facts из Азербайджана и соседних стран (на 100 г). У конкретной марки цифры могут отличаться — точнее отсканировать штрихкод.",
+  "sourceEn": "Typical values: median of 80 Open Food Facts labels from Azerbaijan and neighbouring markets (per 100 g). A given brand may differ; scanning its barcode is more precise."
+ },
+ {
+  "id": "local:typical-mayo-light",
+  "name": "Майонез лёгкий (30–50%)",
+  "nameEn": "Light mayonnaise (30–50%)",
+  "aliases": [
+   "майонез лёгкий mayonez"
+  ],
+  "per100g": {
+   "kcal": 385.0,
+   "protein": 0.4,
+   "fat": 40.0,
+   "carbs": 5.0,
+   "fiber": 0.0
+  },
+  "density": null,
+  "portions": [
+   {
+    "name": "Ст. ложка (15 г)",
+    "nameEn": "Tablespoon (15 g)",
+    "grams": 15
+   }
+  ],
+  "source": "Типичные значения: медиана 61 этикеток товаров Open Food Facts из Азербайджана и соседних стран (на 100 г). У конкретной марки цифры могут отличаться — точнее отсканировать штрихкод.",
+  "sourceEn": "Typical values: median of 61 Open Food Facts labels from Azerbaijan and neighbouring markets (per 100 g). A given brand may differ; scanning its barcode is more precise."
+ },
+ {
+  "id": "local:typical-ketchup",
+  "name": "Кетчуп",
+  "nameEn": "Ketchup",
+  "aliases": [
+   "кетчуп ketçup ketchup"
+  ],
+  "per100g": {
+   "kcal": 97.0,
+   "protein": 1.1,
+   "fat": 0.1,
+   "carbs": 22.55,
+   "fiber": null
+  },
+  "density": null,
+  "portions": [
+   {
+    "name": "Ст. ложка (15 г)",
+    "nameEn": "Tablespoon (15 g)",
+    "grams": 15
+   }
+  ],
+  "source": "Типичные значения: медиана 130 этикеток товаров Open Food Facts из Азербайджана и соседних стран (на 100 г). У конкретной марки цифры могут отличаться — точнее отсканировать штрихкод.",
+  "sourceEn": "Typical values: median of 130 Open Food Facts labels from Azerbaijan and neighbouring markets (per 100 g). A given brand may differ; scanning its barcode is more precise."
+ },
+ {
+  "id": "local:typical-semechki",
+  "name": "Семечки подсолнечника жареные",
+  "nameEn": "Roasted sunflower seeds",
+  "aliases": [
+   "семечки tum günəbaxan"
+  ],
+  "per100g": {
+   "kcal": 591.63,
+   "protein": 22.0,
+   "fat": 52.9,
+   "carbs": 9.0,
+   "fiber": null
+  },
+  "density": null,
+  "portions": [
+   {
+    "name": "Горсть (30 г)",
+    "nameEn": "Handful (30 g)",
+    "grams": 30
+   }
+  ],
+  "source": "Типичные значения: медиана 54 этикеток товаров Open Food Facts из Азербайджана и соседних стран (на 100 г). У конкретной марки цифры могут отличаться — точнее отсканировать штрихкод.",
+  "sourceEn": "Typical values: median of 54 Open Food Facts labels from Azerbaijan and neighbouring markets (per 100 g). A given brand may differ; scanning its barcode is more precise."
+ },
+ {
+  "id": "local:typical-chips-store",
+  "name": "Картофельные чипсы (магазинные)",
+  "nameEn": "Potato crisps, store-bought",
+  "aliases": [
+   "чипсы çips chips"
+  ],
+  "per100g": {
+   "kcal": 518.0,
+   "protein": 6.0,
+   "fat": 31.0,
+   "carbs": 53.0,
+   "fiber": 4.3
+  },
+  "density": null,
+  "portions": [
+   {
+    "name": "Пачка (≈90 г)",
+    "nameEn": "Bag (~90 g)",
+    "grams": 90
+   }
+  ],
+  "source": "Типичные значения: медиана 312 этикеток товаров Open Food Facts из Азербайджана и соседних стран (на 100 г). У конкретной марки цифры могут отличаться — точнее отсканировать штрихкод.",
+  "sourceEn": "Typical values: median of 312 Open Food Facts labels from Azerbaijan and neighbouring markets (per 100 g). A given brand may differ; scanning its barcode is more precise."
+ },
+ {
+  "id": "local:typical-instant-noodles",
+  "name": "Лапша быстрого приготовления (сухая)",
+  "nameEn": "Instant noodles (dry)",
+  "aliases": [
+   "лапша быстрого приготовления доширак роллтон"
+  ],
+  "per100g": {
+   "kcal": 375.41,
+   "protein": 8.19,
+   "fat": 11.91,
+   "carbs": 55.15,
+   "fiber": null
+  },
+  "density": null,
+  "portions": [
+   {
+    "name": "Пачка (≈70 г)",
+    "nameEn": "Pack (~70 g)",
+    "grams": 70
+   }
+  ],
+  "source": "Типичные значения: медиана 126 этикеток товаров Open Food Facts из Азербайджана и соседних стран (на 100 г). У конкретной марки цифры могут отличаться — точнее отсканировать штрихкод.",
+  "sourceEn": "Typical values: median of 126 Open Food Facts labels from Azerbaijan and neighbouring markets (per 100 g). A given brand may differ; scanning its barcode is more precise."
+ },
+ {
+  "id": "local:typical-milk-chocolate",
+  "name": "Шоколад молочный (плитка)",
+  "nameEn": "Milk chocolate bar",
+  "aliases": [
+   "шоколад молочный şokolad"
+  ],
+  "per100g": {
+   "kcal": 546.0,
+   "protein": 7.0,
+   "fat": 33.8,
+   "carbs": 53.0,
+   "fiber": 2.3
+  },
+  "density": null,
+  "portions": [
+   {
+    "name": "Плитка (90 г)",
+    "nameEn": "Bar (90 g)",
+    "grams": 90
+   },
+   {
+    "name": "Долька (≈5 г)",
+    "nameEn": "Square (~5 g)",
+    "grams": 5
+   }
+  ],
+  "source": "Типичные значения: медиана 193 этикеток товаров Open Food Facts из Азербайджана и соседних стран (на 100 г). У конкретной марки цифры могут отличаться — точнее отсканировать штрихкод.",
+  "sourceEn": "Typical values: median of 193 Open Food Facts labels from Azerbaijan and neighbouring markets (per 100 g). A given brand may differ; scanning its barcode is more precise."
+ }
+]

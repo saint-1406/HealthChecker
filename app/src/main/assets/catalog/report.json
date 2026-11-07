@@ -1,18 +1,22 @@
 {
   "retrieved": "2026-10-18",
-  "count": 7834,
+  "count": 12699,
   "localized": 124,
-  "translated": 7690,
-  "estimated_dishes": 41,
-  "with_fiber": 7398,
+  "translated": 11752,
+  "estimated_dishes": 227,
+  "hidden_from_search": 2220,
+  "with_fiber": 11918,
   "excluded_missing_or_invalid_data": 0,
   "sources": {
     "usda": 7793,
+    "fndds": 4062,
     "off": 0,
-    "local": 41
+    "local": 227,
+    "store": 617
   },
   "input_sha256": {
-    "usda-slim.json": "57654df60e537b382b274debb65d51db570be61df540a24f6f313bcb82076198"
+    "usda-slim.json": "fba25a717026bb6e0705a8049800b37c6b2b1fc0deb84ee59bca8ec60b43a708",
+    "fndds-slim.json": "cead222e12a277ab728af63730c1bd79852783ad64b1caa6692812bd84fd0b82"
   },
-  "catalog_sha256": "25e5e3a2db038dadf42264de71675bd6ada5dde061efd30006593bcf28f170f0"
+  "catalog_sha256": "b803c41b132eea74ebdbb0d4ccc6b4cec0fda332d79ba271df5c3feaf8225696"
 }
