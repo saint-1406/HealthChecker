@@ -320,11 +320,13 @@ class AppViewModel(application:Application):AndroidViewModel(application) {
         // The file link goes with the video; undo brings the video back without it.
         file?.let{releaseVideoFile(preferences.videoFile(video.id,null))}
     }
-    /** Logs the exercises of a video workout, the whole video or up to [upTo] seconds, as one change that undo takes back. */
-    fun logVideo(video:WorkoutVideo,upTo:Int?,date:String)=action {
+    /** The exercises of a video workout, the whole video or up to [upTo] seconds, as the user first sees them before logging. */
+    fun videoLogItems(video:WorkoutVideo,upTo:Int?):List<VideoLogItem> = video.workDone(upTo).mapNotNull{w->exercise(w.exerciseId)?.let{videoLogItem(it,w)}}
+    /** Logs the checked exercises of a video workout with the amounts the user confirmed, as one change that undo takes back. */
+    fun logVideo(items:List<VideoLogItem>,date:String)=action {
         val weight=snapshot.value.bodyWeight(date);val now=Instant.now();val zone=ZoneId.systemDefault()
-        val entries=video.workDone(upTo).mapNotNull{w->exercise(w.exerciseId)?.let{videoWorkout(UUID.randomUUID().toString(),it,w,date,now,zone,weight)}}
-        require(entries.isNotEmpty()){tr("В этом отрезке видео ещё нет упражнений","This part of the video has no exercises yet")}
+        val entries=items.filter{it.done}.mapNotNull{i->exercise(i.exerciseId)?.let{i.toWorkout(UUID.randomUUID().toString(),it,date,now,zone,weight)}}
+        require(entries.isNotEmpty()){tr("Отметьте хотя бы одно упражнение","Check at least one exercise")}
         repository.upsertWorkouts(entries)
         offerUndo(tr("Записано из видео: ","Logged from the video: ")+count(entries.size,"упражнение","упражнения","упражнений","exercise","exercises")){repository.deleteWorkouts(entries.map{it.id})}
     }

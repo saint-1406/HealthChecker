@@ -101,13 +101,49 @@ fun WorkoutVideo.workDone(upTo:Int?=null):List<VideoWork> {
  * A diary entry for an exercise done along with a video. The time is the video's work time (rests are not counted);
  * repetitions are estimated from the exercise tempo, so the entry stays editable like any other.
  */
-fun videoWorkout(id:String,exercise:Exercise,work:VideoWork,date:String,now:Instant,zone:ZoneId,bodyWeightKg:Double?):WorkoutEntry {
-    val each=work.seconds.toDouble()/work.parts;val minutes=work.seconds/60.0
-    return when(exercise.measure){
-        ExerciseMeasure.REPS->makeWorkout(id,exercise,work.parts,(each/(exercise.secondsPerRep?:3.0)).roundToInt().coerceIn(1,1000),null,null,minutes,date,null,now,zone,bodyWeightKg)
-        ExerciseMeasure.SECONDS->makeWorkout(id,exercise,work.parts,null,each.roundToInt().coerceIn(1,3600),null,minutes,date,null,now,zone,bodyWeightKg)
-        ExerciseMeasure.MINUTES->makeWorkout(id,exercise,null,null,null,null,minutes,date,null,now,zone,bodyWeightKg)
+fun videoWorkout(id:String,exercise:Exercise,work:VideoWork,date:String,now:Instant,zone:ZoneId,bodyWeightKg:Double?):WorkoutEntry =
+    videoLogItem(exercise,work).toWorkout(id,exercise,date,now,zone,bodyWeightKg)
+
+/**
+ * An exercise of the video as the user checks it before it goes to the diary: done or skipped, and how much they did.
+ * [amount] is the reps of a set (REPS), the seconds of a set (SECONDS) or the whole time in seconds (MINUTES, one "set").
+ * The work time follows the amounts from the video's own time, so an unchanged item logs exactly what the video holds.
+ */
+@Serializable data class VideoLogItem(val exerciseId:String,val measure:ExerciseMeasure,val baseSets:Int,val baseAmount:Int,val baseSeconds:Int,
+    val sets:Int=baseSets,val amount:Int=baseAmount,val done:Boolean=true) {
+    val workSeconds:Int get() = (baseSeconds.toLong()*sets*amount/(baseSets.toLong()*baseAmount).coerceAtLeast(1)).toInt().coerceIn(1,MAX_VIDEO_LOG_SECONDS)
+    val hasSets:Boolean get() = measure!=ExerciseMeasure.MINUTES
+    val amountRange:IntRange get() = when(measure){ExerciseMeasure.REPS->1..1000;ExerciseMeasure.SECONDS->1..3600;ExerciseMeasure.MINUTES->1..MAX_VIDEO_LOG_SECONDS}
+    fun withSets(n:Int)=if(hasSets)copy(sets=n.coerceIn(SETS_RANGE)) else this
+    fun withAmount(n:Int)=copy(amount=n.coerceIn(amountRange))
+    /** The step of the +/- buttons: one rep, five seconds of a set, fifteen seconds of a timed exercise. */
+    val amountStep:Int get() = when(measure){ExerciseMeasure.REPS->1;ExerciseMeasure.SECONDS->5;ExerciseMeasure.MINUTES->15}
+    fun toWorkout(id:String,exercise:Exercise,date:String,now:Instant,zone:ZoneId,bodyWeightKg:Double?):WorkoutEntry {
+        val minutes=workSeconds/60.0
+        return when(measure){
+            ExerciseMeasure.REPS->makeWorkout(id,exercise,sets,amount,null,null,minutes,date,null,now,zone,bodyWeightKg)
+            ExerciseMeasure.SECONDS->makeWorkout(id,exercise,sets,null,amount,null,minutes,date,null,now,zone,bodyWeightKg)
+            ExerciseMeasure.MINUTES->makeWorkout(id,exercise,null,null,null,null,minutes,date,null,now,zone,bodyWeightKg)
+        }
     }
+}
+val SETS_RANGE=1..50
+/** The diary takes up to 600 minutes for one entry. */
+const val MAX_VIDEO_LOG_SECONDS=36000
+/** How the video's work on an exercise is first offered: its sets, and the reps or seconds of each from the exercise tempo. */
+fun videoLogItem(exercise:Exercise,work:VideoWork):VideoLogItem {
+    val each=work.seconds.toDouble()/work.parts
+    return when(exercise.measure){
+        ExerciseMeasure.REPS->VideoLogItem(exercise.id,ExerciseMeasure.REPS,work.parts,(each/(exercise.secondsPerRep?:3.0)).roundToInt().coerceIn(1,1000),work.seconds)
+        ExerciseMeasure.SECONDS->VideoLogItem(exercise.id,ExerciseMeasure.SECONDS,work.parts,each.roundToInt().coerceIn(1,3600),work.seconds)
+        ExerciseMeasure.MINUTES->VideoLogItem(exercise.id,ExerciseMeasure.MINUTES,1,work.seconds.coerceIn(1,MAX_VIDEO_LOG_SECONDS),work.seconds)
+    }
+}
+/** The checked items: how many, their work time in seconds, and the energy when [met] and the body weight are known. */
+data class VideoLogTotals(val count:Int,val seconds:Int,val kcal:Double?)
+fun videoLogTotals(items:List<VideoLogItem>,met:(String)->Double?,bodyWeightKg:Double?):VideoLogTotals {
+    val done=items.filter{it.done}
+    return VideoLogTotals(done.size,done.sumOf{it.workSeconds},bodyWeightKg?.let{w->done.sumOf{i->met(i.exerciseId)?.let{burnedKcal(it,w,i.workSeconds/60.0)}?:0.0}})
 }
 /** "1:05", "30:12". */
 fun formatVideoTime(seconds:Int):String { val s=seconds.coerceAtLeast(0);return if(s>=3600)String.format(java.util.Locale.ROOT,"%d:%02d:%02d",s/3600,s/60%60,s%60) else String.format(java.util.Locale.ROOT,"%d:%02d",s/60,s%60) }

@@ -49,14 +49,19 @@ class VideoWorkoutFlowTest {
         app.onNodeWithTag("logUpToNow").assertExists()
         app.onNodeWithTag("logWholeVideo").performClick()
         app.onNodeWithTag("confirmLogVideo").performClick()
-        waitText("Записано из видео: 32 упражнения",30000)
+        // Every exercise is offered checked; a skipped one is unchecked and only the rest go to the diary.
+        app.onNodeWithTag("videoLogTotals").assert(hasText("32 упражнения",substring=true))
+        app.onNodeWithTag("videoLogDone_0").performClick()
+        app.onNodeWithTag("videoLogTotals").assert(hasText("31 упражнение",substring=true))
+        app.onNodeWithTag("saveVideoLog").performClick()
+        waitText("Записано из видео: 31 упражнение",30000)
         app.onNodeWithContentDescription("Назад").performClick()
         app.onNodeWithContentDescription("Назад").performClick()
         // The notice reserves its own space: the shortcut stays reachable above the day's list.
         app.onNodeWithTag("trainingList").performScrollToNode(hasTestTag("openVideos"))
         app.onNodeWithTag("openVideos").assertIsDisplayed()
         app.onNodeWithTag("trainingList").performScrollToNode(hasText("Выполненные упражнения"))
-        app.onNodeWithText("32 упражнения").assertExists()
+        app.onNodeWithText("31 упражнение").assertExists()
         // The profile names the installed release, as the update file is numbered.
         app.onNodeWithText("Профиль").performClick()
         app.onNodeWithTag("appVersion").performScrollTo().assert(hasText("HealthChecker · версия ",substring=true))
