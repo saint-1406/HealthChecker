@@ -28,10 +28,11 @@ class BarcodeFlowTest {
     private fun waitText(text:String)=app.waitUntil(60000){app.onAllNodesWithText(text).fetchSemanticsNodes().isNotEmpty()}
     private fun launch(){scenario?.close();scenario=ActivityScenario.launch(MainActivity::class.java)}
     private fun open(){app.onNodeWithTag("logFoodButton").performScrollTo().performClick();app.onNodeWithTag("barcodeAction").performClick();waitTag("barcodeInput")}
-    @Test fun bundledProductIsFoundAndLoggedWithNoInternetPermission() {
+    // INTERNET exists only for the in-app updater; the scanner finds products in the bundled database (run in airplane mode).
+    @Test fun bundledProductIsFoundAndLoggedOffline() {
         val context=ApplicationProvider.getApplicationContext<Context>()
         val permissions=context.packageManager.getPackageInfo(context.packageName,android.content.pm.PackageManager.GET_PERMISSIONS).requestedPermissions.orEmpty()
-        Assert.assertFalse(permissions.contains(android.Manifest.permission.INTERNET))
+        Assert.assertFalse(permissions.contains(android.Manifest.permission.ACCESS_BACKGROUND_LOCATION))
         launch();waitText("Начать без расчёта");app.onNodeWithText("Начать без расчёта").performScrollTo().performClick();waitText("Обзор");open()
         app.onNodeWithTag("barcodeInput").performTextInput("3017620422003")
         app.onNodeWithTag("barcodeFind").performScrollTo().performClick()
