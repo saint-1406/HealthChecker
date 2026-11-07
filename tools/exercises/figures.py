@@ -294,6 +294,31 @@ add('db_farmer_hold', walking(P(0, (180, 180), (180, 180), (165, 180), (195, 195
 add('db_thruster db_strength_session db_circuit', [P(35, (150, 10), (150, 10), (95, 200), (95, 200)), P(0, (18, 12), (14, 8))])
 add('db_clean_press', [with_(HINGE, t=30, ln=(150, 195), lf=(150, 195)), P(0, (150, 10), (150, 10)), P(0, (18, 12), (14, 8))])
 
+# ---- From Mady Morrison's stretching, yoga and Pilates videos ----------------------------------------------------
+# Back knee down, hips sinking forward, arms up.
+add('low_lunge', [P(0, (10, 5), (10, 5), (95, 180), (215, 270))], hold=True)
+# The same lunge with the chest leaning in and both hands down inside the front foot.
+add('lizard_pose', [P(65, (175, 175), (175, 175), (95, 175), (220, 270))], hold=True)
+add('standing_forward_bend', [P(140, (175, 115), (175, 115), h=165)], hold=True)
+add('yogi_squat', [P(10, (160, 20), (160, 20), (60, 195), (60, 195))], hold=True)
+# Seated: the near knee up and hugged, the far leg long, the far hand on the floor behind.
+add('seated_spinal_twist', [P(0, (120, 40), (200, 190), (40, 170), (90, 90))], hold=True)
+add('puppy_pose', [P(125, (115, 100), (115, 100), (180, 270), (180, 270))], hold=True)
+add('sphinx_pose', [P(307, (180, 270), (180, 270), (90, 90), (90, 90))], hold=True)
+add('cobra_pose', [P(330, (180, 240), (180, 240), (90, 90), (90, 90))], hold=True)
+# On hands and knees, the far arm slides under the near one and the shoulder drops.
+add('thread_the_needle', [P(110, (185, 180), (170, 260), (180, 270), (180, 270), h=150)], hold=True)
+add('straddle_stretch', [P(50, (85, 85), (85, 85), (90, 90), (90, 90))], hold=True)
+add('hero_pose', [P(0, (160, 95), (160, 95), (90, 270), (90, 270))], hold=True)
+add('eagle_arms', [P(0, (85, 5), (95, 10))], hold=True)
+add('knees_to_chest', [P(270, (30, 80), (30, 80), (330, 100), (330, 100))], hold=True)
+TABLE_TOP = P(270, (90, 90), (90, 90), (0, 90), (0, 90))
+add('pilates_toe_tap', [TABLE_TOP, with_(TABLE_TOP, lf=(50, 150)), TABLE_TOP, with_(TABLE_TOP, ln=(50, 150))])
+SINGLE_LEG = P(295, (20, 60), (20, 60), (330, 70), (75, 75))
+add('pilates_single_leg_stretch', [SINGLE_LEG, swap(SINGLE_LEG)])
+SCISSORS = P(295, (15, 15), (80, 80), (5, 5), (75, 75))
+add('pilates_scissors', [SCISSORS, swap(SCISSORS)])
+
 # ---- Geometry shared with the app ---------------------------------------------------------------------------------
 def vec(a, length):
     r = math.radians(a); return (length * math.sin(r), -length * math.cos(r))

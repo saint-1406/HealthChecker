@@ -18,12 +18,16 @@ import kotlin.math.roundToInt
  */
 @Serializable data class WorkoutVideo(val id:String,val title:String,val channel:String="",val youtubeId:String?=null,val durationSec:Int?=null,val embeddable:Boolean=true,
     val about:String="",val aboutEn:String="",val segments:List<VideoSegment> = emptyList(),val addedAt:String?=null,
-    /** "exact" — timed from the video itself; "chapters" — from the author's chapter list in the description. */
+    /**
+     * "exact" — timed from the video itself; "chapters" — from the author's chapter list in the description; "whole" — the
+     * video has no chapters, so its one segment is the whole video logged as one session.
+     */
     val timing:String="exact",
     /** What kind of workout it is, for the library filter: full, abs, cardio, legs, upper, dumbbells, nojump, warmup. */
     val tags:List<String> = emptyList()) {
     val own:Boolean get() = id.startsWith("video:")
     val byChapters:Boolean get() = timing=="chapters"
+    val wholeSession:Boolean get() = timing=="whole"
 }
 /** The user's own copy of a video on this phone: a document they picked, kept by its persistable link. */
 @Serializable data class VideoFile(val uri:String,val name:String)
