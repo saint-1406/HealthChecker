@@ -111,16 +111,17 @@ import kotlinx.coroutines.delay
 }
 
 /** Kinds of workout the library filters by, in this order. */
-private val VIDEO_TAGS=listOf("full","abs","cardio","legs","upper","dumbbells","nojump","warmup")
+private val VIDEO_TAGS=listOf("full","abs","cardio","legs","upper","dumbbells","nojump","warmup","yoga","pilates","stretch")
 private fun videoTagLabel(tag:String):String = when(tag){"full"->tr("Всё тело","Full body");"abs"->tr("Пресс","Abs");"cardio"->tr("Кардио","Cardio");"legs"->tr("Ноги","Legs")
-    "upper"->tr("Верх тела","Upper body");"dumbbells"->tr("Гантели","Dumbbells");"nojump"->tr("Без прыжков","No jumping");"warmup"->tr("Разминка","Warm-up");else->tag}
+    "upper"->tr("Верх тела","Upper body");"dumbbells"->tr("Гантели","Dumbbells");"nojump"->tr("Без прыжков","No jumping");"warmup"->tr("Разминка","Warm-up")
+    "yoga"->tr("Йога","Yoga");"pilates"->tr("Пилатес","Pilates");"stretch"->tr("Растяжка","Stretching");else->tag}
 private fun videoLengthLabel(l:VideoLength):String = when(l){VideoLength.SHORT->tr("до 12 мин","up to 12 min");VideoLength.MEDIUM->tr("13–22 мин","13–22 min");VideoLength.LONG->tr("от 23 мин","23 min and more")}
 
 /** "30 min · 34 exercises" for a video with a timeline, otherwise what kind of video it is. */
 private fun videoSummary(vm:AppViewModel,v:WorkoutVideo):String = listOfNotNull(
     v.durationSec?.let{"${(it+30)/60} ${tr("мин","min")}"},
     if(v.segments.isNotEmpty())count(v.segments.size,"упражнение","упражнения","упражнений","exercise","exercises")+" · "+count(v.workDone().size,"вид","вида","видов","kind","kinds") else tr("Своё видео без разметки","Your own video, no timeline"),
-    if(v.byChapters)tr("по главам автора","by the author's chapters") else null
+    if(v.byChapters)tr("по главам автора","by the author's chapters") else if(v.wholeSession)tr("без глав — одним занятием","no chapters — one session") else null
 ).joinToString(" · ")
 
 @Composable private fun AddVideoDialog(vm:AppViewModel,close:()->Unit,added:(WorkoutVideo)->Unit) {
@@ -301,8 +302,10 @@ private fun openYoutube(context:Context,youtubeId:String,second:Int):Boolean =
                 Text(listOfNotNull(count(video.segments.size,"упражнение","упражнения","упражнений","exercise","exercises"),tr("работа ","work ")+"${number(video.workSeconds/60.0,1)} ${tr("мин","min")}",if(weight!=null)"≈ ${number(kcal)} $KCAL" else null).joinToString(" · "),
                     style=MaterialTheme.typography.titleSmall,color=MaterialTheme.colorScheme.primary,modifier=Modifier.testTag("videoTotals"))
                 Text(tr("Нажмите на упражнение, чтобы перейти к нему.","Tap an exercise to jump to it."),style=MaterialTheme.typography.bodySmall,color=MaterialTheme.colorScheme.onSurfaceVariant)
-                if(video.byChapters)Text(tr("Разметка — по главам из описания автора: отрезок от главы до главы включает отдых рядом с упражнением, поэтому время работы оценено (≈ на 10–20 с меньше отрезка).",
-                    "The timeline follows the author's chapters in the description: a chapter also holds the rest next to the exercise, so the work time is estimated (≈ 10–20 s less than the chapter)."),
+                if(video.byChapters)Text(if(video.segments.any{it.work!=null})tr("Разметка — по главам из описания автора: отрезок от главы до главы включает отдых рядом с упражнением, поэтому время работы оценено (≈ на 10–20 с меньше отрезка).",
+                    "The timeline follows the author's chapters in the description: a chapter also holds the rest next to the exercise, so the work time is estimated (≈ 10–20 s less than the chapter).")
+                    else tr("Разметка — по главам из описания автора; упражнения идут без пауз, поэтому вся глава считается временем упражнения.",
+                    "The timeline follows the author's chapters in the description; the moves run on without rests, so a whole chapter counts as the move's time."),
                     style=MaterialTheme.typography.bodySmall,color=MaterialTheme.colorScheme.onSurfaceVariant,modifier=Modifier.testTag("chaptersNote"))
             }
         }}

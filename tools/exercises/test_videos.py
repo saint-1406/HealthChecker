@@ -26,7 +26,9 @@ class VideoLibraryTest(unittest.TestCase):
         self.assertEqual([16,506,996],[s[0]['start'],s[8]['start'],s[16]['start']]);self.assertEqual(1456,s[-1]['end'])
     def test_channel_videos_are_timed_by_the_authors_chapters(self):
         more=[v for v in self.items.values() if v.get('timing')=='chapters']
-        self.assertEqual(141,len(more));self.assertEqual(1922,sum(len(v['segments']) for v in self.items.values()))
+        # 141 of Jaeho's videos and 19 of Mady Morrison's; her 145 others without usable chapters are one whole session each.
+        self.assertEqual(141+19,len(more));self.assertEqual(1922+345,sum(len(v['segments']) for v in self.items.values()))
+        self.assertEqual(145,sum(v.get('timing')=='whole' for v in self.items.values()))
         # A chapter holds the exercise and the rest next to it, so the work is shorter; rest chapters are gaps.
         for v in more:
             for s in v['segments']:

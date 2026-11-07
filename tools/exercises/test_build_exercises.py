@@ -47,8 +47,15 @@ class ExerciseCatalogTest(unittest.TestCase):
                 'standing_knee_crunch':'Standing Crunch','plank_toe_touch':'High Plank Toe Touch','woodchop':'Woodchop','russian_twist':'Seated Twist','situp':'L-Sit Up'}
         for i,t in titles.items():self.assertIn(t,by[i]['videoNames'],i)
         self.assertEqual('HIIT',by['cross_mountain_climber']['category'])
-        self.assertEqual(229,len(self.items))
+        self.assertEqual(245,len(self.items))
 
+    def test_mady_morrison_moves_exist_as_timed_yoga_stretch_and_pilates(self):
+        by={i['id']:i for i in self.items}
+        titles={'low_lunge':'Low Lunge','lizard_pose':'Lizard Pose','yogi_squat':'Yogi Squat','puppy_pose':'Extended Puppy Pose','sphinx_pose':'Sphinx Pose',
+                'thread_the_needle':'Childs Pose Twist','pilates_scissors':'Scissors','pilates_single_leg_stretch':'Single Leg Stretch','hamstring_stretch':'Runners Stretch'}
+        for i,t in titles.items():self.assertIn(t,by[i]['videoNames'],i)
+        for i in ('low_lunge','pilates_toe_tap','pilates_scissors'):self.assertEqual(('YOGA','SECONDS'),(by[i]['category'],by[i]['measure']),i)
+        for i in ('straddle_stretch','knees_to_chest','eagle_arms','thread_the_needle'):self.assertEqual(('STRETCH','MOBILITY'),(by[i]['category'],by[i]['kind']),i)
     def test_user_video_routine_is_findable_by_its_titles(self):
         titles=['OH Squat','High Plank SH Tap','Knee to Elbow Crunch','Jumping Jack','Split Squat','High Plank & Pike','Table Top Crunches',
                 'Jog on the Spot','Squat Knee to Elbow','Back Extension','Bridge Crunches','Heel Touch','Air Squat','Plank T Rotation',

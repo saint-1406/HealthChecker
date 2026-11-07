@@ -4,11 +4,13 @@ The timings were read off each video's own countdown circle (one frame per secon
 video shows; each segment points at the catalog exercise it is. Only the work is listed: the gaps between segments are
 the video's rests and transitions. Both videos come from the channel "재호 - Fitness" (Jaeho), whose owner has turned
 embedding off, so the app opens them in YouTube or plays the user's own copy of the file.
+After them come the rest of Jaeho's channel by its chapters (channel.py) and Mady Morrison's Pilates, yoga and stretching
+videos (mady.py): by her chapters where they name the moves, otherwise as one whole session each.
 Run: python tools/exercises/videos.py  ->  app/src/main/assets/videos/library.json
 """
 import json, sys
 from pathlib import Path
-import channel
+import channel, mady
 
 ROOT = Path(__file__).resolve().parents[2]
 EXERCISES = ROOT / 'app/src/main/assets/exercises/exercises.json'
@@ -96,10 +98,17 @@ def build(exercises=EXERCISES, output=OUTPUT):
         for a, b in zip(v['segments'], v['segments'][1:]): assert a['end'] <= b['start'], (v['id'], a, b)
         assert all(0 < s['work'] <= s['end'] - s['start'] for s in v['segments']), v['id']
         out.append({k: val for k, val in v.items() if val != ''} | {'segments': [compact(s) for s in v['segments']]})
+    # Then Mady Morrison's Pilates, yoga and stretching: by her chapters where she wrote them, else as one whole session.
+    mady_videos, whole = mady.videos(catalog)
+    for v in mady_videos:
+        for a, b in zip(v['segments'], v['segments'][1:]): assert a['end'] <= b['start'], (v['id'], a, b)
+        assert 0 <= v['segments'][0]['start'] and v['segments'][-1]['end'] <= v['durationSec'], v['id']
+        out.append(v | {'segments': [compact(s) for s in v['segments']]})
+    assert len({v['id'] for v in out}) == len(out), 'a video is listed twice'
     Path(output).parent.mkdir(parents=True, exist_ok=True)
     lines = [json.dumps(v, ensure_ascii=False, separators=(',', ':')) for v in out]
     Path(output).write_text('[\n' + ',\n'.join(lines) + '\n]\n', encoding='utf-8')
-    return {'videos': len(out), 'segments': sum(len(v['segments']) for v in out), 'left out': len(left_out)}
+    return {'videos': len(out), 'segments': sum(len(v['segments']) for v in out), 'left out': len(left_out), 'whole sessions': len(whole)}
 
 if __name__ == '__main__':
     print(build(*sys.argv[1:]))
