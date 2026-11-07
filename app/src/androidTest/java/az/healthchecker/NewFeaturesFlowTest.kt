@@ -79,7 +79,10 @@ class NewFeaturesFlowTest {
     @Test fun languageSwitchesTheWholeInterface() {
         skipOnboarding()
         app.onNodeWithText("Профиль").performClick()
+        app.onNodeWithTag("open-profile-look").performScrollTo().performClick()
         app.onNodeWithTag("lang-en").performScrollTo().performClick()
+        // The screen is rebuilt in English where it was.
+        waitText("Appearance and language");app.onNodeWithTag("back").performClick()
         waitText("Overview")
         app.onNodeWithText("Diary").performClick()
         waitText("Log food")
@@ -88,7 +91,9 @@ class NewFeaturesFlowTest {
         waitText("Egg, whole, cooked, hard-boiled",30000)
         launch();waitText("Overview")
         app.onNodeWithText("Profile").performClick()
+        app.onNodeWithTag("open-profile-look").performScrollTo().performClick()
         app.onNodeWithTag("lang-ru").performScrollTo().performClick()
+        waitText("Оформление и язык");app.onNodeWithTag("back").performClick()
         waitText("Обзор")
     }
 }

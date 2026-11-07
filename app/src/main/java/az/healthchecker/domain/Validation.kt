@@ -16,7 +16,7 @@ fun validateSnapshot(s:UserSnapshot) {
     s.customFoods.forEach{f->require(f.barcode==null||normalizeBarcode(f.barcode)==f.barcode);f.productPhoto?.let(::validateProductPhoto)}
     s.profile?.let { estimateMaintenance(it);require(it.initialWeight.isFinite() && it.initialWeight in 2.0..500.0) }
     fun nutrient(n:Nutrients,max:Double) { listOf(n.kcal,n.protein,n.fat,n.carbs,n.fiber).forEach{require(it==null || it.isFinite() && it in 0.0..max)} }
-    s.goals.forEach { g -> LocalDate.parse(g.effectiveFrom);listOf(g.kcal,g.protein,g.waterMl).forEach { require(it==null || it.isFinite() && it>0 && it<=100000) } }
+    s.goals.forEach { g -> LocalDate.parse(g.effectiveFrom);listOf(g.kcal,g.protein,g.waterMl,g.fat,g.carbs).forEach { require(it==null || it.isFinite() && it>0 && it<=100000) } }
     s.completedDays.forEach{LocalDate.parse(it)}
     s.customFoods.forEach{ f -> require(f.id.startsWith("custom:") && f.name.isNotBlank() && f.name.length<=200 && f.aliases.size<=30);nutrient(f.per100g,1000.0);require(f.per100g.kcal!=null);require(f.density==null || f.density.isFinite() && f.density>0 && f.density<=20);f.portions.forEach{require(it.grams.isFinite() && it.grams>0 && it.grams<=200000)}
         f.recipe?.let{r->
@@ -39,6 +39,7 @@ fun validateSnapshot(s:UserSnapshot) {
     }
     s.trainingDays.keys.forEach{LocalDate.parse(it)}
     s.trainingPrefs?.let{require(it.level in 1..3)}
+    s.setup?.let(::validateSetup)
     require(s.medications.size<=1000 && s.medicationIntakes.size<=100000 && s.steps.size<=50000) { tr("Слишком много записей","Too many records") }
     unique(s.medications.map{it.id});unique(s.medicationIntakes.map{it.id});unique(s.steps.map{it.date})
     s.medications.forEach{require(it.id.startsWith("med:") && it.id.length<=100);validateMedication(it)}

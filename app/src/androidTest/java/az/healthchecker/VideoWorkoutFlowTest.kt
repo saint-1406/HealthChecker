@@ -64,6 +64,7 @@ class VideoWorkoutFlowTest {
         app.onNodeWithText("31 упражнение").assertExists()
         // The profile names the installed release, as the update file is numbered.
         app.onNodeWithText("Профиль").performClick()
+        app.onNodeWithTag("open-profile-about").performScrollTo().performClick()
         app.onNodeWithTag("appVersion").performScrollTo().assert(hasText("HealthChecker · версия ",substring=true))
     }
     @Test fun channelLibraryFiltersByExerciseAndKind() {

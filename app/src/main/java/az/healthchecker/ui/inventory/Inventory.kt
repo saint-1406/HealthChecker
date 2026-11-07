@@ -32,6 +32,10 @@ val DISH_ICONS:List<Triple<String,ImageVector,String>> get() = listOf(
     Triple("breakfast",Icons.Outlined.EggAlt,tr("Завтрак","Breakfast")),Triple("dessert",Icons.Outlined.Cake,tr("Десерт","Dessert")),Triple("drink",Icons.Outlined.LocalCafe,tr("Напиток","Drink")))
 fun dishIcon(key:String?):ImageVector = DISH_ICONS.find{it.first==key}?.second?:Icons.Outlined.DinnerDining
 
+/** Profile → Inventory as its own screen. */
+@Composable fun InventoryScreen(vm:AppViewModel,date:String,create:()->Unit,edit:(Food)->Unit,back:()->Unit) =
+    az.healthchecker.ui.profile.ProfilePage(tr("Инвентарь","Inventory"),tr("Приготовленные вами блюда","Dishes you cook"),back,"inventoryScreen"){InventorySection(vm,date,create,edit)}
+
 /** Profile → Inventory: every cooked dish as a cell; tapping opens the dish sheet. */
 @OptIn(ExperimentalLayoutApi::class)
 @Composable fun InventorySection(vm:AppViewModel,date:String,create:()->Unit,edit:(Food)->Unit) {

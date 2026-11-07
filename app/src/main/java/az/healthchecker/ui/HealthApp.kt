@@ -25,8 +25,8 @@ import androidx.compose.ui.graphics.Color
 import az.healthchecker.ui.diary.*
 import az.healthchecker.ui.dashboard.DashboardScreen
 import az.healthchecker.ui.dashboard.ProteinScreen
-import az.healthchecker.ui.profile.AppearanceScreen
-import az.healthchecker.ui.profile.ProfileScreen
+import az.healthchecker.ui.profile.*
+import az.healthchecker.ui.inventory.InventoryScreen
 import az.healthchecker.ui.training.*
 import az.healthchecker.ui.steps.StepsScreen
 import az.healthchecker.ui.explore.ExploreHomeScreen
@@ -36,6 +36,7 @@ import kotlinx.coroutines.delay
 import az.healthchecker.update.UpdateViewModel
 import az.healthchecker.ui.update.UpdateBanner
 import az.healthchecker.ui.update.UpdateEffects
+import az.healthchecker.ui.update.UpdatePanel
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable fun HealthApp(vm:AppViewModel=viewModel()) {
@@ -49,7 +50,6 @@ import az.healthchecker.ui.update.UpdateEffects
     val restore by vm.restorePreview.collectAsStateWithLifecycle()
     val backupError by vm.backupError.collectAsStateWithLifecycle()
     val updates:UpdateViewModel=viewModel()
-    var showUpdates by rememberSaveable{mutableStateOf(false)}
     var tab by rememberSaveable{mutableIntStateOf(0)}
     var route by rememberSaveable{mutableStateOf("main")}
     var date by rememberSaveable{mutableStateOf(LocalDate.now().toString())}
@@ -92,7 +92,7 @@ import az.healthchecker.ui.update.UpdateEffects
     fun openDish(existing:Food?,fromInventory:Boolean=false){if(existing!=null||vm.dish.value==null)vm.startDish(existing);dishFromInventory=fromInventory;route="dish"}
     fun editMedication(m:Medication?){medicationId=m?.id?:"";route="medication"}
     fun editIngredient(index:Int){ingredientIndex=index;ingredientFood=vm.dish.value?.ingredients?.getOrNull(index)?.foodId?:"";route="dish-ingredient"}
-    BackHandler(route!="main"){route=when(route){"search"->foodSearchBack;"barcode"->barcodeBack;"custom"->"search";"dish"->if(dishFromInventory)"main" else "search";"dish-search","dish-ingredient"->"dish";"workout","exercise-search"->returnTo;"editor"->entryBack;"meal-item"->"meal";"video"->"videos";else->"main"}}
+    BackHandler(route!="main"){route=when(route){"search"->foodSearchBack;"barcode"->barcodeBack;"custom"->"search";"dish"->if(dishFromInventory)ProfileRoutes.INVENTORY else "search";"appearance"->ProfileRoutes.LOOK;"workout"->returnTo;"dish-search","dish-ingredient"->"dish";"exercise-search"->returnTo;"editor"->entryBack;"meal-item"->"meal";"video"->"videos";else->"main"}}
     UpdateEffects(updates,ready&&snapshot.onboarded)
     LaunchedEffect(notice){if(notice!=null){delay(8000);vm.dismissNotice()}}
     val today=remember(lastToday){LocalDate.now()}
@@ -120,10 +120,12 @@ import az.healthchecker.ui.update.UpdateEffects
             }}
         ){padding->
             Column(Modifier.fillMaxSize().padding(padding)) {
-              if(ready&&snapshot.onboarded&&route=="main"&&tab!=3)UpdateBanner(updates){tab=3;showUpdates=true}
+              if(ready&&snapshot.onboarded&&route=="main"&&tab!=3)UpdateBanner(updates){tab=3;route=ProfileRoutes.ABOUT}
               Box(Modifier.fillMaxWidth().weight(1f)) {
                 if(!ready)Column(Modifier.align(Alignment.Center),horizontalAlignment=Alignment.CenterHorizontally){CircularProgressIndicator();Spacer(Modifier.height(16.dp));Text(tr("Открываем ваш дневник…","Opening your diary…"))}
-                else if(!snapshot.onboarded)ProfileScreen(vm,true,{folderPicker.launch(null)},{restorePicker.launch(arrayOf("application/zip","application/octet-stream","application/json","text/plain"))})
+                // A new user may run the program setup before the first start; applying it finishes the welcome.
+                else if(!snapshot.onboarded&&route==ProfileRoutes.SETUP)SetupScreen(vm,{route="main"}){route=ProfileRoutes.PROGRAM;tab=3}
+                else if(!snapshot.onboarded)ProfileScreen(vm,true,{folderPicker.launch(null)},{restorePicker.launch(arrayOf("application/zip","application/octet-stream","application/json","text/plain"))}){route=it}
                 else when(route) {
                     "search" -> FoodSearchScreen(vm,tr("Что вы съели?","What did you eat?"),{route=foodSearchBack},{add(it.id)},{route="custom"},{openDish(null)},{openDish(it)},scan={barcodeBack="search";route="barcode"})
                     "barcode" -> BarcodeScreen(vm,{route=barcodeBack}){food->if(barcodeBack=="dish-search"){ingredientIndex=-1;ingredientFood=food.id;route="dish-ingredient"}else add(food.id)}
@@ -134,7 +136,7 @@ import az.healthchecker.ui.update.UpdateEffects
                         PortionEditor(item.food,item.quantity,"meal-item:${item.id}",tr("Порция в приёме пищи","Meal portion"),tr("Сохранить порцию","Save portion"),busy,{route="meal"}){q->vm.updateMealItem(item,q){route="meal"}}
                     }?:TextButton(onClick={route="meal"}){Text(tr("Вернуться к приёму пищи","Back to the meal"))}
                     // Started from the inventory, a saved dish goes back there; from food search it opens straight for eating.
-                    "dish" -> DishEditor(vm,{route=if(dishFromInventory)"main" else "search"},{route="dish-search"},::editIngredient){if(dishFromInventory){tab=3;route="main"}else add(it.id)}
+                    "dish" -> DishEditor(vm,{route=if(dishFromInventory)ProfileRoutes.INVENTORY else "search"},{route="dish-search"},::editIngredient){if(dishFromInventory){tab=3;route=ProfileRoutes.INVENTORY}else add(it.id)}
                     "dish-search" -> FoodSearchScreen(vm,tr("Ингредиент блюда","Dish ingredient"),{route="dish"},{ingredientIndex=-1;ingredientFood=it.id;route="dish-ingredient"},null,null,{},scan={barcodeBack="dish-search";route="barcode"})
                     "dish-ingredient" -> {
                         val existing=vm.dish.collectAsStateWithLifecycle().value?.ingredients?.getOrNull(ingredientIndex)
@@ -157,7 +159,16 @@ import az.healthchecker.ui.update.UpdateEffects
                     "steps" -> StepsScreen(vm,snapshot,date,{route="main"})
                     "photo" -> photos.find{it.fileName==photoName}?.let{p->PhotoEntryScreen(vm,snapshot,p,{route="main"}){moved->photoName=moved.fileName}}
                         ?:TextButton(onClick={route="main"}){Text(tr("Фото недоступно. Вернуться","The photo is unavailable. Go back"))}
-                    "appearance" -> AppearanceScreen(vm){route="main"}
+                    "appearance" -> AppearanceScreen(vm){route=ProfileRoutes.LOOK}
+                    ProfileRoutes.BODY -> BodyScreen(vm){route="main"}
+                    ProfileRoutes.TARGETS -> TargetsScreen(vm){route="main"}
+                    ProfileRoutes.INVENTORY -> InventoryScreen(vm,date,{openDish(null,true)},{openDish(it,true)}){route="main"}
+                    ProfileRoutes.HOME -> HomeSettingsScreen(vm){route="main"}
+                    ProfileRoutes.BACKUP -> BackupScreen(vm,{folderPicker.launch(null)},{restorePicker.launch(arrayOf("application/zip","application/octet-stream","application/json","text/plain"))}){route="main"}
+                    ProfileRoutes.LOOK -> LookScreen(vm,{route="appearance"}){route="main"}
+                    ProfileRoutes.ABOUT -> AboutScreen(vm,{route="main"}){UpdatePanel(updates)}
+                    ProfileRoutes.SETUP -> SetupScreen(vm,{route="main"}){route=ProfileRoutes.PROGRAM}
+                    ProfileRoutes.PROGRAM -> ProgramScreen(vm,{route="main"},{route=ProfileRoutes.SETUP}){e,p->logExercise(e,p);returnTo=ProfileRoutes.PROGRAM}
                     "protein" -> ProteinScreen(vm,snapshot,date,{route="main"}){add(it.id,from="protein")}
                     "editor" -> {
                         val old=snapshot.entries.find{it.id==selectedEntry}
@@ -167,12 +178,12 @@ import az.healthchecker.ui.update.UpdateEffects
                         if(food!=null)EntryEditor(vm,food,old,template,draftId,foodDate,{route=entryBack},{foodSearch("meal")}){day->date=day;route=entryBack}else TextButton(onClick={route=entryBack}){Text(tr("Продукт недоступен. Вернуться","The food is unavailable. Go back"))}
                     }
                     else -> when(tab) {
-                        0 -> DashboardScreen(vm,snapshot,date,backupError,{tab=1;foodSearch()},{vm.water(date)},::edit,{tab=3},{tab=2},{route="steps"},{route="protein"},{tab=1},{route="meal"},{folderPicker.launch(null)})
+                        0 -> DashboardScreen(vm,snapshot,date,backupError,{tab=1;foodSearch()},{vm.water(date)},::edit,{tab=3;route=ProfileRoutes.BACKUP},{tab=2},{route="steps"},{route="protein"},{tab=1},{route="meal"},{folderPicker.launch(null)})
                         1 -> DiaryScreen(vm,snapshot,date,{foodSearch()},::edit,{e->add(e.foodId,e.id)},::editMedication,
-                            openPhoto={photoName=it.fileName;route="photo"},selectFood={add(it.id)},openMeals={route="meals"},openDraft={route="meal"},openProfile={tab=3},chooseFolder={folderPicker.launch(null)})
-                        2 -> TrainingScreen(vm,snapshot,date,rememberTodayPlan(vm,snapshot,date,variant),{leaveFor("exercise-search")},{route="workout-now"},::editWorkout,{tab=3}){route="videos"}
+                            openPhoto={photoName=it.fileName;route="photo"},selectFood={add(it.id)},openMeals={route="meals"},openDraft={route="meal"},openProfile={tab=3;route=ProfileRoutes.BACKUP},chooseFolder={folderPicker.launch(null)})
+                        2 -> TrainingScreen(vm,snapshot,date,rememberTodayPlan(vm,snapshot,date,variant),{leaveFor("exercise-search")},{route="workout-now"},::editWorkout,{tab=3;route=ProfileRoutes.BODY}){route="videos"}
                         4 -> ExploreHomeScreen()
-                        else -> ProfileScreen(vm,false,{folderPicker.launch(null)},{restorePicker.launch(arrayOf("application/zip","application/octet-stream","application/json","text/plain"))},date,{openDish(null,true)},{openDish(it,true)},{route="appearance"},showUpdates){showUpdates=false}
+                        else -> ProfileScreen(vm,false,{folderPicker.launch(null)},{restorePicker.launch(arrayOf("application/zip","application/octet-stream","application/json","text/plain"))}){route=it}
                     }
                 }
                 if(busy)LinearProgressIndicator(Modifier.fillMaxWidth().align(Alignment.TopCenter))

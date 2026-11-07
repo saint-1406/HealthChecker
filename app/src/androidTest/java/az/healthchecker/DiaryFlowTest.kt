@@ -73,13 +73,18 @@ class DiaryFlowTest {
         waitText("Обзор")
         app.onNodeWithText("из 2136 ккал").assertExists()
         app.onNodeWithText("Профиль").performClick()
+        app.onNodeWithTag("open-profile-body").performScrollTo().performClick()
         app.onNodeWithText("Текущий вес, кг").performScrollTo().performTextReplacement("75")
-        app.onNodeWithText("Сохранить").performScrollTo().performClick()
+        app.onNodeWithTag("saveBody").performScrollTo().performClick()
         waitText("Сохранено")
         launch();waitText("Обзор")
         app.onNodeWithText("Профиль").performClick()
+        app.onNodeWithTag("open-profile-body").performScrollTo().performClick()
         app.onNodeWithText("Текущий вес, кг").assert(hasText("75"))
         app.onNodeWithText("Начальный вес: 80,0 кг").assertExists()
+        // Saving the body never touches the goals.
+        app.onNodeWithTag("back").performClick()
+        app.onNodeWithTag("open-profile-targets").performScrollTo().performClick()
         app.onNodeWithText("Калории, ккал").assert(hasText("2136"))
     }
 }
