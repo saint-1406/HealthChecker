@@ -39,6 +39,7 @@ import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.compose.LifecycleEventEffect
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import az.healthchecker.domain.*
+import kotlin.math.roundToInt
 import az.healthchecker.ui.*
 import kotlinx.coroutines.delay
 
@@ -54,6 +55,8 @@ import kotlinx.coroutines.delay
     var ownOnly by rememberSaveable{mutableStateOf(false)}
     val filePicker=rememberLauncherForActivityResult(ActivityResultContracts.OpenDocument()){uri->uri?.let{vm.attachVideoFile(it,null,open)}}
     val videos=remember(library,snapshot.videos){vm.videoList(snapshot)}
+    // The card estimates are for the user's current weight; without one, for a reference 70 kg.
+    val weight=remember(snapshot){snapshot.bodyWeight(java.time.LocalDate.now().toString())}
     val shown=remember(videos,query,tag,length,ownOnly){
         filterVideos(videos,query,tag.ifBlank{null},VideoLength.entries.find{it.name==length},ownOnly){id->vm.exercise(id)?.let{it.name+" "+(it.nameEn?:"")}.orEmpty()}
     }
@@ -80,8 +83,11 @@ import kotlinx.coroutines.delay
                     VideoLength.entries.forEach{l->FilterChip(selected=length==l.name,onClick={length=if(length==l.name)"" else l.name},label={Text(videoLengthLabel(l))})}
                 }
                 Text(tr("Найдено: ","Found: ")+shown.size,style=MaterialTheme.typography.bodySmall,color=MaterialTheme.colorScheme.onSurfaceVariant,modifier=Modifier.testTag("videoCount"))
+                Text(if(weight!=null)tr("Слева — примерно сколько ккал сжигает всё занятие при вашем весе ${number(weight,1)} кг.","On the left: roughly the kcal of the whole session at your weight, ${number(weight,1)} kg.")
+                    else tr("Слева — примерно сколько ккал сжигает всё занятие для веса 70 кг. Укажите свой вес в профиле — оценка станет точнее.","On the left: roughly the kcal of the whole session for 70 kg. Enter your weight in the profile for a closer estimate."),
+                    style=MaterialTheme.typography.bodySmall,color=MaterialTheme.colorScheme.onSurfaceVariant,modifier=Modifier.testTag("videoKcalNote"))
             }}
-            items(shown,key={it.id}){v->VideoCard(vm,v,settings.videoFiles[v.id]){open(v.id)}}
+            items(shown,key={it.id}){v->VideoCard(vm,v,settings.videoFiles[v.id],weight){open(v.id)}}
             item{Text(tr("Приложение работает без доступа к сети. Ссылки YouTube открываются во внешнем приложении. Свой видеофайл с телефона играет прямо здесь, вместе с разметкой упражнений.",
                 "This app has no network access. YouTube links open in an external app. Your own video files play here with the exercise timeline."),
                 style=MaterialTheme.typography.bodySmall,color=MaterialTheme.colorScheme.onSurfaceVariant)}
@@ -91,11 +97,18 @@ import kotlinx.coroutines.delay
 }
 
 @OptIn(ExperimentalLayoutApi::class)
-@Composable private fun VideoCard(vm:AppViewModel,v:WorkoutVideo,file:VideoFile?,open:()->Unit) {
+@Composable private fun VideoCard(vm:AppViewModel,v:WorkoutVideo,file:VideoFile?,weight:Double?,open:()->Unit) {
+    val exercises by vm.exercises.collectAsStateWithLifecycle()
+    val kcal=remember(v,weight,exercises){v.potentialKcal({vm.exercise(it)?.met},weight?:REFERENCE_WEIGHT_KG)}
     Panel(Modifier.clickable(onClick=open).testTag("videoCard")) {
         Row(horizontalArrangement=Arrangement.spacedBy(12.dp),verticalAlignment=Alignment.CenterVertically){
-            Box(Modifier.size(52.dp).clip(RoundedCornerShape(12.dp)).background(MaterialTheme.colorScheme.primaryContainer),contentAlignment=Alignment.Center){
-                Icon(if(v.youtubeId!=null)Icons.Outlined.SmartDisplay else Icons.Outlined.VideoFile,null,tint=MaterialTheme.colorScheme.onPrimaryContainer)
+            Box(Modifier.size(56.dp).clip(RoundedCornerShape(12.dp)).background(MaterialTheme.colorScheme.primaryContainer),contentAlignment=Alignment.Center){
+                // The energy of the whole session takes the place of the play icon; videos without a timeline keep the icon.
+                if(kcal!=null)Column(horizontalAlignment=Alignment.CenterHorizontally,modifier=Modifier.testTag("videoKcal").semantics(mergeDescendants=true){}){
+                    Text("≈${kcal.roundToInt()}",style=MaterialTheme.typography.titleMedium,fontWeight=FontWeight.Bold,color=MaterialTheme.colorScheme.onPrimaryContainer,maxLines=1)
+                    Text(KCAL,style=MaterialTheme.typography.labelSmall,color=MaterialTheme.colorScheme.onPrimaryContainer,maxLines=1)
+                }
+                else Icon(if(v.youtubeId!=null)Icons.Outlined.SmartDisplay else Icons.Outlined.VideoFile,null,tint=MaterialTheme.colorScheme.onPrimaryContainer)
             }
             Column(Modifier.weight(1f)){
                 Text(v.title,style=MaterialTheme.typography.titleMedium,maxLines=3,overflow=TextOverflow.Ellipsis)

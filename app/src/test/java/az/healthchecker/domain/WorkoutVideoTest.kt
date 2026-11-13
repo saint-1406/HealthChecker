@@ -19,6 +19,13 @@ class WorkoutVideoTest {
         assertEquals("https://www.youtube.com/watch?v=eoY6qlkp1xA&t=352s",youtubeWatchUrl("eoY6qlkp1xA",352))
         assertEquals("https://www.youtube.com/watch?v=eoY6qlkp1xA",youtubeWatchUrl("eoY6qlkp1xA"))
     }
+    @Test fun potentialKcalCountsWorkTimeOfTheWholeVideo() {
+        // 30 s arm circles + 70 s jumping jacks + 40 s squats = 140 s of work at 3.8 MET for 70 kg; rests count nothing.
+        assertEquals(3.8*70*140/3600,video.potentialKcal({3.8},70.0)!!,1e-9)
+        assertEquals(2*video.potentialKcal({3.8},70.0)!!,video.potentialKcal({3.8},140.0)!!,1e-9)
+        assertNull(WorkoutVideo("video:own","Own").potentialKcal({3.8},70.0))
+        assertNull(video.potentialKcal({null},70.0))
+    }
     @Test fun momentTellsTheRunningExerciseOrTheRestBeforeTheNext() {
         video.moment(0).let{assertNull(it.current);assertEquals("arm_circles",it.next!!.exerciseId);assertEquals(17,it.left);assertEquals(0,it.index)}
         video.moment(17).let{assertEquals("arm_circles",it.current!!.exerciseId);assertEquals(30,it.left);assertEquals("jumping_jacks",it.next!!.exerciseId)}

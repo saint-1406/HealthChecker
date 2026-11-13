@@ -101,6 +101,15 @@ fun WorkoutVideo.workDone(upTo:Int?=null):List<VideoWork> {
     }
     return done.map{(id,parts)->VideoWork(id,parts.size,parts.sum())}
 }
+/** Weight used for a video's energy estimate before the user has entered theirs. */
+const val REFERENCE_WEIGHT_KG=70.0
+/**
+ * Roughly what the whole video burns: every exercise's MET × body weight × its work time, the same estimate the diary
+ * uses when the video is logged (rests count nothing). Null for a video without a timeline or exercises without MET.
+ */
+fun WorkoutVideo.potentialKcal(met:(String)->Double?,bodyWeightKg:Double):Double? =
+    workDone().sumOf{w->met(w.exerciseId)?.let{burnedKcal(it,bodyWeightKg,w.seconds/60.0)}?:0.0}.takeIf{it>0}
+
 /**
  * A diary entry for an exercise done along with a video. The time is the video's work time (rests are not counted);
  * repetitions are estimated from the exercise tempo, so the entry stays editable like any other.
