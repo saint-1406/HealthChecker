@@ -13,6 +13,8 @@ import az.healthchecker.catalog.FigureMotion
 import az.healthchecker.catalog.VideoLibrary
 import az.healthchecker.data.*
 import az.healthchecker.steps.StepTracking
+import az.healthchecker.watch.HealthConnectSource
+import az.healthchecker.watch.WatchStatus
 import az.healthchecker.domain.*
 import kotlinx.coroutines.*
 import kotlinx.coroutines.flow.*
@@ -73,6 +75,8 @@ class AppViewModel(application:Application):AndroidViewModel(application) {
     /** Automatic step counting: switched on, and whether this phone has a step counter at all. */
     val stepTracking=MutableStateFlow(StepTracking.enabled(context))
     val stepSensor=StepTracking.sensorAvailable(context)
+    /** Watch data through Health Connect: whether it can be read, the last read and its error. */
+    val watch=MutableStateFlow(WatchState())
     /** The installed release number, as the update file is named (HealthChecker-update-v11.apk → "11"). */
     val appVersion:String = runCatching{context.packageManager.getPackageInfo(context.packageName,0).versionName}.getOrNull().orEmpty()
     private var undo:(suspend ()->kotlin.Unit)?=null
@@ -440,4 +444,17 @@ class AppViewModel(application:Application):AndroidViewModel(application) {
     fun setStepTracking(value:Boolean){StepTracking.setEnabled(context,value);stepTracking.value=value}
     /** Android may have refused to start counting (permission withdrawn); the switch shows what really runs. */
     fun refreshStepTracking(){stepTracking.value=StepTracking.enabled(context)}
+    /**
+     * Reads Health Connect again: on start, when a screen with watch data opens and after the permission dialog. Reads
+     * only while connected; a failed read keeps the previous data and says why.
+     */
+    fun refreshWatch() { viewModelScope.launch(Dispatchers.IO) {
+        val status=runCatching{HealthConnectSource.status(context)}.getOrDefault(WatchStatus.UNSUPPORTED)
+        watch.update{it.copy(status=status,loading=status==WatchStatus.CONNECTED||status==WatchStatus.PARTIAL)}
+        if(status!=WatchStatus.CONNECTED&&status!=WatchStatus.PARTIAL){watch.update{it.copy(data=null,loading=false,error=null)};return@launch}
+        try{val data=HealthConnectSource.read(context);watch.update{it.copy(data=data,loading=false,error=null,readAt=System.currentTimeMillis())}}
+        catch(e:CancellationException){throw e}
+        catch(e:Exception){watch.update{it.copy(loading=false,error=tr("Health Connect не отдал данные: ","Health Connect did not return data: ")+(e.message?:e.javaClass.simpleName))}}
+    } }
 }
+data class WatchState(val status:WatchStatus=WatchStatus.NOT_CONNECTED,val data:WatchData?=null,val loading:Boolean=false,val error:String?=null,val readAt:Long=0)

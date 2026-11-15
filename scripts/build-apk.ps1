@@ -32,7 +32,7 @@ try {
     $permissions=Invoke-Native 'APK permissions could not be read' { & (Join-Path $buildTools 'aapt2.exe') dump permissions $apk }
     # Only the permissions the app is known to need. INTERNET and REQUEST_INSTALL_PACKAGES serve the in-app updater
     # alone (docs/updates.md); anything else a library might add, ACCESS_BACKGROUND_LOCATION included, stops the build.
-    $allowedPermissions=@('ACTIVITY_RECOGNITION','FOREGROUND_SERVICE','FOREGROUND_SERVICE_HEALTH','POST_NOTIFICATIONS','RECEIVE_BOOT_COMPLETED','VIBRATE','CAMERA','ACCESS_FINE_LOCATION','ACCESS_COARSE_LOCATION','FOREGROUND_SERVICE_LOCATION','INTERNET','REQUEST_INSTALL_PACKAGES' | ForEach-Object {"android.permission.$_"})+'az.healthchecker.app.DYNAMIC_RECEIVER_NOT_EXPORTED_PERMISSION'
+    $allowedPermissions=@('ACTIVITY_RECOGNITION','FOREGROUND_SERVICE','FOREGROUND_SERVICE_HEALTH','POST_NOTIFICATIONS','RECEIVE_BOOT_COMPLETED','VIBRATE','CAMERA','ACCESS_FINE_LOCATION','ACCESS_COARSE_LOCATION','FOREGROUND_SERVICE_LOCATION','INTERNET','REQUEST_INSTALL_PACKAGES','health.READ_STEPS','health.READ_SLEEP','health.READ_EXERCISE','health.READ_HEART_RATE' | ForEach-Object {"android.permission.$_"})+'az.healthchecker.app.DYNAMIC_RECEIVER_NOT_EXPORTED_PERMISSION'
     $requested=@($permissions | ForEach-Object { if("$_" -match "^uses-permission(-sdk-23)?: name='([^']+)'"){$Matches[2]} })
     if($requested.Count -eq 0){throw 'APK permissions could not be parsed'}
     $unexpected=@($requested | Where-Object {$allowedPermissions -notcontains $_})

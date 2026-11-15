@@ -82,7 +82,8 @@ import az.healthchecker.ui.update.UpdatePanel
     val variant=if(planDate==date)planVariant else 0
     val folderPicker=rememberLauncherForActivityResult(ActivityResultContracts.OpenDocumentTree()){it?.let(vm::selectFolder)}
     val restorePicker=rememberLauncherForActivityResult(ActivityResultContracts.OpenDocument()){it?.let(vm::previewRestore)}
-    LifecycleResumeEffect(Unit){val today=LocalDate.now().toString();date=advanceSelectedDate(date,lastToday,today);lastToday=today;onPauseOrDispose{}}
+    // On every return: move to the new day, and read Health Connect again — Mi Fitness may have synced the watch meanwhile.
+    LifecycleResumeEffect(Unit){val today=LocalDate.now().toString();date=advanceSelectedDate(date,lastToday,today);lastToday=today;vm.refreshWatch();onPauseOrDispose{}}
     fun edit(e:DiaryEntry){selectedEntry=e.id;selectedFood=e.foodId;templateEntry="";draftId=e.id;foodDate=e.localDate;entryBack="main";route="editor"}
     fun add(food:String,template:String="",from:String="main"){selectedFood=food;selectedEntry="";templateEntry=template;draftId=UUID.randomUUID().toString();foodDate=mealDraft?.date?:date;entryBack=from;route="editor"}
     fun foodSearch(backTo:String="main"){foodSearchBack=backTo;route="search"}
@@ -156,7 +157,7 @@ import az.healthchecker.ui.update.UpdatePanel
                     "video" -> VideoScreen(vm,snapshot,date,videoId,{route="videos"})
                     "custom" -> CustomFoodEditor(vm,{route="search"})
                     "medication" -> MedicationEditor(vm,snapshot.medications.find{it.id==medicationId},date,{route="main"})
-                    "steps" -> StepsScreen(vm,snapshot,date,{route="main"})
+                    "steps" -> StepsScreen(vm,snapshot,date,{tab=3;route=ProfileRoutes.WATCH},{route="main"})
                     "photo" -> photos.find{it.fileName==photoName}?.let{p->PhotoEntryScreen(vm,snapshot,p,{route="main"}){moved->photoName=moved.fileName}}
                         ?:TextButton(onClick={route="main"}){Text(tr("Фото недоступно. Вернуться","The photo is unavailable. Go back"))}
                     "appearance" -> AppearanceScreen(vm){route=ProfileRoutes.LOOK}
@@ -166,6 +167,7 @@ import az.healthchecker.ui.update.UpdatePanel
                     ProfileRoutes.HOME -> HomeSettingsScreen(vm){route="main"}
                     ProfileRoutes.BACKUP -> BackupScreen(vm,{folderPicker.launch(null)},{restorePicker.launch(arrayOf("application/zip","application/octet-stream","application/json","text/plain"))}){route="main"}
                     ProfileRoutes.LOOK -> LookScreen(vm,{route="appearance"}){route="main"}
+                    ProfileRoutes.WATCH -> az.healthchecker.ui.watch.WatchScreen(vm){route="main"}
                     ProfileRoutes.ABOUT -> AboutScreen(vm,{route="main"}){UpdatePanel(updates)}
                     ProfileRoutes.SETUP -> SetupScreen(vm,{route="main"}){route=ProfileRoutes.PROGRAM}
                     ProfileRoutes.PROGRAM -> ProgramScreen(vm,{route="main"},{route=ProfileRoutes.SETUP}){e,p->logExercise(e,p);returnTo=ProfileRoutes.PROGRAM}

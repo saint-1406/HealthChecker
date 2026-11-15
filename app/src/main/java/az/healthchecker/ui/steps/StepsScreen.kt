@@ -28,10 +28,11 @@ fun stepsText(n:Int):String = String.format(Lang.locale,"%,d",n)
 /** "≈ 412 ккал · 7,5 км", or a hint when the profile lacks height and weight. */
 fun stepsEnergy(steps:Int,profile:Profile?):String = profile?.let{p->"≈ ${number(stepKcal(steps,p))} $KCAL · ${number(stepDistanceKm(steps,p),1)} ${tr("км","km")}"}?:tr("Укажите рост и вес в профиле, чтобы считать калории","Enter height and weight in the profile to estimate calories")
 
-@Composable fun StepsScreen(vm:AppViewModel,snapshot:UserSnapshot,date:String,back:()->Unit) {
+@Composable fun StepsScreen(vm:AppViewModel,snapshot:UserSnapshot,date:String,openWatch:()->Unit,back:()->Unit) {
     val tracking by vm.stepTracking.collectAsStateWithLifecycle()
+    val watch by vm.watch.collectAsStateWithLifecycle()
     val busy by vm.busy.collectAsStateWithLifecycle()
-    val day=snapshot.stepsOn(date);val profile=snapshot.profile
+    val day=snapshot.stepsOn(date,watch.data);val profile=snapshot.profile
     var manual by rememberSaveable(date,day.manual){mutableStateOf(day.manual?.toString()?:"")}
     var message by remember{mutableStateOf<String?>(null)}
     LaunchedEffect(Unit){vm.refreshStepTracking()}
@@ -51,14 +52,16 @@ fun stepsEnergy(steps:Int,profile:Profile?):String = profile?.let{p->"≈ ${numb
             Row(verticalAlignment=Alignment.CenterVertically,horizontalArrangement=Arrangement.spacedBy(12.dp)){
                 Icon(Icons.AutoMirrored.Outlined.DirectionsWalk,null,Modifier.size(36.dp),tint=MaterialTheme.colorScheme.primary)
                 Column{Text(stepsText(day.steps),style=MaterialTheme.typography.displaySmall,fontWeight=FontWeight.SemiBold,modifier=Modifier.testTag("stepsTotal"))
-                    Text(if(day.manual!=null)tr("введено вручную","entered by you") else if(day.sensor>0)tr("посчитано телефоном","counted by the phone") else tr("шагов","steps"),color=MaterialTheme.colorScheme.onSurfaceVariant)}
+                    Text(when(day.source){StepSource.MANUAL->tr("введено вручную","entered by you");StepSource.WATCH->tr("с часов через Health Connect","from the watch via Health Connect");StepSource.PHONE->tr("посчитано телефоном","counted by the phone");StepSource.NONE->tr("шагов","steps")},color=MaterialTheme.colorScheme.onSurfaceVariant,modifier=Modifier.testTag("stepsSource"))}
             }
             Text(stepsEnergy(day.steps,profile),style=MaterialTheme.typography.titleMedium,color=MaterialTheme.colorScheme.primary,modifier=Modifier.testTag("stepsKcal"))
-            if(day.manual!=null&&day.sensor>0)Text(tr("Телефон насчитал ","The phone counted ")+stepsText(day.sensor),style=MaterialTheme.typography.bodySmall,color=MaterialTheme.colorScheme.onSurfaceVariant)
+            if(day.manual!=null&&day.watch!=null)Text(tr("Часы и Health Connect: ","Watch and Health Connect: ")+stepsText(day.watch),style=MaterialTheme.typography.bodySmall,color=MaterialTheme.colorScheme.onSurfaceVariant)
+            if((day.manual!=null||day.watch!=null)&&day.sensor>0)Text(tr("Телефон насчитал ","The phone counted ")+stepsText(day.sensor),style=MaterialTheme.typography.bodySmall,color=MaterialTheme.colorScheme.onSurfaceVariant)
         }
         Panel {
             Text(tr("Ввести шаги вручную","Enter steps yourself"),style=MaterialTheme.typography.titleMedium)
             Text(tr("Например, из другого приложения или часов. Введённое число заменяет подсчёт телефона за этот день.","For example from another app or a watch. The number replaces the phone's count for this day."),style=MaterialTheme.typography.bodySmall,color=MaterialTheme.colorScheme.onSurfaceVariant)
+            TextButton(onClick=openWatch,modifier=Modifier.testTag("openWatch")){Text(tr("Брать шаги с часов (Mi Fitness → Health Connect)","Take steps from the watch (Mi Fitness → Health Connect)"))}
             OutlinedTextField(manual,{manual=it.filter(Char::isDigit).take(6)},label={Text(tr("Шагов за день","Steps for the day"))},singleLine=true,keyboardOptions=KeyboardOptions(keyboardType=KeyboardType.Number),modifier=Modifier.fillMaxWidth().testTag("manualSteps"))
             val value=manual.toIntOrNull()
             Row(horizontalArrangement=Arrangement.spacedBy(8.dp)){
@@ -81,7 +84,7 @@ fun stepsEnergy(steps:Int,profile:Profile?):String = profile?.let{p->"≈ ${numb
         }
         Panel {
             Text(tr("Последние 7 дней","Last 7 days"),style=MaterialTheme.typography.titleMedium)
-            (6 downTo 0).map{LocalDate.parse(date).minusDays(it.toLong()).toString()}.forEach{d->val s=snapshot.stepsOn(d).steps
+            (6 downTo 0).map{LocalDate.parse(date).minusDays(it.toLong()).toString()}.forEach{d->val s=snapshot.stepsOn(d,watch.data).steps
                 Row(Modifier.fillMaxWidth()){Text("${weekday(d)}, ${shortDate(d)}",modifier=Modifier.weight(1f));Text(stepsText(s),fontWeight=FontWeight.Medium);profile?.takeIf{s>0}?.let{p->Text("  ≈ ${number(stepKcal(s,p))} $KCAL",color=MaterialTheme.colorScheme.onSurfaceVariant)}}
             }
         }

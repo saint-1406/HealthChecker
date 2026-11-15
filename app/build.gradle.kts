@@ -38,6 +38,8 @@ dependencies {
     implementation(libs.room.runtime); implementation(libs.room.ktx); ksp(libs.room.compiler)
     implementation("androidx.datastore:datastore-preferences:1.1.7")
     implementation("androidx.documentfile:documentfile:1.0.1")
+    // Health Connect: reads what a watch's app (Mi Fitness for Xiaomi watches) shares — steps, sleep, workouts, pulse.
+    implementation("androidx.health.connect:connect-client:1.1.0")
     implementation("com.journeyapps:zxing-android-embedded:4.3.0")
     implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.9.0")
     implementation("org.mapsforge:mapsforge-map-android:0.25.0")

@@ -80,7 +80,8 @@ import az.healthchecker.ui.diary.MealDraftCard
             }
         }
         if(settings.overviewCards.weight)WeightCard(vm,snapshot,date)
-        val steps=snapshot.stepsOn(date)
+        val watch by vm.watch.collectAsStateWithLifecycle()
+        val steps=snapshot.stepsOn(date,watch.data)
         if(settings.overviewCards.steps)Panel(Modifier.clickable(onClick=openSteps).testTag("stepsCard")){
             Row(verticalAlignment=Alignment.CenterVertically,horizontalArrangement=Arrangement.spacedBy(12.dp)){
                 Icon(Icons.AutoMirrored.Outlined.DirectionsWalk,null,tint=MaterialTheme.colorScheme.primary)

@@ -25,8 +25,8 @@ import java.time.*
 /** Sub-screens the profile opens; HealthApp shows each under this route. */
 object ProfileRoutes {
     const val BODY="profile-body";const val TARGETS="profile-targets";const val INVENTORY="inventory";const val HOME="profile-home"
-    const val BACKUP="profile-backup";const val LOOK="profile-look";const val ABOUT="profile-about";const val SETUP="setup";const val PROGRAM="program"
-    val all=listOf(BODY,TARGETS,INVENTORY,HOME,BACKUP,LOOK,ABOUT,SETUP,PROGRAM)
+    const val BACKUP="profile-backup";const val LOOK="profile-look";const val ABOUT="profile-about";const val SETUP="setup";const val PROGRAM="program";const val WATCH="profile-watch"
+    val all=listOf(BODY,TARGETS,INVENTORY,HOME,BACKUP,LOOK,ABOUT,SETUP,PROGRAM,WATCH)
 }
 
 /**
@@ -51,6 +51,7 @@ fun goalsLine(g:DailyGoals?):String = if(g==null||listOf(g.kcal,g.protein,g.fat,
 
 @Composable private fun ProfileHub(vm:AppViewModel,open:(String)->Unit) {
     val snapshot by vm.snapshot.collectAsStateWithLifecycle();val settings by vm.settings.collectAsStateWithLifecycle();val revision by vm.revision.collectAsStateWithLifecycle()
+    val watch by vm.watch.collectAsStateWithLifecycle()
     val today=LocalDate.now().toString();val goals=snapshot.day(today).goals;val profile=snapshot.profile;val setup=snapshot.setup
     val dishes=snapshot.customFoods.count{it.recipe!=null}
     Column(Modifier.fillMaxSize().verticalScroll(rememberScrollState()).padding(horizontal=16.dp,vertical=20.dp).testTag("profileHub"),verticalArrangement=Arrangement.spacedBy(12.dp)) {
@@ -64,6 +65,7 @@ fun goalsLine(g:DailyGoals?):String = if(g==null||listOf(g.kcal,g.protein,g.fat,
         SetupCard(setup,open)
         GroupLabel(tr("Тело и питание","Body and nutrition"))
         ProfileRow(Icons.Outlined.MonitorWeight,tr("Тело и активность","Body and activity"),profile?.let{"${number(it.currentWeight,1)} ${tr("кг","kg")} · ${tr("активность","activity")} ${activityLabel(it.activity).lowercase(Lang.locale)}"}?:tr("Пол, возраст, рост, вес","Sex, age, height, weight"),"open-${ProfileRoutes.BODY}"){open(ProfileRoutes.BODY)}
+        ProfileRow(Icons.Outlined.Watch,tr("Часы и Health Connect","Watch and Health Connect"),az.healthchecker.ui.watch.watchLine(watch),"open-${ProfileRoutes.WATCH}"){open(ProfileRoutes.WATCH)}
         ProfileRow(Icons.Outlined.Restaurant,tr("Цели питания","Nutrition targets"),goalsLine(goals),"open-${ProfileRoutes.TARGETS}"){open(ProfileRoutes.TARGETS)}
         GroupLabel(tr("Мои данные","My data"))
         ProfileRow(Icons.Outlined.Inventory2,tr("Инвентарь","Inventory"),if(dishes==0)tr("Приготовленные блюда","Dishes you cook") else count(dishes,"блюдо","блюда","блюд","dish","dishes"),"open-${ProfileRoutes.INVENTORY}",badge=dishes.takeIf{it>0}?.toString()){open(ProfileRoutes.INVENTORY)}

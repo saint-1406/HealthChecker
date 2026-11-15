@@ -1,9 +1,18 @@
 package az.healthchecker.domain
 import kotlinx.serialization.Serializable
+import kotlinx.serialization.Transient
 import java.time.LocalDate
 
-/** Steps of one day: [sensor] is counted by the phone, [manual] is what the user entered and wins when set. */
-@Serializable data class StepDay(val date:String,val sensor:Int=0,val manual:Int?=null) { val steps:Int get() = manual?:sensor }
+/**
+ * Steps of one day: [sensor] is counted by the phone, [manual] is what the user entered and wins when set. [watch] is
+ * Health Connect's total for the day (a watch through Mi Fitness and the like); it is read live, never stored, and
+ * replaces the phone's own count when present — adding them up would count one walk twice.
+ */
+@Serializable data class StepDay(val date:String,val sensor:Int=0,val manual:Int?=null,@Transient val watch:Int?=null) {
+    val steps:Int get() = manual?:watch?:sensor
+    val source:StepSource get() = when{manual!=null->StepSource.MANUAL;watch!=null->StepSource.WATCH;sensor>0->StepSource.PHONE;else->StepSource.NONE}
+}
+enum class StepSource { MANUAL, WATCH, PHONE, NONE }
 
 fun UserSnapshot.stepsOn(date:String):StepDay = steps.find{it.date==date}?:StepDay(date)
 
