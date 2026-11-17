@@ -24,6 +24,8 @@ import az.healthchecker.ui.*
 import kotlinx.coroutines.delay
 
 @Composable fun ExerciseSearchScreen(vm:AppViewModel,dumbbellsByDefault:Boolean,back:()->Unit,select:(Exercise)->Unit) {
+    val snapshot by vm.snapshot.collectAsStateWithLifecycle()
+    val busy by vm.busy.collectAsStateWithLifecycle()
     var query by rememberSaveable{mutableStateOf("")}
     var muscleName by rememberSaveable{mutableStateOf("")}
     var categoryName by rememberSaveable{mutableStateOf("")}
@@ -52,6 +54,7 @@ import kotlinx.coroutines.delay
                     Text(e.displayName,style=MaterialTheme.typography.titleMedium)
                     if(e.alsoKnownAs.isNotEmpty())Text(e.alsoKnownAs.joinToString(" · "),style=MaterialTheme.typography.bodyMedium,color=MaterialTheme.colorScheme.onSurfaceVariant)
                 }
+                FavoriteStar(e.id in snapshot.favoriteExercises,e.displayName,!busy){vm.toggleFavoriteExercise(e.id)}
             }
             Text("${categoryLabel(e.category)} · ${e.muscles.joinToString(", "){muscleLabel(it)}} · ${if(e.equipment==Equipment.DUMBBELLS)tr("гантели","dumbbells") else tr("без инвентаря","no equipment")} · ${levelLabel(e.level).lowercase(Lang.locale)}",style=MaterialTheme.typography.bodySmall,color=MaterialTheme.colorScheme.onSurfaceVariant)
             Text("≈ ${number(e.met,1)} MET",style=MaterialTheme.typography.bodySmall,color=MaterialTheme.colorScheme.primary)

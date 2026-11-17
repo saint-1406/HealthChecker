@@ -14,7 +14,7 @@ import java.io.ByteArrayOutputStream
 @Serializable private data class BackupEnvelope(val format:String="healthchecker-backup",val schemaVersion:Int=BackupCodec.SCHEMA_VERSION,val snapshot:UserSnapshot)
 object BackupCodec {
     const val MAX_BYTES=25*1024*1024
-    const val SCHEMA_VERSION=11
+    const val SCHEMA_VERSION=12
     private val json=Json{encodeDefaults=true}
     fun encode(snapshot:UserSnapshot):ByteArray {
         validateSnapshot(snapshot)

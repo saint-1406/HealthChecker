@@ -26,7 +26,17 @@ import az.healthchecker.ui.*
 }
 
 @OptIn(ExperimentalLayoutApi::class)
-@Composable fun TrainingScreen(vm:AppViewModel,snapshot:UserSnapshot,date:String,plan:Recommendation?,add:()->Unit,start:()->Unit,edit:(WorkoutEntry)->Unit,openProfile:()->Unit,videos:()->Unit) {
+@Composable fun TrainingScreen(vm:AppViewModel,snapshot:UserSnapshot,date:String,plan:Recommendation?,add:()->Unit,start:()->Unit,edit:(WorkoutEntry)->Unit,openProfile:()->Unit,log:(Exercise)->Unit,openVideo:(String)->Unit,videos:()->Unit) {
+    val busy by vm.busy.collectAsStateWithLifecycle()
+    val favoritesTab by vm.trainingFavorites.collectAsStateWithLifecycle()
+    Column(Modifier.fillMaxSize()) {
+        DayFavoritesTabs(favoritesTab,snapshot.favoriteExercises.size+snapshot.favoriteVideos.size,tr("Сегодня","Today")){vm.trainingFavorites.value=it}
+        if(favoritesTab)LazyColumn(Modifier.fillMaxSize().testTag("favoriteWorkoutsList"),contentPadding=PaddingValues(20.dp),verticalArrangement=Arrangement.spacedBy(12.dp)){favoriteWorkouts(vm,snapshot,date,busy,log,openVideo)}
+        else TrainingDay(vm,snapshot,date,plan,busy,add,start,edit,openProfile,videos)
+    }
+}
+
+@Composable private fun TrainingDay(vm:AppViewModel,snapshot:UserSnapshot,date:String,plan:Recommendation?,busy:Boolean,add:()->Unit,start:()->Unit,edit:(WorkoutEntry)->Unit,openProfile:()->Unit,videos:()->Unit) {
     val prefs=snapshot.trainingPrefs?:TrainingPrefs()
     val day=snapshot.training(date)
     val weight=snapshot.bodyWeight(date)
@@ -49,6 +59,7 @@ import az.healthchecker.ui.*
             items(day.workouts,key={it.id}){w->Panel {
                 Row(Modifier.fillMaxWidth().clickable{edit(w)},verticalAlignment=Alignment.CenterVertically){
                     Column(Modifier.weight(1f)){Text(vm.workoutName(w),fontWeight=FontWeight.SemiBold);Text(workoutLabel(w),style=MaterialTheme.typography.bodySmall,color=MaterialTheme.colorScheme.onSurfaceVariant)}
+                    if(vm.exercise(w.exerciseId)!=null)FavoriteStar(w.exerciseId in snapshot.favoriteExercises,vm.workoutName(w),!busy){vm.toggleFavoriteExercise(w.exerciseId)}
                     IconButton(onClick={vm.deleteWorkout(w)}){Icon(Icons.Outlined.DeleteOutline,tr("Удалить ","Delete ")+vm.workoutName(w))}
                 }
             }}

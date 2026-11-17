@@ -75,6 +75,9 @@ class AppViewModel(application:Application):AndroidViewModel(application) {
     /** Automatic step counting: switched on, and whether this phone has a step counter at all. */
     val stepTracking=MutableStateFlow(StepTracking.enabled(context))
     val stepSensor=StepTracking.sensorAvailable(context)
+    /** Which tab of Diary and Training is open (false = the day, true = favorites); kept while other screens open over them. */
+    val diaryFavorites=MutableStateFlow(false)
+    val trainingFavorites=MutableStateFlow(false)
     /** Watch data through Health Connect: whether it can be read, the last read and its error. */
     val watch=MutableStateFlow(WatchState())
     /** The installed release number, as the update file is named (HealthChecker-update-v11.apk → "11"). */
@@ -150,6 +153,8 @@ class AppViewModel(application:Application):AndroidViewModel(application) {
         preferences.portion(food.id,q)
     }
     fun toggleFavorite(id:String)=action { repository.setFavorite(id,id !in snapshot.value.favoriteFoods) }
+    fun toggleFavoriteExercise(id:String)=action { repository.setFavoriteWorkout(az.healthchecker.data.FAVORITE_EXERCISE,id,id !in snapshot.value.favoriteExercises) }
+    fun toggleFavoriteVideo(id:String)=action { repository.setFavoriteWorkout(az.healthchecker.data.FAVORITE_VIDEO,id,id !in snapshot.value.favoriteVideos) }
     fun addAnotherFood(id:String,food:Food,q:Quantity,date:String,done:()->kotlin.Unit)=action(done) {
         mealDraft.value=repository.appendMealItems(listOf(MealItem(foodSnapshot(food),q,id)),date)
         preferences.portion(food.id,q)

@@ -4,6 +4,10 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.testTag
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.outlined.Star
+import androidx.compose.material.icons.outlined.StarBorder
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import az.healthchecker.domain.*
@@ -33,4 +37,23 @@ fun workoutLabel(w:WorkoutEntry):String = listOfNotNull(
 }
 @Composable fun Panel(modifier:Modifier=Modifier,content:@Composable ColumnScope.()->Unit) {
     Surface(modifier=modifier.fillMaxWidth(),shape=RoundedCornerShape(24.dp),color=MaterialTheme.colorScheme.surface) {Column(Modifier.padding(20.dp),verticalArrangement=Arrangement.spacedBy(12.dp),content=content)}
+}
+
+/** The "day | favorites" switch at the top of Diary and Training; [count] shows how many favorites there are. */
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable fun DayFavoritesTabs(favorites:Boolean,count:Int,dayLabel:String,onChange:(Boolean)->Unit) {
+    PrimaryTabRow(selectedTabIndex=if(favorites)1 else 0) {
+        Tab(!favorites,{onChange(false)},text={Text(dayLabel)},modifier=Modifier.testTag("tabDay"))
+        Tab(favorites,{onChange(true)},text={Text(tr("Избранное","Favorites")+if(count>0)" · $count" else "")},
+            icon={Icon(Icons.Outlined.Star,null)},modifier=Modifier.testTag("tabFavorites"))
+    }
+}
+
+/** A star that adds to or removes from favorites; [name] goes into the spoken label. */
+@Composable fun FavoriteStar(on:Boolean,name:String,enabled:Boolean=true,toggle:()->Unit) {
+    IconButton(onClick=toggle,enabled=enabled,modifier=Modifier.testTag(if(on)"unstar" else "star")) {
+        Icon(if(on)Icons.Outlined.Star else Icons.Outlined.StarBorder,
+            (if(on)tr("Убрать из избранного: ","Remove favorite: ") else tr("В избранное: ","Favorite: "))+name,
+            tint=if(on)MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.onSurfaceVariant)
+    }
 }

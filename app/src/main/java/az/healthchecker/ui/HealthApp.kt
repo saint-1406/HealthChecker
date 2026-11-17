@@ -72,6 +72,8 @@ import az.healthchecker.ui.update.UpdatePanel
     var medicationId by rememberSaveable{mutableStateOf("")}
     // Exercise search and the exercise form go back to where they were opened: the training tab or the workout screen.
     var returnTo by rememberSaveable{mutableStateOf("main")}
+    // A video opened from Training → Favorites goes back there, one from the library back to the library.
+    var videoBack by rememberSaveable{mutableStateOf("videos")}
     // The food form returns to the protein screen when a food was picked there.
     var entryBack by rememberSaveable{mutableStateOf("main")}
     var photoName by rememberSaveable{mutableStateOf("")}
@@ -93,7 +95,7 @@ import az.healthchecker.ui.update.UpdatePanel
     fun openDish(existing:Food?,fromInventory:Boolean=false){if(existing!=null||vm.dish.value==null)vm.startDish(existing);dishFromInventory=fromInventory;route="dish"}
     fun editMedication(m:Medication?){medicationId=m?.id?:"";route="medication"}
     fun editIngredient(index:Int){ingredientIndex=index;ingredientFood=vm.dish.value?.ingredients?.getOrNull(index)?.foodId?:"";route="dish-ingredient"}
-    BackHandler(route!="main"){route=when(route){"search"->foodSearchBack;"barcode"->barcodeBack;"custom"->"search";"dish"->if(dishFromInventory)ProfileRoutes.INVENTORY else "search";"appearance"->ProfileRoutes.LOOK;"workout"->returnTo;"dish-search","dish-ingredient"->"dish";"exercise-search"->returnTo;"editor"->entryBack;"meal-item"->"meal";"video"->"videos";else->"main"}}
+    BackHandler(route!="main"){route=when(route){"search"->foodSearchBack;"barcode"->barcodeBack;"custom"->"search";"dish"->if(dishFromInventory)ProfileRoutes.INVENTORY else "search";"appearance"->ProfileRoutes.LOOK;"workout"->returnTo;"dish-search","dish-ingredient"->"dish";"exercise-search"->returnTo;"editor"->entryBack;"meal-item"->"meal";"video"->videoBack;else->"main"}}
     UpdateEffects(updates,ready&&snapshot.onboarded)
     LaunchedEffect(notice){if(notice!=null){delay(8000);vm.dismissNotice()}}
     val today=remember(lastToday){LocalDate.now()}
@@ -153,8 +155,8 @@ import az.healthchecker.ui.update.UpdatePanel
                         val p=preset.split("|").takeIf{it.size==4}?.let{v->Prescription(v[0].toIntOrNull(),v[1].toIntOrNull(),v[2].toIntOrNull(),v[3].toDoubleOrNull())}
                         if(exercise!=null)WorkoutEditor(vm,exercise,old,p,draftId,date,snapshot.bodyWeight(date),{route=returnTo})else TextButton(onClick={route=returnTo}){Text(tr("Упражнение недоступно. Вернуться","The exercise is unavailable. Go back"))}
                     }
-                    "videos" -> VideoLibraryScreen(vm,snapshot,{route="main"}){videoId=it;route="video"}
-                    "video" -> VideoScreen(vm,snapshot,date,videoId,{route="videos"})
+                    "videos" -> VideoLibraryScreen(vm,snapshot,{route="main"}){videoId=it;videoBack="videos";route="video"}
+                    "video" -> VideoScreen(vm,snapshot,date,videoId,{route=videoBack})
                     "custom" -> CustomFoodEditor(vm,{route="search"})
                     "medication" -> MedicationEditor(vm,snapshot.medications.find{it.id==medicationId},date,{route="main"})
                     "steps" -> StepsScreen(vm,snapshot,date,{tab=3;route=ProfileRoutes.WATCH},{route="main"})
@@ -183,7 +185,7 @@ import az.healthchecker.ui.update.UpdatePanel
                         0 -> DashboardScreen(vm,snapshot,date,backupError,{tab=1;foodSearch()},{vm.water(date)},::edit,{tab=3;route=ProfileRoutes.BACKUP},{tab=2},{route="steps"},{route="protein"},{tab=1},{route="meal"},{folderPicker.launch(null)})
                         1 -> DiaryScreen(vm,snapshot,date,{foodSearch()},::edit,{e->add(e.foodId,e.id)},::editMedication,
                             openPhoto={photoName=it.fileName;route="photo"},selectFood={add(it.id)},openMeals={route="meals"},openDraft={route="meal"},openProfile={tab=3;route=ProfileRoutes.BACKUP},chooseFolder={folderPicker.launch(null)})
-                        2 -> TrainingScreen(vm,snapshot,date,rememberTodayPlan(vm,snapshot,date,variant),{leaveFor("exercise-search")},{route="workout-now"},::editWorkout,{tab=3;route=ProfileRoutes.BODY}){route="videos"}
+                        2 -> TrainingScreen(vm,snapshot,date,rememberTodayPlan(vm,snapshot,date,variant),{leaveFor("exercise-search")},{route="workout-now"},::editWorkout,{tab=3;route=ProfileRoutes.BODY},{logExercise(it,null)},{videoId=it;videoBack="main";route="video"}){route="videos"}
                         4 -> ExploreHomeScreen()
                         else -> ProfileScreen(vm,false,{folderPicker.launch(null)},{restorePicker.launch(arrayOf("application/zip","application/octet-stream","application/json","text/plain"))}){route=it}
                     }

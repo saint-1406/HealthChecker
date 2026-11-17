@@ -29,7 +29,12 @@ import java.time.format.DateTimeFormatter
     val photos by vm.photos.collectAsStateWithLifecycle()
     val medications=snapshot.medicationDay(date)
     val draft by vm.mealDraft.collectAsStateWithLifecycle()
-    LazyColumn(Modifier.fillMaxSize().testTag("diaryList"),contentPadding=PaddingValues(20.dp),verticalArrangement=Arrangement.spacedBy(14.dp)) {
+    val busy by vm.busy.collectAsStateWithLifecycle()
+    val favoritesTab by vm.diaryFavorites.collectAsStateWithLifecycle()
+    Column(Modifier.fillMaxSize()) {
+    DayFavoritesTabs(favoritesTab,snapshot.favoriteFoods.size,tr("День","Day")){vm.diaryFavorites.value=it}
+    if(favoritesTab)LazyColumn(Modifier.fillMaxSize().testTag("favoriteFoodsList"),contentPadding=PaddingValues(20.dp),verticalArrangement=Arrangement.spacedBy(12.dp)){favoriteFoods(vm,snapshot,date,busy,selectFood)}
+    else LazyColumn(Modifier.fillMaxSize().testTag("diaryList"),contentPadding=PaddingValues(20.dp),verticalArrangement=Arrangement.spacedBy(14.dp)) {
         item{DaySummaryCard(day)}
         // The camera button sits next to "Log food"; the photo card appears only while photos wait, so entries stay near the top.
         item{Row(verticalAlignment=Alignment.CenterVertically,horizontalArrangement=Arrangement.spacedBy(10.dp)){
@@ -57,7 +62,10 @@ import java.time.format.DateTimeFormatter
                 }
                 Text("${number(entry.nutrients.kcal)}\n$KCAL",style=MaterialTheme.typography.titleMedium,color=MaterialTheme.colorScheme.primary)
             }
-            Row{TextButton(onClick={edit(entry)}){Text(tr("Изменить","Edit"))};IconButton(onClick={vm.delete(entry)}){Icon(Icons.Outlined.DeleteOutline,tr("Удалить ","Delete ")+name)}}
+            Row(verticalAlignment=Alignment.CenterVertically){TextButton(onClick={edit(entry)}){Text(tr("Изменить","Edit"))}
+                Spacer(Modifier.weight(1f))
+                if(entry.waterMl==0.0&&vm.food(entry.foodId)!=null)FavoriteStar(entry.foodId in snapshot.favoriteFoods,name,!busy){vm.toggleFavorite(entry.foodId)}
+                IconButton(onClick={vm.delete(entry)}){Icon(Icons.Outlined.DeleteOutline,tr("Удалить ","Delete ")+name)}}
         }}
         item{Panel{Row(verticalAlignment=Alignment.CenterVertically){Checkbox(checked=day.completed,onCheckedChange={vm.completeDay(date,it)});Column{Text(tr("День заполнен","Day complete"),fontWeight=FontWeight.Medium);Text(tr("Учитывать в средней статистике","Count it in the averages"),style=MaterialTheme.typography.bodySmall)}}}}
         if(medications.isNotEmpty())item{Row(verticalAlignment=Alignment.CenterVertically){
@@ -66,6 +74,7 @@ import java.time.format.DateTimeFormatter
         }}
         items(medications,key={"med:"+it.medication.id}){m->MedicationRow(vm,m,date){editMedication(m.medication)}}
         item{OutlinedButton(onClick={editMedication(null)},modifier=Modifier.fillMaxWidth().testTag("addMedication")){Icon(Icons.Outlined.Add,null);Spacer(Modifier.width(8.dp));Text(tr("Добавить препарат","Add a medicine or vitamin"))}}
+    }
     }
 }
 

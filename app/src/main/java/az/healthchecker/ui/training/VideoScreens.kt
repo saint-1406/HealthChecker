@@ -87,7 +87,7 @@ import kotlinx.coroutines.delay
                     else tr("Слева — примерно сколько ккал сжигает всё занятие для веса 70 кг. Укажите свой вес в профиле — оценка станет точнее.","On the left: roughly the kcal of the whole session for 70 kg. Enter your weight in the profile for a closer estimate."),
                     style=MaterialTheme.typography.bodySmall,color=MaterialTheme.colorScheme.onSurfaceVariant,modifier=Modifier.testTag("videoKcalNote"))
             }}
-            items(shown,key={it.id}){v->VideoCard(vm,v,settings.videoFiles[v.id],weight){open(v.id)}}
+            items(shown,key={it.id}){v->VideoCard(vm,v,settings.videoFiles[v.id],weight,v.id in snapshot.favoriteVideos){open(v.id)}}
             item{Text(tr("Приложение работает без доступа к сети. Ссылки YouTube открываются во внешнем приложении. Свой видеофайл с телефона играет прямо здесь, вместе с разметкой упражнений.",
                 "This app has no network access. YouTube links open in an external app. Your own video files play here with the exercise timeline."),
                 style=MaterialTheme.typography.bodySmall,color=MaterialTheme.colorScheme.onSurfaceVariant)}
@@ -97,8 +97,9 @@ import kotlinx.coroutines.delay
 }
 
 @OptIn(ExperimentalLayoutApi::class)
-@Composable private fun VideoCard(vm:AppViewModel,v:WorkoutVideo,file:VideoFile?,weight:Double?,open:()->Unit) {
+@Composable private fun VideoCard(vm:AppViewModel,v:WorkoutVideo,file:VideoFile?,weight:Double?,favorite:Boolean,open:()->Unit) {
     val exercises by vm.exercises.collectAsStateWithLifecycle()
+    val busy by vm.busy.collectAsStateWithLifecycle()
     val kcal=remember(v,weight,exercises){v.potentialKcal({vm.exercise(it)?.met},weight?:REFERENCE_WEIGHT_KG)}
     Panel(Modifier.clickable(onClick=open).testTag("videoCard")) {
         Row(horizontalArrangement=Arrangement.spacedBy(12.dp),verticalAlignment=Alignment.CenterVertically){
@@ -114,6 +115,7 @@ import kotlinx.coroutines.delay
                 Text(v.title,style=MaterialTheme.typography.titleMedium,maxLines=3,overflow=TextOverflow.Ellipsis)
                 if(v.channel.isNotBlank())Text(v.channel,style=MaterialTheme.typography.bodySmall,color=MaterialTheme.colorScheme.onSurfaceVariant)
             }
+            FavoriteStar(favorite,v.title,!busy){vm.toggleFavoriteVideo(v.id)}
         }
         Text(videoSummary(vm,v),style=MaterialTheme.typography.bodyMedium,color=MaterialTheme.colorScheme.primary)
         FlowRow(horizontalArrangement=Arrangement.spacedBy(6.dp)){
@@ -221,6 +223,7 @@ private enum class Source { CLOCK, FILE, YOUTUBE }
                 Text(video.title,style=MaterialTheme.typography.titleMedium,fontWeight=FontWeight.Bold,maxLines=2,overflow=TextOverflow.Ellipsis)
                 if(video.channel.isNotBlank())Text(video.channel,style=MaterialTheme.typography.bodySmall,color=MaterialTheme.colorScheme.onSurfaceVariant)
             }
+            FavoriteStar(id in snapshot.favoriteVideos,video.title){vm.toggleFavoriteVideo(id)}
             if(source!=Source.CLOCK)IconButton(onClick={full=true}){Icon(Icons.Outlined.Fullscreen,tr("На весь экран","Full screen"))}
             IconButton(onClick={editing=true},modifier=Modifier.testTag("editVideo")){Icon(Icons.Outlined.Edit,tr("Изменить название, описание и ссылку","Edit the name, description and link"))}
         }

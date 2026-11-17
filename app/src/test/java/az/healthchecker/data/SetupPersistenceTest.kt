@@ -39,7 +39,7 @@ class SetupPersistenceTest {
     @Test fun backupSchema11KeepsTheSetupAndOlderFilesStillRestore() {
         val s=UserSnapshot(profile=Profile(initialWeight=80.0,currentWeight=72.0),goals=listOf(goals),onboarded=true,setup=setup)
         val text=BackupCodec.encode(s).toString(Charsets.UTF_8)
-        assertTrue(text.contains("\"schemaVersion\":11"));assertTrue(text.contains("\"setup\""));assertTrue(text.contains("\"carbs\":210.0"))
+        assertTrue(text.contains("\"schemaVersion\":${az.healthchecker.backup.BackupCodec.SCHEMA_VERSION}"));assertTrue(text.contains("\"setup\""));assertTrue(text.contains("\"carbs\":210.0"))
         assertEquals(s,BackupCodec.decode(text.toByteArray()))
         // A schema 10 file has no setup and no fat/carb goals: it restores with them empty.
         val ten="""{"format":"healthchecker-backup","schemaVersion":10,"snapshot":{"profile":null,"goals":[{"effectiveFrom":"2026-10-18","kcal":2200.0,"protein":120.0,"waterMl":null,"manual":true}],"entries":[],"customFoods":[],"completedDays":[],"onboarded":true}}"""

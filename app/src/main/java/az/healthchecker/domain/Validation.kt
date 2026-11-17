@@ -7,6 +7,7 @@ import java.util.UUID
 fun validateSnapshot(s:UserSnapshot) {
     s.explore?.let(::validateExplore)
     require(s.favoriteFoods.size<=10000 && s.favoriteFoods.all{it.length in 1..200} && s.savedMeals.size<=200)
+    require(s.favoriteExercises.size<=10000 && s.favoriteVideos.size<=10000 && (s.favoriteExercises+s.favoriteVideos).all{it.length in 1..200})
     require(s.savedMeals.map{it.id}.toSet().size==s.savedMeals.size)
     s.savedMeals.forEach(::validateSavedMeal)
     require(s.entries.size<=50000 && s.customFoods.size<=10000 && s.goals.size<=10000 && s.completedDays.size<=50000 && s.workouts.size<=50000 && s.trainingDays.size<=50000) { tr("Слишком много записей","Too many records") }

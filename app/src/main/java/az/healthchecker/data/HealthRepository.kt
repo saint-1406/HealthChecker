@@ -27,6 +27,14 @@ class HealthRepository(context: Context, name: String = "healthchecker.db") {
     suspend fun commitMealDraft(id:String,now:java.time.Instant,zone:java.time.ZoneId)=meals.commit(id,now,zone)
     suspend fun logMealItem(item:MealItem,date:String,now:java.time.Instant,zone:java.time.ZoneId)=meals.log(item,date,now,zone)
     suspend fun setFavorite(id:String,enabled:Boolean)=meals.favorite(id,enabled)
+    /** Stars an exercise ([FAVORITE_EXERCISE]) or a workout video ([FAVORITE_VIDEO]); both go into backups. */
+    suspend fun setFavoriteWorkout(kind:String,id:String,enabled:Boolean)=db.withTransaction {
+        require(kind==FAVORITE_EXERCISE||kind==FAVORITE_VIDEO);require(id.length in 1..200)
+        val key="$kind:$id"
+        if((dao.get(key)!=null)==enabled)return@withTransaction
+        if(enabled){require(dao.countKind(kind)<10000){tr("Слишком много избранного","Too many favorites")};dao.put(StoredRecord(key,kind,id))}else dao.delete(key)
+        changed()
+    }
     suspend fun saveMeal(meal:SavedMeal)=meals.save(meal)
     suspend fun deleteMeal(id:String)=meals.delete(id)
     suspend fun deleteEntries(ids:List<String>)=meals.deleteEntries(ids)
@@ -52,7 +60,8 @@ class HealthRepository(context: Context, name: String = "healthchecker.db") {
         weights=records("weight").map{json.decodeFromString<WeightEntry>(it.payload)},
         videos=records("video").map{json.decodeFromString<WorkoutVideo>(it.payload)}.sortedBy{it.addedAt},
         favoriteFoods=records("favorite").map{it.payload}.toSet(),savedMeals=records("meal").map{json.decodeFromString<SavedMeal>(it.payload)},
-        setup=records("setup").firstOrNull()?.let{json.decodeFromString<ProgramSetup>(it.payload)})
+        setup=records("setup").firstOrNull()?.let{json.decodeFromString<ProgramSetup>(it.payload)},
+        favoriteExercises=records(FAVORITE_EXERCISE).map{it.payload}.toSet(),favoriteVideos=records(FAVORITE_VIDEO).map{it.payload}.toSet())
     }
     private suspend fun changed() { val r=dao.revision()?:Revision();dao.putRevision(r.copy(current=r.current+1)) }
     suspend fun exportSnapshot():UserSnapshot = db.withTransaction{recoverImages();decode(dao.all())}
@@ -199,6 +208,8 @@ class HealthRepository(context: Context, name: String = "healthchecker.db") {
             snapshot.favoriteFoods.forEach{dao.put(StoredRecord("favorite:$it","favorite",it))}
             snapshot.savedMeals.forEach{dao.put(StoredRecord("meal:${it.id}","meal",json.encodeToString(it)))}
             snapshot.setup?.let{dao.put(StoredRecord("setup","setup",json.encodeToString(it)))}
+            snapshot.favoriteExercises.forEach{dao.put(StoredRecord("$FAVORITE_EXERCISE:$it",FAVORITE_EXERCISE,it))}
+            snapshot.favoriteVideos.forEach{dao.put(StoredRecord("$FAVORITE_VIDEO:$it",FAVORITE_VIDEO,it))}
             explore.replace(snapshot.explore?:ExploreSnapshot())
             explore.replacement.activate()
             dao.put(StoredRecord("explore-generation","internal",exploreGeneration))
@@ -212,3 +223,5 @@ class HealthRepository(context: Context, name: String = "healthchecker.db") {
         recoverImages()
     }
 }
+const val FAVORITE_EXERCISE="favex"
+const val FAVORITE_VIDEO="favvideo"
