@@ -52,7 +52,8 @@ fun weeklyKg(v:Double):String = (if(v>0)"+" else if(v<0)"−" else "")+number(ko
                 ExpenditureStatus.NEED_FOOD->Hint(tr("Записывайте еду хотя бы $MIN_LOGGED_DAYS дней. Дни меньше ${MIN_DAY_KCAL.toInt()} ккал не учитываются — похоже, их записали не целиком. Отмечайте «День заполнен», и учитываться будут только такие дни.",
                     "Log food for at least $MIN_LOGGED_DAYS days. Days under ${MIN_DAY_KCAL.toInt()} kcal are left out — they look half-logged. Mark “Day complete” and only those days will count."))
                 ExpenditureStatus.NEED_WEIGHT->Hint(tr("Взвешивайтесь утром хотя бы $MIN_WEIGH_INS раза за $MIN_WEIGH_SPAN_DAYS дней, лучше каждый день: скачки воды сглаживаются трендом.",
-                    "Weigh yourself in the morning at least $MIN_WEIGH_INS times over $MIN_WEIGH_SPAN_DAYS days, daily is better: the trend smooths water swings."))
+                    "Weigh yourself in the morning at least $MIN_WEIGH_INS times over $MIN_WEIGH_SPAN_DAYS days, daily is better: the trend smooths water swings.")+
+                    tr(" Умные весы Xiaomi подключаются через Mi Fitness → «Часы и Health Connect» — вес будет записываться сам."," A Xiaomi smart scale connects through Mi Fitness → “Watch and Health Connect” — the weight is then logged by itself."))
                 ExpenditureStatus.NEED_PROFILE->Hint(tr("Укажите пол, возраст, рост и активность в «Тело и активность».","Enter sex, age, height and activity under “Body and activity”."))
                 ExpenditureStatus.OK->{}
             }

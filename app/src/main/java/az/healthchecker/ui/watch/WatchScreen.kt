@@ -62,7 +62,7 @@ fun watchLine(state:az.healthchecker.ui.WatchState):String = when(state.status) 
     fun start(intent:android.content.Intent){try{context.startActivity(intent)}catch(e:ActivityNotFoundException){message=tr("Не удалось открыть: нет подходящего приложения","Could not open: no app handles it")}}
     Column(Modifier.fillMaxSize().verticalScroll(rememberScrollState()).padding(24.dp).testTag("watchScreen"),verticalArrangement=Arrangement.spacedBy(16.dp)) {
         IconButton(onClick=back){Icon(Icons.AutoMirrored.Outlined.ArrowBack,tr("Назад","Back"))}
-        SectionTitle(tr("Часы и Health Connect","Watch and Health Connect"),tr("Шаги, сон, тренировки и пульс с часов Xiaomi через Mi Fitness","Steps, sleep, workouts and pulse from a Xiaomi watch through Mi Fitness"))
+        SectionTitle(tr("Часы и Health Connect","Watch and Health Connect"),tr("Шаги, сон, тренировки и пульс с часов Xiaomi, вес с умных весов — через Mi Fitness","Steps, sleep, workouts and pulse from a Xiaomi watch, weight from a smart scale — through Mi Fitness"))
         Panel {
             val connected=state.status==WatchStatus.CONNECTED||state.status==WatchStatus.PARTIAL
             Row(verticalAlignment=Alignment.CenterVertically,horizontalArrangement=Arrangement.spacedBy(12.dp)) {
@@ -77,7 +77,7 @@ fun watchLine(state:az.healthchecker.ui.WatchState):String = when(state.status) 
                     Button(onClick={start(HealthConnectSource.installIntent())},modifier=Modifier.testTag("installHealthConnect")){Text(if(state.status==WatchStatus.INSTALL)tr("Установить Health Connect","Install Health Connect") else tr("Обновить Health Connect","Update Health Connect"))}
                 }
                 WatchStatus.NOT_CONNECTED,WatchStatus.PARTIAL->{
-                    Text(if(state.status==WatchStatus.PARTIAL)tr("Разрешено не всё: часть данных не видна.","Not everything is allowed: some data is hidden.") else tr("Разрешите HealthChecker читать шаги, сон, тренировки и пульс.","Let HealthChecker read steps, sleep, workouts and pulse."),style=MaterialTheme.typography.bodyMedium)
+                    Text(if(state.status==WatchStatus.PARTIAL)tr("Разрешено не всё: часть данных не видна.","Not everything is allowed: some data is hidden.") else tr("Разрешите HealthChecker читать шаги, сон, тренировки, пульс и вес.","Let HealthChecker read steps, sleep, workouts, pulse and weight."),style=MaterialTheme.typography.bodyMedium)
                     Button(onClick={try{request.launch(HealthConnectSource.permissions)}catch(e:ActivityNotFoundException){start(HealthConnectSource.settingsIntent())}},modifier=Modifier.testTag("connectHealthConnect")){Icon(Icons.Outlined.Link,null);Spacer(Modifier.width(8.dp));Text(tr("Подключить","Connect"))}
                 }
                 WatchStatus.CONNECTED->{}
@@ -90,7 +90,7 @@ fun watchLine(state:az.healthchecker.ui.WatchState):String = when(state.status) 
             }
         }
         val data=state.data
-        if(data!=null&&!data.isEmpty)WatchPanels(data) else MiFitnessSteps(data!=null)
+        if(data!=null&&!data.isEmpty)WatchPanels(data,state.weightsAdded) else MiFitnessSteps(data!=null)
         if(data!=null&&!data.isEmpty&&!data.fromXiaomi)MiFitnessSteps(true)
         Text(privacyText(),style=MaterialTheme.typography.bodySmall,color=MaterialTheme.colorScheme.onSurfaceVariant)
     }
@@ -108,7 +108,7 @@ fun watchLine(state:az.healthchecker.ui.WatchState):String = when(state.status) 
     Text(tr("Mi Fitness передаёт шаги, дистанцию, сон и тренировки с пульсом. Круглосуточный пульс и SpO₂ зависят от модели часов и версии Mi Fitness.","Mi Fitness shares steps, distance, sleep and workouts with heart rate. All-day pulse and SpO₂ depend on the watch model and Mi Fitness version."),style=MaterialTheme.typography.bodySmall,color=MaterialTheme.colorScheme.onSurfaceVariant)
 }
 
-@Composable private fun WatchPanels(data:WatchData) {
+@Composable private fun WatchPanels(data:WatchData,weightsAdded:Int) {
     val today=LocalDate.now();val days=(6 downTo 0).map{today.minusDays(it.toLong()).toString()}
     Panel(Modifier.testTag("watchSteps")) {
         Text(tr("Шаги","Steps"),style=MaterialTheme.typography.titleMedium)
@@ -138,6 +138,17 @@ fun watchLine(state:az.healthchecker.ui.WatchState):String = when(state.status) 
             Text("${weekday(n.date())}, ${shortDate(n.date())}",modifier=Modifier.weight(1f))
             Column(horizontalAlignment=Alignment.End){Text(hoursMinutes(n.asleepMinutes),fontWeight=FontWeight.Medium);Text("${clock(n.start)}–${clock(n.end)} · ${n.source}",style=MaterialTheme.typography.bodySmall,color=MaterialTheme.colorScheme.onSurfaceVariant)}
         }}
+    }
+    Panel(Modifier.testTag("watchWeight")) {
+        Text(tr("Вес с весов","Scale weight"),style=MaterialTheme.typography.titleMedium)
+        if(data.weights.isEmpty())Text(tr("Взвешиваний за 30 дней нет. Умные весы Xiaomi передают вес через Mi Fitness, если в нём включена синхронизация с Health Connect.","No weigh-ins in 30 days. Xiaomi smart scales share weight through Mi Fitness when its Health Connect sync is on."),style=MaterialTheme.typography.bodyMedium,color=MaterialTheme.colorScheme.onSurfaceVariant)
+        data.weights.take(5).forEach{w->Row(Modifier.fillMaxWidth()){
+            val d=w.time.atZone(ZoneId.systemDefault()).toLocalDate().toString()
+            Text("${weekday(d)}, ${shortDate(d)}",modifier=Modifier.weight(1f))
+            Column(horizontalAlignment=Alignment.End){Text(number(w.kg,1)+" "+tr("кг","kg"),fontWeight=FontWeight.Medium);Text("${clock(w.time)} · ${w.source}",style=MaterialTheme.typography.bodySmall,color=MaterialTheme.colorScheme.onSurfaceVariant)}
+        }}
+        if(weightsAdded>0)Text(tr("Добавлено в журнал веса: $weightsAdded","Added to the weight log: $weightsAdded"),style=MaterialTheme.typography.bodyMedium,color=MaterialTheme.colorScheme.primary,modifier=Modifier.testTag("weightsAdded"))
+        Text(tr("Первое взвешивание дня само попадает в журнал веса — по нему считаются тренд и расход энергии. Если вы уже записали вес за этот день вручную, остаётся ваш. Удалённое из журнала больше не вернётся.","The first weigh-in of a day goes to the weight log by itself — the trend and the energy expenditure use it. A weight you entered for that day yourself stays. One you delete from the log does not come back."),style=MaterialTheme.typography.bodySmall,color=MaterialTheme.colorScheme.onSurfaceVariant)
     }
     Panel(Modifier.testTag("watchWorkouts")) {
         Text(tr("Тренировки с часов","Watch workouts"),style=MaterialTheme.typography.titleMedium)

@@ -14,6 +14,7 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.compose.LifecycleResumeEffect
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import az.healthchecker.domain.*
 import az.healthchecker.reminders.Reminders
@@ -36,6 +37,9 @@ import java.time.LocalTime
     var allowed by remember{mutableStateOf(Reminders.notificationsAllowed(context))}
     var error by remember{mutableStateOf<String?>(null)}
     var pending by remember{mutableStateOf<ReminderSettings?>(null)}
+    var unrestricted by remember{mutableStateOf(Reminders.batteryUnrestricted(context))}
+    // Back from the system dialogs: show what was really allowed.
+    LifecycleResumeEffect(Unit){unrestricted=Reminders.batteryUnrestricted(context);allowed=Reminders.notificationsAllowed(context);onPauseOrDispose{}}
     fun store(next:ReminderSettings){runCatching{Reminders.save(context,next)}.onSuccess{s=next;error=null}.onFailure{error=it.message}}
     val ask=rememberLauncherForActivityResult(ActivityResultContracts.RequestPermission()){ok->allowed=ok;pending?.let{if(ok)store(it)};pending=null}
     // Switching anything on first asks for notifications (Android 13+); switching off never asks.
@@ -46,6 +50,7 @@ import java.time.LocalTime
             Text(tr("Уведомления запрещены — напоминания не придут.","Notifications are blocked — reminders will not show."),color=MaterialTheme.colorScheme.error)
             TextButton(onClick={context.startActivity(Intent(Settings.ACTION_APP_NOTIFICATION_SETTINGS).putExtra(Settings.EXTRA_APP_PACKAGE,context.packageName).addFlags(Intent.FLAG_ACTIVITY_NEW_TASK))}){Text(tr("Открыть настройки уведомлений","Open notification settings"))}
         }
+        if(s.anyOn&&(!unrestricted||Reminders.xiaomi))BatteryPanel(unrestricted)
         val meds=snapshot.medications.filter{it.activeOn(java.time.LocalDate.now().toString())}
         Section(tr("Лекарства и витамины","Medicines and vitamins"),s.medications,"remindMeds",{update(s.copy(medications=it))}) {
             val timed=meds.filter{it.times.isNotEmpty()}
@@ -76,6 +81,24 @@ import java.time.LocalTime
         }
         error?.let{Text(it,color=MaterialTheme.colorScheme.error)}
         Text(tr("Напоминания работают без интернета. Android может показать их чуть позже, обычно в пределах 10 минут, а в режиме сна телефона — до часа: так он бережёт батарею. Если телефон был выключен и напоминание опоздало больше чем на час с четвертью, оно не придёт.","Reminders work offline. Android may show them a little late, usually within 10 minutes, up to an hour while the phone sleeps, to save battery. A reminder more than 75 minutes late (the phone was off) is skipped."),style=MaterialTheme.typography.bodySmall,color=MaterialTheme.colorScheme.onSurfaceVariant)
+    }
+}
+
+/**
+ * Battery optimisation delays or drops reminders, Xiaomi's MIUI/HyperOS especially. Shown while it is on, and on Xiaomi
+ * phones always, since their autostart switch cannot be read by the app.
+ */
+@Composable private fun BatteryPanel(unrestricted:Boolean) = Panel(Modifier.testTag("batteryPanel")) {
+    val context=LocalContext.current
+    if(!unrestricted) {
+        Text(tr("Экономия батареи может задерживать напоминания","Battery saving can hold reminders back"),style=MaterialTheme.typography.titleMedium,fontWeight=FontWeight.SemiBold)
+        Text(if(Reminders.xiaomi)tr("На телефонах Xiaomi, Redmi и POCO система может совсем не показать напоминание, пока приложение закрыто. Разрешите HealthChecker работать в фоне: приложение не будет тратить батарею, оно просыпается только во время напоминаний.","On Xiaomi, Redmi and POCO phones the system may not show a reminder at all while the app is closed. Let HealthChecker run in the background: it does not drain the battery, it only wakes up for reminders.")
+            else tr("Разрешите HealthChecker работать в фоне, чтобы напоминания приходили вовремя. Приложение просыпается только во время напоминаний.","Let HealthChecker run in the background so reminders come on time. It only wakes up for reminders."),style=MaterialTheme.typography.bodyMedium)
+        Button(onClick={Reminders.allowBackground(context)},modifier=Modifier.fillMaxWidth().testTag("allowBackground")){Text(tr("Разрешить работу в фоне","Allow running in the background"))}
+    } else Text(tr("Работа в фоне разрешена.","Running in the background is allowed."),style=MaterialTheme.typography.bodyMedium,color=MaterialTheme.colorScheme.primary,modifier=Modifier.testTag("batteryOk"))
+    if(Reminders.xiaomi) {
+        Text(tr("Ещё на Xiaomi: Безопасность → Разрешения → Автозапуск → включить HealthChecker. Тогда напоминания вернутся и после перезагрузки.","Also on Xiaomi: Security → Permissions → Autostart → turn HealthChecker on. Then reminders come back after a restart too."),style=MaterialTheme.typography.bodySmall,color=MaterialTheme.colorScheme.onSurfaceVariant)
+        OutlinedButton(onClick={Reminders.openAutostart(context)},modifier=Modifier.testTag("openAutostart")){Text(tr("Открыть автозапуск","Open autostart"))}
     }
 }
 

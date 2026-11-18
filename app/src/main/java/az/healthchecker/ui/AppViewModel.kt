@@ -14,6 +14,7 @@ import az.healthchecker.catalog.VideoLibrary
 import az.healthchecker.data.*
 import az.healthchecker.steps.StepTracking
 import az.healthchecker.watch.HealthConnectSource
+import az.healthchecker.watch.ScaleImport
 import az.healthchecker.watch.WatchStatus
 import az.healthchecker.domain.*
 import kotlinx.coroutines.*
@@ -474,9 +475,24 @@ class AppViewModel(application:Application):AndroidViewModel(application) {
         val status=runCatching{HealthConnectSource.status(context)}.getOrDefault(WatchStatus.UNSUPPORTED)
         watch.update{it.copy(status=status,loading=status==WatchStatus.CONNECTED||status==WatchStatus.PARTIAL)}
         if(status!=WatchStatus.CONNECTED&&status!=WatchStatus.PARTIAL){watch.update{it.copy(data=null,loading=false,error=null)};return@launch}
-        try{val data=HealthConnectSource.read(context);watch.update{it.copy(data=data,loading=false,error=null,readAt=System.currentTimeMillis())}}
+        try{val data=HealthConnectSource.read(context);val added=importScaleWeights(data)
+            watch.update{it.copy(data=data,loading=false,error=null,readAt=System.currentTimeMillis(),weightsAdded=it.weightsAdded+added)}}
         catch(e:CancellationException){throw e}
         catch(e:Exception){watch.update{it.copy(loading=false,error=tr("Health Connect не отдал данные: ","Health Connect did not return data: ")+(e.message?:e.javaClass.simpleName))}}
     } }
+    /**
+     * Smart-scale weigh-ins become the app's own weight log, so the weight chart, the energy expenditure and the weigh-in
+     * reminder all see them. A day already weighed by hand keeps that value; a day taken once is never taken again.
+     */
+    private suspend fun importScaleWeights(data:WatchData):Int {
+        if(data.weights.isEmpty())return 0
+        val zone=java.time.ZoneId.systemDefault()
+        val existing=repository.exportSnapshot().weights.map{it.date}.toSet()
+        val add=scaleWeightsToImport(data.weights,existing,ScaleImport.seen(context),zone)
+        add.forEach{repository.saveWeight(it)}
+        ScaleImport.remember(context,data.weights.map{it.time.atZone(zone).toLocalDate().toString()})
+        return add.size
+    }
 }
-data class WatchState(val status:WatchStatus=WatchStatus.NOT_CONNECTED,val data:WatchData?=null,val loading:Boolean=false,val error:String?=null,val readAt:Long=0)
+/** [weightsAdded]: scale weigh-ins added to the weight log since the app started. */
+data class WatchState(val status:WatchStatus=WatchStatus.NOT_CONNECTED,val data:WatchData?=null,val loading:Boolean=false,val error:String?=null,val readAt:Long=0,val weightsAdded:Int=0)

@@ -62,6 +62,22 @@ class RemindersAndExpenditureFlowTest {
         context.sendBroadcast(Intent(context,ReminderActionReceiver::class.java).setAction("unknown"))
     }
 
+    @Test fun remindersScreenOffersToLiftBatteryLimits() {
+        runBlocking{HealthRepository(context).finishOnboarding()}
+        Reminders.save(context,ReminderSettings(weigh=true))
+        scenario=ActivityScenario.launch(MainActivity::class.java)
+        app.waitUntil(90000){app.onAllNodesWithText("Профиль").fetchSemanticsNodes().isNotEmpty()}
+        app.onNodeWithText("Профиль").performClick()
+        app.onNodeWithTag("open-profile-reminders").performScrollTo().performClick()
+        waitTag("remindersScreen")
+        // A fresh install is battery-optimised: the screen says so and offers the system dialog.
+        app.onNodeWithTag("batteryPanel").assertExists()
+        app.onNodeWithTag("allowBackground").assertExists()
+        // With every reminder off there is nothing to warn about.
+        app.onNodeWithTag("remindWeigh").performClick()
+        app.waitUntil(10000){app.onAllNodesWithTag("batteryPanel").fetchSemanticsNodes().isEmpty()}
+    }
+
     @Test fun expenditureScreenShowsTheEstimateFromFourWeeks() {
         runBlocking {
             val repo=HealthRepository(context)

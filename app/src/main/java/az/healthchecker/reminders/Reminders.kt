@@ -4,11 +4,16 @@ import android.app.AlarmManager
 import android.app.NotificationChannel
 import android.app.NotificationManager
 import android.app.PendingIntent
+import android.content.ActivityNotFoundException
+import android.content.ComponentName
 import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
 import android.content.pm.PackageManager
+import android.net.Uri
 import android.os.Build
+import android.os.PowerManager
+import android.provider.Settings
 import androidx.core.app.NotificationCompat
 import androidx.core.content.ContextCompat
 import androidx.core.content.edit
@@ -45,6 +50,25 @@ object Reminders {
     fun settings(c:Context):ReminderSettings = prefs(c).getString(SETTINGS,null)?.let{runCatching{json.decodeFromString<ReminderSettings>(it)}.getOrNull()}?:ReminderSettings()
     fun save(c:Context,s:ReminderSettings){validateReminders(s);prefs(c).edit{putString(SETTINGS,json.encodeToString(ReminderSettings.serializer(),s))};reschedule(c)}
     fun notificationsAllowed(c:Context):Boolean = Build.VERSION.SDK_INT<33||ContextCompat.checkSelfPermission(c,Manifest.permission.POST_NOTIFICATIONS)==PackageManager.PERMISSION_GRANTED
+
+    /**
+     * Whether Android lets the app run its alarms freely. With battery optimisation on, Doze delays reminders, and
+     * MIUI/HyperOS on Xiaomi phones may drop them altogether ("Battery saver" for the app).
+     */
+    fun batteryUnrestricted(c:Context):Boolean = c.getSystemService(PowerManager::class.java)?.isIgnoringBatteryOptimizations(c.packageName)?:true
+    /** Xiaomi, Redmi and POCO phones: MIUI/HyperOS add their own autostart switch on top of Android's battery setting. */
+    val xiaomi:Boolean get() = Build.MANUFACTURER.lowercase() in setOf("xiaomi","redmi","poco")
+    /** Android's "Allow the app to run in the background?" dialog; the app list in battery settings when it is missing. */
+    fun allowBackground(c:Context) = open(c,
+        Intent(Settings.ACTION_REQUEST_IGNORE_BATTERY_OPTIMIZATIONS,Uri.parse("package:"+c.packageName)),
+        Intent(Settings.ACTION_IGNORE_BATTERY_OPTIMIZATION_SETTINGS),appSettings(c))
+    /** MIUI's autostart list (Security app); the app's own settings page on other versions. */
+    fun openAutostart(c:Context) = open(c,
+        Intent().setComponent(ComponentName("com.miui.securitycenter","com.miui.permcenter.autostart.AutoStartManagementActivity")),appSettings(c))
+    private fun appSettings(c:Context)=Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS,Uri.parse("package:"+c.packageName))
+    /** The first screen this phone has; false when none of them opens. */
+    private fun open(c:Context,vararg intents:Intent):Boolean = intents.any{i->
+        try{c.startActivity(i.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK));true}catch(_:ActivityNotFoundException){false}catch(_:SecurityException){false}}
 
     /** After a settings or medicine change, a reboot or an update: plan the next alarm from now, without firing past ones. */
     fun reschedule(c:Context) {

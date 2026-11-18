@@ -65,4 +65,23 @@ class WatchTest {
             RawSteps("2026-11-14","android",1200),RawSteps("2026-11-13","com.mi.health",0))
         assertEquals(mapOf("2026-11-15" to 8000L,"2026-11-14" to 1200L),stepsBySource(r))
     }
+
+    @Test fun scaleWeighInsFillOnlyNewDaysWithTheMorningValue() {
+        val scale=listOf(
+            ScaleWeight(at("2026-11-16T03:10:00Z"),82.437,"Mi Fitness"),   // 07:10 in Baku
+            ScaleWeight(at("2026-11-16T15:00:00Z"),83.1,"Mi Fitness"),     // evening, same day: the morning one wins
+            ScaleWeight(at("2026-11-17T03:00:00Z"),82.2,"Mi Fitness"),     // weighed by hand that day already
+            ScaleWeight(at("2026-11-15T03:00:00Z"),82.6,"Mi Fitness"),     // taken before, then deleted by the user
+            ScaleWeight(at("2026-11-18T03:00:00Z"),12.0,"Mi Fitness"),     // a bag on the scale
+            ScaleWeight(at("2026-11-14T20:30:00Z"),82.9,"Mi Fitness"),     // 00:30 on the 15th in Baku — still the 15th
+        )
+        val add=scaleWeightsToImport(scale,existing=setOf("2026-11-17"),seen=setOf("2026-11-15"),zone=baku)
+        assertEquals(listOf("2026-11-16"),add.map{it.date})
+        assertEquals(82.44,add.single().kg,1e-9)
+        assertEquals("2026-11-16T03:10:00Z",add.single().instant)
+        assertEquals("Asia/Baku",add.single().zoneId)
+        validateWeight(add.single())
+        assertTrue(scaleWeightsToImport(emptyList(),emptySet(),emptySet(),baku).isEmpty())
+        assertFalse(WatchData(weights=listOf(scale.first())).isEmpty)
+    }
 }

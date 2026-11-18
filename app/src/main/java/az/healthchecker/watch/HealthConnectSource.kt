@@ -9,6 +9,7 @@ import androidx.health.connect.client.records.ExerciseSessionRecord
 import androidx.health.connect.client.records.HeartRateRecord
 import androidx.health.connect.client.records.SleepSessionRecord
 import androidx.health.connect.client.records.StepsRecord
+import androidx.health.connect.client.records.WeightRecord
 import androidx.health.connect.client.request.AggregateGroupByPeriodRequest
 import androidx.health.connect.client.request.AggregateRequest
 import androidx.health.connect.client.request.ReadRecordsRequest
@@ -24,15 +25,19 @@ enum class WatchStatus { UNSUPPORTED, INSTALL, UPDATE, NOT_CONNECTED, PARTIAL, C
 
 /**
  * Reads steps, sleep, workouts and heart rate that a watch's app (Mi Fitness for Xiaomi watches) writes to Health
- * Connect. Read-only, on demand while the app is open: no background reading, nothing is written back.
+ * Connect, and weigh-ins from a smart scale. Read-only, on demand while the app is open: no background reading,
+ * nothing is written back.
  */
 object HealthConnectSource {
     const val PROVIDER="com.google.android.apps.healthdata"
     val permissions:Set<String> = setOf(
         HealthPermission.getReadPermission(StepsRecord::class),HealthPermission.getReadPermission(SleepSessionRecord::class),
-        HealthPermission.getReadPermission(ExerciseSessionRecord::class),HealthPermission.getReadPermission(HeartRateRecord::class))
+        HealthPermission.getReadPermission(ExerciseSessionRecord::class),HealthPermission.getReadPermission(HeartRateRecord::class),
+        HealthPermission.getReadPermission(WeightRecord::class))
     /** Days of history shown; Health Connect itself lets an app read 30 days back from the first permission. */
     const val DAYS=7
+    /** Weigh-ins are read further back: the energy expenditure looks at 4 weeks of weight. */
+    const val WEIGHT_DAYS=30
 
     fun sdkStatus(context:Context):Int = HealthConnectClient.getSdkStatus(context,PROVIDER)
     suspend fun status(context:Context):WatchStatus = when(sdkStatus(context)) {
@@ -85,6 +90,11 @@ object HealthConnectSource {
             val r=client.aggregate(AggregateRequest(setOf(HeartRateRecord.BPM_MIN,HeartRateRecord.BPM_AVG,HeartRateRecord.BPM_MAX),TimeRangeFilter.between(today.atStartOfDay(zone).toInstant(),now)))
             val min=r[HeartRateRecord.BPM_MIN];val avg=r[HeartRateRecord.BPM_AVG];val max=r[HeartRateRecord.BPM_MAX]
             if(min!=null&&avg!=null&&max!=null)data=data.copy(heartToday=HeartRange(min.toInt(),avg.toInt(),max.toInt()),heartSources=r.dataOrigins.map{labels(it.packageName)}.toSet())
+        }
+        if(HealthPermission.getReadPermission(WeightRecord::class) in granted) {
+            val since=today.minusDays((WEIGHT_DAYS-1).toLong()).atStartOfDay(zone).toInstant()
+            val weights=client.readRecords(ReadRecordsRequest(WeightRecord::class,TimeRangeFilter.between(since,now),pageSize=1000)).records
+            data=data.copy(weights=weights.map{ScaleWeight(it.time,it.weight.inKilograms,labels(it.metadata.dataOrigin.packageName))}.sortedByDescending{it.time})
         }
         return data
     }

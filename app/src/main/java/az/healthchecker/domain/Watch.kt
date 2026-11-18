@@ -4,7 +4,8 @@ import java.time.ZoneId
 
 /**
  * What a watch shares through Android's Health Connect (for Xiaomi watches: Mi Fitness → Health Connect). The app only
- * reads it and never copies it into its own records or backups: Health Connect stays the place it lives.
+ * reads it. Steps, sleep, workouts and pulse are shown and never copied into the app's records or backups; weigh-ins
+ * from a smart scale are the one exception — they become the app's own weight log (see [scaleWeightsToImport]).
  */
 enum class WatchActivity { WALK, RUN, BIKE, SWIM, STRENGTH, YOGA, PILATES, STRETCH, HIKE, ELLIPTICAL, ROWING, HIIT, OTHER }
 data class WatchWorkout(val start:Instant,val end:Instant,val activity:WatchActivity,val title:String?,val avgHeartRate:Int?,val source:String) {
@@ -13,14 +14,17 @@ data class WatchWorkout(val start:Instant,val end:Instant,val activity:WatchActi
 /** One night: [asleepMinutes] leaves out the awake stages when the watch recorded stages. */
 data class WatchSleep(val start:Instant,val end:Instant,val asleepMinutes:Int,val source:String)
 data class HeartRange(val min:Int,val avg:Int,val max:Int)
+/** One weigh-in a smart scale's app (Mi Fitness for Xiaomi scales) wrote to Health Connect. */
+data class ScaleWeight(val time:Instant,val kg:Double,val source:String)
 /** [steps] holds Health Connect's daily totals, which already merge overlapping sources (phone, watch, other apps). */
 data class WatchData(
     val steps:Map<String,Int> = emptyMap(), val stepSources:Set<String> = emptySet(), val sleep:List<WatchSleep> = emptyList(),
     val workouts:List<WatchWorkout> = emptyList(), val heartToday:HeartRange? = null, val heartSources:Set<String> = emptySet(),
+    val weights:List<ScaleWeight> = emptyList(),
 ) {
-    val sources:Set<String> get() = stepSources+heartSources+sleep.map{it.source}+workouts.map{it.source}
+    val sources:Set<String> get() = stepSources+heartSources+sleep.map{it.source}+workouts.map{it.source}+weights.map{it.source}
     val fromXiaomi:Boolean get() = sources.any{it in XIAOMI_APPS||it in XIAOMI_APPS.values}
-    val isEmpty:Boolean get() = steps.values.none{it>0}&&sleep.isEmpty()&&workouts.isEmpty()&&heartToday==null
+    val isEmpty:Boolean get() = steps.values.none{it>0}&&sleep.isEmpty()&&workouts.isEmpty()&&heartToday==null&&weights.isEmpty()
 }
 
 /** Xiaomi's companion apps that write to Health Connect, by package name. */
@@ -57,3 +61,14 @@ fun stepsBySource(records:List<RawSteps>):Map<String,Long> =
 
 /** Steps of a day with the watch's total attached. */
 fun UserSnapshot.stepsOn(date:String,watch:WatchData?):StepDay = stepsOn(date).copy(watch=watch?.steps?.get(date)?.takeIf{it>0})
+
+/**
+ * Scale weigh-ins to add to the app's weight log: the first weigh-in of each day (the morning one, before food), for
+ * days with no weight of their own. [seen] are days taken from Health Connect before: a weight the user deleted or
+ * typed over is never brought back. Values outside 20–400 kg (a child or a bag on the scale) are left out.
+ */
+fun scaleWeightsToImport(scale:List<ScaleWeight>,existing:Set<String>,seen:Set<String>,zone:ZoneId=ZoneId.systemDefault()):List<WeightEntry> =
+    scale.filter{it.kg.isFinite()&&it.kg in 20.0..400.0}.groupBy{it.time.atZone(zone).toLocalDate().toString()}
+        .filterKeys{it !in existing&&it !in seen}
+        .map{(date,day)->val first=day.minBy{it.time};WeightEntry(date,Math.round(first.kg*100)/100.0,first.time.toString(),zone.id)}
+        .sortedBy{it.date}
