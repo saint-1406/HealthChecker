@@ -37,7 +37,7 @@ class ProgramSetupFlowTest {
         tap("applySetup")
         waitTag("programScreen")
         app.onNodeWithTag("back").performClick()
-        waitTag("profileHub");app.onNodeWithTag("todayTargets").assert(hasText("2210",substring=true))
+        waitTag("profileHub");app.onNodeWithTag("todayTargets").assert(hasAnyDescendant(hasText("2210",substring=true)))
         app.onNodeWithText("Обзор").performClick()
         waitText("из 2210 ккал")
     }

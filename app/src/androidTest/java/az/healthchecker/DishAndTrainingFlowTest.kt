@@ -71,6 +71,8 @@ class DishAndTrainingFlowTest {
         app.onNodeWithTag("deleteDish").performScrollTo().performClick()
         app.onNodeWithText("Удалить").performClick()
         app.waitUntil(30000){app.onAllNodesWithContentDescription("Суп").fetchSemanticsNodes().isEmpty()}
+        // The inventory is a screen of its own (since 1.16.6): back to the tabs first.
+        app.onAllNodesWithContentDescription("Назад").onFirst().performClick();waitText("Дневник")
         app.onNodeWithText("Дневник").performClick()
         app.waitUntil(30000){runCatching{app.onNodeWithTag("diaryList").performScrollToNode(hasText("1 запись"))}.isSuccess}
         app.onNodeWithTag("diaryList").performScrollToNode(hasText("Суп"));app.onAllNodesWithText("Суп").onFirst().assertExists()

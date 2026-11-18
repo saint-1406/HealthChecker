@@ -70,10 +70,12 @@ class VideoWorkoutFlowTest {
     @Test fun channelLibraryFiltersByExerciseAndKind() {
         skipOnboarding()
         openVideos()
-        app.onNodeWithTag("videoCount").assert(hasText("Найдено: 143"))
+        // The whole library is listed at first; its size grows with new channels, so compare with it rather than a number.
+        val all=app.onNodeWithTag("videoCount").fetchSemanticsNode().config[androidx.compose.ui.semantics.SemanticsProperties.Text].joinToString()
+        org.junit.Assert.assertTrue(all,all.removePrefix("Найдено: ").toInt()>=300)
         // An exercise name finds the videos that have it; a kind of workout narrows the list.
         app.onNodeWithTag("videoSearch").performTextInput("макгилла")
-        app.onNodeWithTag("videoCount").assert(!hasText("Найдено: 143")).assert(!hasText("Найдено: 0"))
+        app.onNodeWithTag("videoCount").assert(!hasText(all)).assert(!hasText("Найдено: 0"))
         app.onNodeWithTag("videoTag_abs").performClick()
         app.onNodeWithTag("videoCount").assert(!hasText("Найдено: 0"))
         app.onAllNodesWithTag("videoCard").onFirst().performClick()
@@ -129,7 +131,7 @@ class VideoWorkoutFlowTest {
         dialogClosed()
         app.onNodeWithText("Йога-разминка по утрам").assertExists()
         // The link is kept after a restart.
-        launch()
+        launch();waitText("Обзор")
         openVideos()
         app.onNodeWithTag("videoList").performScrollToNode(hasText("Утренняя тренировка"))
         app.onNodeWithText("Утренняя тренировка").assertExists()

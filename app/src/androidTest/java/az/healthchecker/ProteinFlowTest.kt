@@ -24,13 +24,14 @@ class ProteinFlowTest {
         app.onNodeWithTag("proteinCard").performClick()
         app.onNodeWithTag("proteinToday").assertTextEquals("0 г")
         scrollTo("proteinGrams");app.onNodeWithTag("proteinGrams").performTextInput("25")
-        // Everyday foods with at least 25 g per 100 g: chicken, turkey, pumpkin seeds, peanuts.
-        waitText("Найдено: 6")
+        // Everyday foods with at least 25 g per 100 g: chicken, turkey, pumpkin seeds, peanuts, sulguni and the Baku kebabs.
+        waitText("Найдено: 11")
         scrollTo("proteinFood")
         app.onAllNodesWithTag("proteinFood").onFirst().assert(hasText("Куриная грудка без кожи, запечённая",substring=true)).assert(hasText("31,0 г",substring=true))
         scrollTo("sortLow");app.onNodeWithTag("sortLow").performClick()
         scrollTo("proteinFood")
-        app.waitUntil(10000){runCatching{app.onAllNodesWithTag("proteinFood").onFirst().assert(hasText("Куриное бедро без кожи, отварное",substring=true))}.isSuccess}
+        // Boiled chicken thigh and sulguni share the lowest value, 25 g, so either may come first.
+        app.waitUntil(10000){runCatching{app.onAllNodesWithTag("proteinFood").onFirst().assert(hasText("25,0 г",substring=true))}.isSuccess}
         app.onAllNodesWithTag("proteinFood").onFirst().performClick()
         app.onNodeWithTag("quantity").performTextReplacement("100")
         app.onNodeWithText("Добавить в дневник").performScrollTo().performClick()

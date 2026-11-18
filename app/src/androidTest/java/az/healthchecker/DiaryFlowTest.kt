@@ -20,7 +20,8 @@ class DiaryFlowTest {
     private fun addFood(query:String,name:String,fill:()->Unit) {
         app.onNodeWithContentDescription("Добавить еду").performClick()
         app.onNodeWithTag("foodSearch").performTextInput(query)
-        waitText(name,30000)
+        // Results sit in a lazy list and the catalog has grown: scroll to the food rather than expect it on screen.
+        app.waitUntil(30000){runCatching{app.onNodeWithTag("foodResultsList").performScrollToNode(hasText(name))}.isSuccess}
         app.onAllNodesWithText(name).onFirst().performClick()
         fill()
         app.onNodeWithText("Добавить в дневник").performScrollTo().performClick()
