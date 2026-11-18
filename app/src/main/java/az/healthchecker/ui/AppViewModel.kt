@@ -112,6 +112,8 @@ class AppViewModel(application:Application):AndroidViewModel(application) {
         viewModelScope.launch(Dispatchers.IO){repository.revisions.collect{r->revision.value=r;if(r.current!=r.backedUp)performBackup(false)}}
         // Counting may have been stopped by the system; start it again if the user left it on.
         if(stepTracking.value)StepTracking.resume(context)
+        // Medicine times may have come with a restore or an update; the next reminder is planned from them.
+        az.healthchecker.reminders.Reminders.reschedule(context)
     }
     fun setLanguage(value:AppLanguage){LanguageStore.save(context,value);language.value=value}
     /** The name of a logged food in the current language; the user's own foods and removed products keep the saved name. */
@@ -372,6 +374,20 @@ class AppViewModel(application:Application):AndroidViewModel(application) {
     fun saveBody(profile:Profile,done:()->kotlin.Unit)=action(done) { repository.saveProfile(profile) }
     /** Profile → nutrition targets: only today's goals change. */
     fun saveGoals(goals:DailyGoals,done:()->kotlin.Unit)=action(done) { repository.saveGoals(goals) }
+    /**
+     * Takes the adaptive calorie target from today on: protein and fat stay, carbohydrates (when set) make up the rest.
+     */
+    fun applyAdaptiveTarget(kcal:Double)=action {
+        val today=LocalDate.now().toString();val g=snapshot.value.day(today).goals
+        val carbs=g?.carbs?.let{((kcal-(g.protein?:0.0)*4-(g.fat?:0.0)*9)/4).coerceAtLeast(0.0).let{c->Math.round(c/5.0)*5.0}}
+        repository.saveGoals((g?:DailyGoals(today)).copy(effectiveFrom=today,kcal=kcal,carbs=carbs,manual=false))
+        expenditureCardHidden.value=true
+        notice.value=Notice(tr("Новая цель: ${number(kcal)} ккал в день","New target: ${number(kcal)} kcal a day"))
+    }
+    /** The home card about the expenditure stays hidden for a week after closing it (device setting). */
+    private val appPrefs=context.getSharedPreferences("app",android.content.Context.MODE_PRIVATE)
+    val expenditureCardHidden=MutableStateFlow(appPrefs.getString("expenditureHiddenUntil",null)?.let{it>=LocalDate.now().toString()}==true)
+    fun hideExpenditureCard(){appPrefs.edit().putString("expenditureHiddenUntil",LocalDate.now().plusDays(7).toString()).apply();expenditureCardHidden.value=true}
     /** The confirmed plan becomes today's targets; values the plan leaves open keep the current goal. */
     fun applySetup(plan:ProgramPlan,done:()->kotlin.Unit)=action(done) {
         val today=LocalDate.now().toString();val current=snapshot.value.day(today).goals;val n=plan.nutrition
@@ -434,12 +450,13 @@ class AppViewModel(application:Application):AndroidViewModel(application) {
         az.healthchecker.explore.WalkTracking.stopForRestore(context)
         repository.replaceSnapshot(s,stagedRestore?.media.orEmpty())
         az.healthchecker.explore.WalkTracking.reconcile(context)
+        az.healthchecker.reminders.Reminders.reschedule(context)
         stagedRestore?.close();stagedRestore=null
         restorePreview.value=null;undo=null;mealDraft.value=null;imageVersions.value=repository.imageVersions()
         notice.value=Notice(if(settings.value.folder.isEmpty())tr("Данные восстановлены. Выберите папку для новых копий в профиле.","Data restored. Choose a folder for new backups in the profile.") else tr("Данные восстановлены","Data restored"))
     }
-    fun saveMedication(medication:Medication,done:()->kotlin.Unit)=action(done){repository.saveMedication(medication)}
-    fun deleteMedication(medication:Medication)=action { repository.deleteMedication(medication.id);offerUndo(tr("Препарат «${medication.name}» удалён","“${medication.name}” deleted")){repository.saveMedication(medication)} }
+    fun saveMedication(medication:Medication,done:()->kotlin.Unit)=action(done){repository.saveMedication(medication);az.healthchecker.reminders.Reminders.reschedule(context)}
+    fun deleteMedication(medication:Medication)=action { repository.deleteMedication(medication.id);az.healthchecker.reminders.Reminders.reschedule(context);offerUndo(tr("Препарат «${medication.name}» удалён","“${medication.name}” deleted")){repository.saveMedication(medication)} }
     fun takeMedication(medication:Medication,date:String)=action {
         val t=makeIntake(medication,date,Instant.now(),ZoneId.systemDefault())
         repository.upsertIntake(t);offerUndo(tr("Отмечен приём: ","Dose taken: ")+medication.name){repository.deleteIntake(t.id)}

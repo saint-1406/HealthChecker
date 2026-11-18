@@ -169,6 +169,8 @@ import az.healthchecker.ui.update.UpdatePanel
                     ProfileRoutes.HOME -> HomeSettingsScreen(vm){route="main"}
                     ProfileRoutes.BACKUP -> BackupScreen(vm,{folderPicker.launch(null)},{restorePicker.launch(arrayOf("application/zip","application/octet-stream","application/json","text/plain"))}){route="main"}
                     ProfileRoutes.LOOK -> LookScreen(vm,{route="appearance"}){route="main"}
+                    ProfileRoutes.ENERGY -> az.healthchecker.ui.profile.ExpenditureScreen(vm){route="main"}
+                    ProfileRoutes.REMINDERS -> az.healthchecker.ui.profile.RemindersScreen(vm){route="main"}
                     ProfileRoutes.WATCH -> az.healthchecker.ui.watch.WatchScreen(vm){route="main"}
                     ProfileRoutes.ABOUT -> AboutScreen(vm,{route="main"}){UpdatePanel(updates)}
                     ProfileRoutes.SETUP -> SetupScreen(vm,{route="main"}){route=ProfileRoutes.PROGRAM}
@@ -182,7 +184,7 @@ import az.healthchecker.ui.update.UpdatePanel
                         if(food!=null)EntryEditor(vm,food,old,template,draftId,foodDate,{route=entryBack},{foodSearch("meal")}){day->date=day;route=entryBack}else TextButton(onClick={route=entryBack}){Text(tr("Продукт недоступен. Вернуться","The food is unavailable. Go back"))}
                     }
                     else -> when(tab) {
-                        0 -> DashboardScreen(vm,snapshot,date,backupError,{tab=1;foodSearch()},{vm.water(date)},::edit,{tab=3;route=ProfileRoutes.BACKUP},{tab=2},{route="steps"},{route="protein"},{tab=1},{route="meal"},{folderPicker.launch(null)})
+                        0 -> DashboardScreen(vm,snapshot,date,backupError,{tab=1;foodSearch()},{vm.water(date)},::edit,{tab=3;route=ProfileRoutes.BACKUP},{tab=2},{route="steps"},{route="protein"},{tab=1},{route="meal"},{folderPicker.launch(null)}){tab=3;route=ProfileRoutes.ENERGY}
                         1 -> DiaryScreen(vm,snapshot,date,{foodSearch()},::edit,{e->add(e.foodId,e.id)},::editMedication,
                             openPhoto={photoName=it.fileName;route="photo"},selectFood={add(it.id)},openMeals={route="meals"},openDraft={route="meal"},openProfile={tab=3;route=ProfileRoutes.BACKUP},chooseFolder={folderPicker.launch(null)})
                         2 -> TrainingScreen(vm,snapshot,date,rememberTodayPlan(vm,snapshot,date,variant),{leaveFor("exercise-search")},{route="workout-now"},::editWorkout,{tab=3;route=ProfileRoutes.BODY},{logExercise(it,null)},{videoId=it;videoBack="main";route="video"}){route="videos"}

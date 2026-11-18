@@ -32,7 +32,7 @@ import az.healthchecker.ui.steps.stepsEnergy
 import az.healthchecker.ui.steps.stepsText
 import az.healthchecker.ui.diary.MealDraftCard
 
-@Composable fun DashboardScreen(vm:AppViewModel,snapshot:UserSnapshot,date:String,backupError:String?,add:()->Unit,water:()->Unit,edit:(DiaryEntry)->Unit,openProfile:()->Unit,openTraining:()->Unit,openSteps:()->Unit,openProtein:()->Unit,openDiary:()->Unit,openDraft:()->Unit,chooseFolder:()->Unit) {
+@Composable fun DashboardScreen(vm:AppViewModel,snapshot:UserSnapshot,date:String,backupError:String?,add:()->Unit,water:()->Unit,edit:(DiaryEntry)->Unit,openProfile:()->Unit,openTraining:()->Unit,openSteps:()->Unit,openProtein:()->Unit,openDiary:()->Unit,openDraft:()->Unit,chooseFolder:()->Unit,openExpenditure:()->Unit={}) {
     val day=snapshot.day(date);val summary=day.summary;val goals=day.goals
     val settings by vm.settings.collectAsStateWithLifecycle()
     val draft by vm.mealDraft.collectAsStateWithLifecycle()
@@ -79,6 +79,8 @@ import az.healthchecker.ui.diary.MealDraftCard
                 Icon(Icons.Outlined.ChevronRight,null)
             }
         }
+        // Only for today: the estimate is about the current weeks, not a past date.
+        if(date==java.time.LocalDate.now().toString())az.healthchecker.ui.profile.ExpenditureCard(vm,snapshot,openExpenditure)
         if(settings.overviewCards.weight)WeightCard(vm,snapshot,date)
         val watch by vm.watch.collectAsStateWithLifecycle()
         val steps=snapshot.stepsOn(date,watch.data)

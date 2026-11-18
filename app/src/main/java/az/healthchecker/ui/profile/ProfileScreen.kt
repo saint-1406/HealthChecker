@@ -26,7 +26,8 @@ import java.time.*
 object ProfileRoutes {
     const val BODY="profile-body";const val TARGETS="profile-targets";const val INVENTORY="inventory";const val HOME="profile-home"
     const val BACKUP="profile-backup";const val LOOK="profile-look";const val ABOUT="profile-about";const val SETUP="setup";const val PROGRAM="program";const val WATCH="profile-watch"
-    val all=listOf(BODY,TARGETS,INVENTORY,HOME,BACKUP,LOOK,ABOUT,SETUP,PROGRAM,WATCH)
+    const val ENERGY="profile-energy";const val REMINDERS="profile-reminders"
+    val all=listOf(BODY,TARGETS,INVENTORY,HOME,BACKUP,LOOK,ABOUT,SETUP,PROGRAM,WATCH,ENERGY,REMINDERS)
 }
 
 /**
@@ -65,6 +66,8 @@ fun goalsLine(g:DailyGoals?):String = if(g==null||listOf(g.kcal,g.protein,g.fat,
         SetupCard(setup,open)
         GroupLabel(tr("Тело и питание","Body and nutrition"))
         ProfileRow(Icons.Outlined.MonitorWeight,tr("Тело и активность","Body and activity"),profile?.let{"${number(it.currentWeight,1)} ${tr("кг","kg")} · ${tr("активность","activity")} ${activityLabel(it.activity).lowercase(Lang.locale)}"}?:tr("Пол, возраст, рост, вес","Sex, age, height, weight"),"open-${ProfileRoutes.BODY}"){open(ProfileRoutes.BODY)}
+        ProfileRow(Icons.Outlined.LocalFireDepartment,tr("Расход энергии","Energy expenditure"),remember(snapshot,today){expenditure(snapshot,today)}.let{e->e.estimate?.let{tr("≈ ","≈ ")+kcal10(it)+if(e.observed!=null)tr(" · по вашим данным"," · from your data") else tr(" · по формуле"," · by formula")}?:tr("Нужны рост, вес и записи","Needs height, weight and logs")},"open-${ProfileRoutes.ENERGY}"){open(ProfileRoutes.ENERGY)}
+        ProfileRow(Icons.Outlined.NotificationsActive,tr("Напоминания","Reminders"),reminderLine(),"open-${ProfileRoutes.REMINDERS}"){open(ProfileRoutes.REMINDERS)}
         ProfileRow(Icons.Outlined.Watch,tr("Часы и Health Connect","Watch and Health Connect"),az.healthchecker.ui.watch.watchLine(watch),"open-${ProfileRoutes.WATCH}"){open(ProfileRoutes.WATCH)}
         ProfileRow(Icons.Outlined.Restaurant,tr("Цели питания","Nutrition targets"),goalsLine(goals),"open-${ProfileRoutes.TARGETS}"){open(ProfileRoutes.TARGETS)}
         GroupLabel(tr("Мои данные","My data"))
