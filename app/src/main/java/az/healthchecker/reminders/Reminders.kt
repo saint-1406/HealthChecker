@@ -55,10 +55,15 @@ object Reminders {
 
     private fun schedule(c:Context,meds:List<Medication>) {
         val am=c.getSystemService(AlarmManager::class.java)?:return
-        val pi=PendingIntent.getBroadcast(c,0,Intent(c,ReminderReceiver::class.java).setAction(ACTION_FIRE),PendingIntent.FLAG_IMMUTABLE or PendingIntent.FLAG_UPDATE_CURRENT)
+        fun pi(code:Int)=PendingIntent.getBroadcast(c,code,Intent(c,ReminderReceiver::class.java).setAction(ACTION_FIRE),PendingIntent.FLAG_IMMUTABLE or PendingIntent.FLAG_UPDATE_CURRENT)
         val next=settings(c).takeIf{it.anyOn}?.nextSlot(meds,LocalDateTime.now())
-        if(next==null){am.cancel(pi);return}
-        am.setAndAllowWhileIdle(AlarmManager.RTC_WAKEUP,next.at.atZone(ZoneId.systemDefault()).toInstant().toEpochMilli(),pi)
+        if(next==null){am.cancel(pi(0));am.cancel(pi(1));return}
+        val at=next.at.atZone(ZoneId.systemDefault()).toInstant().toEpochMilli()
+        // Two inexact alarms, no exact-alarm permission: a 10-minute window while the phone is in use, and one that
+        // also runs in Doze (Android may give it up to an hour). Whichever comes first shows the reminder; the other
+        // then finds nothing new.
+        am.setWindow(AlarmManager.RTC_WAKEUP,at,10*60_000L,pi(1))
+        am.setAndAllowWhileIdle(AlarmManager.RTC_WAKEUP,at,pi(0))
     }
 
     /** The alarm went off: show what is due and still needed, then point the alarm at the next one. */

@@ -75,7 +75,7 @@ import java.time.LocalTime
             Text(tr("Не придёт, если день уже отмечен «День заполнен».","Skipped when the day is already marked complete."),style=MaterialTheme.typography.bodySmall,color=MaterialTheme.colorScheme.onSurfaceVariant)
         }
         error?.let{Text(it,color=MaterialTheme.colorScheme.error)}
-        Text(tr("Напоминания работают без интернета. Android может показать их чуть позже, обычно в пределах 10–20 минут, — так он бережёт батарею. Если напоминание опоздало больше чем на полчаса (телефон был выключен), оно не придёт.","Reminders work offline. Android may show them a little late, usually within 10–20 minutes, to save battery. A reminder more than half an hour late (the phone was off) is skipped."),style=MaterialTheme.typography.bodySmall,color=MaterialTheme.colorScheme.onSurfaceVariant)
+        Text(tr("Напоминания работают без интернета. Android может показать их чуть позже, обычно в пределах 10 минут, а в режиме сна телефона — до часа: так он бережёт батарею. Если телефон был выключен и напоминание опоздало больше чем на час с четвертью, оно не придёт.","Reminders work offline. Android may show them a little late, usually within 10 minutes, up to an hour while the phone sleeps, to save battery. A reminder more than 75 minutes late (the phone was off) is skipped."),style=MaterialTheme.typography.bodySmall,color=MaterialTheme.colorScheme.onSurfaceVariant)
     }
 }
 

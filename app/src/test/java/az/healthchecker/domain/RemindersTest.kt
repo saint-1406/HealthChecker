@@ -33,8 +33,10 @@ class RemindersTest {
     @Test fun dueSlotsSkipStaleOnesAfterTheClockJumped() {
         val s=ReminderSettings(medications=true)
         assertEquals(1,s.dueSlots(listOf(vitD),at("07:00"),at("08:05")).size)
-        // The phone was off from 07:00 to 10:00: an 08:00 reminder two hours late is not shown.
+        // The phone was off from 07:00 to 10:00: an 08:00 reminder two hours late is not shown...
         assertTrue(s.dueSlots(listOf(vitD),at("07:00"),at("10:00")).isEmpty())
+        // ...but one Android delivered an hour late while dozing still is.
+        assertEquals(1,s.dueSlots(listOf(vitD),at("07:00"),at("09:00")).size)
         // Across midnight.
         assertEquals(listOf("21:00"),s.dueSlots(listOf(vitD),at("20:50"),at("21:10")).map{it.at.toLocalTime().toString()})
     }

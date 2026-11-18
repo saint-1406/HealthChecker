@@ -44,10 +44,10 @@ fun ReminderSettings.nextSlot(meds:List<Medication>,after:LocalDateTime):Reminde
     (0..7).asSequence().map{after.toLocalDate().plusDays(it.toLong())}.flatMap{slotsOn(it,meds)}.firstOrNull{it.at.isAfter(after)}
 
 /**
- * Reminders due in (from, to]. One that is more than [STALE_MINUTES] late (the phone was off or asleep) is dropped
- * rather than shown out of place.
+ * Reminders due in (from, to]. One that is more than [STALE_MINUTES] late (the phone was off) is dropped rather than
+ * shown out of place; the limit is above the up-to-an-hour window Android gives an inexact alarm in Doze.
  */
-const val STALE_MINUTES=30L
+const val STALE_MINUTES=75L
 fun ReminderSettings.dueSlots(meds:List<Medication>,from:LocalDateTime,to:LocalDateTime):List<ReminderSlot> {
     val earliest=maxOf(from,to.minusMinutes(STALE_MINUTES))
     return generateSequence(earliest.toLocalDate()){it.plusDays(1)}.takeWhile{!it.isAfter(to.toLocalDate())}
