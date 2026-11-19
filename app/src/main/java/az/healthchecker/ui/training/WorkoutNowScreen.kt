@@ -89,6 +89,19 @@ fun roleLabel(r:RecommendedExercise):String = when(r.role){
             style=MaterialTheme.typography.titleSmall,color=MaterialTheme.colorScheme.primary)
         Text(e.displayCue,style=MaterialTheme.typography.bodyMedium)
         if((p.sets?:0)>1)Text(tr("Отдых между подходами ","Rest between sets ")+"≈ ${restSeconds(e).toInt()} ${tr("с","s")}",style=MaterialTheme.typography.bodySmall,color=MaterialTheme.colorScheme.onSurfaceVariant)
+        // Set by set: each tap starts the rest timer; the last one logs the exercise.
+        val sets=p.sets?:0
+        if(logged==null&&sets>1&&e.measure!=ExerciseMeasure.MINUTES){
+            var done by androidx.compose.runtime.saveable.rememberSaveable(e.id){mutableIntStateOf(0)}
+            Row(verticalAlignment=Alignment.CenterVertically,horizontalArrangement=Arrangement.spacedBy(6.dp)){
+                (1..sets).forEach{i->Icon(if(i<=done)Icons.Outlined.CheckCircle else Icons.Outlined.RadioButtonUnchecked,null,Modifier.size(22.dp),tint=if(i<=done)MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.outline)}
+                Spacer(Modifier.weight(1f))
+                FilledTonalButton(onClick={
+                    done++
+                    if(done<sets)vm.startCountdown(restSeconds(e).toInt(),tr("Отдых · дальше подход ","Rest · next set ")+"${done+1}/$sets") else {done=0;log()}
+                },enabled=!busy,modifier=Modifier.testTag("setDone")){Text(if(done+1<sets)tr("Подход ","Set ")+"${done+1}/$sets "+tr("готов","done") else tr("Последний подход — записать","Last set — log it"))}
+            }
+        }
         FlowRow(horizontalArrangement=Arrangement.spacedBy(8.dp)){
             if(logged==null){
                 Button(onClick=log,enabled=!busy,modifier=Modifier.testTag("logPrescribed")){Icon(Icons.Outlined.Check,null);Spacer(Modifier.width(6.dp));Text(tr("Записать","Log it"))}

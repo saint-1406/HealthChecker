@@ -65,11 +65,16 @@ import kotlinx.coroutines.delay
 /** Logs a performed exercise; for sets the time is estimated with rest and stays editable. */
 @Composable fun WorkoutEditor(vm:AppViewModel,exercise:Exercise,old:WorkoutEntry?,preset:Prescription?,id:String,date:String,bodyWeightKg:Double?,back:()->Unit) {
     val busy by vm.busy.collectAsStateWithLifecycle()
-    val start=old?.let{Prescription(it.sets,it.reps,it.seconds,it.minutes)}?:preset?:prescribe(exercise,1)
+    val snapshot by vm.snapshot.collectAsStateWithLifecycle()
+    val history=remember(snapshot.workouts,exercise.id){snapshot.exerciseHistory(exercise.id)}
+    val last=remember(history,date,old){lastPerformance(history,date,old?.id)}
+    // A new entry starts from what was done last time; a suggestion from the workout plan keeps its sets and reps.
+    val fromLast=last?.takeIf{old==null&&preset==null}?.let{Prescription(it.sets,it.reps,it.seconds,if(exercise.measure==ExerciseMeasure.MINUTES)it.minutes else null)}
+    val start=old?.let{Prescription(it.sets,it.reps,it.seconds,it.minutes)}?:fromLast?:preset?:prescribe(exercise,1)
     var sets by rememberSaveable(id){mutableStateOf(start.sets?.toString()?:if(exercise.measure==ExerciseMeasure.MINUTES)"" else "3")}
     var reps by rememberSaveable(id){mutableStateOf(start.reps?.toString()?:"")}
     var seconds by rememberSaveable(id){mutableStateOf(start.seconds?.toString()?:"")}
-    var load by rememberSaveable(id){mutableStateOf(old?.loadKg?.let(::plain)?:"")}
+    var load by rememberSaveable(id){mutableStateOf((if(old!=null)old.loadKg else last?.loadKg)?.let(::plain)?:"")}
     var minutesText by rememberSaveable(id){mutableStateOf((old?.minutes?:start.minutes)?.let(::plain)?:"")}
     var minutesEdited by rememberSaveable(id){mutableStateOf(old!=null||exercise.measure==ExerciseMeasure.MINUTES)}
     fun int(s:String)=s.trim().toIntOrNull()
@@ -90,6 +95,10 @@ import kotlinx.coroutines.delay
         ExercisePicture(vm,exercise)
         Text(exercise.displayCue,style=MaterialTheme.typography.bodyMedium,color=MaterialTheme.colorScheme.onSurfaceVariant)
         // Seconds-per-set exercises take the measured time as one set; the others as the whole duration.
+        if(last!=null)LastTimePanel(history.filter{it.id!=old?.id},last,exercise.measure,result.getOrNull()?.let{w->newRecords(w,history).takeIf{it.isNotEmpty()}?.let{recordsText(w,it)}}){n->
+            n.sets?.let{sets=it.toString()};n.reps?.let{reps=it.toString()};n.seconds?.let{seconds=it.toString()};n.loadKg?.let{load=plain(it)}
+            if(exercise.measure!=ExerciseMeasure.MINUTES)minutesEdited=old!=null&&minutesEdited
+        }
         StopwatchPanel(vm,{ms->if(exercise.measure==ExerciseMeasure.SECONDS)seconds=(ms/1000).coerceIn(1,3600).toString() else {minutesEdited=true;minutesText=plain((Math.round(ms/6000.0)/10.0).coerceAtLeast(0.1))}},
             if(exercise.measure==ExerciseMeasure.SECONDS)tr("Подставить в секунды подхода","Use as seconds per set") else tr("Подставить во время","Use as the duration"))
         if(exercise.measure!=ExerciseMeasure.MINUTES)CountField(tr("Подходы","Sets"),sets,"sets"){sets=it}

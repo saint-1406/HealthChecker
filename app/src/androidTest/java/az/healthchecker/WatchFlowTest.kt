@@ -33,10 +33,11 @@ class WatchFlowTest {
             val c=HealthConnectClient.getOrCreate(context)
             clear(c)
             val today=LocalDate.now();val yesterday=today.minusDays(1);val run=yesterday.atTime(18,0).atZone(zone).toInstant()
-            val morning=today.atTime(0,30).atZone(zone).toInstant()
+            // Today's sample must not lie in the future: shortly after midnight it starts at midnight.
+            val morning=minOf(today.atTime(0,30).atZone(zone).toInstant(),maxOf(today.atStartOfDay(zone).toInstant(),Instant.now().minusSeconds(15*60)))
             val m=Metadata.manualEntry()
             c.insertRecords(listOf<Record>(
-                StepsRecord(morning,null,morning.plusSeconds(1800),null,8421,m),
+                StepsRecord(morning,null,morning.plusSeconds(60),null,8421,m),
                 StepsRecord(today.minusDays(1).atTime(12,0).atZone(zone).toInstant(),null,today.minusDays(1).atTime(13,0).atZone(zone).toInstant(),null,5300,m),
                 SleepSessionRecord(today.minusDays(2).atTime(23,30).atZone(zone).toInstant(),null,yesterday.atTime(7,0).atZone(zone).toInstant(),null,metadata=m,
                     stages=listOf(SleepSessionRecord.Stage(yesterday.atTime(3,0).atZone(zone).toInstant(),yesterday.atTime(3,30).atZone(zone).toInstant(),SleepSessionRecord.STAGE_TYPE_AWAKE))),

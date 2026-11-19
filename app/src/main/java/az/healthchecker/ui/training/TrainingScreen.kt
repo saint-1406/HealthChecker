@@ -26,20 +26,22 @@ import az.healthchecker.ui.*
 }
 
 @OptIn(ExperimentalLayoutApi::class)
-@Composable fun TrainingScreen(vm:AppViewModel,snapshot:UserSnapshot,date:String,plan:Recommendation?,add:()->Unit,start:()->Unit,edit:(WorkoutEntry)->Unit,openProfile:()->Unit,log:(Exercise)->Unit,openVideo:(String)->Unit,videos:()->Unit) {
+@Composable fun TrainingScreen(vm:AppViewModel,snapshot:UserSnapshot,date:String,plan:Recommendation?,add:()->Unit,start:()->Unit,edit:(WorkoutEntry)->Unit,openProfile:()->Unit,log:(Exercise)->Unit,openVideo:(String)->Unit,videos:()->Unit,progress:()->Unit) {
     val busy by vm.busy.collectAsStateWithLifecycle()
     val favoritesTab by vm.trainingFavorites.collectAsStateWithLifecycle()
     Column(Modifier.fillMaxSize()) {
         DayFavoritesTabs(favoritesTab,snapshot.favoriteExercises.size+snapshot.favoriteVideos.size,tr("Сегодня","Today")){vm.trainingFavorites.value=it}
         if(favoritesTab)LazyColumn(Modifier.fillMaxSize().testTag("favoriteWorkoutsList"),contentPadding=PaddingValues(20.dp),verticalArrangement=Arrangement.spacedBy(12.dp)){favoriteWorkouts(vm,snapshot,date,busy,log,openVideo)}
-        else TrainingDay(vm,snapshot,date,plan,busy,add,start,edit,openProfile,videos)
+        else TrainingDay(vm,snapshot,date,plan,busy,add,start,edit,openProfile,videos,progress)
     }
 }
 
-@Composable private fun TrainingDay(vm:AppViewModel,snapshot:UserSnapshot,date:String,plan:Recommendation?,busy:Boolean,add:()->Unit,start:()->Unit,edit:(WorkoutEntry)->Unit,openProfile:()->Unit,videos:()->Unit) {
+@Composable private fun TrainingDay(vm:AppViewModel,snapshot:UserSnapshot,date:String,plan:Recommendation?,busy:Boolean,add:()->Unit,start:()->Unit,edit:(WorkoutEntry)->Unit,openProfile:()->Unit,videos:()->Unit,progress:()->Unit) {
     val prefs=snapshot.trainingPrefs?:TrainingPrefs()
     val day=snapshot.training(date)
     val weight=snapshot.bodyWeight(date)
+    // Records each of the day's entries set when it was logged, for a trophy in the list.
+    val trophies=remember(snapshot.workouts,date){day.workouts.map{it.exerciseId}.toSet().flatMap{id->recordsAtTheTime(snapshot.exerciseHistory(id)).entries}.associate{it.key to it.value}}
     LazyColumn(Modifier.fillMaxSize().testTag("trainingList"),contentPadding=PaddingValues(20.dp),verticalArrangement=Arrangement.spacedBy(14.dp)) {
         item{Panel {
             Text(tr("Тренировка за день","Today's training"),style=MaterialTheme.typography.titleMedium)
@@ -54,11 +56,13 @@ import az.healthchecker.ui.*
         item{Button(onClick=add,modifier=Modifier.fillMaxWidth().heightIn(min=54.dp).testTag("addExercise")){Icon(Icons.Outlined.Add,null);Spacer(Modifier.width(8.dp));Text(tr("Добавить упражнение","Add exercise"))}}
         // Right under "Add exercise", above the day's list, so it is on the first screen however much was logged.
         item{FilledTonalButton(onClick=videos,modifier=Modifier.fillMaxWidth().heightIn(min=54.dp).testTag("openVideos")){Icon(Icons.Outlined.SmartDisplay,null);Spacer(Modifier.width(8.dp));Text(tr("Видеотренировки","Workout videos"))}}
+        item{OutlinedButton(onClick=progress,modifier=Modifier.fillMaxWidth().heightIn(min=48.dp).testTag("openProgress")){Icon(Icons.Outlined.Insights,null);Spacer(Modifier.width(8.dp));Text(tr("Прогресс и рекорды","Progress and records"))}}
         if(day.workouts.isNotEmpty()){
             item{SectionTitle(tr("Выполненные упражнения","Completed exercises"),count(day.workouts.size,"упражнение","упражнения","упражнений","exercise","exercises"))}
             items(day.workouts,key={it.id}){w->Panel {
                 Row(Modifier.fillMaxWidth().clickable{edit(w)},verticalAlignment=Alignment.CenterVertically){
-                    Column(Modifier.weight(1f)){Text(vm.workoutName(w),fontWeight=FontWeight.SemiBold);Text(workoutLabel(w),style=MaterialTheme.typography.bodySmall,color=MaterialTheme.colorScheme.onSurfaceVariant)}
+                    Column(Modifier.weight(1f)){Text(vm.workoutName(w),fontWeight=FontWeight.SemiBold);Text(workoutLabel(w),style=MaterialTheme.typography.bodySmall,color=MaterialTheme.colorScheme.onSurfaceVariant)
+                        trophies[w.id]?.let{Text("🏆 "+tr("Рекорд: ","Record: ")+recordsText(w,it),style=MaterialTheme.typography.bodySmall,color=MaterialTheme.colorScheme.primary,fontWeight=FontWeight.Medium,modifier=Modifier.testTag("recordBadge"))}}
                     if(vm.exercise(w.exerciseId)!=null)FavoriteStar(w.exerciseId in snapshot.favoriteExercises,vm.workoutName(w),!busy){vm.toggleFavoriteExercise(w.exerciseId)}
                     IconButton(onClick={vm.deleteWorkout(w)}){Icon(Icons.Outlined.DeleteOutline,tr("Удалить ","Delete ")+vm.workoutName(w))}
                 }
