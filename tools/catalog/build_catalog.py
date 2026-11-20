@@ -131,7 +131,7 @@ def build_catalog(inputs, output, translations=HERE/'i18n'):
     for i in hidden_ids(usda,{i:f['_category'] for i,f in usda.items()}):
         if not foods[i]['common']:foods[i]['hidden']=True
     for f in foods.values():f.pop('_category',None)
-    for item in load_json(HERE/'extra-foods.json',[])+load_json(HERE/'sushi-foods.json',[])+load_json(HERE/'dish-foods.json',[])+load_json(HERE/'typical-foods.json',[])+load_json(HERE/'store-foods.json',[]):
+    for item in load_json(HERE/'extra-foods.json',[])+load_json(HERE/'sushi-foods.json',[])+load_json(HERE/'dish-foods.json',[])+load_json(HERE/'typical-foods.json',[])+load_json(HERE/'store-foods.json',[])+load_json(HERE/'kfc-foods.json',[]):
         foods[item['id']]=extra_food(item,foods)
     search_aliases=load_json(HERE/'search-aliases.json',{})
     for f in foods.values():

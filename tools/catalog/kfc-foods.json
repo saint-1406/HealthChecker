@@ -1,0 +1,1477 @@
+[
+ {
+  "id": "local:kfc-twister-original",
+  "name": "Твистер оригинальный · KFC",
+  "nameEn": "Twister Original · KFC",
+  "aliases": [
+   "kfc кфс кфц твистер twister tvister tvister acısız twister original"
+  ],
+  "per100g": {
+   "kcal": 276.76,
+   "protein": 10.12,
+   "fat": 17.13,
+   "carbs": 20.53,
+   "fiber": 1.81
+  },
+  "portions": [
+   {
+    "name": "1 шт. (≈185 г)",
+    "nameEn": "1 pc (~185 g)",
+    "grams": 185
+   }
+  ],
+  "density": null,
+  "source": "KFC (Баку, меню kfc.az). KFC Азербайджан не публикует пищевую ценность. Вес и энергия — официальные данные KFC Украины (kfc.ua, «Твістер Оригінальний»: 185 г, 512 ккал). Белки и углеводы — по составу (USDA: пшеничная тортилья, куриное филе в панировке (стрипсы KFC), салат айсберг, помидор, майонез, вода), жиры — остаток энергии по Этуотеру (4/4/9). В Баку вес может отличаться.",
+  "sourceEn": "KFC (Baku, kfc.az menu). KFC Azerbaijan publishes no nutrition values. Weight and energy are KFC Ukraine's official figures (kfc.ua, \"Твістер Оригінальний\": 185 g, 512 kcal). Protein and carbohydrate come from the composition (USDA: flour tortilla, breaded chicken fillet (KFC strips), iceberg lettuce, tomato, mayonnaise, water); fat is the Atwater remainder (4/4/9). The Baku weight may differ."
+ },
+ {
+  "id": "local:kfc-twister-spicy",
+  "name": "Твистер острый · KFC",
+  "nameEn": "Twister Spicy · KFC",
+  "aliases": [
+   "kfc кфс кфц твистер twister tvister острый acili tvister acılı twister spicy"
+  ],
+  "per100g": {
+   "kcal": 263.76,
+   "protein": 9.79,
+   "fat": 15.73,
+   "carbs": 20.76,
+   "fiber": 1.83
+  },
+  "portions": [
+   {
+    "name": "1 шт. (≈181 г)",
+    "nameEn": "1 pc (~181 g)",
+    "grams": 181
+   }
+  ],
+  "density": null,
+  "source": "KFC (Баку, меню kfc.az). KFC Азербайджан не публикует пищевую ценность. Вес и энергия — официальные данные KFC Украины (kfc.ua, «Твістер Гострий»: 181 г, 477.4 ккал). Белки и углеводы — по составу (USDA: пшеничная тортилья, куриное филе в панировке (стрипсы KFC), салат айсберг, помидор, майонез, вода), жиры — остаток энергии по Этуотеру (4/4/9). В Баку вес может отличаться.",
+  "sourceEn": "KFC (Baku, kfc.az menu). KFC Azerbaijan publishes no nutrition values. Weight and energy are KFC Ukraine's official figures (kfc.ua, \"Твістер Гострий\": 181 g, 477.4 kcal). Protein and carbohydrate come from the composition (USDA: flour tortilla, breaded chicken fillet (KFC strips), iceberg lettuce, tomato, mayonnaise, water); fat is the Atwater remainder (4/4/9). The Baku weight may differ."
+ },
+ {
+  "id": "local:kfc-i-twister",
+  "name": "Ай-твистер · KFC",
+  "nameEn": "i-Twister · KFC",
+  "aliases": [
+   "kfc кфс кфц ай твистер i twister мини i-tvister i-twister"
+  ],
+  "per100g": {
+   "kcal": 243.31,
+   "protein": 9.63,
+   "fat": 12.94,
+   "carbs": 21.93,
+   "fiber": 1.9
+  },
+  "portions": [
+   {
+    "name": "1 шт. (≈104 г)",
+    "nameEn": "1 pc (~104 g)",
+    "grams": 104
+   }
+  ],
+  "density": null,
+  "source": "KFC (Баку, меню kfc.az). KFC Азербайджан не публикует пищевую ценность — оценка по составу из описания на kfc.az (USDA, включая анализ блюд KFC): пшеничная тортилья, куриное филе в панировке (стрипсы KFC), салат айсберг, помидор, майонез, вода, 104 г на порцию. Вес в ресторане может отличаться.",
+  "sourceEn": "KFC (Baku, kfc.az menu). KFC Azerbaijan publishes no nutrition values — estimated from the kfc.az description (USDA, including its analyses of KFC food): flour tortilla, breaded chicken fillet (KFC strips), iceberg lettuce, tomato, mayonnaise, water, 104 g per serving. The restaurant weight may differ."
+ },
+ {
+  "id": "local:kfc-twister-fresher-original",
+  "name": "Твистер Фрешер оригинальный · KFC",
+  "nameEn": "Original Twister Fresher · KFC",
+  "aliases": [
+   "kfc кфс кфц твистер фрешер twister fresher freser tvister freşer orijinal original twister fresher"
+  ],
+  "per100g": {
+   "kcal": 219.62,
+   "protein": 9.28,
+   "fat": 11.79,
+   "carbs": 19.06,
+   "fiber": 1.7
+  },
+  "portions": [
+   {
+    "name": "1 шт. (≈203 г)",
+    "nameEn": "1 pc (~203 g)",
+    "grams": 203
+   }
+  ],
+  "density": null,
+  "source": "KFC (Баку, меню kfc.az). KFC Азербайджан не публикует пищевую ценность — оценка по составу из описания на kfc.az (USDA, включая анализ блюд KFC): пшеничная тортилья, куриное филе в панировке (стрипсы KFC), салат айсберг, помидор, огурец, майонез, вода, 203 г на порцию. Вес в ресторане может отличаться.",
+  "sourceEn": "KFC (Baku, kfc.az menu). KFC Azerbaijan publishes no nutrition values — estimated from the kfc.az description (USDA, including its analyses of KFC food): flour tortilla, breaded chicken fillet (KFC strips), iceberg lettuce, tomato, cucumber, mayonnaise, water, 203 g per serving. The restaurant weight may differ."
+ },
+ {
+  "id": "local:kfc-twister-fresher-spicy",
+  "name": "Твистер Фрешер острый · KFC",
+  "nameEn": "Spicy Twister Fresher · KFC",
+  "aliases": [
+   "kfc кфс кфц твистер фрешер twister fresher freser острый acili tvister freşer acılı spicy twister fresher"
+  ],
+  "per100g": {
+   "kcal": 217.96,
+   "protein": 8.95,
+   "fat": 11.68,
+   "carbs": 19.23,
+   "fiber": 1.71
+  },
+  "portions": [
+   {
+    "name": "1 шт. (≈197 г)",
+    "nameEn": "1 pc (~197 g)",
+    "grams": 197
+   }
+  ],
+  "density": null,
+  "source": "KFC (Баку, меню kfc.az). KFC Азербайджан не публикует пищевую ценность — оценка по составу из описания на kfc.az (USDA, включая анализ блюд KFC): пшеничная тортилья, куриное филе в панировке (стрипсы KFC), салат айсберг, помидор, огурец, майонез, вода, 197 г на порцию. Вес в ресторане может отличаться.",
+  "sourceEn": "KFC (Baku, kfc.az menu). KFC Azerbaijan publishes no nutrition values — estimated from the kfc.az description (USDA, including its analyses of KFC food): flour tortilla, breaded chicken fillet (KFC strips), iceberg lettuce, tomato, cucumber, mayonnaise, water, 197 g per serving. The restaurant weight may differ."
+ },
+ {
+  "id": "local:kfc-boxmaster-original",
+  "name": "Боксмастер оригинальный · KFC",
+  "nameEn": "Boxmaster Original · KFC",
+  "aliases": [
+   "kfc кфс кфц боксмастер boxmaster boksmaster boksmaster acısız boxmaster original"
+  ],
+  "per100g": {
+   "kcal": 264.09,
+   "protein": 10.57,
+   "fat": 15.18,
+   "carbs": 21.29,
+   "fiber": 1.89
+  },
+  "portions": [
+   {
+    "name": "1 шт. (≈279 г)",
+    "nameEn": "1 pc (~279 g)",
+    "grams": 279
+   }
+  ],
+  "density": null,
+  "source": "KFC (Баку, меню kfc.az). KFC Азербайджан не публикует пищевую ценность. Вес и энергия — официальные данные KFC Украины (kfc.ua, «Боксмайстер Оригінальний»: 279 г, 736.8 ккал). Белки и углеводы — по составу (USDA: пшеничная тортилья, куриное филе в панировке (стрипсы KFC), хашбраун, плавленый сыр, помидор, салат айсберг, майонез, вода), жиры — остаток энергии по Этуотеру (4/4/9). В Баку вес может отличаться.",
+  "sourceEn": "KFC (Baku, kfc.az menu). KFC Azerbaijan publishes no nutrition values. Weight and energy are KFC Ukraine's official figures (kfc.ua, \"Боксмайстер Оригінальний\": 279 g, 736.8 kcal). Protein and carbohydrate come from the composition (USDA: flour tortilla, breaded chicken fillet (KFC strips), hash brown, processed cheese, tomato, iceberg lettuce, mayonnaise, water); fat is the Atwater remainder (4/4/9). The Baku weight may differ."
+ },
+ {
+  "id": "local:kfc-boxmaster-spicy",
+  "name": "Боксмастер острый · KFC",
+  "nameEn": "Boxmaster Spicy · KFC",
+  "aliases": [
+   "kfc кфс кфц боксмастер boxmaster boksmaster острый acili boksmaster acılı boxmaster spicy"
+  ],
+  "per100g": {
+   "kcal": 261.01,
+   "protein": 10.46,
+   "fat": 14.85,
+   "carbs": 21.37,
+   "fiber": 1.9
+  },
+  "portions": [
+   {
+    "name": "1 шт. (≈276 г)",
+    "nameEn": "1 pc (~276 g)",
+    "grams": 276
+   }
+  ],
+  "density": null,
+  "source": "KFC (Баку, меню kfc.az). KFC Азербайджан не публикует пищевую ценность. Вес и энергия — официальные данные KFC Украины (kfc.ua, «Боксмайстер Гострий»: 276 г, 720.4 ккал). Белки и углеводы — по составу (USDA: пшеничная тортилья, куриное филе в панировке (стрипсы KFC), хашбраун, плавленый сыр, помидор, салат айсберг, майонез, вода), жиры — остаток энергии по Этуотеру (4/4/9). В Баку вес может отличаться.",
+  "sourceEn": "KFC (Baku, kfc.az menu). KFC Azerbaijan publishes no nutrition values. Weight and energy are KFC Ukraine's official figures (kfc.ua, \"Боксмайстер Гострий\": 276 g, 720.4 kcal). Protein and carbohydrate come from the composition (USDA: flour tortilla, breaded chicken fillet (KFC strips), hash brown, processed cheese, tomato, iceberg lettuce, mayonnaise, water); fat is the Atwater remainder (4/4/9). The Baku weight may differ."
+ },
+ {
+  "id": "local:kfc-mega-roll-original",
+  "name": "Мега Ролл оригинальный · KFC",
+  "nameEn": "Mega Roll Original · KFC",
+  "aliases": [
+   "kfc кфс кфц мега ролл mega roll meqa meqa roll orijinal mega roll original"
+  ],
+  "per100g": {
+   "kcal": 278.22,
+   "protein": 10.92,
+   "fat": 15.12,
+   "carbs": 24.44,
+   "fiber": 2.13
+  },
+  "portions": [
+   {
+    "name": "1 шт. (≈249 г)",
+    "nameEn": "1 pc (~249 g)",
+    "grams": 249
+   }
+  ],
+  "density": null,
+  "source": "KFC (Баку, меню kfc.az). KFC Азербайджан не публикует пищевую ценность — оценка по составу из описания на kfc.az (USDA, включая анализ блюд KFC): пшеничная тортилья, куриное филе в панировке (стрипсы KFC), картофель фри, солёный огурец, салат айсберг, майонез, вода, 249 г на порцию. Вес в ресторане может отличаться.",
+  "sourceEn": "KFC (Baku, kfc.az menu). KFC Azerbaijan publishes no nutrition values — estimated from the kfc.az description (USDA, including its analyses of KFC food): flour tortilla, breaded chicken fillet (KFC strips), french fries, pickle, iceberg lettuce, mayonnaise, water, 249 g per serving. The restaurant weight may differ."
+ },
+ {
+  "id": "local:kfc-mega-roll-spicy",
+  "name": "Мега Ролл острый · KFC",
+  "nameEn": "Mega Roll Spicy · KFC",
+  "aliases": [
+   "kfc кфс кфц мега ролл mega roll meqa острый acili meqa roll acılı mega roll spicy"
+  ],
+  "per100g": {
+   "kcal": 278.38,
+   "protein": 10.57,
+   "fat": 15.11,
+   "carbs": 24.84,
+   "fiber": 2.15
+  },
+  "portions": [
+   {
+    "name": "1 шт. (≈240 г)",
+    "nameEn": "1 pc (~240 g)",
+    "grams": 240
+   }
+  ],
+  "density": null,
+  "source": "KFC (Баку, меню kfc.az). KFC Азербайджан не публикует пищевую ценность — оценка по составу из описания на kfc.az (USDA, включая анализ блюд KFC): пшеничная тортилья, куриное филе в панировке (стрипсы KFC), картофель фри, солёный огурец, салат айсберг, майонез, вода, 240 г на порцию. Вес в ресторане может отличаться.",
+  "sourceEn": "KFC (Baku, kfc.az menu). KFC Azerbaijan publishes no nutrition values — estimated from the kfc.az description (USDA, including its analyses of KFC food): flour tortilla, breaded chicken fillet (KFC strips), french fries, pickle, iceberg lettuce, mayonnaise, water, 240 g per serving. The restaurant weight may differ."
+ },
+ {
+  "id": "local:kfc-veggie-twister",
+  "name": "Вегетарианский твистер с сыром · KFC",
+  "nameEn": "Vegetarian Twister Cheese · KFC",
+  "aliases": [
+   "kfc кфс кфц вегетарианский твистер сыр vegetarian twister cheese vegeterian tvister cheese vegetarian twister cheese"
+  ],
+  "per100g": {
+   "kcal": 261.62,
+   "protein": 8.29,
+   "fat": 14.19,
+   "carbs": 24.99,
+   "fiber": 2.06
+  },
+  "portions": [
+   {
+    "name": "1 шт. (≈185 г)",
+    "nameEn": "1 pc (~185 g)",
+    "grams": 185
+   }
+  ],
+  "density": null,
+  "source": "KFC (Баку, меню kfc.az). KFC Азербайджан не публикует пищевую ценность — оценка по составу из описания на kfc.az (USDA, включая анализ блюд KFC): пшеничная тортилья, сыр в панировке, салат айсберг, помидор, майонез, вода, 185 г на порцию. Вес в ресторане может отличаться.",
+  "sourceEn": "KFC (Baku, kfc.az menu). KFC Azerbaijan publishes no nutrition values — estimated from the kfc.az description (USDA, including its analyses of KFC food): flour tortilla, breaded cheese, iceberg lettuce, tomato, mayonnaise, water, 185 g per serving. The restaurant weight may differ."
+ },
+ {
+  "id": "local:kfc-longer",
+  "name": "Лонгер · KFC",
+  "nameEn": "Longer · KFC",
+  "aliases": [
+   "kfc кфс кфц лонгер longer longer longer"
+  ],
+  "per100g": {
+   "kcal": 266.05,
+   "protein": 11.37,
+   "fat": 12.37,
+   "carbs": 27.35,
+   "fiber": 1.62
+  },
+  "portions": [
+   {
+    "name": "1 шт. (≈99 г)",
+    "nameEn": "1 pc (~99 g)",
+    "grams": 99
+   }
+  ],
+  "density": null,
+  "source": "KFC (Баку, меню kfc.az). KFC Азербайджан не публикует пищевую ценность — оценка по составу из описания на kfc.az (USDA, включая анализ блюд KFC): булочка, куриное филе в панировке (стрипсы KFC), салат айсберг, майонез, вода, 99 г на порцию. Вес в ресторане может отличаться.",
+  "sourceEn": "KFC (Baku, kfc.az menu). KFC Azerbaijan publishes no nutrition values — estimated from the kfc.az description (USDA, including its analyses of KFC food): bun, breaded chicken fillet (KFC strips), iceberg lettuce, mayonnaise, water, 99 g per serving. The restaurant weight may differ."
+ },
+ {
+  "id": "local:kfc-sanders-original",
+  "name": "Сандерс бургер оригинальный · KFC",
+  "nameEn": "Sanders Burger Original · KFC",
+  "aliases": [
+   "kfc кфс кфц сандерс sanders бургер burger sanders burger acısız sanders burger original"
+  ],
+  "per100g": {
+   "kcal": 254.16,
+   "protein": 12.73,
+   "fat": 11.98,
+   "carbs": 23.86,
+   "fiber": 1.55
+  },
+  "portions": [
+   {
+    "name": "1 шт. (≈185 г)",
+    "nameEn": "1 pc (~185 g)",
+    "grams": 185
+   }
+  ],
+  "density": null,
+  "source": "KFC (Баку, меню kfc.az). KFC Азербайджан не публикует пищевую ценность. Вес и энергия — официальные данные KFC Украины (kfc.ua, «Сандерс Класік»: 185 г, 470.2 ккал). Белки и углеводы — по составу (USDA: булочка, куриное филе в панировке (стрипсы KFC), салат айсберг, майонез, вода), жиры — остаток энергии по Этуотеру (4/4/9). В Баку вес может отличаться.",
+  "sourceEn": "KFC (Baku, kfc.az menu). KFC Azerbaijan publishes no nutrition values. Weight and energy are KFC Ukraine's official figures (kfc.ua, \"Сандерс Класік\": 185 g, 470.2 kcal). Protein and carbohydrate come from the composition (USDA: bun, breaded chicken fillet (KFC strips), iceberg lettuce, mayonnaise, water); fat is the Atwater remainder (4/4/9). The Baku weight may differ."
+ },
+ {
+  "id": "local:kfc-sanders-spicy",
+  "name": "Сандерс бургер острый · KFC",
+  "nameEn": "Sanders Burger Spicy · KFC",
+  "aliases": [
+   "kfc кфс кфц сандерс sanders бургер burger острый acili зингер sanders burger acılı sanders burger spicy"
+  ],
+  "per100g": {
+   "kcal": 249.34,
+   "protein": 12.61,
+   "fat": 11.42,
+   "carbs": 24.03,
+   "fiber": 1.55
+  },
+  "portions": [
+   {
+    "name": "1 шт. (≈182 г)",
+    "nameEn": "1 pc (~182 g)",
+    "grams": 182
+   }
+  ],
+  "density": null,
+  "source": "KFC (Баку, меню kfc.az). KFC Азербайджан не публикует пищевую ценность. Вес и энергия — официальные данные KFC Украины (kfc.ua, «Сандерс Зінгер»: 182 г, 453.8 ккал). Белки и углеводы — по составу (USDA: булочка, куриное филе в панировке (стрипсы KFC), салат айсберг, майонез, вода), жиры — остаток энергии по Этуотеру (4/4/9). В Баку вес может отличаться.",
+  "sourceEn": "KFC (Baku, kfc.az menu). KFC Azerbaijan publishes no nutrition values. Weight and energy are KFC Ukraine's official figures (kfc.ua, \"Сандерс Зінгер\": 182 g, 453.8 kcal). Protein and carbohydrate come from the composition (USDA: bun, breaded chicken fillet (KFC strips), iceberg lettuce, mayonnaise, water); fat is the Atwater remainder (4/4/9). The Baku weight may differ."
+ },
+ {
+  "id": "local:kfc-big-sanders-original",
+  "name": "Биг Сандерс бургер оригинальный · KFC",
+  "nameEn": "Big Sanders Burger Original · KFC",
+  "aliases": [
+   "kfc кфс кфц биг сандерс big sanders biq бургер burger biq sanders burger acısız big sanders burger original"
+  ],
+  "per100g": {
+   "kcal": 253.78,
+   "protein": 12.64,
+   "fat": 13.64,
+   "carbs": 20.25,
+   "fiber": 1.41
+  },
+  "portions": [
+   {
+    "name": "1 шт. (≈273 г)",
+    "nameEn": "1 pc (~273 g)",
+    "grams": 273
+   }
+  ],
+  "density": null,
+  "source": "KFC (Баку, меню kfc.az). KFC Азербайджан не публикует пищевую ценность — оценка по составу из описания на kfc.az (USDA, включая анализ блюд KFC): булочка, куриное филе в панировке (стрипсы KFC), салат айсберг, помидор, плавленый сыр, майонез, вода, 273 г на порцию. Вес в ресторане может отличаться.",
+  "sourceEn": "KFC (Baku, kfc.az menu). KFC Azerbaijan publishes no nutrition values — estimated from the kfc.az description (USDA, including its analyses of KFC food): bun, breaded chicken fillet (KFC strips), iceberg lettuce, tomato, processed cheese, mayonnaise, water, 273 g per serving. The restaurant weight may differ."
+ },
+ {
+  "id": "local:kfc-big-sanders-spicy",
+  "name": "Биг Сандерс бургер острый · KFC",
+  "nameEn": "Big Sanders Burger Spicy · KFC",
+  "aliases": [
+   "kfc кфс кфц биг сандерс big sanders biq бургер burger острый acili biq sanders burger acılı big sanders burger spicy"
+  ],
+  "per100g": {
+   "kcal": 253.4,
+   "protein": 12.5,
+   "fat": 13.6,
+   "carbs": 20.38,
+   "fiber": 1.41
+  },
+  "portions": [
+   {
+    "name": "1 шт. (≈268 г)",
+    "nameEn": "1 pc (~268 g)",
+    "grams": 268
+   }
+  ],
+  "density": null,
+  "source": "KFC (Баку, меню kfc.az). KFC Азербайджан не публикует пищевую ценность — оценка по составу из описания на kfc.az (USDA, включая анализ блюд KFC): булочка, куриное филе в панировке (стрипсы KFC), салат айсберг, помидор, плавленый сыр, майонез, вода, 268 г на порцию. Вес в ресторане может отличаться.",
+  "sourceEn": "KFC (Baku, kfc.az menu). KFC Azerbaijan publishes no nutrition values — estimated from the kfc.az description (USDA, including its analyses of KFC food): bun, breaded chicken fillet (KFC strips), iceberg lettuce, tomato, processed cheese, mayonnaise, water, 268 g per serving. The restaurant weight may differ."
+ },
+ {
+  "id": "local:kfc-tower-original",
+  "name": "Тауэр бургер оригинальный · KFC",
+  "nameEn": "Tower Burger Original · KFC",
+  "aliases": [
+   "kfc кфс кфц тауэр тауер tower tauer бургер burger tauer burger acısız tower burger original"
+  ],
+  "per100g": {
+   "kcal": 274.68,
+   "protein": 11.58,
+   "fat": 14.79,
+   "carbs": 23.82,
+   "fiber": 1.67
+  },
+  "portions": [
+   {
+    "name": "1 шт. (≈235 г)",
+    "nameEn": "1 pc (~235 g)",
+    "grams": 235
+   }
+  ],
+  "density": null,
+  "source": "KFC (Баку, меню kfc.az). KFC Азербайджан не публикует пищевую ценность. Вес и энергия — официальные данные KFC Украины (kfc.ua, «Тауер Бургер Оригінальний»: 235 г, 645.5 ккал). Белки и углеводы — по составу (USDA: булочка, куриное филе в панировке (стрипсы KFC), хашбраун, плавленый сыр, салат айсберг, майонез, вода), жиры — остаток энергии по Этуотеру (4/4/9). В Баку вес может отличаться.",
+  "sourceEn": "KFC (Baku, kfc.az menu). KFC Azerbaijan publishes no nutrition values. Weight and energy are KFC Ukraine's official figures (kfc.ua, \"Тауер Бургер Оригінальний\": 235 g, 645.5 kcal). Protein and carbohydrate come from the composition (USDA: bun, breaded chicken fillet (KFC strips), hash brown, processed cheese, iceberg lettuce, mayonnaise, water); fat is the Atwater remainder (4/4/9). The Baku weight may differ."
+ },
+ {
+  "id": "local:kfc-tower-spicy",
+  "name": "Тауэр бургер острый · KFC",
+  "nameEn": "Tower Burger Spicy · KFC",
+  "aliases": [
+   "kfc кфс кфц тауэр тауер tower tauer бургер burger острый acili tauer burger acılı tower burger spicy"
+  ],
+  "per100g": {
+   "kcal": 272.34,
+   "protein": 11.43,
+   "fat": 14.51,
+   "carbs": 24.0,
+   "fiber": 1.67
+  },
+  "portions": [
+   {
+    "name": "1 шт. (≈231 г)",
+    "nameEn": "1 pc (~231 g)",
+    "grams": 231
+   }
+  ],
+  "density": null,
+  "source": "KFC (Баку, меню kfc.az). KFC Азербайджан не публикует пищевую ценность. Вес и энергия — официальные данные KFC Украины (kfc.ua, «Тауер Бургер Гострий»: 231 г, 629.1 ккал). Белки и углеводы — по составу (USDA: булочка, куриное филе в панировке (стрипсы KFC), хашбраун, плавленый сыр, салат айсберг, майонез, вода), жиры — остаток энергии по Этуотеру (4/4/9). В Баку вес может отличаться.",
+  "sourceEn": "KFC (Baku, kfc.az menu). KFC Azerbaijan publishes no nutrition values. Weight and energy are KFC Ukraine's official figures (kfc.ua, \"Тауер Бургер Гострий\": 231 g, 629.1 kcal). Protein and carbohydrate come from the composition (USDA: bun, breaded chicken fillet (KFC strips), hash brown, processed cheese, iceberg lettuce, mayonnaise, water); fat is the Atwater remainder (4/4/9). The Baku weight may differ."
+ },
+ {
+  "id": "local:kfc-double-crispy-original",
+  "name": "Дабл Криспи оригинальный · KFC",
+  "nameEn": "Double Crispy Original · KFC",
+  "aliases": [
+   "kfc кфс кфц дабл криспи double crispy dabl krispi бургер burger dabl krispi acısız double crispy original"
+  ],
+  "per100g": {
+   "kcal": 278.7,
+   "protein": 14.47,
+   "fat": 15.03,
+   "carbs": 21.45,
+   "fiber": 1.43
+  },
+  "portions": [
+   {
+    "name": "1 шт. (≈230 г)",
+    "nameEn": "1 pc (~230 g)",
+    "grams": 230
+   }
+  ],
+  "density": null,
+  "source": "KFC (Баку, меню kfc.az). KFC Азербайджан не публикует пищевую ценность — оценка по составу из описания на kfc.az (USDA, включая анализ блюд KFC): булочка, куриное филе в панировке (стрипсы KFC), плавленый сыр, салат айсберг, майонез, вода, 230 г на порцию. Вес в ресторане может отличаться.",
+  "sourceEn": "KFC (Baku, kfc.az menu). KFC Azerbaijan publishes no nutrition values — estimated from the kfc.az description (USDA, including its analyses of KFC food): bun, breaded chicken fillet (KFC strips), processed cheese, iceberg lettuce, mayonnaise, water, 230 g per serving. The restaurant weight may differ."
+ },
+ {
+  "id": "local:kfc-double-crispy-spicy",
+  "name": "Дабл Криспи острый · KFC",
+  "nameEn": "Double Crispy Spicy · KFC",
+  "aliases": [
+   "kfc кфс кфц дабл криспи double crispy dabl krispi бургер burger острый acili dabl krispi acılı double crispy spicy"
+  ],
+  "per100g": {
+   "kcal": 278.8,
+   "protein": 14.35,
+   "fat": 15.02,
+   "carbs": 21.62,
+   "fiber": 1.43
+  },
+  "portions": [
+   {
+    "name": "1 шт. (≈225 г)",
+    "nameEn": "1 pc (~225 g)",
+    "grams": 225
+   }
+  ],
+  "density": null,
+  "source": "KFC (Баку, меню kfc.az). KFC Азербайджан не публикует пищевую ценность — оценка по составу из описания на kfc.az (USDA, включая анализ блюд KFC): булочка, куриное филе в панировке (стрипсы KFC), плавленый сыр, салат айсберг, майонез, вода, 225 г на порцию. Вес в ресторане может отличаться.",
+  "sourceEn": "KFC (Baku, kfc.az menu). KFC Azerbaijan publishes no nutrition values — estimated from the kfc.az description (USDA, including its analyses of KFC food): bun, breaded chicken fillet (KFC strips), processed cheese, iceberg lettuce, mayonnaise, water, 225 g per serving. The restaurant weight may differ."
+ },
+ {
+  "id": "local:kfc-fresher-burger-original",
+  "name": "Фрешер бургер оригинальный · KFC",
+  "nameEn": "Original Fresher Burger · KFC",
+  "aliases": [
+   "kfc кфс кфц фрешер фреш fresher fresh freser bürger бургер burger freşer burger orijinal original fresher burger"
+  ],
+  "per100g": {
+   "kcal": 222.96,
+   "protein": 10.79,
+   "fat": 10.82,
+   "carbs": 20.77,
+   "fiber": 1.46
+  },
+  "portions": [
+   {
+    "name": "1 шт. (≈235 г)",
+    "nameEn": "1 pc (~235 g)",
+    "grams": 235
+   }
+  ],
+  "density": null,
+  "source": "KFC (Баку, меню kfc.az). KFC Азербайджан не публикует пищевую ценность — оценка по составу из описания на kfc.az (USDA, включая анализ блюд KFC): булочка, куриное филе в панировке (стрипсы KFC), салат айсберг, помидор, огурец, майонез, вода, 235 г на порцию. Вес в ресторане может отличаться.",
+  "sourceEn": "KFC (Baku, kfc.az menu). KFC Azerbaijan publishes no nutrition values — estimated from the kfc.az description (USDA, including its analyses of KFC food): bun, breaded chicken fillet (KFC strips), iceberg lettuce, tomato, cucumber, mayonnaise, water, 235 g per serving. The restaurant weight may differ."
+ },
+ {
+  "id": "local:kfc-fresher-burger-spicy",
+  "name": "Фрешер бургер острый · KFC",
+  "nameEn": "Spicy Fresher Burger · KFC",
+  "aliases": [
+   "kfc кфс кфц фрешер фреш fresher fresh freser бургер burger острый acili freşer burger acılı spicy fresher burger"
+  ],
+  "per100g": {
+   "kcal": 222.07,
+   "protein": 10.62,
+   "fat": 10.74,
+   "carbs": 20.89,
+   "fiber": 1.46
+  },
+  "portions": [
+   {
+    "name": "1 шт. (≈231 г)",
+    "nameEn": "1 pc (~231 g)",
+    "grams": 231
+   }
+  ],
+  "density": null,
+  "source": "KFC (Баку, меню kfc.az). KFC Азербайджан не публикует пищевую ценность — оценка по составу из описания на kfc.az (USDA, включая анализ блюд KFC): булочка, куриное филе в панировке (стрипсы KFC), салат айсберг, помидор, огурец, майонез, вода, 231 г на порцию. Вес в ресторане может отличаться.",
+  "sourceEn": "KFC (Baku, kfc.az menu). KFC Azerbaijan publishes no nutrition values — estimated from the kfc.az description (USDA, including its analyses of KFC food): bun, breaded chicken fillet (KFC strips), iceberg lettuce, tomato, cucumber, mayonnaise, water, 231 g per serving. The restaurant weight may differ."
+ },
+ {
+  "id": "local:kfc-bbq-burger-original",
+  "name": "BBQ бургер оригинальный · KFC",
+  "nameEn": "Original BBQ Burger · KFC",
+  "aliases": [
+   "kfc кфс кфц барбекю bbq barbekü бургер burger bbq burger orijinal original bbq burger"
+  ],
+  "per100g": {
+   "kcal": 246.02,
+   "protein": 12.96,
+   "fat": 9.9,
+   "carbs": 26.38,
+   "fiber": 1.55
+  },
+  "portions": [
+   {
+    "name": "1 шт. (≈215 г)",
+    "nameEn": "1 pc (~215 g)",
+    "grams": 215
+   }
+  ],
+  "density": null,
+  "source": "KFC (Баку, меню kfc.az). KFC Азербайджан не публикует пищевую ценность — оценка по составу из описания на kfc.az (USDA, включая анализ блюд KFC): булочка, куриное филе в панировке (стрипсы KFC), плавленый сыр, лук, соус барбекю, салат айсберг, 215 г на порцию. Вес в ресторане может отличаться.",
+  "sourceEn": "KFC (Baku, kfc.az menu). KFC Azerbaijan publishes no nutrition values — estimated from the kfc.az description (USDA, including its analyses of KFC food): bun, breaded chicken fillet (KFC strips), processed cheese, onion, barbecue sauce, iceberg lettuce, 215 g per serving. The restaurant weight may differ."
+ },
+ {
+  "id": "local:kfc-bbq-burger-spicy",
+  "name": "BBQ бургер острый · KFC",
+  "nameEn": "Spicy BBQ Burger · KFC",
+  "aliases": [
+   "kfc кфс кфц барбекю bbq barbekü бургер burger острый acili bbq burger acılı spicy bbq burger"
+  ],
+  "per100g": {
+   "kcal": 245.49,
+   "protein": 12.82,
+   "fat": 9.8,
+   "carbs": 26.62,
+   "fiber": 1.56
+  },
+  "portions": [
+   {
+    "name": "1 шт. (≈211 г)",
+    "nameEn": "1 pc (~211 g)",
+    "grams": 211
+   }
+  ],
+  "density": null,
+  "source": "KFC (Баку, меню kfc.az). KFC Азербайджан не публикует пищевую ценность — оценка по составу из описания на kfc.az (USDA, включая анализ блюд KFC): булочка, куриное филе в панировке (стрипсы KFC), плавленый сыр, лук, соус барбекю, салат айсберг, 211 г на порцию. Вес в ресторане может отличаться.",
+  "sourceEn": "KFC (Baku, kfc.az menu). KFC Azerbaijan publishes no nutrition values — estimated from the kfc.az description (USDA, including its analyses of KFC food): bun, breaded chicken fillet (KFC strips), processed cheese, onion, barbecue sauce, iceberg lettuce, 211 g per serving. The restaurant weight may differ."
+ },
+ {
+  "id": "local:kfc-chefburger-deluxe-original",
+  "name": "Шефбургер Делюкс оригинальный · KFC",
+  "nameEn": "Chefburger Deluxe Original · KFC",
+  "aliases": [
+   "kfc кфс кфц шефбургер делюкс chefburger deluxe şefburger şefburger delüks orijinal chefburger deluxe original"
+  ],
+  "per100g": {
+   "kcal": 248.12,
+   "protein": 11.68,
+   "fat": 13.42,
+   "carbs": 20.31,
+   "fiber": 1.39
+  },
+  "portions": [
+   {
+    "name": "1 шт. (≈205 г)",
+    "nameEn": "1 pc (~205 g)",
+    "grams": 205
+   }
+  ],
+  "density": null,
+  "source": "KFC (Баку, меню kfc.az). KFC Азербайджан не публикует пищевую ценность — оценка по составу из описания на kfc.az (USDA, включая анализ блюд KFC): булочка, куриное филе в панировке (стрипсы KFC), салат айсберг, помидор, плавленый сыр, майонез, вода, 205 г на порцию. Вес в ресторане может отличаться.",
+  "sourceEn": "KFC (Baku, kfc.az menu). KFC Azerbaijan publishes no nutrition values — estimated from the kfc.az description (USDA, including its analyses of KFC food): bun, breaded chicken fillet (KFC strips), iceberg lettuce, tomato, processed cheese, mayonnaise, water, 205 g per serving. The restaurant weight may differ."
+ },
+ {
+  "id": "local:kfc-chefburger-deluxe-spicy",
+  "name": "Шефбургер Делюкс острый · KFC",
+  "nameEn": "Chefburger Deluxe Spicy · KFC",
+  "aliases": [
+   "kfc кфс кфц шефбургер делюкс chefburger deluxe şefburger острый acili şefburger delüks acılı chefburger deluxe spicy"
+  ],
+  "per100g": {
+   "kcal": 247.74,
+   "protein": 11.56,
+   "fat": 13.39,
+   "carbs": 20.41,
+   "fiber": 1.39
+  },
+  "portions": [
+   {
+    "name": "1 шт. (≈202 г)",
+    "nameEn": "1 pc (~202 g)",
+    "grams": 202
+   }
+  ],
+  "density": null,
+  "source": "KFC (Баку, меню kfc.az). KFC Азербайджан не публикует пищевую ценность — оценка по составу из описания на kfc.az (USDA, включая анализ блюд KFC): булочка, куриное филе в панировке (стрипсы KFC), салат айсберг, помидор, плавленый сыр, майонез, вода, 202 г на порцию. Вес в ресторане может отличаться.",
+  "sourceEn": "KFC (Baku, kfc.az menu). KFC Azerbaijan publishes no nutrition values — estimated from the kfc.az description (USDA, including its analyses of KFC food): bun, breaded chicken fillet (KFC strips), iceberg lettuce, tomato, processed cheese, mayonnaise, water, 202 g per serving. The restaurant weight may differ."
+ },
+ {
+  "id": "local:kfc-chefburger-buffalo-ranch",
+  "name": "Шефбургер Buffalo Ranch · KFC",
+  "nameEn": "Buffalo Ranch Chefburger · KFC",
+  "aliases": [
+   "kfc кфс кфц шефбургер баффало ранч chefburger buffalo ranch şefburger buffalo ranch şefburger buffalo ranch chefburger"
+  ],
+  "per100g": {
+   "kcal": 259.2,
+   "protein": 11.95,
+   "fat": 12.96,
+   "carbs": 23.75,
+   "fiber": 1.56
+  },
+  "portions": [
+   {
+    "name": "1 шт. (≈172 г)",
+    "nameEn": "1 pc (~172 g)",
+    "grams": 172
+   }
+  ],
+  "density": null,
+  "source": "KFC (Баку, меню kfc.az). KFC Азербайджан не публикует пищевую ценность — оценка по составу из описания на kfc.az (USDA, включая анализ блюд KFC): булочка, куриное филе в панировке (стрипсы KFC), салат айсберг, майонез, вода, острый соус, 172 г на порцию. Вес в ресторане может отличаться.",
+  "sourceEn": "KFC (Baku, kfc.az menu). KFC Azerbaijan publishes no nutrition values — estimated from the kfc.az description (USDA, including its analyses of KFC food): bun, breaded chicken fillet (KFC strips), iceberg lettuce, mayonnaise, water, hot sauce, 172 g per serving. The restaurant weight may differ."
+ },
+ {
+  "id": "local:kfc-chefburger-pickle-ranch",
+  "name": "Шефбургер Pickle Ranch · KFC",
+  "nameEn": "Pickle Ranch Chefburger · KFC",
+  "aliases": [
+   "kfc кфс кфц шефбургер пикл ранч chefburger pickle ranch şefburger огурец pickle ranch şefburger pickle ranch chefburger"
+  ],
+  "per100g": {
+   "kcal": 243.89,
+   "protein": 11.42,
+   "fat": 12.3,
+   "carbs": 21.98,
+   "fiber": 1.49
+  },
+  "portions": [
+   {
+    "name": "1 шт. (≈185 г)",
+    "nameEn": "1 pc (~185 g)",
+    "grams": 185
+   }
+  ],
+  "density": null,
+  "source": "KFC (Баку, меню kfc.az). KFC Азербайджан не публикует пищевую ценность — оценка по составу из описания на kfc.az (USDA, включая анализ блюд KFC): булочка, куриное филе в панировке (стрипсы KFC), салат айсберг, солёный огурец, майонез, вода, 185 г на порцию. Вес в ресторане может отличаться.",
+  "sourceEn": "KFC (Baku, kfc.az menu). KFC Azerbaijan publishes no nutrition values — estimated from the kfc.az description (USDA, including its analyses of KFC food): bun, breaded chicken fillet (KFC strips), iceberg lettuce, pickle, mayonnaise, water, 185 g per serving. The restaurant weight may differ."
+ },
+ {
+  "id": "local:kfc-zinger",
+  "name": "Зингер · KFC",
+  "nameEn": "Zinger · KFC",
+  "aliases": [
+   "kfc кфс кфц зингер zinger бургер burger острый zinger zinger"
+  ],
+  "per100g": {
+   "kcal": 267.04,
+   "protein": 12.6,
+   "fat": 13.17,
+   "carbs": 24.57,
+   "fiber": 1.56
+  },
+  "portions": [
+   {
+    "name": "1 шт. (≈135 г)",
+    "nameEn": "1 pc (~135 g)",
+    "grams": 135
+   }
+  ],
+  "density": null,
+  "source": "KFC (Баку, меню kfc.az). KFC Азербайджан не публикует пищевую ценность — оценка по составу из описания на kfc.az (USDA, включая анализ блюд KFC): булочка, куриное филе в панировке (стрипсы KFC), салат айсберг, майонез, вода, 135 г на порцию. Вес в ресторане может отличаться.",
+  "sourceEn": "KFC (Baku, kfc.az menu). KFC Azerbaijan publishes no nutrition values — estimated from the kfc.az description (USDA, including its analyses of KFC food): bun, breaded chicken fillet (KFC strips), iceberg lettuce, mayonnaise, water, 135 g per serving. The restaurant weight may differ."
+ },
+ {
+  "id": "local:kfc-cheeseburger",
+  "name": "Чизбургер · KFC",
+  "nameEn": "Cheeseburger · KFC",
+  "aliases": [
+   "kfc кфс кфц чизбургер cheeseburger çizburger говядина çizburger cheeseburger"
+  ],
+  "per100g": {
+   "kcal": 257.5,
+   "protein": 14.42,
+   "fat": 12.53,
+   "carbs": 21.76,
+   "fiber": 1.1
+  },
+  "portions": [
+   {
+    "name": "1 шт. (≈124 г)",
+    "nameEn": "1 pc (~124 g)",
+    "grams": 124
+   }
+  ],
+  "density": null,
+  "source": "KFC (Баку, меню kfc.az). KFC Азербайджан не публикует пищевую ценность. Вес и энергия — официальные данные KFC Украины (kfc.ua, «Чізбургер»: 124 г, 319.3 ккал). Белки и углеводы — по составу (USDA: булочка, говяжья котлета, плавленый сыр, солёный огурец, лук, кетчуп, горчица), жиры — остаток энергии по Этуотеру (4/4/9). В Баку вес может отличаться.",
+  "sourceEn": "KFC (Baku, kfc.az menu). KFC Azerbaijan publishes no nutrition values. Weight and energy are KFC Ukraine's official figures (kfc.ua, \"Чізбургер\": 124 g, 319.3 kcal). Protein and carbohydrate come from the composition (USDA: bun, beef patty, processed cheese, pickle, onion, ketchup, mustard); fat is the Atwater remainder (4/4/9). The Baku weight may differ."
+ },
+ {
+  "id": "local:kfc-strips-original",
+  "name": "Стрипсы оригинальные · KFC",
+  "nameEn": "Strips Original · KFC",
+  "aliases": [
+   "kfc кфс кфц стрипсы стрипс strips strips ədəd strips orijinal strips original"
+  ],
+  "per100g": {
+   "kcal": 297.7,
+   "protein": 20.2,
+   "fat": 18.01,
+   "carbs": 13.7,
+   "fiber": 1.4
+  },
+  "portions": [
+   {
+    "name": "3 шт. (≈102 г)",
+    "nameEn": "3 pcs (~102 g)",
+    "grams": 102
+   },
+   {
+    "name": "6 шт. (≈204 г)",
+    "nameEn": "6 pcs (~204 g)",
+    "grams": 204
+   },
+   {
+    "name": "9 шт. (≈306 г)",
+    "nameEn": "9 pcs (~306 g)",
+    "grams": 306
+   }
+  ],
+  "density": null,
+  "source": "KFC (Баку, меню kfc.az). KFC Азербайджан не публикует пищевую ценность. Вес и энергия — официальные данные KFC Украины (kfc.ua, «3 стріпси Оригінальні»: 102 г, 303.65 ккал). Белки и углеводы — по составу (USDA: куриное филе в панировке (стрипсы KFC)), жиры — остаток энергии по Этуотеру (4/4/9). В Баку вес может отличаться.",
+  "sourceEn": "KFC (Baku, kfc.az menu). KFC Azerbaijan publishes no nutrition values. Weight and energy are KFC Ukraine's official figures (kfc.ua, \"3 стріпси Оригінальні\": 102 g, 303.65 kcal). Protein and carbohydrate come from the composition (USDA: breaded chicken fillet (KFC strips)); fat is the Atwater remainder (4/4/9). The Baku weight may differ."
+ },
+ {
+  "id": "local:kfc-strips-spicy",
+  "name": "Стрипсы острые · KFC",
+  "nameEn": "Strips Spicy · KFC",
+  "aliases": [
+   "kfc кфс кфц стрипсы стрипс strips острые acili ədəd strips acılı strips spicy"
+  ],
+  "per100g": {
+   "kcal": 274.41,
+   "protein": 20.2,
+   "fat": 15.42,
+   "carbs": 13.7,
+   "fiber": 1.4
+  },
+  "portions": [
+   {
+    "name": "3 шт. (≈93 г)",
+    "nameEn": "3 pcs (~93 g)",
+    "grams": 93
+   },
+   {
+    "name": "6 шт. (≈186 г)",
+    "nameEn": "6 pcs (~186 g)",
+    "grams": 186
+   },
+   {
+    "name": "9 шт. (≈279 г)",
+    "nameEn": "9 pcs (~279 g)",
+    "grams": 279
+   }
+  ],
+  "density": null,
+  "source": "KFC (Баку, меню kfc.az). KFC Азербайджан не публикует пищевую ценность. Вес и энергия — официальные данные KFC Украины (kfc.ua, «3 стріпси Гострі»: 93 г, 255.2 ккал). Белки и углеводы — по составу (USDA: куриное филе в панировке (стрипсы KFC)), жиры — остаток энергии по Этуотеру (4/4/9). В Баку вес может отличаться.",
+  "sourceEn": "KFC (Baku, kfc.az menu). KFC Azerbaijan publishes no nutrition values. Weight and energy are KFC Ukraine's official figures (kfc.ua, \"3 стріпси Гострі\": 93 g, 255.2 kcal). Protein and carbohydrate come from the composition (USDA: breaded chicken fillet (KFC strips)); fat is the Atwater remainder (4/4/9). The Baku weight may differ."
+ },
+ {
+  "id": "local:kfc-wings-spicy",
+  "name": "Крылышки острые · KFC",
+  "nameEn": "Spicy Wings · KFC",
+  "aliases": [
+   "kfc кфс кфц крылья крылышки wings qanad острые hot spicy ədəd qanad acılı spicy wings"
+  ],
+  "per100g": {
+   "kcal": 285.51,
+   "protein": 20.8,
+   "fat": 17.28,
+   "carbs": 11.7,
+   "fiber": 0.0
+  },
+  "portions": [
+   {
+    "name": "3 шт. (≈75 г)",
+    "nameEn": "3 pcs (~75 g)",
+    "grams": 75
+   },
+   {
+    "name": "6 шт. (≈150 г)",
+    "nameEn": "6 pcs (~150 g)",
+    "grams": 150
+   },
+   {
+    "name": "9 шт. (≈225 г)",
+    "nameEn": "9 pcs (~225 g)",
+    "grams": 225
+   }
+  ],
+  "density": null,
+  "source": "KFC (Баку, меню kfc.az). KFC Азербайджан не публикует пищевую ценность. Вес и энергия — официальные данные KFC Украины (kfc.ua, «3 крила»: 75 г, 214.13 ккал). Белки и углеводы — по составу (USDA: крыло KFC в панировке), жиры — остаток энергии по Этуотеру (4/4/9). В Баку вес может отличаться.",
+  "sourceEn": "KFC (Baku, kfc.az menu). KFC Azerbaijan publishes no nutrition values. Weight and energy are KFC Ukraine's official figures (kfc.ua, \"3 крила\": 75 g, 214.13 kcal). Protein and carbohydrate come from the composition (USDA: breaded KFC wing); fat is the Atwater remainder (4/4/9). The Baku weight may differ."
+ },
+ {
+  "id": "local:kfc-drumsticks-spicy",
+  "name": "Ножки острые · KFC",
+  "nameEn": "Spicy Drumsticks · KFC",
+  "aliases": [
+   "kfc кфс кфц ножки ножка голень drumstick bud острые ədəd bud acılı spicy drumsticks"
+  ],
+  "per100g": {
+   "kcal": 242.7,
+   "protein": 20.6,
+   "fat": 14.27,
+   "carbs": 7.96,
+   "fiber": 0.0
+  },
+  "portions": [
+   {
+    "name": "1 шт. (≈84 г)",
+    "nameEn": "1 pcs (~84 g)",
+    "grams": 84
+   },
+   {
+    "name": "2 шт. (≈168 г)",
+    "nameEn": "2 pcs (~168 g)",
+    "grams": 168
+   },
+   {
+    "name": "3 шт. (≈252 г)",
+    "nameEn": "3 pcs (~252 g)",
+    "grams": 252
+   }
+  ],
+  "density": null,
+  "source": "KFC (Баку, меню kfc.az). KFC Азербайджан не публикует пищевую ценность. Вес и энергия — официальные данные KFC Украины (kfc.ua, «1 ніжка Оригінальна»: 84 г, 203.87 ккал). Белки и углеводы — по составу (USDA: ножка KFC в панировке), жиры — остаток энергии по Этуотеру (4/4/9). В Баку вес может отличаться.",
+  "sourceEn": "KFC (Baku, kfc.az menu). KFC Azerbaijan publishes no nutrition values. Weight and energy are KFC Ukraine's official figures (kfc.ua, \"1 ніжка Оригінальна\": 84 g, 203.87 kcal). Protein and carbohydrate come from the composition (USDA: breaded KFC drumstick); fat is the Atwater remainder (4/4/9). The Baku weight may differ."
+ },
+ {
+  "id": "local:kfc-chicken-pieces",
+  "name": "Куриные кусочки · KFC",
+  "nameEn": "Chicken Pieces · KFC",
+  "aliases": [
+   "kfc кфс кфц куриные кусочки курица на кости chicken pieces toyuq tike ədəd toyuq tikə chicken pieces"
+  ],
+  "per100g": {
+   "kcal": 246.4,
+   "protein": 21.02,
+   "fat": 15.01,
+   "carbs": 6.72,
+   "fiber": 0.0
+  },
+  "portions": [
+   {
+    "name": "1 шт. (≈110 г)",
+    "nameEn": "1 pcs (~110 g)",
+    "grams": 110
+   },
+   {
+    "name": "3 шт. (≈330 г)",
+    "nameEn": "3 pcs (~330 g)",
+    "grams": 330
+   },
+   {
+    "name": "6 шт. (≈660 г)",
+    "nameEn": "6 pcs (~660 g)",
+    "grams": 660
+   }
+  ],
+  "density": null,
+  "source": "KFC (Баку, меню kfc.az). KFC Азербайджан не публикует пищевую ценность — оценка по составу из описания на kfc.az (USDA, включая анализ блюд KFC): грудка KFC, бедро KFC, ножка KFC, 110 г на порцию. Вес в ресторане может отличаться.",
+  "sourceEn": "KFC (Baku, kfc.az menu). KFC Azerbaijan publishes no nutrition values — estimated from the kfc.az description (USDA, including its analyses of KFC food): KFC breast, KFC thigh, KFC drumstick, 110 g per serving. The restaurant weight may differ."
+ },
+ {
+  "id": "local:kfc-bites",
+  "name": "Байтсы · KFC",
+  "nameEn": "Bites · KFC",
+  "aliases": [
+   "kfc кфс кфц байтсы байтс попкорн bites bayts popcorn bayts bites"
+  ],
+  "per100g": {
+   "kcal": 351.0,
+   "protein": 17.7,
+   "fat": 21.7,
+   "carbs": 21.2,
+   "fiber": 1.0
+  },
+  "portions": [
+   {
+    "name": "S (≈90 г)",
+    "nameEn": "S (~90 g)",
+    "grams": 90
+   },
+   {
+    "name": "M (≈135 г)",
+    "nameEn": "M (~135 g)",
+    "grams": 135
+   },
+   {
+    "name": "L (≈270 г)",
+    "nameEn": "L (~270 g)",
+    "grams": 270
+   }
+  ],
+  "density": null,
+  "source": "KFC (Баку, меню kfc.az). KFC Азербайджан не публикует пищевую ценность — оценка по составу из описания на kfc.az (USDA, включая анализ блюд KFC): байтсы (попкорн-курица KFC), 45 г на порцию. Вес в ресторане может отличаться.",
+  "sourceEn": "KFC (Baku, kfc.az menu). KFC Azerbaijan publishes no nutrition values — estimated from the kfc.az description (USDA, including its analyses of KFC food): bites (KFC popcorn chicken), 45 g per serving. The restaurant weight may differ."
+ },
+ {
+  "id": "local:kfc-fries",
+  "name": "Картофель фри · KFC",
+  "nameEn": "French Fries · KFC",
+  "aliases": [
+   "kfc кфс кфц картофель фри картошка fries fri kartof böyük orta kiçik basket баскет fri kartofu french fries"
+  ],
+  "per100g": {
+   "kcal": 337.2,
+   "protein": 3.43,
+   "fat": 17.54,
+   "carbs": 41.4,
+   "fiber": 3.8
+  },
+  "portions": [
+   {
+    "name": "Маленький (≈60 г)",
+    "nameEn": "Small (~60 g)",
+    "grams": 60
+   },
+   {
+    "name": "Средний (≈120 г)",
+    "nameEn": "Medium (~120 g)",
+    "grams": 120
+   },
+   {
+    "name": "Баскет Фри (≈240 г)",
+    "nameEn": "Basket Fries (~240 g)",
+    "grams": 240
+   }
+  ],
+  "density": null,
+  "source": "KFC (Баку, меню kfc.az). KFC Азербайджан не публикует пищевую ценность. Вес и энергия — официальные данные KFC Украины (kfc.ua, «Картопля Фрі стандарт»: 120 г, 404.64 ккал). Белки и углеводы — по составу (USDA: картофель фри), жиры — остаток энергии по Этуотеру (4/4/9). В Баку вес может отличаться.",
+  "sourceEn": "KFC (Baku, kfc.az menu). KFC Azerbaijan publishes no nutrition values. Weight and energy are KFC Ukraine's official figures (kfc.ua, \"Картопля Фрі стандарт\": 120 g, 404.64 kcal). Protein and carbohydrate come from the composition (USDA: french fries); fat is the Atwater remainder (4/4/9). The Baku weight may differ."
+ },
+ {
+  "id": "local:kfc-wedges",
+  "name": "Картофель по-деревенски · KFC",
+  "nameEn": "Potato Wedges · KFC",
+  "aliases": [
+   "kfc кфс кфц картофель по деревенски дольки wedges kəndsayağı kendsayagi kartof kəndsayağı kartof potato wedges"
+  ],
+  "per100g": {
+   "kcal": 305.25,
+   "protein": 3.43,
+   "fat": 13.99,
+   "carbs": 41.4,
+   "fiber": 3.8
+  },
+  "portions": [
+   {
+    "name": "Маленький (≈90 г)",
+    "nameEn": "Small (~90 g)",
+    "grams": 90
+   },
+   {
+    "name": "Средний (≈135 г)",
+    "nameEn": "Medium (~135 g)",
+    "grams": 135
+   }
+  ],
+  "density": null,
+  "source": "KFC (Баку, меню kfc.az). KFC Азербайджан не публикует пищевую ценность. Вес и энергия — официальные данные KFC Украины (kfc.ua, «Картопля по-домашньому»: 135 г, 412.09 ккал). Белки и углеводы — по составу (USDA: картофель фри), жиры — остаток энергии по Этуотеру (4/4/9). В Баку вес может отличаться.",
+  "sourceEn": "KFC (Baku, kfc.az menu). KFC Azerbaijan publishes no nutrition values. Weight and energy are KFC Ukraine's official figures (kfc.ua, \"Картопля по-домашньому\": 135 g, 412.09 kcal). Protein and carbohydrate come from the composition (USDA: french fries); fat is the Atwater remainder (4/4/9). The Baku weight may differ."
+ },
+ {
+  "id": "local:kfc-corn",
+  "name": "Кукуруза · KFC",
+  "nameEn": "Corn · KFC",
+  "aliases": [
+   "kfc кфс кфц кукуруза початок corn qargidali qarğıdalı corn"
+  ],
+  "per100g": {
+   "kcal": 96.0,
+   "protein": 3.41,
+   "fat": 1.5,
+   "carbs": 21.0,
+   "fiber": 2.4
+  },
+  "portions": [
+   {
+    "name": "1 початок (≈110 г)",
+    "nameEn": "1 cob (~110 g)",
+    "grams": 110
+   }
+  ],
+  "density": null,
+  "source": "KFC (Баку, меню kfc.az). KFC Азербайджан не публикует пищевую ценность — оценка по составу из описания на kfc.az (USDA, включая анализ блюд KFC): кукуруза, 110 г на порцию. Вес в ресторане может отличаться.",
+  "sourceEn": "KFC (Baku, kfc.az menu). KFC Azerbaijan publishes no nutrition values — estimated from the kfc.az description (USDA, including its analyses of KFC food): corn, 110 g per serving. The restaurant weight may differ."
+ },
+ {
+  "id": "local:kfc-coleslaw",
+  "name": "Салат коул-слоу · KFC",
+  "nameEn": "Coleslaw Salad · KFC",
+  "aliases": [
+   "kfc кфс кфц коул слоу коулслоу капустный салат coleslaw koulslou koulslou salatı coleslaw salad"
+  ],
+  "per100g": {
+   "kcal": 144.0,
+   "protein": 0.91,
+   "fat": 8.64,
+   "carbs": 15.6,
+   "fiber": 2.0
+  },
+  "portions": [
+   {
+    "name": "1 порция (≈100 г)",
+    "nameEn": "1 serving (~100 g)",
+    "grams": 100
+   }
+  ],
+  "density": null,
+  "source": "KFC (Баку, меню kfc.az). KFC Азербайджан не публикует пищевую ценность — оценка по составу из описания на kfc.az (USDA, включая анализ блюд KFC): коул-слоу KFC, 100 г на порцию. Вес в ресторане может отличаться.",
+  "sourceEn": "KFC (Baku, kfc.az menu). KFC Azerbaijan publishes no nutrition values — estimated from the kfc.az description (USDA, including its analyses of KFC food): KFC coleslaw, 100 g per serving. The restaurant weight may differ."
+ },
+ {
+  "id": "local:kfc-cheese-sticks",
+  "name": "Сырные стики · KFC",
+  "nameEn": "Cheese Sticks · KFC",
+  "aliases": [
+   "kfc кфс кфц сырные стики палочки cheese sticks pendirli stikler pendirli stiklər cheese sticks"
+  ],
+  "per100g": {
+   "kcal": 325.0,
+   "protein": 14.8,
+   "fat": 18.3,
+   "carbs": 25.1,
+   "fiber": 2.0
+  },
+  "portions": [
+   {
+    "name": "3 шт. (≈54 г)",
+    "nameEn": "3 pcs (~54 g)",
+    "grams": 54
+   },
+   {
+    "name": "5 шт. (≈90 г)",
+    "nameEn": "5 pcs (~90 g)",
+    "grams": 90
+   },
+   {
+    "name": "7 шт. (≈126 г)",
+    "nameEn": "7 pcs (~126 g)",
+    "grams": 126
+   }
+  ],
+  "density": null,
+  "source": "KFC (Баку, меню kfc.az). KFC Азербайджан не публикует пищевую ценность — оценка по составу из описания на kfc.az (USDA, включая анализ блюд KFC): сыр в панировке, 18 г на порцию. Вес в ресторане может отличаться.",
+  "sourceEn": "KFC (Baku, kfc.az menu). KFC Azerbaijan publishes no nutrition values — estimated from the kfc.az description (USDA, including its analyses of KFC food): breaded cheese, 18 g per serving. The restaurant weight may differ."
+ },
+ {
+  "id": "local:kfc-cheese-pops",
+  "name": "Сырные шарики · KFC",
+  "nameEn": "Cheese Pops · KFC",
+  "aliases": [
+   "kfc кфс кфц сырные шарики cheese pops pendir toplar halloween pendir toplar cheese pops"
+  ],
+  "per100g": {
+   "kcal": 325.0,
+   "protein": 14.8,
+   "fat": 18.3,
+   "carbs": 25.1,
+   "fiber": 2.0
+  },
+  "portions": [
+   {
+    "name": "3 шт. (≈36 г)",
+    "nameEn": "3 pcs (~36 g)",
+    "grams": 36
+   },
+   {
+    "name": "5 шт. (≈60 г)",
+    "nameEn": "5 pcs (~60 g)",
+    "grams": 60
+   },
+   {
+    "name": "7 шт. (≈84 г)",
+    "nameEn": "7 pcs (~84 g)",
+    "grams": 84
+   },
+   {
+    "name": "25 шт. (≈300 г)",
+    "nameEn": "25 pcs (~300 g)",
+    "grams": 300
+   }
+  ],
+  "density": null,
+  "source": "KFC (Баку, меню kfc.az). KFC Азербайджан не публикует пищевую ценность — оценка по составу из описания на kfc.az (USDA, включая анализ блюд KFC): сыр в панировке, 12 г на порцию. Вес в ресторане может отличаться.",
+  "sourceEn": "KFC (Baku, kfc.az menu). KFC Azerbaijan publishes no nutrition values — estimated from the kfc.az description (USDA, including its analyses of KFC food): breaded cheese, 12 g per serving. The restaurant weight may differ."
+ },
+ {
+  "id": "local:kfc-sauce-ketchup",
+  "name": "Кетчуп · KFC",
+  "nameEn": "Ketchup · KFC",
+  "aliases": [
+   "kfc кфс кфц кетчуп ketchup ketcup соус sous ketçup ketchup"
+  ],
+  "per100g": {
+   "kcal": 86.0,
+   "protein": 0.89,
+   "fat": 0.09,
+   "carbs": 23.33,
+   "fiber": 0.26
+  },
+  "portions": [
+   {
+    "name": "1 порция (≈40 г)",
+    "nameEn": "1 cup (~40 g)",
+    "grams": 40
+   }
+  ],
+  "density": null,
+  "source": "KFC (Баку, меню kfc.az). KFC Азербайджан не публикует пищевую ценность. Вес и энергия — официальные данные KFC Украины (kfc.ua, «Соус Кетчуп спешл»: 40 г, 34.4 ккал). Белки и углеводы — по составу (USDA: кетчуп), все нутриенты пересчитаны под официальную энергию. В Баку вес может отличаться.",
+  "sourceEn": "KFC (Baku, kfc.az menu). KFC Azerbaijan publishes no nutrition values. Weight and energy are KFC Ukraine's official figures (kfc.ua, \"Соус Кетчуп спешл\": 40 g, 34.4 kcal). Protein and carbohydrate come from the composition (USDA: ketchup); every nutrient is scaled to the official energy. The Baku weight may differ."
+ },
+ {
+  "id": "local:kfc-sauce-bbq",
+  "name": "Соус барбекю · KFC",
+  "nameEn": "Barbecue Sauce · KFC",
+  "aliases": [
+   "kfc кфс кфц соус барбекю bbq barbecue barbekü sous barbekü sousu barbecue sauce"
+  ],
+  "per100g": {
+   "kcal": 172.0,
+   "protein": 0.82,
+   "fat": 0.63,
+   "carbs": 40.8,
+   "fiber": 0.9
+  },
+  "portions": [
+   {
+    "name": "1 порция (≈40 г)",
+    "nameEn": "1 cup (~40 g)",
+    "grams": 40
+   }
+  ],
+  "density": null,
+  "source": "KFC (Баку, меню kfc.az). KFC Азербайджан не публикует пищевую ценность — оценка по составу из описания на kfc.az (USDA, включая анализ блюд KFC): соус барбекю, 40 г на порцию. Вес в ресторане может отличаться.",
+  "sourceEn": "KFC (Baku, kfc.az menu). KFC Azerbaijan publishes no nutrition values — estimated from the kfc.az description (USDA, including its analyses of KFC food): barbecue sauce, 40 g per serving. The restaurant weight may differ."
+ },
+ {
+  "id": "local:kfc-sauce-garlic",
+  "name": "Чесночный соус · KFC",
+  "nameEn": "Garlic Sauce · KFC",
+  "aliases": [
+   "kfc кфс кфц чесночный соус garlic sauce sarimsaqli sous sarımsaqlı sous garlic sauce"
+  ],
+  "per100g": {
+   "kcal": 381.45,
+   "protein": 0.85,
+   "fat": 41.17,
+   "carbs": 1.97,
+   "fiber": 0.11
+  },
+  "portions": [
+   {
+    "name": "1 порция (≈40 г)",
+    "nameEn": "1 cup (~40 g)",
+    "grams": 40
+   }
+  ],
+  "density": null,
+  "source": "KFC (Баку, меню kfc.az). KFC Азербайджан не публикует пищевую ценность — оценка по составу из описания на kfc.az (USDA, включая анализ блюд KFC): майонез, вода, чеснок, 40 г на порцию. Вес в ресторане может отличаться.",
+  "sourceEn": "KFC (Baku, kfc.az menu). KFC Azerbaijan publishes no nutrition values — estimated from the kfc.az description (USDA, including its analyses of KFC food): mayonnaise, water, garlic, 40 g per serving. The restaurant weight may differ."
+ },
+ {
+  "id": "local:kfc-sauce-cheese",
+  "name": "Сырный соус · KFC",
+  "nameEn": "Cheese Sauce · KFC",
+  "aliases": [
+   "kfc кфс кфц сырный соус cheese sauce pendirli sous pendirli sous cheese sauce"
+  ],
+  "per100g": {
+   "kcal": 332.0,
+   "protein": 6.71,
+   "fat": 30.87,
+   "carbs": 6.83,
+   "fiber": 0.5
+  },
+  "portions": [
+   {
+    "name": "1 порция (≈40 г)",
+    "nameEn": "1 cup (~40 g)",
+    "grams": 40
+   }
+  ],
+  "density": null,
+  "source": "KFC (Баку, меню kfc.az). KFC Азербайджан не публикует пищевую ценность. Вес и энергия — официальные данные KFC Украины (kfc.ua, «Соус сирний спешл»: 40 г, 132.8 ккал). Белки и углеводы — по составу (USDA: сырный соус), жиры — остаток энергии по Этуотеру (4/4/9). В Баку вес может отличаться.",
+  "sourceEn": "KFC (Baku, kfc.az menu). KFC Azerbaijan publishes no nutrition values. Weight and energy are KFC Ukraine's official figures (kfc.ua, \"Соус сирний спешл\": 40 g, 132.8 kcal). Protein and carbohydrate come from the composition (USDA: cheese sauce); fat is the Atwater remainder (4/4/9). The Baku weight may differ."
+ },
+ {
+  "id": "local:kfc-sauce-ajika",
+  "name": "Аджика · KFC",
+  "nameEn": "Ajika · KFC",
+  "aliases": [
+   "kfc кфс кфц аджика ajika acika острый соус sous acika ajika"
+  ],
+  "per100g": {
+   "kcal": 85.2,
+   "protein": 1.12,
+   "fat": 0.22,
+   "carbs": 22.31,
+   "fiber": 0.85
+  },
+  "portions": [
+   {
+    "name": "1 порция (≈40 г)",
+    "nameEn": "1 cup (~40 g)",
+    "grams": 40
+   }
+  ],
+  "density": null,
+  "source": "KFC (Баку, меню kfc.az). KFC Азербайджан не публикует пищевую ценность — оценка по составу из описания на kfc.az (USDA, включая анализ блюд KFC): кетчуп, сладкий перец, острый соус, 40 г на порцию. Вес в ресторане может отличаться.",
+  "sourceEn": "KFC (Baku, kfc.az menu). KFC Azerbaijan publishes no nutrition values — estimated from the kfc.az description (USDA, including its analyses of KFC food): ketchup, sweet pepper, hot sauce, 40 g per serving. The restaurant weight may differ."
+ },
+ {
+  "id": "local:kfc-sauce-truffle",
+  "name": "Соус трюфель · KFC",
+  "nameEn": "Truffle Sauce · KFC",
+  "aliases": [
+   "kfc кфс кфц трюфельный соус трюфель truffle trufel sous trufel sousu truffle sauce"
+  ],
+  "per100g": {
+   "kcal": 409.1,
+   "protein": 0.73,
+   "fat": 44.9,
+   "carbs": 0.51,
+   "fiber": 0.05
+  },
+  "portions": [
+   {
+    "name": "1 порция (≈40 г)",
+    "nameEn": "1 cup (~40 g)",
+    "grams": 40
+   }
+  ],
+  "density": null,
+  "source": "KFC (Баку, меню kfc.az). KFC Азербайджан не публикует пищевую ценность — оценка по составу из описания на kfc.az (USDA, включая анализ блюд KFC): майонез, вода, грибы, 40 г на порцию. Вес в ресторане может отличаться.",
+  "sourceEn": "KFC (Baku, kfc.az menu). KFC Azerbaijan publishes no nutrition values — estimated from the kfc.az description (USDA, including its analyses of KFC food): mayonnaise, water, mushrooms, 40 g per serving. The restaurant weight may differ."
+ },
+ {
+  "id": "local:kfc-napoleon-strawberry",
+  "name": "Наполеон с клубникой · KFC",
+  "nameEn": "Strawberry Napoleon · KFC",
+  "aliases": [
+   "kfc кфс кфц наполеон клубника napoleon strawberry çiyələkli çiyələkli napoleon strawberry napoleon"
+  ],
+  "per100g": {
+   "kcal": 271.87,
+   "protein": 4.26,
+   "fat": 17.17,
+   "carbs": 25.79,
+   "fiber": 0.76
+  },
+  "portions": [
+   {
+    "name": "1 шт. (≈100 г)",
+    "nameEn": "1 pc (~100 g)",
+    "grams": 100
+   }
+  ],
+  "density": null,
+  "source": "KFC (Баку, меню kfc.az). KFC Азербайджан не публикует пищевую ценность — оценка по составу из описания на kfc.az (USDA, включая анализ блюд KFC): торт «Наполеон», клубника, 100 г на порцию. Вес в ресторане может отличаться.",
+  "sourceEn": "KFC (Baku, kfc.az menu). KFC Azerbaijan publishes no nutrition values — estimated from the kfc.az description (USDA, including its analyses of KFC food): Napoleon cake, strawberry, 100 g per serving. The restaurant weight may differ."
+ },
+ {
+  "id": "local:kfc-pie-cherry",
+  "name": "Вишнёвый пирожок · KFC",
+  "nameEn": "Cherry Pie · KFC",
+  "aliases": [
+   "kfc кфс кфц пирожок вишня вишнёвый cherry pie albalili piroq albalılı piroq cherry pie"
+  ],
+  "per100g": {
+   "kcal": 316.0,
+   "protein": 3.0,
+   "fat": 16.1,
+   "carbs": 42.6,
+   "fiber": 2.6
+  },
+  "portions": [
+   {
+    "name": "1 шт. (≈95 г)",
+    "nameEn": "1 pc (~95 g)",
+    "grams": 95
+   }
+  ],
+  "density": null,
+  "source": "KFC (Баку, меню kfc.az). KFC Азербайджан не публикует пищевую ценность — оценка по составу из описания на kfc.az (USDA, включая анализ блюд KFC): жареный пирожок с вишней, 95 г на порцию. Вес в ресторане может отличаться.",
+  "sourceEn": "KFC (Baku, kfc.az menu). KFC Azerbaijan publishes no nutrition values — estimated from the kfc.az description (USDA, including its analyses of KFC food): fried cherry pie, 95 g per serving. The restaurant weight may differ."
+ },
+ {
+  "id": "local:kfc-pie-wildberry",
+  "name": "Пирожок лесная ягода · KFC",
+  "nameEn": "Wildberry Pie · KFC",
+  "aliases": [
+   "kfc кфс кфц пирожок лесная ягода ягодный wildberry pie giləmeyvəli piroq giləmeyvəli piroq wildberry pie"
+  ],
+  "per100g": {
+   "kcal": 316.0,
+   "protein": 3.0,
+   "fat": 16.1,
+   "carbs": 42.6,
+   "fiber": 2.6
+  },
+  "portions": [
+   {
+    "name": "1 шт. (≈95 г)",
+    "nameEn": "1 pc (~95 g)",
+    "grams": 95
+   }
+  ],
+  "density": null,
+  "source": "KFC (Баку, меню kfc.az). KFC Азербайджан не публикует пищевую ценность — оценка по составу из описания на kfc.az (USDA, включая анализ блюд KFC): жареный пирожок с ягодами, 95 г на порцию. Вес в ресторане может отличаться.",
+  "sourceEn": "KFC (Baku, kfc.az menu). KFC Azerbaijan publishes no nutrition values — estimated from the kfc.az description (USDA, including its analyses of KFC food): fried berry pie, 95 g per serving. The restaurant weight may differ."
+ },
+ {
+  "id": "local:kfc-muffin-blackcurrant",
+  "name": "Маффин со смородиной · KFC",
+  "nameEn": "Blackcurrant Muffin · KFC",
+  "aliases": [
+   "kfc кфс кфц маффин смородина muffin blackcurrant qara qarağat maffin qara qarağat blackcurrant muffin"
+  ],
+  "per100g": {
+   "kcal": 375.0,
+   "protein": 4.49,
+   "fat": 16.1,
+   "carbs": 53.0,
+   "fiber": 1.1
+  },
+  "portions": [
+   {
+    "name": "1 шт. (≈100 г)",
+    "nameEn": "1 pc (~100 g)",
+    "grams": 100
+   }
+  ],
+  "density": null,
+  "source": "KFC (Баку, меню kfc.az). KFC Азербайджан не публикует пищевую ценность — оценка по составу из описания на kfc.az (USDA, включая анализ блюд KFC): маффин с ягодами, 100 г на порцию. Вес в ресторане может отличаться.",
+  "sourceEn": "KFC (Baku, kfc.az menu). KFC Azerbaijan publishes no nutrition values — estimated from the kfc.az description (USDA, including its analyses of KFC food): berry muffin, 100 g per serving. The restaurant weight may differ."
+ },
+ {
+  "id": "local:kfc-muffin-chocolate",
+  "name": "Шоколадный маффин · KFC",
+  "nameEn": "Chocolate Muffin · KFC",
+  "aliases": [
+   "kfc кфс кфц маффин шоколадный muffin chocolate şokolad maffin şokolad chocolate muffin"
+  ],
+  "per100g": {
+   "kcal": 402.0,
+   "protein": 5.77,
+   "fat": 19.0,
+   "carbs": 55.4,
+   "fiber": 1.8
+  },
+  "portions": [
+   {
+    "name": "1 шт. (≈100 г)",
+    "nameEn": "1 pc (~100 g)",
+    "grams": 100
+   }
+  ],
+  "density": null,
+  "source": "KFC (Баку, меню kfc.az). KFC Азербайджан не публикует пищевую ценность — оценка по составу из описания на kfc.az (USDA, включая анализ блюд KFC): шоколадный маффин, 100 г на порцию. Вес в ресторане может отличаться.",
+  "sourceEn": "KFC (Baku, kfc.az menu). KFC Azerbaijan publishes no nutrition values — estimated from the kfc.az description (USDA, including its analyses of KFC food): chocolate muffin, 100 g per serving. The restaurant weight may differ."
+ },
+ {
+  "id": "local:kfc-cookie-chocolate",
+  "name": "Шоколадное печенье · KFC",
+  "nameEn": "Chocolate Cookie · KFC",
+  "aliases": [
+   "kfc кфс кфц печенье шоколадное cookie chocolate şokoladlı şokoladlı cookie chocolate cookie"
+  ],
+  "per100g": {
+   "kcal": 492.0,
+   "protein": 5.1,
+   "fat": 24.7,
+   "carbs": 65.4,
+   "fiber": 2.0
+  },
+  "portions": [
+   {
+    "name": "1 шт. (≈50 г)",
+    "nameEn": "1 pc (~50 g)",
+    "grams": 50
+   }
+  ],
+  "density": null,
+  "source": "KFC (Баку, меню kfc.az). KFC Азербайджан не публикует пищевую ценность — оценка по составу из описания на kfc.az (USDA, включая анализ блюд KFC): печенье с шоколадом, 50 г на порцию. Вес в ресторане может отличаться.",
+  "sourceEn": "KFC (Baku, kfc.az menu). KFC Azerbaijan publishes no nutrition values — estimated from the kfc.az description (USDA, including its analyses of KFC food): chocolate cookie, 50 g per serving. The restaurant weight may differ."
+ },
+ {
+  "id": "local:kfc-cookie-double-chocolate",
+  "name": "Печенье Двойной шоколад · KFC",
+  "nameEn": "Double Chocolate Cookie · KFC",
+  "aliases": [
+   "kfc кфс кфц печенье двойной шоколад cookie double chocolate şokoladlı double şokoladlı cookie double chocolate cookie"
+  ],
+  "per100g": {
+   "kcal": 492.0,
+   "protein": 5.1,
+   "fat": 24.7,
+   "carbs": 65.4,
+   "fiber": 2.0
+  },
+  "portions": [
+   {
+    "name": "1 шт. (≈50 г)",
+    "nameEn": "1 pc (~50 g)",
+    "grams": 50
+   }
+  ],
+  "density": null,
+  "source": "KFC (Баку, меню kfc.az). KFC Азербайджан не публикует пищевую ценность — оценка по составу из описания на kfc.az (USDA, включая анализ блюд KFC): печенье с шоколадом, 50 г на порцию. Вес в ресторане может отличаться.",
+  "sourceEn": "KFC (Baku, kfc.az menu). KFC Azerbaijan publishes no nutrition values — estimated from the kfc.az description (USDA, including its analyses of KFC food): chocolate cookie, 50 g per serving. The restaurant weight may differ."
+ },
+ {
+  "id": "local:kfc-cheesecake-strawberry",
+  "name": "Клубничный чизкейк · KFC",
+  "nameEn": "Strawberry Cheesecake · KFC",
+  "aliases": [
+   "kfc кфс кфц чизкейк клубничный cheesecake strawberry çizkeyk çiyələkli çizkeyk strawberry cheesecake"
+  ],
+  "per100g": {
+   "kcal": 387.0,
+   "protein": 4.8,
+   "fat": 23.9,
+   "carbs": 38.2,
+   "fiber": 0.6
+  },
+  "portions": [
+   {
+    "name": "1 шт. (≈100 г)",
+    "nameEn": "1 pc (~100 g)",
+    "grams": 100
+   }
+  ],
+  "density": null,
+  "source": "KFC (Баку, меню kfc.az). KFC Азербайджан не публикует пищевую ценность — оценка по составу из описания на kfc.az (USDA, включая анализ блюд KFC): фруктовый чизкейк, 100 г на порцию. Вес в ресторане может отличаться.",
+  "sourceEn": "KFC (Baku, kfc.az menu). KFC Azerbaijan publishes no nutrition values — estimated from the kfc.az description (USDA, including its analyses of KFC food): fruit cheesecake, 100 g per serving. The restaurant weight may differ."
+ }
+]

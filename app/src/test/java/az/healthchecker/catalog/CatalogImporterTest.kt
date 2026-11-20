@@ -83,6 +83,22 @@ class CatalogImporterTest {
         listOf("гункан","сашими лосось","нигири","маки","tekka","мисо суп","чука").forEach{q->assertTrue(q,ids(q).first().startsWith("local:sushi-"))}
         assertEquals("usda:174277",ids("соевый соус").first());assertEquals("usda:171831",ids("васаби").first())
     }
+    @Test fun kfcItemsKeepTheOfficialEnergyAndAreFoundInEveryLanguage() {
+        fun portion(id:String,index:Int=0):Nutrients { val f=catalog.byId(id)!!;return calculate(f,Quantity(1.0,Measure.PIECES,f.portions[index].grams)).nutrients }
+        // KFC Ukraine's published weight and energy are kept; fat is what protein and carbohydrate leave.
+        val sanders=portion("local:kfc-sanders-original")
+        assertEquals(470.2,sanders.kcal!!,0.5);assertEquals((sanders.kcal!!-4*sanders.protein!!-4*sanders.carbs!!)/9,sanders.fat!!,0.05)
+        assertEquals(512.0,portion("local:kfc-twister-original").kcal!!,0.5)
+        assertEquals(3*214.13,portion("local:kfc-wings-spicy",2).kcal!!,2.0)  // nine wings
+        assertEquals(3*255.2,portion("local:kfc-strips-spicy",2).kcal!!,2.0)  // nine strips
+        assertEquals(55,catalog.foods.count{it.id.startsWith("local:kfc-")})
+        catalog.foods.filter{it.id.startsWith("local:kfc-")}.forEach{assertNotNull(it.id,it.per100g.fiber);assertTrue(it.id,it.common);assertTrue(it.id,it.source.contains("kfc.az"))}
+        // Receipt names in Azerbaijani, menu names in Russian and English.
+        listOf("tvister acılı" to "local:kfc-twister-spicy","sanders burger acılı" to "local:kfc-sanders-spicy","tauer burger" to "local:kfc-tower-original",
+            "dabl krispi" to "local:kfc-double-crispy-original","qanad acılı" to "local:kfc-wings-spicy","sarımsaqlı sous" to "local:kfc-sauce-garlic",
+            "pendirli sous" to "local:kfc-sauce-cheese","стрипсы острые" to "local:kfc-strips-spicy","боксмастер" to "local:kfc-boxmaster-original",
+            "böyük fri" to "local:kfc-fries","картофель фри kfc" to "local:kfc-fries","freşer burger" to "local:kfc-fresher-burger-original").forEach{(q,id)->assertTrue("$q → ${ids(q).take(5)}",id in ids(q).take(3))}
+    }
     @Test fun emptyQueryIsLimitedAndCustomFoodsComeFirst() {
         val custom=Food("custom:1","Лаваш Bakı",per100g=Nutrients(250.0))
         val result=ids("",listOf(custom));assertEquals(50,result.size);assertEquals("custom:1",result.first())
