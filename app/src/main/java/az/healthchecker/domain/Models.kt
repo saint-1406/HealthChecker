@@ -14,7 +14,9 @@ import kotlinx.serialization.Serializable
     @EncodeDefault(EncodeDefault.Mode.NEVER) val nameEn: String? = null, @EncodeDefault(EncodeDefault.Mode.NEVER) val sourceEn: String? = null, @EncodeDefault(EncodeDefault.Mode.NEVER) val common: Boolean = false,
     @EncodeDefault(EncodeDefault.Mode.NEVER) val barcode:String? = null,
     @EncodeDefault(EncodeDefault.Mode.NEVER) val productPhoto:String? = null,
-    @EncodeDefault(EncodeDefault.Mode.NEVER) val hidden:Boolean = false)
+    @EncodeDefault(EncodeDefault.Mode.NEVER) val hidden:Boolean = false,
+    /** Shelf in the food search ([FoodCategory.id]); catalog foods only. */
+    @EncodeDefault(EncodeDefault.Mode.NEVER) val category:String? = null)
 @Serializable enum class Measure { GRAMS, PIECES, ML }
 @Serializable data class Quantity(val value: Double, val unit: Measure, val portionGrams: Double? = null)
 data class CalculatedPortion(val grams: Double, val nutrients: Nutrients)

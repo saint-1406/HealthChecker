@@ -7,6 +7,7 @@ extra-foods.json adds estimated dishes whose derivation is recorded in the item 
 import json, math, hashlib, re
 from pathlib import Path
 from curation import hidden_ids, fresh_name, clean_name
+from categories import source_category, local_category, store_category
 
 HERE=Path(__file__).parent
 
@@ -130,9 +131,11 @@ def build_catalog(inputs, output, translations=HERE/'i18n'):
     usda={i:f for i,f in foods.items() if i.startswith('usda:')}
     for i in hidden_ids(usda,{i:f['_category'] for i,f in usda.items()}):
         if not foods[i]['common']:foods[i]['hidden']=True
-    for f in foods.values():f.pop('_category',None)
+    for f in foods.values():
+        f['category']=source_category(f['_category'],f.get('nameEn') or f['name']);f.pop('_category',None)
     for item in load_json(HERE/'extra-foods.json',[])+load_json(HERE/'sushi-foods.json',[])+load_json(HERE/'dish-foods.json',[])+load_json(HERE/'typical-foods.json',[])+load_json(HERE/'store-foods.json',[])+load_json(HERE/'kfc-foods.json',[]):
         foods[item['id']]=extra_food(item,foods)
+        foods[item['id']]['category']=store_category(item['name']) if item['id'].startswith('store:') else local_category(item['id'],item.get('nameEn') or '')
     search_aliases=load_json(HERE/'search-aliases.json',{})
     for f in foods.values():
         original=' '.join([f.get('nameEn') or '',f['name']]+f['aliases']).lower()

@@ -3,6 +3,13 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.animation.core.VectorConverter
+import androidx.compose.foundation.gestures.detectDragGestures
+import androidx.compose.ui.graphics.graphicsLayer
+import androidx.compose.ui.input.pointer.pointerInput
+import kotlinx.coroutines.launch
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.testTag
 import androidx.compose.material.icons.Icons
@@ -55,5 +62,32 @@ fun workoutLabel(w:WorkoutEntry):String = listOfNotNull(
         Icon(if(on)Icons.Outlined.Star else Icons.Outlined.StarBorder,
             (if(on)tr("Убрать из избранного: ","Remove favorite: ") else tr("В избранное: ","Favorite: "))+name,
             tint=if(on)MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.onSurfaceVariant)
+    }
+}
+
+/**
+ * A notice that can be flicked away in any direction: it follows the finger, fades as it goes, and past [limit] it
+ * leaves and [dismiss] runs; a shorter drag springs back. Buttons inside still work: a drag starts only after the
+ * touch slop. [key] restarts the position for every new notice.
+ */
+@Composable fun SwipeAway(key:Any,dismiss:()->Unit,modifier:Modifier=Modifier,limit:androidx.compose.ui.unit.Dp=80.dp,content:@Composable ()->Unit) {
+    androidx.compose.runtime.key(key) {
+        val offset=remember{androidx.compose.animation.core.Animatable(androidx.compose.ui.geometry.Offset.Zero,androidx.compose.ui.geometry.Offset.VectorConverter)}
+        val scope=rememberCoroutineScope()
+        val limitPx=with(androidx.compose.ui.platform.LocalDensity.current){limit.toPx()}
+        Box(modifier
+            .offset{androidx.compose.ui.unit.IntOffset(offset.value.x.toInt(),offset.value.y.toInt())}
+            .graphicsLayer{alpha=1f-(offset.value.getDistance()/(limitPx*2.5f)).coerceIn(0f,0.8f)}
+            .pointerInput(Unit){
+                detectDragGestures(
+                    onDragEnd={scope.launch{
+                        val d=offset.value.getDistance()
+                        if(d>limitPx){offset.animateTo(offset.value*(limitPx*4/d),androidx.compose.animation.core.tween(160));dismiss()}
+                        else offset.animateTo(androidx.compose.ui.geometry.Offset.Zero,androidx.compose.animation.core.spring())
+                    }},
+                    onDragCancel={scope.launch{offset.animateTo(androidx.compose.ui.geometry.Offset.Zero)}}
+                ){change,drag->change.consume();scope.launch{offset.snapTo(offset.value+drag)}}
+            }
+            .testTag("noticeSwipe")){content()}
     }
 }

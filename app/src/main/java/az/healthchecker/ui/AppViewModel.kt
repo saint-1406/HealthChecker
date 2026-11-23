@@ -120,9 +120,9 @@ class AppViewModel(application:Application):AndroidViewModel(application) {
     /** The name of a logged food in the current language; the user's own foods and removed products keep the saved name. */
     fun entryName(e:DiaryEntry):String = catalog?.byId(e.foodId)?.displayName?:e.name
     fun workoutName(w:WorkoutEntry):String = exerciseCatalog?.byId(w.exerciseId)?.displayName?:w.name
-    suspend fun search(query:String,filter:FoodFilter=FoodFilter.ALL):List<Food> {
+    suspend fun search(query:String,filter:FoodFilter=FoodFilter.ALL,category:FoodCategory?=null):List<Food> {
         val loaded=try{catalogLoad.await()}catch(e:CancellationException){throw e}catch(e:Exception){null}
-        return withContext(Dispatchers.Default){loaded?.search(query,snapshot.value.customFoods,filter=filter,favorites=snapshot.value.favoriteFoods)?:emptyList()}
+        return withContext(Dispatchers.Default){loaded?.search(query,snapshot.value.customFoods,filter=filter,favorites=snapshot.value.favoriteFoods,category=category)?:emptyList()}
     }
     fun food(id:String):Food? = snapshot.value.customFoods.find{it.id==id}?:catalog?.byId(id)
     /** Foods for the protein list: the user's own and everyday catalog foods, or the whole catalog; a name narrows them. */

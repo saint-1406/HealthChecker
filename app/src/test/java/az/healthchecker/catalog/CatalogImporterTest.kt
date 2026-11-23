@@ -99,6 +99,24 @@ class CatalogImporterTest {
             "pendirli sous" to "local:kfc-sauce-cheese","стрипсы острые" to "local:kfc-strips-spicy","боксмастер" to "local:kfc-boxmaster-original",
             "böyük fri" to "local:kfc-fries","картофель фри kfc" to "local:kfc-fries","freşer burger" to "local:kfc-fresher-burger-original").forEach{(q,id)->assertTrue("$q → ${ids(q).take(5)}",id in ids(q).take(3))}
     }
+    @Test fun everyFoodIsOnAShelfAndShelvesNarrowTheSearch() {
+        assertTrue(catalog.foods.all{FoodCategory.of(it.category)!=null})
+        FoodCategory.entries.forEach{c->assertTrue(c.id,catalog.search("",emptyList(),category=c).size==50)}
+        fun shelf(c:FoodCategory,q:String="")=catalog.search(q,emptyList(),category=c).map{it.id}
+        assertTrue(shelf(FoodCategory.FAST_FOOD).take(20).all{catalog.byId(it)!!.common});assertTrue(shelf(FoodCategory.FAST_FOOD).take(20).count{it.startsWith("local:kfc-")}>=10)
+        assertTrue("local:kfc-twister-spicy" in shelf(FoodCategory.FAST_FOOD,"твистер"))
+        assertTrue("local:espresso-double" in shelf(FoodCategory.COFFEE,"эспрессо"))
+        assertTrue(shelf(FoodCategory.ALCOHOL,"вино").isNotEmpty());assertTrue(shelf(FoodCategory.COFFEE,"вино").none{catalog.byId(it)!!.name.contains("Вино")})
+        assertTrue("usda:173647" in shelf(FoodCategory.DRINKS,"вода"))
+        assertEquals("ingredients",catalog.byId("usda:171009")!!.category)  // mayonnaise
+        assertEquals("dairy",catalog.byId("local:typical-kefir-1")!!.category)
+        // The user's own foods have no shelf: they stay under "All" and "My foods".
+        val own=Food("custom:1","Мой твистер",per100g=Nutrients(200.0))
+        assertFalse("custom:1" in catalog.search("твистер",listOf(own),category=FoodCategory.FAST_FOOD).map{it.id})
+        assertTrue("custom:1" in catalog.search("твистер",listOf(own)).map{it.id})
+        // Favourites keep the shelf too.
+        assertEquals(listOf("local:kfc-fries"),catalog.search("",emptyList(),filter=FoodFilter.FAVORITES,favorites=setOf("local:kfc-fries","usda:171009"),category=FoodCategory.FAST_FOOD).map{it.id})
+    }
     @Test fun emptyQueryIsLimitedAndCustomFoodsComeFirst() {
         val custom=Food("custom:1","Лаваш Bakı",per100g=Nutrients(250.0))
         val result=ids("",listOf(custom));assertEquals(50,result.size);assertEquals("custom:1",result.first())

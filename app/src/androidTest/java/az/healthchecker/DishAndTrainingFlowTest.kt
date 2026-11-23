@@ -50,7 +50,7 @@ class DishAndTrainingFlowTest {
         // The dish is now a product of its own and can be found again.
         app.onNodeWithText("Дневник").performClick();app.onNodeWithContentDescription("Добавить еду").performClick()
         app.onNodeWithTag("foodSearch").performTextInput("курица с картошкой")
-        waitText("Своё блюдо · 2 ингредиента",30000)
+        app.waitUntil(30000){app.onAllNodesWithText("своё блюдо, 2 ингредиента",substring=true).fetchSemanticsNodes().isNotEmpty()}
     }
     @Test fun inventoryDishCanBeEatenAndDeletedWithoutLosingDiary() {
         launch();waitText("Начать без расчёта");app.onNodeWithText("Начать без расчёта").performClick();waitText("Обзор")

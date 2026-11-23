@@ -526,7 +526,7 @@
  },
  {
   "id": "local:kfc-bbq-burger-original",
-  "name": "BBQ бургер оригинальный · KFC",
+  "name": "Бургер BBQ оригинальный · KFC",
   "nameEn": "Original BBQ Burger · KFC",
   "aliases": [
    "kfc кфс кфц барбекю bbq barbekü бургер burger bbq burger orijinal original bbq burger"
@@ -551,7 +551,7 @@
  },
  {
   "id": "local:kfc-bbq-burger-spicy",
-  "name": "BBQ бургер острый · KFC",
+  "name": "Бургер BBQ острый · KFC",
   "nameEn": "Spicy BBQ Burger · KFC",
   "aliases": [
    "kfc кфс кфц барбекю bbq barbekü бургер burger острый acili bbq burger acılı spicy bbq burger"

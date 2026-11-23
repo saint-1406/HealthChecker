@@ -197,7 +197,7 @@ import az.healthchecker.ui.update.UpdatePanel
                 }
                 if(busy)LinearProgressIndicator(Modifier.fillMaxWidth().align(Alignment.TopCenter))
               }
-              notice?.let{n->Snackbar(modifier=Modifier.padding(16.dp),action=if(n.undo)({TextButton(onClick={vm.undo()}){Text(tr("Отменить","Undo"))}})else null,dismissAction={IconButton(onClick={vm.dismissNotice()}){Icon(Icons.Outlined.Close,tr("Закрыть","Close"))}}){Text(n.text,maxLines=3)}}
+              notice?.let{n->SwipeAway(n,{vm.dismissNotice()}){Snackbar(modifier=Modifier.padding(16.dp),action=if(n.undo)({TextButton(onClick={vm.undo()}){Text(tr("Отменить","Undo"))}})else null,dismissAction={IconButton(onClick={vm.dismissNotice()}){Icon(Icons.Outlined.Close,tr("Закрыть","Close"))}}){Text(n.text,maxLines=3)}}}
             }
         }
         if(error!=null)AlertDialog(onDismissRequest={vm.error.value=null},title={Text(tr("Не удалось выполнить действие","Something went wrong"))},text={Text(error!!)},confirmButton={TextButton(onClick={vm.error.value=null}){Text(tr("Понятно","OK"))}})
