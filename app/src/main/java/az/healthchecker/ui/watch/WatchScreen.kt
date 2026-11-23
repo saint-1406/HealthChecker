@@ -77,7 +77,7 @@ fun watchLine(state:az.healthchecker.ui.WatchState):String = when(state.status) 
                     Button(onClick={start(HealthConnectSource.installIntent())},modifier=Modifier.testTag("installHealthConnect")){Text(if(state.status==WatchStatus.INSTALL)tr("Установить Health Connect","Install Health Connect") else tr("Обновить Health Connect","Update Health Connect"))}
                 }
                 WatchStatus.NOT_CONNECTED,WatchStatus.PARTIAL->{
-                    Text(if(state.status==WatchStatus.PARTIAL)tr("Разрешено не всё: часть данных не видна.","Not everything is allowed: some data is hidden.") else tr("Разрешите HealthChecker читать шаги, сон, тренировки, пульс и вес.","Let HealthChecker read steps, sleep, workouts, pulse and weight."),style=MaterialTheme.typography.bodyMedium)
+                    Text(if(state.status==WatchStatus.PARTIAL)tr("Разрешено не всё: часть данных не видна.","Not everything is allowed: some data is hidden.") else tr("Разрешите VitaCore читать шаги, сон, тренировки, пульс и вес.","Let VitaCore read steps, sleep, workouts, pulse and weight."),style=MaterialTheme.typography.bodyMedium)
                     Button(onClick={try{request.launch(HealthConnectSource.permissions)}catch(e:ActivityNotFoundException){start(HealthConnectSource.settingsIntent())}},modifier=Modifier.testTag("connectHealthConnect")){Icon(Icons.Outlined.Link,null);Spacer(Modifier.width(8.dp));Text(tr("Подключить","Connect"))}
                 }
                 WatchStatus.CONNECTED->{}
@@ -103,7 +103,7 @@ fun watchLine(state:az.healthchecker.ui.WatchState):String = when(state.status) 
         tr("В Mi Fitness: Профиль → Сторонние данные → Health Connect. Включите синхронизацию и разрешите запись шагов, сна, тренировок и пульса.","In Mi Fitness: Profile → Third-party data → Health Connect. Turn on syncing and allow writing steps, sleep, workouts and heart rate."),
         tr("Синхронизируйте часы с Mi Fitness (потяните экран вниз в приложении).","Sync the watch with Mi Fitness (pull down in the app)."),
         if(connected)tr("Вернитесь сюда и нажмите «Обновить». В Health Connect → Данные и доступ → Шаги видно, пишет ли туда Mi Fitness.","Come back and tap Refresh. Health Connect → Data and access → Steps shows whether Mi Fitness writes there.")
-        else tr("Здесь нажмите «Подключить» и разрешите HealthChecker чтение.","Here, tap Connect and allow HealthChecker to read."),
+        else tr("Здесь нажмите «Подключить» и разрешите VitaCore чтение.","Here, tap Connect and allow VitaCore to read."),
     ).forEachIndexed{i,t->Row(horizontalArrangement=Arrangement.spacedBy(8.dp)){Text("${i+1}.",fontWeight=FontWeight.SemiBold);Text(t,style=MaterialTheme.typography.bodyMedium)}}
     Text(tr("Mi Fitness передаёт шаги, дистанцию, сон и тренировки с пульсом. Круглосуточный пульс и SpO₂ зависят от модели часов и версии Mi Fitness.","Mi Fitness shares steps, distance, sleep and workouts with heart rate. All-day pulse and SpO₂ depend on the watch model and Mi Fitness version."),style=MaterialTheme.typography.bodySmall,color=MaterialTheme.colorScheme.onSurfaceVariant)
 }

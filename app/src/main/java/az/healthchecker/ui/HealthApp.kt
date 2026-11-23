@@ -12,6 +12,10 @@ import androidx.compose.runtime.*
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalDensity
+import androidx.compose.ui.platform.testTag
+import androidx.compose.foundation.clickable
+import androidx.compose.ui.semantics.semantics
+import androidx.compose.ui.semantics.contentDescription
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
@@ -110,17 +114,18 @@ import az.healthchecker.ui.update.UpdatePanel
             bottomBar={if(ready && snapshot.onboarded && route=="main")NavigationBar(containerColor=MaterialTheme.colorScheme.surface){
                 listOf(Triple(0,tr("Обзор","Overview"),Icons.Outlined.SpaceDashboard),Triple(1,tr("Дневник","Diary"),Icons.AutoMirrored.Outlined.MenuBook),Triple(2,tr("Тренировки","Training"),Icons.Outlined.FitnessCenter),Triple(4,tr("Находки","Findings"),Icons.Outlined.Explore),Triple(3,tr("Профиль","Profile"),Icons.Outlined.PersonOutline)).forEach{(id,label,icon)->NavigationBarItem(selected=tab==id,onClick={tab=id},icon={Icon(icon,label)},label={Text(label)})}
             }},
-            topBar={if(ready && snapshot.onboarded && route=="main" && tab!=3 && tab!=4)Column(Modifier.statusBarsPadding().padding(horizontal=24.dp,vertical=if(LocalDensity.current.fontScale>1.3f)8.dp else 16.dp)){
-                if(LocalDensity.current.fontScale<=1.3f)Text("HEALTHCHECKER",style=MaterialTheme.typography.labelMedium,color=MaterialTheme.colorScheme.primary,fontWeight=FontWeight.Bold)
-                Row(Modifier.fillMaxWidth(),verticalAlignment=Alignment.CenterVertically){
-                    Text(when(tab){0->tr("Ваш день","Your day");1->tr("Дневник питания","Food diary");else->tr("Тренировки","Training")},style=if(LocalDensity.current.fontScale>1.3f)MaterialTheme.typography.titleLarge else MaterialTheme.typography.headlineLarge,fontWeight=FontWeight.Bold,modifier=Modifier.weight(1f))
-                    IconButton(onClick={calendar=true}){Icon(Icons.Outlined.CalendarMonth,tr("Выбрать дату","Choose a date"))}
+            // One compact row: the screen title, then the day switcher as a pill (◀ day ▶) and the calendar.
+            topBar={if(ready && snapshot.onboarded && route=="main" && tab!=3 && tab!=4)Row(Modifier.statusBarsPadding().fillMaxWidth().padding(start=20.dp,end=8.dp,top=6.dp,bottom=2.dp),verticalAlignment=Alignment.CenterVertically){
+                Text(when(tab){0->tr("Ваш день","Your day");1->tr("Дневник питания","Food diary");else->tr("Тренировки","Training")},style=MaterialTheme.typography.titleLarge,fontWeight=FontWeight.Bold,maxLines=1,overflow=androidx.compose.ui.text.style.TextOverflow.Ellipsis,modifier=Modifier.weight(1f).testTag("screenTitle"))
+                Surface(shape=androidx.compose.foundation.shape.RoundedCornerShape(50),color=MaterialTheme.colorScheme.surface.copy(alpha=0.85f)) {
+                    Row(verticalAlignment=Alignment.CenterVertically){
+                        IconButton(onClick={date=LocalDate.parse(date).minusDays(1).toString()},modifier=Modifier.size(36.dp)){Icon(Icons.Outlined.ChevronLeft,tr("Предыдущий день","Previous day"),Modifier.size(20.dp))}
+                        Text(if(date==LocalDate.now().toString())tr("Сегодня","Today") else shortDayMonth(date),style=MaterialTheme.typography.labelLarge,fontWeight=FontWeight.SemiBold,maxLines=1,
+                            modifier=Modifier.clickable(enabled=date!=LocalDate.now().toString()){date=LocalDate.now().toString()}.padding(horizontal=2.dp).semantics{contentDescription=dayMonth(date,true)}.testTag("dayLabel"))
+                        IconButton(onClick={date=LocalDate.parse(date).plusDays(1).toString()},enabled=date<LocalDate.now().toString(),modifier=Modifier.size(36.dp)){Icon(Icons.Outlined.ChevronRight,tr("Следующий день","Next day"),Modifier.size(20.dp))}
+                    }
                 }
-                Row(verticalAlignment=Alignment.CenterVertically){
-                    IconButton(onClick={date=LocalDate.parse(date).minusDays(1).toString()}){Icon(Icons.Outlined.ChevronLeft,tr("Предыдущий день","Previous day"))}
-                    TextButton(onClick={date=LocalDate.now().toString()},modifier=Modifier.weight(1f)){Text(if(date==LocalDate.now().toString())tr("Сегодня · ","Today · ")+dayMonth(date) else dayMonth(date,true))}
-                    IconButton(onClick={date=LocalDate.parse(date).plusDays(1).toString()},enabled=date<LocalDate.now().toString()){Icon(Icons.Outlined.ChevronRight,tr("Следующий день","Next day"))}
-                }
+                IconButton(onClick={calendar=true}){Icon(Icons.Outlined.CalendarMonth,tr("Выбрать дату","Choose a date"))}
             }}
         ){padding->
             Column(Modifier.fillMaxSize().padding(padding)) {

@@ -7,6 +7,9 @@ import androidx.compose.material.icons.outlined.*
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.Alignment
+import androidx.compose.foundation.horizontalScroll
+import androidx.compose.foundation.rememberScrollState
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
@@ -18,27 +21,31 @@ import az.healthchecker.ui.*
     val loaded by vm.catalogCount.collectAsStateWithLifecycle()
     val favorites=remember(snapshot.favoriteFoods,snapshot.customFoods,loaded,Lang.current){snapshot.favoriteFoods.mapNotNull{vm.food(it)}.sortedBy{it.displayName}.take(12)}
     val recent=remember(snapshot.entries){snapshot.entries.asSequence().filter{it.waterMl==0.0}.sortedByDescending{it.instant}.distinctBy{it.foodId}.take(5).toList()}
-    Column(verticalArrangement=Arrangement.spacedBy(6.dp)) {
+    // Slim chip rows with a small caption each: favourites, recent foods (with the amount last time) and saved meals.
+    Column(verticalArrangement=Arrangement.spacedBy(2.dp)) {
         if(favorites.isNotEmpty()) {
-            Text(tr("Избранное","Favorites"),style=MaterialTheme.typography.titleSmall)
-            LazyRow(horizontalArrangement=Arrangement.spacedBy(8.dp)){items(favorites,key={it.id}){food->AssistChip(onClick={select(food)},label={Text(food.displayName,maxLines=1,overflow=TextOverflow.Ellipsis,modifier=Modifier.widthIn(max=200.dp))},leadingIcon={Icon(Icons.Outlined.Star,null,Modifier.size(18.dp))},modifier=Modifier.heightIn(min=48.dp))}}
+            Caption(tr("Избранное","Favorites"))
+            LazyRow(horizontalArrangement=Arrangement.spacedBy(6.dp)){items(favorites,key={it.id}){food->AssistChip(onClick={select(food)},label={Text(food.displayName,maxLines=1,overflow=TextOverflow.Ellipsis,modifier=Modifier.widthIn(max=180.dp))},leadingIcon={Icon(Icons.Outlined.Star,null,Modifier.size(16.dp))})}}
         }
         if(recent.isNotEmpty()) {
-            Text(tr("Недавние продукты","Recent foods"),style=MaterialTheme.typography.titleSmall)
-            LazyRow(horizontalArrangement=Arrangement.spacedBy(8.dp)){items(recent,key={it.foodId}){entry->AssistChip(onClick={repeat(entry)},label={Column{Text(vm.entryName(entry),maxLines=1,overflow=TextOverflow.Ellipsis,modifier=Modifier.widthIn(max=200.dp));Text(quantityLabel(entry.quantity,entry.grams),style=MaterialTheme.typography.labelSmall)}},modifier=Modifier.heightIn(min=48.dp))}}
+            Caption(tr("Недавние продукты","Recent foods"))
+            LazyRow(horizontalArrangement=Arrangement.spacedBy(6.dp)){items(recent,key={it.foodId}){entry->AssistChip(onClick={repeat(entry)},label={Text(vm.entryName(entry)+" · "+quantityLabel(entry.quantity,entry.grams),maxLines=1,overflow=TextOverflow.Ellipsis,modifier=Modifier.widthIn(max=220.dp))},leadingIcon={Icon(Icons.Outlined.History,null,Modifier.size(16.dp))})}}
         }
-        TextButton(onClick=openMeals,modifier=Modifier.heightIn(min=48.dp)){Icon(Icons.Outlined.RestaurantMenu,null);Spacer(Modifier.width(8.dp));Text(tr("Наборы еды","Saved meals"))}
-        if(snapshot.savedMeals.isNotEmpty())LazyRow(horizontalArrangement=Arrangement.spacedBy(8.dp)){items(snapshot.savedMeals.sortedBy{it.name}.take(5),key={it.id}){meal->SuggestionChip(onClick={vm.addSavedMeal(meal,date,openDraft)},label={Text(meal.name,maxLines=1,overflow=TextOverflow.Ellipsis,modifier=Modifier.widthIn(max=200.dp))},modifier=Modifier.heightIn(min=48.dp))}}
+        LazyRow(horizontalArrangement=Arrangement.spacedBy(6.dp)) {
+            item{AssistChip(onClick=openMeals,label={Text(tr("Наборы еды","Saved meals"))},leadingIcon={Icon(Icons.Outlined.RestaurantMenu,null,Modifier.size(16.dp))})}
+            items(snapshot.savedMeals.sortedBy{it.name}.take(5),key={it.id}){meal->SuggestionChip(onClick={vm.addSavedMeal(meal,date,openDraft)},label={Text(meal.name,maxLines=1,overflow=TextOverflow.Ellipsis,modifier=Modifier.widthIn(max=180.dp))})}
+        }
     }
 }
 
 @OptIn(ExperimentalLayoutApi::class)
 @Composable fun WaterActions(vm:AppViewModel,date:String) {
     val settings by vm.settings.collectAsStateWithLifecycle()
-    Column(verticalArrangement=Arrangement.spacedBy(2.dp)) {
-        FlowRow(horizontalArrangement=Arrangement.spacedBy(8.dp)) {
-            listOf(200,250,500).forEach{ml->FilterChip(selected=settings.waterMl==ml,onClick={vm.waterSize(ml)},label={Text("$ml $ML")},modifier=Modifier.heightIn(min=48.dp))}
-        }
-        TextButton(onClick={vm.water(date)},modifier=Modifier.heightIn(min=48.dp)){Icon(Icons.Outlined.WaterDrop,null);Spacer(Modifier.width(6.dp));Text(tr("+${settings.waterMl} мл воды","+${settings.waterMl} ml water"))}
+    // Glass size and "+ water" on one line (it wraps only on a narrow screen).
+    Row(Modifier.horizontalScroll(rememberScrollState()),horizontalArrangement=Arrangement.spacedBy(6.dp),verticalAlignment=Alignment.CenterVertically) {
+        FilledTonalButton(onClick={vm.water(date)},contentPadding=PaddingValues(horizontal=12.dp),modifier=Modifier.height(36.dp)){Icon(Icons.Outlined.WaterDrop,null,Modifier.size(16.dp));Spacer(Modifier.width(6.dp));Text(tr("+${settings.waterMl} мл воды","+${settings.waterMl} ml water"),style=MaterialTheme.typography.labelLarge)}
+        listOf(200,250,500).forEach{ml->FilterChip(selected=settings.waterMl==ml,onClick={vm.waterSize(ml)},label={Text("$ml $ML")})}
     }
 }
+
+@Composable private fun Caption(text:String) = Text(text,style=MaterialTheme.typography.labelMedium,color=MaterialTheme.colorScheme.onSurfaceVariant,modifier=Modifier.padding(top=4.dp))

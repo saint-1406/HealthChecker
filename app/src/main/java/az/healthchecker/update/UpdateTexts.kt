@@ -11,8 +11,8 @@ object UpdateTexts {
     fun downloading(percent: Int) = tr("Загружаю обновление… $percent%", "Downloading the update… $percent%")
     fun verified(version: String) = tr("Файл версии $version проверен — открываю установку. Дневник, находки и прогулки останутся.",
         "Version $version checked — opening the installer. Your diary, findings and walks stay.")
-    val permission get() = tr("Разрешите HealthChecker устанавливать приложения (Android спросит один раз) и вернитесь — установка продолжится сама.",
-        "Allow HealthChecker to install apps (Android asks once) and come back — the update carries on by itself.")
+    val permission get() = tr("Разрешите VitaCore устанавливать приложения (Android спросит один раз) и вернитесь — установка продолжится сама.",
+        "Allow VitaCore to install apps (Android asks once) and come back — the update carries on by itself.")
 
     /** What went wrong, and that nothing was installed or lost. */
     fun failure(f: UpdateFailure): String = when (f.reason) {

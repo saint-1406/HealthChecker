@@ -8,7 +8,7 @@ class SafBackupStore(private val context:Context,private val folder:Uri):BackupS
     override suspend fun writeNew(bytes:ByteArray):String {
         val root=DocumentFile.fromTreeUri(context,folder)?:error(tr("Папка недоступна","The folder is unavailable"))
         require(root.canWrite()){ tr("Нет доступа к папке. Выберите её снова.","No access to the folder. Choose it again.") }
-        val file=root.createFile("application/json","HealthChecker-${System.currentTimeMillis()}-${UUID.randomUUID()}.json")?:error(tr("Не удалось создать файл","Could not create the file"))
+        val file=root.createFile("application/json","VitaCore-${System.currentTimeMillis()}-${UUID.randomUUID()}.json")?:error(tr("Не удалось создать файл","Could not create the file"))
         val stream=context.contentResolver.openOutputStream(file.uri,"w")?:error(tr("Не удалось открыть файл","Could not open the file"))
         stream.use{it.write(bytes);it.flush()}
         return file.uri.toString()
@@ -17,7 +17,7 @@ class SafBackupStore(private val context:Context,private val folder:Uri):BackupS
     suspend fun writeArchive(source:java.io.File):String {
         val root=DocumentFile.fromTreeUri(context,folder)?:error("Backup folder unavailable")
         require(root.canWrite()){"No write access to backup folder"}
-        val target=root.createFile("application/zip","HealthChecker-${System.currentTimeMillis()}-${UUID.randomUUID()}.zip")?:error("Could not create backup")
+        val target=root.createFile("application/zip","VitaCore-${System.currentTimeMillis()}-${UUID.randomUUID()}.zip")?:error("Could not create backup")
         try {
             val output=context.contentResolver.openOutputStream(target.uri,"w")?:error("Could not open backup")
             output.use{out->source.inputStream().use{it.copyTo(out)};out.flush()}

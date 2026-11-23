@@ -60,12 +60,12 @@ class VideoWorkoutFlowTest {
         // The notice reserves its own space: the shortcut stays reachable above the day's list.
         app.onNodeWithTag("trainingList").performScrollToNode(hasTestTag("openVideos"))
         app.onNodeWithTag("openVideos").assertIsDisplayed()
-        app.onNodeWithTag("trainingList").performScrollToNode(hasText("Выполненные упражнения"))
-        app.onNodeWithText("31 упражнение").assertExists()
+        app.onNodeWithTag("trainingList").performScrollToNode(hasText("Выполнено · 31 упражнение"))
+        app.onNodeWithText("Выполнено · 31 упражнение").assertExists()
         // The profile names the installed release, as the update file is numbered.
         app.onNodeWithText("Профиль").performClick()
         app.onNodeWithTag("open-profile-about").performScrollTo().performClick()
-        app.onNodeWithTag("appVersion").performScrollTo().assert(hasText("HealthChecker · версия ",substring=true))
+        app.onNodeWithTag("appVersion").performScrollTo().assert(hasText("VitaCore · версия ",substring=true))
     }
     @Test fun channelLibraryFiltersByExerciseAndKind() {
         skipOnboarding()

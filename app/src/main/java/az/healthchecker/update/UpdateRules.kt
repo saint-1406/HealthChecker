@@ -6,7 +6,7 @@ import java.net.URI
 import java.util.Locale
 
 /**
- * Updating HealthChecker from inside the app, like ATLAS does: the newest GitHub release is asked for, its full APK is
+ * Updating VitaCore (formerly HealthChecker) from inside the app, like ATLAS does: the newest GitHub release is asked for, its full APK is
  * downloaded into the app's cache and checked (size, the published .sha256 file, GitHub's own digest, the same package,
  * a higher versionCode and the same signing key). Only a file that passes all of that goes to Android's installer,
  * which puts the new version over the old one: the diary, findings and walks stay.
@@ -14,7 +14,8 @@ import java.util.Locale
  * The network is used only here, only for the hosts below and only when the user checks or the once-a-day check runs.
  */
 object UpdateRules {
-    const val REPOSITORY = "saint-1406/HealthChecker"
+    /** Renamed from saint-1406/HealthChecker: GitHub redirects the old address, so older installs keep finding updates. */
+    const val REPOSITORY = "saint-1406/VitaCore"
     const val LATEST = "https://api.github.com/repos/$REPOSITORY/releases/latest"
     /** GitHub's API, its release pages and the storage its download links redirect to. Nothing else is ever opened. */
     val HOSTS = setOf("api.github.com", "github.com", "objects.githubusercontent.com", "release-assets.githubusercontent.com")
@@ -22,6 +23,7 @@ object UpdateRules {
     const val SPARE_BYTES = 32L * 1024 * 1024
     const val MAX_APK_BYTES = 1024L * 1024 * 1024
 
+    /** The file keeps its old name: installs from before the rename look for exactly this asset. */
     fun apkName(version: String) = "HealthChecker-update-v$version.apk"
 
     fun allowedUrl(url: String): Boolean = runCatching {

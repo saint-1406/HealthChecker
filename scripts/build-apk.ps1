@@ -73,8 +73,8 @@ try {
         if(-not (Test-Path -LiteralPath $gh)){throw 'GitHub CLI is required for -Publish: install it and run gh auth login.'}
         if($NotesFile){$Notes=(Get-Content -LiteralPath $NotesFile -Raw -Encoding UTF8).TrimEnd()+"`n`nSHA-256 APK: ``$($hash.ToLowerInvariant())``"}
         if(-not $Notes){$Notes="Обновление HealthChecker v$VersionName. Скачайте $name и откройте его поверх установленного приложения — дневник сохранится. SHA-256: $hash"}
-        Invoke-Native 'GitHub release failed' { & $gh release create "v$VersionName" @releaseAssets --repo saint-1406/HealthChecker --target main --title "HealthChecker v$VersionName" --notes $Notes --latest }
-        Write-Output "Published: https://github.com/saint-1406/HealthChecker/releases/tag/v$VersionName"
+        Invoke-Native 'GitHub release failed' { & $gh release create "v$VersionName" @releaseAssets --repo saint-1406/VitaCore --target main --title "VitaCore v$VersionName" --notes $Notes --latest }
+        Write-Output "Published: https://github.com/saint-1406/VitaCore/releases/tag/v$VersionName"
     }
     Write-Output "Ready: $projectRoot\dist\$name (versionCode $VersionCode, SHA-256 $hash)"
 } finally {Pop-Location}

@@ -92,12 +92,12 @@ import java.time.LocalTime
     val context=LocalContext.current
     if(!unrestricted) {
         Text(tr("Экономия батареи может задерживать напоминания","Battery saving can hold reminders back"),style=MaterialTheme.typography.titleMedium,fontWeight=FontWeight.SemiBold)
-        Text(if(Reminders.xiaomi)tr("На телефонах Xiaomi, Redmi и POCO система может совсем не показать напоминание, пока приложение закрыто. Разрешите HealthChecker работать в фоне: приложение не будет тратить батарею, оно просыпается только во время напоминаний.","On Xiaomi, Redmi and POCO phones the system may not show a reminder at all while the app is closed. Let HealthChecker run in the background: it does not drain the battery, it only wakes up for reminders.")
-            else tr("Разрешите HealthChecker работать в фоне, чтобы напоминания приходили вовремя. Приложение просыпается только во время напоминаний.","Let HealthChecker run in the background so reminders come on time. It only wakes up for reminders."),style=MaterialTheme.typography.bodyMedium)
+        Text(if(Reminders.xiaomi)tr("На телефонах Xiaomi, Redmi и POCO система может совсем не показать напоминание, пока приложение закрыто. Разрешите VitaCore работать в фоне: приложение не будет тратить батарею, оно просыпается только во время напоминаний.","On Xiaomi, Redmi and POCO phones the system may not show a reminder at all while the app is closed. Let VitaCore run in the background: it does not drain the battery, it only wakes up for reminders.")
+            else tr("Разрешите VitaCore работать в фоне, чтобы напоминания приходили вовремя. Приложение просыпается только во время напоминаний.","Let VitaCore run in the background so reminders come on time. It only wakes up for reminders."),style=MaterialTheme.typography.bodyMedium)
         Button(onClick={Reminders.allowBackground(context)},modifier=Modifier.fillMaxWidth().testTag("allowBackground")){Text(tr("Разрешить работу в фоне","Allow running in the background"))}
     } else Text(tr("Работа в фоне разрешена.","Running in the background is allowed."),style=MaterialTheme.typography.bodyMedium,color=MaterialTheme.colorScheme.primary,modifier=Modifier.testTag("batteryOk"))
     if(Reminders.xiaomi) {
-        Text(tr("Ещё на Xiaomi: Безопасность → Разрешения → Автозапуск → включить HealthChecker. Тогда напоминания вернутся и после перезагрузки.","Also on Xiaomi: Security → Permissions → Autostart → turn HealthChecker on. Then reminders come back after a restart too."),style=MaterialTheme.typography.bodySmall,color=MaterialTheme.colorScheme.onSurfaceVariant)
+        Text(tr("Ещё на Xiaomi: Безопасность → Разрешения → Автозапуск → включить VitaCore. Тогда напоминания вернутся и после перезагрузки.","Also on Xiaomi: Security → Permissions → Autostart → turn VitaCore on. Then reminders come back after a restart too."),style=MaterialTheme.typography.bodySmall,color=MaterialTheme.colorScheme.onSurfaceVariant)
         OutlinedButton(onClick={Reminders.openAutostart(context)},modifier=Modifier.testTag("openAutostart")){Text(tr("Открыть автозапуск","Open autostart"))}
     }
 }

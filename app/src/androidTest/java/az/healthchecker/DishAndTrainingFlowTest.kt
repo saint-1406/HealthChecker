@@ -101,7 +101,7 @@ class DishAndTrainingFlowTest {
         // A tall first card can push the progress line out of the lazy list, so scroll back up to it.
         app.waitUntil(10000){runCatching{app.onNodeWithTag("workoutNowList").performScrollToNode(hasText("Выполнено 1 из",substring=true))}.isSuccess}
         app.onNodeWithContentDescription("Назад").performClick()
-        app.waitUntil(90000){runCatching{app.onNodeWithTag("trainingList").performScrollToNode(hasText("2 упражнения"))}.isSuccess}
+        app.waitUntil(90000){runCatching{app.onNodeWithTag("trainingList").performScrollToNode(hasText("Выполнено · 2 упражнения"))}.isSuccess}
         app.onNodeWithText("Обзор").performClick()
         waitText("Тренировка была")
     }

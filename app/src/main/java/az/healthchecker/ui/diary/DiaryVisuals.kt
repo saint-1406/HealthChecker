@@ -50,38 +50,39 @@ data class MacroColors(val protein:Color,val fat:Color,val carbs:Color)
 @Composable fun DaySummaryCard(day:DayState) {
     val s=day.summary;val goal=day.goals?.kcal;val c=macroColors()
     val ring=MaterialTheme.colorScheme.primary;val track=MaterialTheme.colorScheme.surfaceVariant
-    Panel(Modifier.testTag("diarySummary")) {
+    // Same content as before with tighter padding: the day's total, ring, energy split, macros and fibre/water.
+    Surface(Modifier.fillMaxWidth().testTag("diarySummary"),shape=RoundedCornerShape(20.dp),color=MaterialTheme.colorScheme.surface) {Column(Modifier.padding(horizontal=16.dp,vertical=12.dp),verticalArrangement=Arrangement.spacedBy(8.dp)) {
         Row(verticalAlignment=Alignment.CenterVertically) {
             Column(Modifier.weight(1f)) {
                 Text(tr("ЗА ДЕНЬ","FOR THE DAY"),style=MaterialTheme.typography.labelMedium,color=MaterialTheme.colorScheme.primary)
-                Text("${number(s.kcal.value)}${if(!s.kcal.complete)"+" else ""} $KCAL",style=MaterialTheme.typography.headlineMedium,fontWeight=FontWeight.SemiBold)
+                Text("${number(s.kcal.value)}${if(!s.kcal.complete)"+" else ""} $KCAL",style=MaterialTheme.typography.headlineSmall,fontWeight=FontWeight.SemiBold)
                 Text(goal?.let{g->"${tr("из","of")} ${number(g)} · "+if(s.kcal.value>g)tr("выше цели на ","above by ")+number(s.kcal.value-g) else tr("осталось ","left ")+number(g-s.kcal.value)}?:tr("Цель не задана","No goal set"),style=MaterialTheme.typography.bodySmall,color=MaterialTheme.colorScheme.onSurfaceVariant)
             }
             val progress=goal?.let{(s.kcal.value/it).coerceIn(0.0,1.0).toFloat()}?:0f
-            Box(Modifier.size(64.dp).semantics{contentDescription=tr("Выполнено ","Done ")+"${(progress*100).toInt()}%"},contentAlignment=Alignment.Center) {
+            Box(Modifier.size(56.dp).semantics{contentDescription=tr("Выполнено ","Done ")+"${(progress*100).toInt()}%"},contentAlignment=Alignment.Center) {
                 Canvas(Modifier.fillMaxSize()){val w=7.dp.toPx();drawArc(track,-90f,360f,false,style=Stroke(w,cap=StrokeCap.Round));drawArc(ring,-90f,360f*progress,false,style=Stroke(w,cap=StrokeCap.Round))}
                 Text(if(goal==null)"—" else "${(progress*100).toInt()}%",style=MaterialTheme.typography.labelLarge,fontWeight=FontWeight.SemiBold)
             }
         }
-        MacroBar(Nutrients(s.kcal.value,s.protein.value,s.fat.value,s.carbs.value),Modifier.fillMaxWidth(),10.dp)
+        MacroBar(Nutrients(s.kcal.value,s.protein.value,s.fat.value,s.carbs.value),Modifier.fillMaxWidth(),8.dp)
         Row(horizontalArrangement=Arrangement.spacedBy(12.dp)) {
             Legend(tr("Белки","Protein"),s.protein,c.protein,Modifier.weight(1f))
             Legend(tr("Жиры","Fat"),s.fat,c.fat,Modifier.weight(1f))
             Legend(tr("Углеводы","Carbs"),s.carbs,c.carbs,Modifier.weight(1f))
         }
         Text("${tr("Клетчатка","Fibre")} ${number(s.fiber.value,1)}${if(!s.fiber.complete)"+" else ""} $G · ${tr("Вода","Water")} ${number(s.waterMl)} $ML",style=MaterialTheme.typography.bodySmall,color=MaterialTheme.colorScheme.onSurfaceVariant)
-    }
+    }}
 }
 @Composable private fun Legend(name:String,t:NutrientTotal,color:Color,modifier:Modifier) {
     Column(modifier) {
         Row(verticalAlignment=Alignment.CenterVertically){Box(Modifier.size(8.dp).clip(CircleShape).background(color));Spacer(Modifier.width(6.dp));Text(name,style=MaterialTheme.typography.labelMedium,color=MaterialTheme.colorScheme.onSurfaceVariant)}
-        Text("${number(t.value,1)}${if(!t.complete)"+" else ""} $G",style=MaterialTheme.typography.titleMedium,fontWeight=FontWeight.SemiBold)
+        Text("${number(t.value,1)}${if(!t.complete)"+" else ""} $G",style=MaterialTheme.typography.titleSmall,fontWeight=FontWeight.SemiBold)
     }
 }
 
 /** Round badge before an entry: a drop for water, a plate for the user's dishes, otherwise the food's first letter. */
-@Composable fun EntryBadge(name:String,water:Boolean,dish:Boolean) {
-    Box(Modifier.size(40.dp).clip(CircleShape).background(MaterialTheme.colorScheme.primaryContainer),contentAlignment=Alignment.Center) {
+@Composable fun EntryBadge(name:String,water:Boolean,dish:Boolean,size:androidx.compose.ui.unit.Dp=40.dp) {
+    Box(Modifier.size(size).clip(CircleShape).background(MaterialTheme.colorScheme.primaryContainer),contentAlignment=Alignment.Center) {
         when {
             water->Icon(Icons.Outlined.WaterDrop,null,tint=MaterialTheme.colorScheme.onPrimaryContainer,modifier=Modifier.size(20.dp))
             dish->Icon(Icons.Outlined.RestaurantMenu,null,tint=MaterialTheme.colorScheme.onPrimaryContainer,modifier=Modifier.size(20.dp))

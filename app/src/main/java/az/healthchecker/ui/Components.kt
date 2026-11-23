@@ -26,6 +26,7 @@ fun number(value:Double?,decimals:Int=0):String = value?.let{String.format(Lang.
 /** "19 октября" / "October 19", optionally with the year. */
 fun dayMonth(date:String,year:Boolean=false):String = LocalDate.parse(date).format(DateTimeFormatter.ofPattern(if(Lang.en)(if(year)"MMMM d, yyyy" else "MMMM d") else if(year)"d MMMM yyyy" else "d MMMM",Lang.locale))
 fun shortDate(date:String):String = LocalDate.parse(date).format(DateTimeFormatter.ofPattern(if(Lang.en)"MMM d" else "d MMM",Lang.locale))
+fun shortDayMonth(date:String):String = LocalDate.parse(date).format(DateTimeFormatter.ofPattern(if(Lang.en)"EEE, MMM d" else "EE, d MMM",Lang.locale))
 fun weekday(date:String):String = LocalDate.parse(date).format(DateTimeFormatter.ofPattern("EE",Lang.locale))
 val G:String get() = tr("г","g")
 val KCAL:String get() = tr("ккал","kcal")
@@ -49,10 +50,12 @@ fun workoutLabel(w:WorkoutEntry):String = listOfNotNull(
 /** The "day | favorites" switch at the top of Diary and Training; [count] shows how many favorites there are. */
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable fun DayFavoritesTabs(favorites:Boolean,count:Int,dayLabel:String,onChange:(Boolean)->Unit) {
-    PrimaryTabRow(selectedTabIndex=if(favorites)1 else 0) {
-        Tab(!favorites,{onChange(false)},text={Text(dayLabel)},modifier=Modifier.testTag("tabDay"))
-        Tab(favorites,{onChange(true)},text={Text(tr("Избранное","Favorites")+if(count>0)" · $count" else "")},
-            icon={Icon(Icons.Outlined.Star,null)},modifier=Modifier.testTag("tabFavorites"))
+    // A slim two-way switch instead of a full-height tab row: the day's content starts right under it.
+    SingleChoiceSegmentedButtonRow(Modifier.fillMaxWidth().padding(horizontal=16.dp,vertical=4.dp)) {
+        SegmentedButton(selected=!favorites,onClick={onChange(false)},shape=SegmentedButtonDefaults.itemShape(0,2),modifier=Modifier.height(38.dp).testTag("tabDay"),
+            icon={}){Text(dayLabel,style=MaterialTheme.typography.labelLarge)}
+        SegmentedButton(selected=favorites,onClick={onChange(true)},shape=SegmentedButtonDefaults.itemShape(1,2),modifier=Modifier.height(38.dp).testTag("tabFavorites"),
+            icon={Icon(Icons.Outlined.Star,null,Modifier.size(16.dp))}){Text(tr("Избранное","Favorites")+if(count>0)" · $count" else "",style=MaterialTheme.typography.labelLarge,maxLines=1)}
     }
 }
 

@@ -62,7 +62,7 @@ import java.time.format.DateTimeFormatter
     var notes by rememberSaveable { mutableStateOf(false) }
     val found = state.found?.takeIf { it.newer }?.update
     Panel(modifier.testTag("updatePanel")) {
-        SectionTitle(tr("Обновления", "Updates"), tr("Новые версии с GitHub: github.com/saint-1406/HealthChecker", "New versions from GitHub: github.com/saint-1406/HealthChecker"))
+        SectionTitle(tr("Обновления", "Updates"), tr("Новые версии с GitHub: github.com/saint-1406/VitaCore", "New versions from GitHub: github.com/saint-1406/VitaCore"))
         if (state.current.isNotBlank()) Text(UpdateTexts.current(state.current), style = MaterialTheme.typography.bodyMedium)
         state.newerVersion?.let { v ->
             Text(UpdateTexts.available(v) + (found?.let { " · " + UpdateTexts.megabytes(it.size) } ?: ""), color = MaterialTheme.colorScheme.primary, style = MaterialTheme.typography.bodyMedium)

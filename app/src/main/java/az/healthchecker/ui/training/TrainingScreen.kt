@@ -11,6 +11,8 @@ import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.text.style.TextOverflow
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
@@ -42,27 +44,35 @@ import az.healthchecker.ui.*
     val weight=snapshot.bodyWeight(date)
     // Records each of the day's entries set when it was logged, for a trophy in the list.
     val trophies=remember(snapshot.workouts,date){day.workouts.map{it.exerciseId}.toSet().flatMap{id->recordsAtTheTime(snapshot.exerciseHistory(id)).entries}.associate{it.key to it.value}}
-    LazyColumn(Modifier.fillMaxSize().testTag("trainingList"),contentPadding=PaddingValues(20.dp),verticalArrangement=Arrangement.spacedBy(14.dp)) {
-        item{Panel {
-            Text(tr("Тренировка за день","Today's training"),style=MaterialTheme.typography.titleMedium)
-            FlowRow(horizontalArrangement=Arrangement.spacedBy(8.dp)){
-                FilterChip(selected=day.trained==true,onClick={vm.markTraining(date,if(day.mark==true)null else true)},label={Text(tr("Была тренировка","Trained"))},leadingIcon={Icon(Icons.Outlined.FitnessCenter,null)})
-                FilterChip(selected=day.trained==false,enabled=day.workouts.isEmpty(),onClick={vm.markTraining(date,if(day.mark==false)null else false)},label={Text(tr("Не было","Rest day"))},leadingIcon={Icon(Icons.Outlined.Bedtime,null)})
+    LazyColumn(Modifier.fillMaxSize().testTag("trainingList"),contentPadding=PaddingValues(horizontal=16.dp,vertical=8.dp),verticalArrangement=Arrangement.spacedBy(8.dp)) {
+        // The day in one slim card: burned energy on the left, "trained / rest day" chips on the right.
+        item{Surface(shape=RoundedCornerShape(20.dp),color=MaterialTheme.colorScheme.surface,modifier=Modifier.fillMaxWidth()) {
+            Column(Modifier.padding(horizontal=16.dp,vertical=10.dp),verticalArrangement=Arrangement.spacedBy(4.dp)) {
+                Row(verticalAlignment=Alignment.CenterVertically) {
+                    Column(Modifier.weight(1f)) {
+                        Text(tr("Израсходовано","Burned"),style=MaterialTheme.typography.labelMedium,color=MaterialTheme.colorScheme.onSurfaceVariant)
+                        Text("≈ ${number(day.burned.value)}${if(!day.burned.complete)"+" else ""} $KCAL",style=MaterialTheme.typography.titleLarge,fontWeight=FontWeight.SemiBold,color=MaterialTheme.colorScheme.primary)
+                    }
+                    FilterChip(selected=day.trained==true,onClick={vm.markTraining(date,if(day.mark==true)null else true)},label={Text(tr("Была","Trained"))},leadingIcon={Icon(Icons.Outlined.FitnessCenter,tr("Была тренировка","Trained"),Modifier.size(16.dp))})
+                    Spacer(Modifier.width(6.dp))
+                    FilterChip(selected=day.trained==false,enabled=day.workouts.isEmpty(),onClick={vm.markTraining(date,if(day.mark==false)null else false)},label={Text(tr("Не было","Rest"))},leadingIcon={Icon(Icons.Outlined.Bedtime,null,Modifier.size(16.dp))})
+                }
+                if(day.workouts.isNotEmpty())Text(tr("Отмечено по выполненным упражнениям","Marked from the logged exercises"),style=MaterialTheme.typography.labelSmall,color=MaterialTheme.colorScheme.onSurfaceVariant)
+                if(weight==null)Text(tr("Укажите вес в профиле, чтобы считать калории упражнений","Enter your weight in the profile to estimate exercise calories"),color=MaterialTheme.colorScheme.error,style=MaterialTheme.typography.bodySmall,modifier=Modifier.clickable(onClick=openProfile))
             }
-            if(day.workouts.isNotEmpty())Text(tr("Отмечено по выполненным упражнениям","Marked from the logged exercises"),style=MaterialTheme.typography.bodySmall,color=MaterialTheme.colorScheme.onSurfaceVariant)
-            Text("${tr("Израсходовано","Burned")} ≈ ${number(day.burned.value)}${if(!day.burned.complete)"+" else ""} $KCAL",style=MaterialTheme.typography.headlineSmall,fontWeight=FontWeight.SemiBold,color=MaterialTheme.colorScheme.primary)
-            if(weight==null)Text(tr("Укажите вес в профиле, чтобы считать калории упражнений","Enter your weight in the profile to estimate exercise calories"),color=MaterialTheme.colorScheme.error,style=MaterialTheme.typography.bodySmall,modifier=Modifier.clickable(onClick=openProfile))
         }}
-        item{Button(onClick=add,modifier=Modifier.fillMaxWidth().heightIn(min=54.dp).testTag("addExercise")){Icon(Icons.Outlined.Add,null);Spacer(Modifier.width(8.dp));Text(tr("Добавить упражнение","Add exercise"))}}
-        // Right under "Add exercise", above the day's list, so it is on the first screen however much was logged.
-        item{FilledTonalButton(onClick=videos,modifier=Modifier.fillMaxWidth().heightIn(min=54.dp).testTag("openVideos")){Icon(Icons.Outlined.SmartDisplay,null);Spacer(Modifier.width(8.dp));Text(tr("Видеотренировки","Workout videos"))}}
-        item{OutlinedButton(onClick=progress,modifier=Modifier.fillMaxWidth().heightIn(min=48.dp).testTag("openProgress")){Icon(Icons.Outlined.Insights,null);Spacer(Modifier.width(8.dp));Text(tr("Прогресс и рекорды","Progress and records"))}}
+        item{Button(onClick=add,modifier=Modifier.fillMaxWidth().height(46.dp).testTag("addExercise")){Icon(Icons.Outlined.Add,null,Modifier.size(20.dp));Spacer(Modifier.width(8.dp));Text(tr("Добавить упражнение","Add exercise"))}}
+        // Right under "Add exercise", above the day's list, so they are on the first screen however much was logged.
+        item{Row(horizontalArrangement=Arrangement.spacedBy(8.dp)){
+            FilledTonalButton(onClick=videos,contentPadding=PaddingValues(horizontal=12.dp),modifier=Modifier.weight(1f).height(44.dp).testTag("openVideos")){Icon(Icons.Outlined.SmartDisplay,null,Modifier.size(18.dp));Spacer(Modifier.width(6.dp));Text(tr("Видео","Videos"),maxLines=1)}
+            OutlinedButton(onClick=progress,contentPadding=PaddingValues(horizontal=12.dp),modifier=Modifier.weight(1f).height(44.dp).testTag("openProgress")){Icon(Icons.Outlined.Insights,null,Modifier.size(18.dp));Spacer(Modifier.width(6.dp));Text(tr("Прогресс","Progress"),maxLines=1)}
+        }}
         if(day.workouts.isNotEmpty()){
-            item{SectionTitle(tr("Выполненные упражнения","Completed exercises"),count(day.workouts.size,"упражнение","упражнения","упражнений","exercise","exercises"))}
-            items(day.workouts,key={it.id}){w->Panel {
-                Row(Modifier.fillMaxWidth().clickable{edit(w)},verticalAlignment=Alignment.CenterVertically){
-                    Column(Modifier.weight(1f)){Text(vm.workoutName(w),fontWeight=FontWeight.SemiBold);Text(workoutLabel(w),style=MaterialTheme.typography.bodySmall,color=MaterialTheme.colorScheme.onSurfaceVariant)
-                        trophies[w.id]?.let{Text("🏆 "+tr("Рекорд: ","Record: ")+recordsText(w,it),style=MaterialTheme.typography.bodySmall,color=MaterialTheme.colorScheme.primary,fontWeight=FontWeight.Medium,modifier=Modifier.testTag("recordBadge"))}}
+            item{Text(tr("Выполнено · ","Done · ")+count(day.workouts.size,"упражнение","упражнения","упражнений","exercise","exercises"),style=MaterialTheme.typography.titleSmall,fontWeight=FontWeight.SemiBold,modifier=Modifier.padding(top=6.dp))}
+            items(day.workouts,key={it.id}){w->Surface(shape=RoundedCornerShape(16.dp),color=MaterialTheme.colorScheme.surface,modifier=Modifier.fillMaxWidth()) {
+                Row(Modifier.fillMaxWidth().clickable{edit(w)}.padding(start=14.dp,top=6.dp,bottom=6.dp),verticalAlignment=Alignment.CenterVertically){
+                    Column(Modifier.weight(1f)){Text(vm.workoutName(w),style=MaterialTheme.typography.titleSmall,maxLines=1,overflow=TextOverflow.Ellipsis);Text(workoutLabel(w),style=MaterialTheme.typography.labelMedium,color=MaterialTheme.colorScheme.onSurfaceVariant,maxLines=1,overflow=TextOverflow.Ellipsis)
+                        trophies[w.id]?.let{Text("🏆 "+tr("Рекорд: ","Record: ")+recordsText(w,it),style=MaterialTheme.typography.labelMedium,color=MaterialTheme.colorScheme.primary,fontWeight=FontWeight.Medium,modifier=Modifier.testTag("recordBadge"))}}
                     if(vm.exercise(w.exerciseId)!=null)FavoriteStar(w.exerciseId in snapshot.favoriteExercises,vm.workoutName(w),!busy){vm.toggleFavoriteExercise(w.exerciseId)}
                     IconButton(onClick={vm.deleteWorkout(w)}){Icon(Icons.Outlined.DeleteOutline,tr("Удалить ","Delete ")+vm.workoutName(w))}
                 }
@@ -70,14 +80,15 @@ import az.healthchecker.ui.*
         }
         plan?.let{p->
             item{Panel {
-                SectionTitle(tr("Рекомендации на сегодня","Today's suggestions"),if(p.recovery)tr("Мышцы ещё восстанавливаются после последних тренировок — лёгкий день","Muscles are still recovering from recent training — an easy day") else tr("Акцент: ","Focus: ")+p.focus.distinct().joinToString(", "){muscleLabel(it).lowercase(Lang.locale)})
+                Text(tr("Рекомендации на сегодня","Today's suggestions"),style=MaterialTheme.typography.titleMedium,fontWeight=FontWeight.SemiBold)
+                Text(if(p.recovery)tr("Мышцы ещё восстанавливаются после последних тренировок — лёгкий день","Muscles are still recovering from recent training — an easy day") else tr("Акцент: ","Focus: ")+p.focus.distinct().joinToString(", "){muscleLabel(it).lowercase(Lang.locale)},style=MaterialTheme.typography.bodySmall,color=MaterialTheme.colorScheme.onSurfaceVariant)
                 Text("${tr("Дома","At home")}, ${if(prefs.dumbbells)tr("с гантелями и без","with and without dumbbells") else tr("без инвентаря","no equipment")} · ${tr("уровень","level")}: ${levelLabel(prefs.level).lowercase(Lang.locale)}",style=MaterialTheme.typography.bodySmall,color=MaterialTheme.colorScheme.onSurfaceVariant)
-                Row(Modifier.horizontalScroll(rememberScrollState()),horizontalArrangement=Arrangement.spacedBy(8.dp)){p.items.forEach{r->ExerciseThumb(vm,r.exercise.id,56.dp)}}
+                Row(Modifier.horizontalScroll(rememberScrollState()),horizontalArrangement=Arrangement.spacedBy(8.dp)){p.items.forEach{r->ExerciseThumb(vm,r.exercise.id,48.dp)}}
                 val done=p.items.count{r->day.workouts.any{it.exerciseId==r.exercise.id}}
                 val minutes=p.items.sumOf{it.prescription.minutesFor(it.exercise)?:0.0}
                 Text(listOfNotNull(count(p.items.size,"упражнение","упражнения","упражнений","exercise","exercises"),"≈ ${number(minutes)} ${tr("мин","min")}",if(done>0)tr("выполнено ","done ")+"$done" else null).joinToString(" · "),style=MaterialTheme.typography.bodyMedium)
                 if(done>0)LinearProgressIndicator(progress={done.toFloat()/p.items.size},modifier=Modifier.fillMaxWidth())
-                Button(onClick=start,modifier=Modifier.fillMaxWidth().heightIn(min=52.dp).testTag("startWorkout")){
+                Button(onClick=start,modifier=Modifier.fillMaxWidth().height(46.dp).testTag("startWorkout")){
                     Icon(Icons.Outlined.PlayArrow,null);Spacer(Modifier.width(8.dp))
                     Text(when{done==0->tr("Начать тренировку","Start the workout");done<p.items.size->tr("Продолжить тренировку","Continue the workout");else->tr("Открыть тренировку","Open the workout")})
                 }

@@ -34,7 +34,7 @@ class GithubHttpTest {
         val server = Server(mapOf(UpdateRules.LATEST to ok("{}")))
         assertEquals("{}", GithubHttp(server::open).text(UpdateRules.LATEST, 100))
         assertEquals("application/vnd.github+json", server.headers["Accept"])
-        assertTrue(server.headers.getValue("User-Agent").startsWith("HealthChecker"))
+        assertTrue(server.headers.getValue("User-Agent").startsWith("VitaCore"))
     }
 
     @Test fun downloadFollowsGithubRedirectsToItsFileStorage() {

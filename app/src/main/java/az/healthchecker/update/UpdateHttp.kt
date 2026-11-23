@@ -58,7 +58,7 @@ class GithubHttp(private val open: (URL) -> HttpURLConnection = { it.openConnect
                 connection.connectTimeout = 20_000
                 connection.readTimeout = 30_000
                 connection.useCaches = false
-                connection.setRequestProperty("User-Agent", "HealthChecker-Android-Updater")
+                connection.setRequestProperty("User-Agent", "VitaCore-Android-Updater")
                 if (api) {
                     connection.setRequestProperty("Accept", "application/vnd.github+json")
                     connection.setRequestProperty("X-GitHub-Api-Version", "2022-11-28")
