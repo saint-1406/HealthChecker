@@ -123,6 +123,8 @@ import java.time.format.DateTimeFormatter
     ProfilePage(tr("О приложении","About"),null,back,"aboutScreen") {
         Panel {
             // Product name with its publisher: each OCTO app has its own name, OCTO stays the maker.
+            androidx.compose.foundation.Image(androidx.compose.ui.res.painterResource(az.healthchecker.R.drawable.ic_launcher_foreground),tr("Логотип OCTO","OCTO logo"),
+                colorFilter=androidx.compose.ui.graphics.ColorFilter.tint(MaterialTheme.colorScheme.onSurface),modifier=Modifier.size(72.dp).testTag("octoLogo"))
             Text("VITACORE",style=MaterialTheme.typography.headlineSmall,fontWeight=FontWeight.Bold,letterSpacing=androidx.compose.ui.unit.TextUnit(2f,androidx.compose.ui.unit.TextUnitType.Sp),modifier=Modifier.testTag("brandName"))
             Text(tr("by OCTO · здоровье и самочувствие","by OCTO · health & wellness"),style=MaterialTheme.typography.labelLarge,color=MaterialTheme.colorScheme.onSurfaceVariant)
             // Matches the update file's number, so the user can see which update the phone has.
