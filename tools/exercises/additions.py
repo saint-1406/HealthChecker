@@ -561,3 +561,19 @@ KEYWORDS.update({
     'knees_to_chest': 'апанасана apanasana поясница колени', 'pilates_toe_tap': 'пилатес пресс носки', 'pilates_single_leg_stretch': 'пилатес пресс',
     'pilates_scissors': 'пилатес пресс ножницы',
 })
+
+# Parts of follow-along videos whose chapters name a block, not a move (creators.py): logged by minutes.
+NEW += [
+    ('warmup_session', 'Разминка: весь блок', 'Warm-up block', [L, S], N, CA, 1, '02030', MIN, None,
+     'Лёгкие движения 3–5 минут: шаги на месте, круги руками и тазом, неглубокие приседания — пока не станет тепло.',
+     'Easy moves for 3–5 minutes: steps in place, arm and hip circles, shallow squats — until you feel warm.'),
+    ('core_session', 'Пресс и кор: блок упражнений', 'Abs and core block', [K], N, ST, 1, '02022', MIN, None,
+     'Скручивания, планки и подъёмы ног подряд, с короткими паузами; поясница прижата, дыхание не задерживайте.',
+     'Crunches, planks and leg raises in a row with short breaks; keep your lower back down and keep breathing.'),
+    ('bw_strength_session', 'Силовая с весом тела: блок упражнений', 'Bodyweight strength block', [L, G, C, A], N, ST, 2, '02022', MIN, None,
+     'Приседания, выпады, отжимания и мостики подходами по 30–45 секунд; двигайтесь под контролем, без рывков.',
+     'Squats, lunges, push-ups and bridges in sets of 30–45 seconds; move with control, no jerking.'),
+]
+CATEGORY['WARMUP'] += ['warmup_session']
+KEYWORDS.update({'warmup_session': 'разминка разогрев warm up warmup', 'core_session': 'пресс кор живот abs core блок',
+                 'bw_strength_session': 'силовая вес тела калистеника bodyweight calisthenics блок'})

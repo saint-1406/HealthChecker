@@ -53,12 +53,15 @@ import kotlinx.coroutines.delay
     var tag by rememberSaveable{mutableStateOf("")}
     var length by rememberSaveable{mutableStateOf("")}
     var ownOnly by rememberSaveable{mutableStateOf(false)}
+    var channel by rememberSaveable{mutableStateOf("")}
     val filePicker=rememberLauncherForActivityResult(ActivityResultContracts.OpenDocument()){uri->uri?.let{vm.attachVideoFile(it,null,open)}}
     val videos=remember(library,snapshot.videos){vm.videoList(snapshot)}
     // The card estimates are for the user's current weight; without one, for a reference 70 kg.
     val weight=remember(snapshot){snapshot.bodyWeight(java.time.LocalDate.now().toString())}
-    val shown=remember(videos,query,tag,length,ownOnly){
-        filterVideos(videos,query,tag.ifBlank{null},VideoLength.entries.find{it.name==length},ownOnly){id->vm.exercise(id)?.let{it.name+" "+(it.nameEn?:"")}.orEmpty()}
+    // Channels in the order they come in the library, with how many videos each has.
+    val channels=remember(videos){videos.filter{it.channel.isNotBlank()}.groupingBy{it.channel}.eachCount().toList()}
+    val shown=remember(videos,query,tag,length,ownOnly,channel){
+        filterVideos(videos,query,tag.ifBlank{null},VideoLength.entries.find{it.name==length},ownOnly,channel.ifBlank{null}){id->vm.exercise(id)?.let{it.name+" "+(it.nameEn?:"")}.orEmpty()}
     }
     Column(Modifier.fillMaxSize()) {
         Row(Modifier.padding(start=8.dp,end=16.dp,top=8.dp),verticalAlignment=Alignment.CenterVertically){
@@ -78,6 +81,10 @@ import kotlinx.coroutines.delay
                     FilterChip(selected=tag.isBlank()&&!ownOnly,onClick={tag="";ownOnly=false},label={Text(tr("Все","All"))})
                     VIDEO_TAGS.forEach{t->FilterChip(selected=tag==t,onClick={tag=if(tag==t)"" else t;ownOnly=false},label={Text(videoTagLabel(t))},modifier=Modifier.testTag("videoTag_$t"))}
                     FilterChip(selected=ownOnly,onClick={ownOnly=!ownOnly;tag=""},label={Text(tr("Мои видео","My videos"))})
+                }
+                Row(Modifier.horizontalScroll(rememberScrollState()).testTag("videoChannels"),horizontalArrangement=Arrangement.spacedBy(6.dp)){
+                    FilterChip(selected=channel.isBlank(),onClick={channel=""},label={Text(tr("Все каналы","All channels"))})
+                    channels.forEach{(c,n)->FilterChip(selected=channel==c,onClick={channel=if(channel==c)"" else c},label={Text("$c · $n")},modifier=Modifier.testTag("channel_$c"))}
                 }
                 Row(Modifier.horizontalScroll(rememberScrollState()),horizontalArrangement=Arrangement.spacedBy(6.dp)){
                     VideoLength.entries.forEach{l->FilterChip(selected=length==l.name,onClick={length=if(length==l.name)"" else l.name},label={Text(videoLengthLabel(l))})}
@@ -135,8 +142,10 @@ private fun videoLengthLabel(l:VideoLength):String = when(l){VideoLength.SHORT->
 /** "30 min · 34 exercises" for a video with a timeline, otherwise what kind of video it is. */
 private fun videoSummary(vm:AppViewModel,v:WorkoutVideo):String = listOfNotNull(
     v.durationSec?.let{"${(it+30)/60} ${tr("мин","min")}"},
-    if(v.segments.isNotEmpty())count(v.segments.size,"упражнение","упражнения","упражнений","exercise","exercises")+" · "+count(v.workDone().size,"вид","вида","видов","kind","kinds") else tr("Своё видео без разметки","Your own video, no timeline"),
-    if(v.byChapters)tr("по главам автора","by the author's chapters") else if(v.wholeSession)tr("без глав — одним занятием","no chapters — one session") else null
+    if(v.bySections)count(v.segments.size,"часть","части","частей","part","parts")
+    else if(v.segments.isNotEmpty())count(v.segments.size,"упражнение","упражнения","упражнений","exercise","exercises")+" · "+count(v.workDone().size,"вид","вида","видов","kind","kinds") else tr("Своё видео без разметки","Your own video, no timeline"),
+    when{v.byChapters->tr("по главам автора","by the author's chapters");v.byList->tr("по списку упражнений автора","by the author's list of moves")
+        v.bySections->tr("по частям тренировки","by parts of the workout");v.wholeSession->tr("одним занятием","as one session");else->null}
 ).joinToString(" · ")
 
 @Composable private fun AddVideoDialog(vm:AppViewModel,close:()->Unit,added:(WorkoutVideo)->Unit) {

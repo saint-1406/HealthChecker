@@ -27,8 +27,9 @@ class VideoLibraryTest(unittest.TestCase):
     def test_channel_videos_are_timed_by_the_authors_chapters(self):
         more=[v for v in self.items.values() if v.get('timing')=='chapters']
         # 141 of Jaeho's videos and 19 of Mady Morrison's; her 145 others without usable chapters are one whole session each.
-        self.assertEqual(141+19,len(more));self.assertEqual(1922+345,sum(len(v['segments']) for v in self.items.values()))
-        self.assertEqual(145,sum(v.get('timing')=='whole' for v in self.items.values()))
+        older=[v for v in self.items.values() if v['channel'] not in CREATORS]
+        self.assertEqual(141+19,len(more));self.assertEqual(1922+345,sum(len(v['segments']) for v in older))
+        self.assertEqual(145,sum(v.get('timing')=='whole' for v in older))
         # A chapter holds the exercise and the rest next to it, so the work is shorter; rest chapters are gaps.
         for v in more:
             for s in v['segments']:
@@ -56,3 +57,42 @@ class VideoLibraryTest(unittest.TestCase):
             self.assertLessEqual(video['segments'][-1]['end'],video['durationSec'])
 
 if __name__=='__main__':unittest.main()
+
+CREATORS={'Oliver Sjostrom','growingannanas','You1stLondon'}
+
+class CreatorChannelsTest(unittest.TestCase):
+    """Oliver Sjostrom, growingannanas and You1stLondon: every workout video listed, each with the most detailed timeline its page allows."""
+    @classmethod
+    def setUpClass(cls):
+        cls.items=[x for x in json.loads(v.OUTPUT.read_text(encoding='utf-8')) if x['channel'] in CREATORS]
+        cls.catalog={e['id'] for e in json.loads(Path(v.EXERCISES).read_text(encoding='utf-8'))}
+    def test_every_snapshot_video_is_listed_once(self):
+        snapshot=json.loads((Path(__file__).with_name('creators_channels.json')).read_text(encoding='utf-8'))
+        self.assertEqual(sum(len(snapshot[h]) for h in ('OliverSjostrom','growingannanas','you1stlondon')),len(self.items))
+        self.assertEqual(len(self.items),len({v['id'] for v in self.items}))
+        self.assertEqual({'list','sections','whole'},{v['timing'] for v in self.items})
+        for x in self.items:
+            self.assertTrue(x['about'] and x['aboutEn'],x['id'])
+            for a,b in zip(x['segments'],x['segments'][1:]):self.assertLessEqual(a['end'],b['start'],x['id'])
+            for s in x['segments']:
+                self.assertIn(s['exerciseId'],self.catalog);self.assertLess(s['start'],s['end']);self.assertLessEqual(s['end'],x['durationSec'])
+    def test_listed_moves_follow_the_authors_intervals(self):
+        hyrox=next(v for v in self.items if v['youtubeId']=='m-_F0cop3c4')
+        self.assertEqual('list',hyrox['timing'])
+        self.assertEqual(('overhead squats','squat',0,30),tuple(hyrox['segments'][0][k] for k in ('title','exerciseId','start','end')))
+        strength=next(v for v in self.items if v['title'].startswith('30 PURE STRENGTH'))
+        # No "dumbbell" in the title, but the description's equipment line says so: the dumbbell versions are taken.
+        self.assertEqual(['db_bent_row','chair_dip'],[s['exerciseId'] for s in strength['segments'][:2]])
+        self.assertEqual(50,strength['segments'][0]['work'])
+    def test_chapters_naming_parts_become_sessions_and_breaks_are_gaps(self):
+        stretch=next(v for v in self.items if v['title'].startswith('Daily 15 Min Full Body Stretch'))
+        self.assertEqual('sections',stretch['timing']);self.assertTrue(all(s['exerciseId']=='stretch_session' for s in stretch['segments']))
+        for v in self.items:
+            if v['timing']=='sections':
+                for s in v['segments']:self.assertNotRegex(s['title'].lower(),r'^(intro|outro|water break)$')
+    def test_videos_without_parts_are_one_session_of_their_kind(self):
+        abs_glutes=next(v for v in self.items if v['youtubeId']=='a3U6YBBEaF4')
+        self.assertEqual(('whole','core_session'),(abs_glutes['timing'],abs_glutes['segments'][0]['exerciseId']))
+        hiit=next(v for v in self.items if v['youtubeId']=='-hSma-BRzoo')
+        self.assertEqual('hiit_moderate',hiit['segments'][0]['exerciseId'])
+

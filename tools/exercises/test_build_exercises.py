@@ -47,7 +47,7 @@ class ExerciseCatalogTest(unittest.TestCase):
                 'standing_knee_crunch':'Standing Crunch','plank_toe_touch':'High Plank Toe Touch','woodchop':'Woodchop','russian_twist':'Seated Twist','situp':'L-Sit Up'}
         for i,t in titles.items():self.assertIn(t,by[i]['videoNames'],i)
         self.assertEqual('HIIT',by['cross_mountain_climber']['category'])
-        self.assertEqual(245,len(self.items))
+        self.assertEqual(248,len(self.items))
 
     def test_mady_morrison_moves_exist_as_timed_yoga_stretch_and_pilates(self):
         by={i['id']:i for i in self.items}

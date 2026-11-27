@@ -84,6 +84,20 @@ class VideoWorkoutFlowTest {
         app.onNodeWithTag("videoTimeline").performScrollToNode(hasTestTag("chaptersNote"))
         app.onNodeWithTag("videoTimeline").performScrollToNode(hasText("Скручивание Макгилла",substring=true))
     }
+    @Test fun channelFilterShowsOneChannelAndAListedWorkoutOpens() {
+        skipOnboarding()
+        openVideos()
+        val all=app.onNodeWithTag("videoCount").fetchSemanticsNode().config[androidx.compose.ui.semantics.SemanticsProperties.Text].joinToString()
+        // growingannanas lists her moves and intervals in the description: such a video is timed by that list.
+        app.onNodeWithTag("videoChannels").performScrollToNode(hasTestTag("channel_growingannanas"))
+        app.onNodeWithTag("channel_growingannanas").performClick()
+        app.onNodeWithTag("videoCount").assert(!hasText(all)).assert(!hasText("Найдено: 0"))
+        app.onNodeWithTag("videoSearch").performTextInput("PURE STRENGTH")
+        app.waitUntil(10000){app.onAllNodesWithTag("videoCard").fetchSemanticsNodes().isNotEmpty()}
+        app.onAllNodesWithTag("videoCard").onFirst().assert(hasText("по списку упражнений автора",substring=true)).performClick()
+        app.waitUntil(30000){app.onAllNodesWithTag("videoTimeline").fetchSemanticsNodes().isNotEmpty()}
+        app.onNodeWithTag("videoTimeline").performScrollToNode(hasText("dumbbell row",substring=true))
+    }
     @Test fun builtInVideoLinkAndDescriptionCanBeChangedAndPutBack() {
         skipOnboarding()
         openVideos()

@@ -126,7 +126,7 @@ class WorkoutVideoTest {
         val full=WorkoutVideo("yt:b","30 MIN FULL BODY",durationSec=1812,tags=listOf("full"),segments=listOf(seg(0,40,"burpee","SLOW BURPEE")))
         val mine=makeOwnVideo("video:1","Утренняя йога","",now)
         val all=listOf(abs,full,mine);val names={id:String->when(id){"burpee"->"Бёрпи Burpee";"mcgill_crunch"->"Скручивание Макгилла McGill curl-up";else->""}}
-        fun ids(q:String,tag:String?=null,len:VideoLength?=null,own:Boolean=false)=filterVideos(all,q,tag,len,own,names).map{it.id}
+        fun ids(q:String,tag:String?=null,len:VideoLength?=null,own:Boolean=false)=filterVideos(all,q,tag,len,own,exerciseNames=names).map{it.id}
         assertEquals(listOf("yt:a","yt:b","video:1"),ids(""))
         assertEquals(listOf("yt:a"),ids("six pack"));assertEquals(listOf("yt:b"),ids("бёрпи"));assertEquals(listOf("yt:a"),ids("макгилла"));assertEquals(listOf("yt:b"),ids("slow"))
         assertEquals(listOf("yt:b"),ids("",tag="full"));assertEquals(listOf("yt:a"),ids("",len=VideoLength.SHORT));assertEquals(listOf("yt:b"),ids("",len=VideoLength.LONG))

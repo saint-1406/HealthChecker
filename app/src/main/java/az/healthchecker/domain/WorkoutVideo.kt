@@ -19,8 +19,10 @@ import kotlin.math.roundToInt
 @Serializable data class WorkoutVideo(val id:String,val title:String,val channel:String="",val youtubeId:String?=null,val durationSec:Int?=null,val embeddable:Boolean=true,
     val about:String="",val aboutEn:String="",val segments:List<VideoSegment> = emptyList(),val addedAt:String?=null,
     /**
-     * "exact" — timed from the video itself; "chapters" — from the author's chapter list in the description; "whole" — the
-     * video has no chapters, so its one segment is the whole video logged as one session.
+     * "exact" — timed from the video itself; "chapters" — from the author's chapter list in the description; "list" — from
+     * the moves and intervals the description lists (the work is exact, where a move starts is an estimate); "sections" —
+     * the chapters name parts of the workout, each logged as a session of its kind; "whole" — nothing names the parts,
+     * so its one segment is the whole video logged as one session.
      */
     val timing:String="exact",
     /** What kind of workout it is, for the library filter: full, abs, cardio, legs, upper, dumbbells, nojump, warmup. */
@@ -28,6 +30,8 @@ import kotlin.math.roundToInt
     val own:Boolean get() = id.startsWith("video:")
     val byChapters:Boolean get() = timing=="chapters"
     val wholeSession:Boolean get() = timing=="whole"
+    val byList:Boolean get() = timing=="list"
+    val bySections:Boolean get() = timing=="sections"
 }
 /** The user's own copy of a video on this phone: a document they picked, kept by its persistable link. */
 @Serializable data class VideoFile(val uri:String,val name:String)
@@ -76,10 +80,10 @@ enum class VideoLength(val minutes:IntRange) { SHORT(0..12), MEDIUM(13..22), LON
  * The library filter: every word of [query] in the title or in an exercise of the video ([exerciseNames] gives an exercise's
  * names in both languages), a kind of workout from [tag], a length, only the user's own videos.
  */
-fun filterVideos(videos:List<WorkoutVideo>,query:String,tag:String?,length:VideoLength?,ownOnly:Boolean,exerciseNames:(String)->String):List<WorkoutVideo> {
+fun filterVideos(videos:List<WorkoutVideo>,query:String,tag:String?,length:VideoLength?,ownOnly:Boolean,channel:String?=null,exerciseNames:(String)->String):List<WorkoutVideo> {
     val words=query.lowercase().split(' ').filter{it.isNotBlank()}
     return videos.filter{v->
-        (!ownOnly||v.own)&&(tag==null||tag in v.tags)&&(length==null||v.durationSec?.let{(it+30)/60 in length.minutes}==true)&&
+        (!ownOnly||v.own)&&(channel==null||v.channel==channel)&&(tag==null||tag in v.tags)&&(length==null||v.durationSec?.let{(it+30)/60 in length.minutes}==true)&&
             words.all{w->v.title.lowercase().contains(w)||v.segments.any{s->s.title.lowercase().contains(w)||exerciseNames(s.exerciseId).lowercase().contains(w)}}
     }
 }

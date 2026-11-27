@@ -11,7 +11,7 @@ import org.robolectric.annotation.Config
 class ExerciseCatalogTest {
     private val catalog by lazy{ExerciseCatalog(ApplicationProvider.getApplicationContext<Context>())}
     @Test fun bundledHomeExercisesLoad() {
-        val all=catalog.exercises;assertEquals(245,all.size);assertEquals(all.size,all.map{it.id}.toSet().size)
+        val all=catalog.exercises;assertEquals(248,all.size);assertEquals(all.size,all.map{it.id}.toSet().size)
         assertTrue(all.all{it.met in 1.0..15.0&&it.metCode.length==5&&it.cue.isNotBlank()&&it.level in 1..3})
         assertEquals(37,all.count{it.equipment==Equipment.DUMBBELLS})
     }
@@ -48,12 +48,15 @@ class ExerciseCatalogTest {
     @Test fun builtInVideosPointAtCatalogExercises() {
         val videos=VideoLibrary(ApplicationProvider.getApplicationContext<Context>()).videos
         // The user's two videos first (timed from the video itself), then 141 of Jaeho's channel and 19 of Mady Morrison's by chapters,
-        // and 145 more of Mady Morrison's without chapters, each one whole session.
+        // and 145 more of Mady Morrison's without chapters, each one whole session; then 1 181 of Oliver Sjostrom, growingannanas and
+        // You1stLondon: by the moves their descriptions list, by the parts their chapters name, or as one session.
         assertEquals(listOf("eoY6qlkp1xA","jFvQl1boyM0"),videos.take(2).map{it.youtubeId});assertTrue(videos.take(2).none{it.embeddable||it.own||it.byChapters})
-        assertEquals(307,videos.size);assertEquals(160,videos.count{it.byChapters});assertEquals(2,videos.count{it.embeddable})
-        assertTrue(videos.filter{it.wholeSession}.let{w->w.size==145&&w.all{it.segments.size==1&&it.segments[0].end==it.durationSec&&it.channel=="Mady Morrison"}})
+        assertEquals(1488,videos.size);assertEquals(160,videos.count{it.byChapters});assertEquals(2,videos.count{it.embeddable})
+        assertEquals(218,videos.count{it.byList});assertEquals(735,videos.count{it.bySections})
+        assertTrue(videos.filter{it.wholeSession}.let{w->w.size==373&&w.all{it.segments.size==1&&it.segments[0].end==it.durationSec}})
+        assertEquals(145,videos.count{it.wholeSession&&it.channel=="Mady Morrison"})
         videos.forEach{v->v.segments.forEach{s->assertNotNull(s.exerciseId,catalog.byId(s.exerciseId));assertTrue(s.workSeconds in 1..s.seconds)};assertTrue(v.segments.zipWithNext().all{(a,b)->a.end<=b.start});validateVideo(v.copy(id="video:check"))}
-        assertEquals(2267,videos.sumOf{it.segments.size})
+        assertEquals(15224,videos.sumOf{it.segments.size})
         // Mady Morrison's post-run stretch: each side of the low lunge is a chapter, logged as one exercise with two sets of 40 s.
         assertEquals(VideoWork("low_lunge",2,80),videos.single{it.youtubeId=="FbmLx-PahO4"}.workDone().single{it.exerciseId=="low_lunge"})
         val thirty=videos.first()
@@ -69,7 +72,7 @@ class ExerciseCatalogTest {
         assertTrue(catalog.search("планка таз",null,null,false).map{it.id}.containsAll(listOf("plank_pike","forearm_plank_pike")))
         assertEquals("skip_imitation",catalog.search("скакалка",null,null,false).first().id)
         assertTrue(catalog.search("отжиманий",null,null,false).any{it.id=="pushup"})
-        assertEquals(21,catalog.search("",null,ExerciseCategory.WARMUP,false).size)
+        assertEquals(22,catalog.search("",null,ExerciseCategory.WARMUP,false).size)
     }
     @Test fun everyBeginnerHomePlanCanBeBuilt() {
         val plan=recommend(catalog.exercises,UserSnapshot(),"2026-10-19",TrainingPrefs(false,1))

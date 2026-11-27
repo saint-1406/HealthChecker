@@ -5,12 +5,13 @@ video shows; each segment points at the catalog exercise it is. Only the work is
 the video's rests and transitions. Both videos come from the channel "재호 - Fitness" (Jaeho), whose owner has turned
 embedding off, so the app opens them in YouTube or plays the user's own copy of the file.
 After them come the rest of Jaeho's channel by its chapters (channel.py) and Mady Morrison's Pilates, yoga and stretching
-videos (mady.py): by her chapters where they name the moves, otherwise as one whole session each.
+videos (mady.py): by her chapters where they name the moves, otherwise as one whole session each. Last come Oliver Sjostrom,
+growingannanas and You1stLondon (creators.py): by the moves their descriptions list, by their chapters' parts, or as one session.
 Run: python tools/exercises/videos.py  ->  app/src/main/assets/videos/library.json
 """
 import json, sys
 from pathlib import Path
-import channel, mady
+import channel, creators, mady
 
 ROOT = Path(__file__).resolve().parents[2]
 EXERCISES = ROOT / 'app/src/main/assets/exercises/exercises.json'
@@ -101,6 +102,14 @@ def build(exercises=EXERCISES, output=OUTPUT):
     # Then Mady Morrison's Pilates, yoga and stretching: by her chapters where she wrote them, else as one whole session.
     mady_videos, whole = mady.videos(catalog)
     for v in mady_videos:
+        for a, b in zip(v['segments'], v['segments'][1:]): assert a['end'] <= b['start'], (v['id'], a, b)
+        assert 0 <= v['segments'][0]['start'] and v['segments'][-1]['end'] <= v['durationSec'], v['id']
+        out.append(v | {'segments': [compact(s) for s in v['segments']]})
+    # Then Oliver Sjostrom, growingannanas and You1stLondon: by the listed moves, by the chapters' parts or as one session.
+    creator_videos, timings = creators.videos(catalog)
+    seen = {v['id'] for v in out}
+    for v in creator_videos:
+        if v['id'] in seen: continue
         for a, b in zip(v['segments'], v['segments'][1:]): assert a['end'] <= b['start'], (v['id'], a, b)
         assert 0 <= v['segments'][0]['start'] and v['segments'][-1]['end'] <= v['durationSec'], v['id']
         out.append(v | {'segments': [compact(s) for s in v['segments']]})

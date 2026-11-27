@@ -134,7 +134,7 @@ add('bird_dog', [QUAD, with_(QUAD, an=(90, 90), lf=(270, 270))])
 # ---- Core ---------------------------------------------------------------------------------------------------------
 CRUNCH_DOWN = P(270, (330, 250), (330, 250), (45, 135), (45, 135))
 CRUNCH_UP = P(300, (0, 280), (0, 280), (45, 135), (45, 135))
-add('crunch', [CRUNCH_DOWN, CRUNCH_UP])
+add('crunch core_session', [CRUNCH_DOWN, CRUNCH_UP])
 add('reverse_crunch', [SUPINE_KNEES, P(270, (90, 90), (90, 90), (330, 60), (330, 60))])
 add('heel_touch', [with_(CRUNCH_UP, an=(100, 100), af=(85, 85)), with_(CRUNCH_UP, an=(85, 85), af=(100, 100))])
 add('dead_bug', [P(270, (0, 0), (0, 0), (0, 90), (0, 90)), P(270, (280, 280), (0, 0), (0, 90), (75, 75))])
@@ -166,7 +166,7 @@ add('step_jacks', [F_STAND, P(0, (330, 330), (30, 30), (200, 200), (180, 180), f
 add('cross_jacks', [P(0, (300, 300), (60, 60), (205, 205), (155, 155), lift=0.05, front=True), P(0, (150, 150), (210, 210), (165, 165), (195, 195), front=True)])
 add('seal_jacks', [P(0, (270, 270), (90, 90), (205, 205), (155, 155), lift=0.05, front=True), P(0, (190, 150), (170, 210), (180, 180), (180, 180), front=True)])
 add('squat_jacks', [P(0, (200, 120), (160, 240), (195, 165), (165, 195), front=True), P(0, (200, 120), (160, 240), (225, 165), (135, 195), lift=0.04, front=True)])
-add('jog_in_place march_in_place jogging_outdoor sprint_in_place', [RUN, swap(RUN)])
+add('jog_in_place march_in_place jogging_outdoor sprint_in_place warmup_session', [RUN, swap(RUN)])
 add('high_knees', [P(5, (120, 30), (220, 160), (60, 180), (180, 180), lift=0.05), P(5, (220, 160), (120, 30), (180, 180), (60, 180), lift=0.05)])
 add('butt_kicks', [P(5, (150, 60), (210, 150), (185, 330), (175, 175), lift=0.04), P(5, (210, 150), (150, 60), (175, 175), (185, 330), lift=0.04)])
 add('skip_imitation ankle_hops', [P(0, (185, 130), (185, 130)), P(0, (185, 130), (185, 130), lift=0.08)])
@@ -190,7 +190,7 @@ add('step_touch grapevine v_step box_step dance_low zumba_video video_cardio', [
 add('dance_high video_cardio_hard hiit_moderate', [F_STAND, F_JACK_OUT, F_HALF_SQUAT])
 add('knee_lift_clap', [STAND, P(0, (130, 150), (130, 150), (75, 180), (180, 180))])
 add('walk_moderate walk_brisk heel_toe_walk', walking())
-add('circuit_bw endurance_circuit', [STAND_FWD, SQUAT, F_STAND, F_JACK_OUT])
+add('circuit_bw endurance_circuit bw_strength_session', [STAND_FWD, SQUAT, F_STAND, F_JACK_OUT])
 
 # ---- Warm-up, mobility, stretching, yoga --------------------------------------------------------------------------
 add('arm_circles', [P(0, (250, 250), (110, 110), front=True), P(0, (290, 290), (70, 70), front=True)])
