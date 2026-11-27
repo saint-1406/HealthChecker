@@ -35,7 +35,7 @@ class EverydayUseFlowTest {
         app.onNodeWithTag("quantity").performTextReplacement("50")
         app.onNodeWithText("Записать всё").performScrollTo().performClick()
         waitText("Дневник");app.onNodeWithText("Дневник").performClick();diaryCount("2 записи")
-        app.onNodeWithText("Обзор").performClick();app.onNodeWithText("345").assertExists()
+        app.onNodeWithText("Обзор").performClick();app.waitUntil(30000){runCatching{app.onNodeWithTag("kcalLine",useUnmergedTree=true).assertTextContains("345",substring=true)}.isSuccess}
         launch();waitText("Обзор");app.onNodeWithTag("logFoodButton").performScrollTo().performClick()
         find("варёное яйцо",egg)
         app.onNodeWithTag("quantity").assert(hasText("2"))
@@ -54,7 +54,7 @@ class EverydayUseFlowTest {
         app.onNodeWithTag("diaryList").performScrollToNode(hasText("Наборы еды"));app.onNodeWithText("Наборы еды").performClick()
         waitTag("savedMealsList");app.onNodeWithTag("savedMealsList").performScrollToNode(hasContentDescription("Добавить набор: Мой завтрак"));app.onNodeWithContentDescription("Добавить набор: Мой завтрак").performClick()
         waitText("Приём пищи");app.onNodeWithTag("mealDraftList").performScrollToNode(hasText("Записать всё"));app.onNodeWithText("Записать всё").performClick();waitText("Дневник");diaryCount("2 записи")
-        app.onNodeWithText("Обзор").performClick();app.onNodeWithText("388").assertExists()
+        app.onNodeWithText("Обзор").performClick();app.waitUntil(30000){runCatching{app.onNodeWithTag("kcalLine",useUnmergedTree=true).assertTextContains("388",substring=true)}.isSuccess}
     }
     @Test fun overviewCardsCanBeHiddenWithoutHidingFoodLogging() {
         begin();app.onNodeWithText("Профиль").performClick()
@@ -72,7 +72,9 @@ class EverydayUseFlowTest {
         launch();waitText("Обзор")
         app.onNodeWithText("250 мл").assertExists()
         app.waitUntil(30000){app.onAllNodesWithTag("backupSetup").fetchSemanticsNodes().isEmpty()}
-        app.onNodeWithTag("saveStatus").performScrollTo().assertExists()
+        // The save status lives in the diary; the overview follows the mockup without it.
+        app.onNodeWithText("Дневник").performClick();waitTag("diaryList")
+        app.onNodeWithTag("diaryList").performScrollToNode(hasTestTag("saveStatus"))
     }
     @Test fun aSavedMealCanBeCreatedFromDiaryEntriesAndRenamed() {
         begin();app.onNodeWithTag("logFoodButton").performScrollTo().performClick();find("оливковое масло","Масло оливковое")
@@ -88,6 +90,6 @@ class EverydayUseFlowTest {
         app.onNodeWithTag("saveMeal").performScrollTo().performClick();waitTag("savedMealsList")
         app.onNodeWithTag("savedMealsList").performScrollToNode(hasContentDescription("Добавить набор: Заправка"));app.onNodeWithContentDescription("Добавить набор: Заправка").performClick()
         waitTag("mealDraftList");app.onNodeWithTag("mealDraftList").performScrollToNode(hasText("Записать всё"));app.onNodeWithText("Записать всё").performClick()
-        waitText("Дневник");diaryCount("2 записи");app.onNodeWithText("Обзор").performClick();app.onNodeWithText("124").assertExists()
+        waitText("Дневник");diaryCount("2 записи");app.onNodeWithText("Обзор").performClick();app.waitUntil(30000){runCatching{app.onNodeWithTag("kcalLine",useUnmergedTree=true).assertTextContains("124",substring=true)}.isSuccess}
     }
 }

@@ -39,7 +39,7 @@ class ProgramSetupFlowTest {
         app.onNodeWithTag("back").performClick()
         waitTag("profileHub");app.onNodeWithTag("todayTargets").assert(hasAnyDescendant(hasText("2210",substring=true)))
         app.onNodeWithText("Обзор").performClick()
-        waitText("из 2210 ккал")
+        waitText("/ 2210 ккал")
     }
     @Test fun skippingKeepsTheSetupInTheProfile() {
         launch();waitText("Начать без расчёта")

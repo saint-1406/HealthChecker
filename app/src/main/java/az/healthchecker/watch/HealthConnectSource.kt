@@ -87,6 +87,10 @@ object HealthConnectSource {
             }.sortedByDescending{it.start})
         }
         if(heart) {
+            // The day's average for each of the week's days, for the overview of any date.
+            val days=runCatching{client.aggregateGroupByPeriod(AggregateGroupByPeriodRequest(setOf(HeartRateRecord.BPM_AVG),
+                TimeRangeFilter.between(from.atStartOfDay(),today.plusDays(1).atStartOfDay()),Period.ofDays(1)))}.getOrDefault(emptyList())
+            data=data.copy(heartByDay=days.mapNotNull{d->d.result[HeartRateRecord.BPM_AVG]?.let{d.startTime.toLocalDate().toString() to it.toInt()}}.toMap())
             val r=client.aggregate(AggregateRequest(setOf(HeartRateRecord.BPM_MIN,HeartRateRecord.BPM_AVG,HeartRateRecord.BPM_MAX),TimeRangeFilter.between(today.atStartOfDay(zone).toInstant(),now)))
             val min=r[HeartRateRecord.BPM_MIN];val avg=r[HeartRateRecord.BPM_AVG];val max=r[HeartRateRecord.BPM_MAX]
             if(min!=null&&avg!=null&&max!=null)data=data.copy(heartToday=HeartRange(min.toInt(),avg.toInt(),max.toInt()),heartSources=r.dataOrigins.map{labels(it.packageName)}.toSet())

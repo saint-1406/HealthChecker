@@ -37,7 +37,7 @@ class DiaryFlowTest {
         diary("2 записи");app.onNodeWithText("2 записи").assertExists()
         app.onNodeWithText("Обзор").performClick()
         // 2 × 50 г яйца × 155/100 + 50 г хлопьев × 379/100 = 344,5 ккал.
-        app.onNodeWithText("345").assertExists()
+        app.waitUntil(30000){runCatching{app.onNodeWithTag("kcalLine",useUnmergedTree=true).assertTextContains("345",substring=true)}.isSuccess}
         app.onNodeWithText("Дневник").performClick()
         app.onNodeWithTag("diaryList").performScrollToNode(hasContentDescription("Изменить запись: Овсяные хлопья, сухие"));app.onNodeWithContentDescription("Изменить запись: Овсяные хлопья, сухие").performClick()
         app.onNodeWithTag("quantity").performTextReplacement("100,0")
@@ -46,7 +46,7 @@ class DiaryFlowTest {
         diary("2 записи");app.onNodeWithText("2 записи").assertExists()
         launch()
         waitText("Обзор")
-        app.onNodeWithText("534").assertExists()
+        app.waitUntil(30000){runCatching{app.onNodeWithTag("kcalLine",useUnmergedTree=true).assertTextContains("534",substring=true)}.isSuccess}
     }
     @Test fun deletedEntryCanBeRestored() {
         skipOnboarding()
@@ -61,7 +61,7 @@ class DiaryFlowTest {
         app.onNodeWithText("Отменить").performClick()
         diary("1 запись")
         app.onNodeWithText("Обзор").performClick()
-        app.onNodeWithText("250 мл").assertExists()
+        app.waitUntil(30000){runCatching{app.onNodeWithTag("waterLine",useUnmergedTree=true).assertTextContains("250",substring=true)}.isSuccess}
     }
     @Test fun profileKeepsInitialWeightAndManualGoal() {
         launch();waitText("Начать без расчёта")
@@ -72,7 +72,7 @@ class DiaryFlowTest {
         app.onNodeWithText("Калории, ккал").assert(hasText("2136"))
         app.onNodeWithText("Сохранить и начать").performScrollTo().performClick()
         waitText("Обзор")
-        app.onNodeWithText("из 2136 ккал").assertExists()
+        app.waitUntil(30000){runCatching{app.onNodeWithTag("kcalLine",useUnmergedTree=true).assertTextContains("/ 2136",substring=true)}.isSuccess}
         app.onNodeWithText("Профиль").performClick()
         app.onNodeWithTag("open-profile-body").performScrollTo().performClick()
         app.onNodeWithText("Текущий вес, кг").performScrollTo().performTextReplacement("75")

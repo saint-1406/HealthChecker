@@ -90,7 +90,7 @@ class BarcodeFlowTest {
         app.onNodeWithTag("barcodeSaveFood").performScrollTo().performClick();waitTag("quantity")
         app.onNodeWithTag("quantity").performTextReplacement("50")
         app.onNodeWithText("Добавить в дневник").performScrollTo().performClick();waitText("Обзор")
-        launch();waitText("Обзор");app.onNodeWithText("100").assertExists();open()
+        launch();waitText("Обзор");app.waitUntil(30000){runCatching{app.onNodeWithTag("kcalLine",useUnmergedTree=true).assertTextContains("100",substring=true)}.isSuccess};open()
         app.onNodeWithTag("barcodeInput").performTextInput("04006381333931")
         app.onNodeWithTag("barcodeFind").performScrollTo().performClick();waitTag("quantity")
         app.onNodeWithTag("quantity").assert(hasText("50"))

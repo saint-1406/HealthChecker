@@ -46,7 +46,7 @@ class DishAndTrainingFlowTest {
         app.onNodeWithText("Добавить в дневник").performScrollTo().performClick()
         waitText("Записать еду")
         app.onNodeWithText("Обзор").performClick()
-        app.onNodeWithText("301").assertExists()
+        app.waitUntil(30000){runCatching{app.onNodeWithTag("kcalLine",useUnmergedTree=true).assertTextContains("301",substring=true)}.isSuccess}
         // The dish is now a product of its own and can be found again.
         app.onNodeWithText("Дневник").performClick();app.onNodeWithContentDescription("Добавить еду").performClick()
         app.onNodeWithTag("foodSearch").performTextInput("курица с картошкой")
@@ -103,6 +103,6 @@ class DishAndTrainingFlowTest {
         app.onNodeWithContentDescription("Назад").performClick()
         app.waitUntil(90000){runCatching{app.onNodeWithTag("trainingList").performScrollToNode(hasText("Выполнено · 2 упражнения"))}.isSuccess}
         app.onNodeWithText("Обзор").performClick()
-        waitText("Тренировка была")
+        waitText("Тренировка завершена")
     }
 }

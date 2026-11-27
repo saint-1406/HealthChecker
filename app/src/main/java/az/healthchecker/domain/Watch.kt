@@ -21,6 +21,8 @@ data class WatchData(
     val steps:Map<String,Int> = emptyMap(), val stepSources:Set<String> = emptySet(), val sleep:List<WatchSleep> = emptyList(),
     val workouts:List<WatchWorkout> = emptyList(), val heartToday:HeartRange? = null, val heartSources:Set<String> = emptySet(),
     val weights:List<ScaleWeight> = emptyList(),
+    /** Average heart rate of each day (ISO date → bpm), from every source Health Connect merges. */
+    val heartByDay:Map<String,Int> = emptyMap(),
 ) {
     val sources:Set<String> get() = stepSources+heartSources+sleep.map{it.source}+workouts.map{it.source}+weights.map{it.source}
     val fromXiaomi:Boolean get() = sources.any{it in XIAOMI_APPS||it in XIAOMI_APPS.values}
@@ -39,6 +41,10 @@ fun WatchSleep.date(zone:ZoneId=ZoneId.systemDefault()):String = end.atZone(zone
 fun WatchWorkout.date(zone:ZoneId=ZoneId.systemDefault()):String = start.atZone(zone).toLocalDate().toString()
 fun WatchData.sleepOn(date:String,zone:ZoneId=ZoneId.systemDefault()):List<WatchSleep> = sleep.filter{it.date(zone)==date}
 fun WatchData.workoutsOn(date:String,zone:ZoneId=ZoneId.systemDefault()):List<WatchWorkout> = workouts.filter{it.date(zone)==date}
+/** Minutes asleep in the nights that belong to [date] (a night belongs to the day it ends); null when none was recorded. */
+fun WatchData.asleepOn(date:String,zone:ZoneId=ZoneId.systemDefault()):Int? = sleepOn(date,zone).takeIf{it.isNotEmpty()}?.sumOf{it.asleepMinutes}
+/** The day's average heart rate; for today the same as [WatchData.heartToday] when only that was read. */
+fun WatchData.heartOn(date:String,today:String):Int? = heartByDay[date]?:heartToday?.takeIf{date==today}?.avg
 
 /**
  * Minutes asleep in a session. [awake] lists the stages marked awake, awake in bed or out of bed; they are subtracted

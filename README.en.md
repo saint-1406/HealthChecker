@@ -15,6 +15,7 @@ VitaCore is a standalone Android app for a food diary and home workouts. Android
 
 Every APK in the releases contains the whole app. There is no need to install the base version or the updates in between.
 
+**1.26.0:** a new Overview after the mockup: workout, food and water, weight (at the start / this month / all time), "Watch today" (steps with distance, average pulse, sleep, watch workouts), the last 7 days with the day's balance; narrow screens and large fonts. [Details](docs/releases/v1.26.0.md) (in Russian).
 **1.25.0:** three more workout video channels — Oliver Sjostrom, growingannanas and You1stLondon (1,181 videos, 1,488 in all), timed by the authors' lists of moves and by workout parts, and a channel filter. [Details](docs/releases/v1.25.0.md).
 **1.24.1:** OCTO octopus app icon (vector, with Android 13+ themed icons). [Details](docs/releases/v1.24.1.md) (in Russian).
 **1.24.0:** HealthChecker renamed VitaCore (by OCTO); compact screen tops (a one-row header, a slim Day / Favorites switch), dense rows in the diary and in training. [Details](docs/releases/v1.24.0.md).
@@ -97,8 +98,8 @@ All files are signed with one key; the applicationId stays `az.healthchecker.app
 2. In the profile you can fill in an approximate maintenance calorie target or set every goal by hand. Set protein and water yourself; an empty field means no goal.
 3. In the diary find a food and choose grams, pieces or — for liquids — millilitres. With pieces, check **the weight of one piece**. Add each thing you ate separately.
 4. The Overview shows the chosen calendar day and the last seven days. Older entries and goals are reached by date. This is not a rolling last 24 hours.
-5. Weigh yourself in the morning and tap **"Log"** on the **"Weight"** card of the Overview: the card shows the latest weight, the change over the week and the direction — down, up or stable.
-6. Tap the **"Energy for the day"** card: a window shows the day's protein, fat, carbohydrate and fibre, and the same for every entry. In the diary each entry also shows "P · F · C · Fb".
+5. Weigh yourself in the morning and tap **"+"** on the **"Weight"** card of the Overview: the card shows the latest weight, the first weight in the log and the change over the month and over all time. Tapping the card opens the history with the week's change and the direction — down, up or stable.
+6. Tap **"Food ›"** or **"Day balance ›"** on the Overview: the "Energy for the day" window shows the day's protein, fat, carbohydrate and fibre, and the same for every entry. In the diary each entry also shows "P · F · C · Fb".
 
 Raw and cooked foods are different. 50 g of dry oats is not 50 g of cooked porridge. Tap an entry to correct it; a correction does not move the entry to another day. Deleting and quick water can be undone with "Undo" at the bottom of the screen. "Recent foods" in the diary fill in the amount from the last entry.
 

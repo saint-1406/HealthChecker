@@ -93,8 +93,10 @@ class TrainingAndWeightFlowTest {
         app.onNodeWithTag("weightInput").performTextInput("81,6");app.onNodeWithTag("saveWeight").performClick()
         app.waitUntil(30000){app.onAllNodesWithText("81,6 кг").fetchSemanticsNodes().isNotEmpty()}
         app.onNodeWithContentDescription("Следующий день").performClick()
-        app.waitUntil(30000){app.onAllNodesWithTag("weightTrend",useUnmergedTree=true).fetchSemanticsNodes().isNotEmpty()}
-        app.onNodeWithTag("weightTrend",useUnmergedTree=true).assertTextEquals("За неделю: −0,6 кг · снижается")
-        app.onNodeWithTag("weightLatest",useUnmergedTree=true).assertTextEquals("81,0 кг")
+        // The log starts with yesterday's 81,6 kg: today's 81,0 is −0,6 kg over the whole log; a month is not covered yet.
+        app.waitUntil(30000){runCatching{app.onNodeWithTag("weightLatest",useUnmergedTree=true).assertTextEquals("81,0 кг")}.isSuccess}
+        app.onNodeWithTag("weightStart",useUnmergedTree=true).assertTextEquals("81,6 кг")
+        app.onNodeWithTag("weightAllTime",useUnmergedTree=true).assertTextEquals("−0,6 кг")
+        app.onNodeWithTag("weightMonth",useUnmergedTree=true).assertTextEquals("—")
     }
 }

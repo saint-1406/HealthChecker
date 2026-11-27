@@ -32,43 +32,62 @@ private fun kg(v:Double?,decimals:Int=1)="${number(v,decimals)} ${tr("кг","kg"
 private fun change(v:Double)=(if(v>0)"+" else if(v<0)"−" else "±")+kg(kotlin.math.abs(v))
 private fun trendText(t:Trend?)=when(t){Trend.DOWN->tr("снижается","going down");Trend.UP->tr("растёт","going up");Trend.STABLE->tr("стабилен","stable");null->""}
 
-/** Overview card: last morning weigh-in, direction over a week, a 90-day line; tap opens the history. */
+/**
+ * Overview card: the latest weigh-in large; under it where the log starts, the change over a month (the 7-day averages,
+ * as weightStats has it) and over the whole log (latest − first entry); then the 90-day line. Tap opens the history,
+ * "+" logs a new weigh-in.
+ */
 @Composable fun WeightCard(vm:AppViewModel,snapshot:UserSnapshot,date:String) {
     val stats=weightStats(snapshot.weights,date,snapshot.profile?.initialWeight)
     var record by rememberSaveable{mutableStateOf(false)}
     var history by rememberSaveable{mutableStateOf(false)}
-    Panel(Modifier.clickable{history=true}.testTag("weightCard")) {
-        Row(verticalAlignment=Alignment.CenterVertically,horizontalArrangement=Arrangement.spacedBy(12.dp)){
-            Icon(Icons.Outlined.MonitorWeight,null,tint=MaterialTheme.colorScheme.primary)
-            Column(Modifier.weight(1f)){
-                Text(tr("Вес","Weight"),color=MaterialTheme.colorScheme.onSurfaceVariant)
-                val latest=stats.latest
-                if(latest==null)Text(tr("Взвешивайтесь утром и записывайте вес — здесь появится, снижается он или растёт","Weigh yourself in the morning and log it — the trend will appear here"),style=MaterialTheme.typography.bodyMedium)
-                else {
-                    Text(kg(latest.kg),style=MaterialTheme.typography.headlineSmall,fontWeight=FontWeight.SemiBold,modifier=Modifier.testTag("weightLatest"))
-                    Text(if(latest.date==date)tr("сегодня","today") else dayMonth(latest.date),style=MaterialTheme.typography.bodySmall,color=MaterialTheme.colorScheme.onSurfaceVariant)
-                }
-            }
-            FilledTonalButton(onClick={record=true},modifier=Modifier.testTag("recordWeight")){Icon(Icons.Outlined.Add,null);Spacer(Modifier.width(4.dp));Text(tr("Записать","Log"))}
+    // "In the beginning" is the first entry of the log itself, not the profile's starting weight.
+    val first=snapshot.weights.filter{it.date<=date}.minByOrNull{it.date}
+    val latest=stats.latest
+    OverviewCard(Modifier.clickable{history=true}.testTag("weightCard")) {
+        Row(verticalAlignment=Alignment.CenterVertically,horizontalArrangement=Arrangement.spacedBy(10.dp)){
+            Icon(Icons.Outlined.MonitorWeight,null,tint=MaterialTheme.colorScheme.primary,modifier=Modifier.size(22.dp))
+            Text(tr("Вес","Weight"),style=MaterialTheme.typography.titleLarge,fontWeight=FontWeight.SemiBold)
+            FilledTonalIconButton(onClick={record=true},modifier=Modifier.size(32.dp).testTag("recordWeight")){Icon(Icons.Outlined.Add,tr("Записать вес","Log weight"),Modifier.size(18.dp))}
+            Spacer(Modifier.weight(1f))
+            if(latest!=null)Text(kg(latest.kg),style=MaterialTheme.typography.headlineMedium,fontWeight=FontWeight.SemiBold,modifier=Modifier.testTag("weightLatest"))
         }
-        stats.weekChange?.let{w->Text("${tr("За неделю","This week")}: ${change(w)} · ${trendText(stats.trend)}",style=MaterialTheme.typography.bodyMedium,color=when(stats.trend){Trend.DOWN->MaterialTheme.colorScheme.primary;Trend.UP->MaterialTheme.colorScheme.tertiary;else->MaterialTheme.colorScheme.onSurface},modifier=Modifier.testTag("weightTrend"))}
-        val more=listOfNotNull(stats.monthChange?.let{tr("за месяц ","month ")+change(it)},stats.sinceStart?.takeIf{snapshot.weights.size>1||snapshot.profile!=null}?.let{tr("с начала ","since start ")+change(it)})
-        if(more.isNotEmpty())Text(more.joinToString(" · "),style=MaterialTheme.typography.bodySmall,color=MaterialTheme.colorScheme.onSurfaceVariant)
-        if(stats.series.size>=2)WeightLine(stats.series,Modifier.fillMaxWidth().height(56.dp))
+        if(latest==null)Text(tr("Взвешивайтесь утром и записывайте вес — здесь появится, снижается он или растёт","Weigh yourself in the morning and log it — the trend will appear here"),style=MaterialTheme.typography.bodyMedium,color=MaterialTheme.colorScheme.onSurfaceVariant)
+        else {
+            if(latest.date!=date)Text(tr("последнее взвешивание ","last weigh-in ")+dayMonth(latest.date),style=MaterialTheme.typography.bodySmall,color=MaterialTheme.colorScheme.onSurfaceVariant)
+            val figures=listOf(Triple(tr("В начале","At the start"),first?.let{kg(it.kg)}?:"—",false) to "weightStart",
+                Triple(tr("За месяц","This month"),stats.monthChange?.let(::change)?:"—",stats.monthChange!=null) to "weightMonth",
+                Triple(tr("За всё время","All time"),first?.let{change(latest.kg-it.kg)}?:"—",first!=null) to "weightAllTime")
+            // Little room per line: one figure per row, label on the left.
+            if(tightLayout())figures.forEach{(f,tag)->Row(Modifier.fillMaxWidth(),verticalAlignment=Alignment.CenterVertically){
+                Text(f.first,style=MaterialTheme.typography.bodyMedium,color=MaterialTheme.colorScheme.onSurfaceVariant,modifier=Modifier.weight(1f))
+                Text(f.second,style=MaterialTheme.typography.titleMedium,fontWeight=FontWeight.SemiBold,color=if(f.third)MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.onSurface,modifier=Modifier.testTag(tag))}}
+            else Row(Modifier.fillMaxWidth()){figures.forEach{(f,tag)->WeightFigure(f.first,f.second,f.third,Modifier.weight(1f),tag)}}
+        }
+        if(stats.series.size>=2)WeightLine(stats.series,Modifier.fillMaxWidth().height(48.dp))
     }
     if(record)WeightDialog(vm,date,stats.latest?.kg?:snapshot.profile?.currentWeight){record=false}
     if(history)WeightHistory(vm,snapshot,date,stats,{history=false}){history=false;record=true}
 }
 
+/** A label over a figure; a change ([accent]) is drawn in the main colour. */
+@Composable private fun WeightFigure(label:String,value:String,accent:Boolean,modifier:Modifier,tag:String) {
+    Column(modifier,verticalArrangement=Arrangement.spacedBy(2.dp)) {
+        Text(label,style=MaterialTheme.typography.bodySmall,color=MaterialTheme.colorScheme.onSurfaceVariant,maxLines=1)
+        Text(value,style=MaterialTheme.typography.titleMedium,fontWeight=FontWeight.SemiBold,color=if(accent)MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.onSurface,maxLines=1,modifier=Modifier.testTag(tag))
+    }
+}
+
+/** The 90-day line: a thin stroke through the weigh-ins with a dot on the latest one. */
 @Composable private fun WeightLine(points:List<WeightEntry>,modifier:Modifier) {
     val color=MaterialTheme.colorScheme.primary
     val first=LocalDate.parse(points.first().date).toEpochDay();val span=(LocalDate.parse(points.last().date).toEpochDay()-first).coerceAtLeast(1)
     val low=points.minOf{it.kg};val high=points.maxOf{it.kg};val range=(high-low).coerceAtLeast(0.5)
     Canvas(modifier.semantics{contentDescription=tr("График веса: от ","Weight chart: from ")+kg(points.first().kg)+tr(" до "," to ")+kg(points.last().kg)}) {
-        fun at(p:WeightEntry)=Offset(size.width*(LocalDate.parse(p.date).toEpochDay()-first)/span,size.height-6.dp.toPx()-(size.height-12.dp.toPx())*((p.kg-low)/range).toFloat())
+        fun at(p:WeightEntry)=Offset(4.dp.toPx()+(size.width-8.dp.toPx())*(LocalDate.parse(p.date).toEpochDay()-first)/span,size.height-5.dp.toPx()-(size.height-10.dp.toPx())*((p.kg-low)/range).toFloat())
         val path=Path().apply{points.forEachIndexed{i,p->val o=at(p);if(i==0)moveTo(o.x,o.y) else lineTo(o.x,o.y)}}
-        drawPath(path,color,style=Stroke(2.5.dp.toPx(),cap=StrokeCap.Round))
-        points.forEach{drawCircle(color,3.dp.toPx(),at(it))}
+        drawPath(path,color,style=Stroke(2.dp.toPx(),cap=StrokeCap.Round))
+        drawCircle(color,4.dp.toPx(),at(points.last()))
     }
 }
 

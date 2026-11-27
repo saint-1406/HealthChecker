@@ -73,8 +73,8 @@ class NewFeaturesFlowTest {
         app.onNodeWithText("Обзор").performClick()
         app.onNodeWithTag("energyCard").performClick()
         waitTag("energySheet")
-        app.onNodeWithText("Клетчатка").assertExists()
-        app.onNodeWithText("5,1 г").assertExists()
+        app.onNode(hasText("Клетчатка") and hasAnyAncestor(hasTestTag("energySheet"))).assertExists()
+        app.onAllNodes(hasText("5,1 г") and hasAnyAncestor(hasTestTag("energySheet"))).onFirst().assertExists()
     }
     @Test fun languageSwitchesTheWholeInterface() {
         skipOnboarding()
