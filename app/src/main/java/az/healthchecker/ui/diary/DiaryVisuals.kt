@@ -62,8 +62,7 @@ data class MacroColors(val protein:Color,val fat:Color,val carbs:Color)
             }
             az.healthchecker.ui.dashboard.SegmentBar(goal?.let{(s.kcal.value/it).toFloat()}?:0f,az.healthchecker.ui.theme.reducedMotion(),Modifier.fillMaxWidth().height(8.dp))
             Text(goal?.let{g->if(s.kcal.value>g)tr("выше цели на ","above by ")+number(s.kcal.value-g)+" $KCAL" else tr("осталось ","left ")+number(g-s.kcal.value)+" $KCAL"}?:tr("Цель не задана","No goal set"),style=MaterialTheme.typography.bodySmall,color=MaterialTheme.colorScheme.onSurfaceVariant)
-        } else
-        Row(verticalAlignment=Alignment.CenterVertically) {
+        } else Row(verticalAlignment=Alignment.CenterVertically) {
             Column(Modifier.weight(1f)) {
                 Text(tr("ЗА ДЕНЬ","FOR THE DAY"),style=MaterialTheme.typography.labelMedium,color=MaterialTheme.colorScheme.primary)
                 Text("${number(s.kcal.value)}${if(!s.kcal.complete)"+" else ""} $KCAL",style=MaterialTheme.typography.headlineSmall,fontWeight=FontWeight.SemiBold)
