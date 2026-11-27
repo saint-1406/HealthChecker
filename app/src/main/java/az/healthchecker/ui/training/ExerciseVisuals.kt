@@ -26,6 +26,11 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import az.healthchecker.domain.*
 import az.healthchecker.ui.*
 import kotlinx.coroutines.delay
+import az.healthchecker.ui.kit.TextButton
+import az.healthchecker.ui.kit.FilledTonalButton
+import az.healthchecker.ui.kit.OutlinedButton
+import az.healthchecker.ui.kit.Button
+import az.healthchecker.ui.theme.rounded
 
 @Composable private fun rememberExerciseImage(vm:AppViewModel,id:String,maxSize:Dp):ImageBitmap? {
     val versions by vm.imageVersions.collectAsStateWithLifecycle()
@@ -36,8 +41,8 @@ import kotlinx.coroutines.delay
 /** Small square picture for lists: the user's own picture, otherwise a still of the app's motion scheme. */
 @Composable fun ExerciseThumb(vm:AppViewModel,id:String,size:Dp=52.dp) {
     val image=rememberExerciseImage(vm,id,size)
-    if(image!=null)Image(image,null,Modifier.size(size).clip(RoundedCornerShape(12.dp)),contentScale=ContentScale.Crop)
-    else vm.figure(id)?.let{m->ExerciseFigure(m,vm.exercise(id)?.equipment==Equipment.DUMBBELLS,null,Modifier.size(size).clip(RoundedCornerShape(12.dp)).background(MaterialTheme.colorScheme.surfaceContainerHighest).padding(3.dp),animate=false)}
+    if(image!=null)Image(image,null,Modifier.size(size).clip(rounded(12.dp)),contentScale=ContentScale.Crop)
+    else vm.figure(id)?.let{m->ExerciseFigure(m,vm.exercise(id)?.equipment==Equipment.DUMBBELLS,null,Modifier.size(size).clip(rounded(12.dp)).background(MaterialTheme.colorScheme.surfaceContainerHighest).padding(3.dp),animate=false)}
 }
 
 /** Large picture of an exercise: the user's own picture (tap for full screen) or else the animated motion scheme. */
@@ -45,11 +50,11 @@ import kotlinx.coroutines.delay
     val image=rememberExerciseImage(vm,exercise.id,360.dp)
     var full by remember{mutableStateOf(false)}
     if(image!=null){
-        Image(image,tr("Картинка к упражнению ","Picture for ")+exercise.displayName,modifier.fillMaxWidth().height(height).clip(RoundedCornerShape(18.dp)).clickable{full=true},contentScale=ContentScale.Crop)
-        if(full)Dialog(onDismissRequest={full=false}){Image(image,null,Modifier.fillMaxWidth().clip(RoundedCornerShape(18.dp)).clickable{full=false},contentScale=ContentScale.Fit)}
+        Image(image,tr("Картинка к упражнению ","Picture for ")+exercise.displayName,modifier.fillMaxWidth().height(height).clip(rounded(18.dp)).clickable{full=true},contentScale=ContentScale.Crop)
+        if(full)Dialog(onDismissRequest={full=false}){Image(image,null,Modifier.fillMaxWidth().clip(rounded(18.dp)).clickable{full=false},contentScale=ContentScale.Fit)}
     } else vm.figure(exercise.id)?.let{m->
         ExerciseFigure(m,exercise.equipment==Equipment.DUMBBELLS,tr("Схема движения: ","Movement: ")+exercise.displayName,
-            modifier.fillMaxWidth().height(height).clip(RoundedCornerShape(18.dp)).background(MaterialTheme.colorScheme.surfaceContainerHighest).padding(12.dp).testTag("exerciseFigure"))
+            modifier.fillMaxWidth().height(height).clip(rounded(18.dp)).background(MaterialTheme.colorScheme.surfaceContainerHighest).padding(12.dp).testTag("exerciseFigure"))
     }
 }
 
@@ -62,7 +67,7 @@ import kotlinx.coroutines.delay
     val picker=rememberLauncherForActivityResult(ActivityResultContracts.PickVisualMedia()){uri->uri?.let{vm.setExerciseImage(exercise.id,it)}}
     fun pick()=picker.launch(PickVisualMediaRequest(ActivityResultContracts.PickVisualMedia.ImageOnly))
     if(image!=null) {
-        Image(image,tr("Картинка к упражнению ","Picture for ")+exercise.displayName,Modifier.fillMaxWidth().heightIn(max=260.dp).clip(RoundedCornerShape(18.dp)).clickable{full=true}.testTag("exercisePicture"),contentScale=ContentScale.Fit)
+        Image(image,tr("Картинка к упражнению ","Picture for ")+exercise.displayName,Modifier.fillMaxWidth().heightIn(max=260.dp).clip(rounded(18.dp)).clickable{full=true}.testTag("exercisePicture"),contentScale=ContentScale.Fit)
         Row(horizontalArrangement=Arrangement.spacedBy(8.dp)){
             OutlinedButton(onClick=::pick,enabled=!busy){Icon(Icons.Outlined.AddPhotoAlternate,null);Spacer(Modifier.width(6.dp));Text(tr("Заменить","Replace"))}
             TextButton(onClick={vm.removeExerciseImage(exercise.id)},enabled=!busy){Icon(Icons.Outlined.DeleteOutline,null);Spacer(Modifier.width(6.dp));Text(tr("Убрать картинку","Remove picture"))}
@@ -70,14 +75,14 @@ import kotlinx.coroutines.delay
     } else {
         // Without the user's picture the app's own motion scheme shows the movement.
         ExerciseIllustration(vm,exercise)
-        Surface(onClick=::pick,enabled=!busy,shape=RoundedCornerShape(18.dp),color=MaterialTheme.colorScheme.surfaceContainer,modifier=Modifier.fillMaxWidth().testTag("addExercisePicture")) {
+        Surface(onClick=::pick,enabled=!busy,shape=rounded(18.dp),color=MaterialTheme.colorScheme.surfaceContainer,modifier=Modifier.fillMaxWidth().testTag("addExercisePicture")) {
             Row(Modifier.padding(16.dp),verticalAlignment=Alignment.CenterVertically,horizontalArrangement=Arrangement.spacedBy(14.dp)){
                 Icon(Icons.Outlined.AddPhotoAlternate,null,Modifier.size(32.dp),tint=MaterialTheme.colorScheme.primary)
                 Column{Text(tr("Добавить свою картинку","Add your own picture"),fontWeight=FontWeight.SemiBold);Text(tr("Скриншот из видео или фото — заменит схему","A video screenshot or photo — replaces the scheme"),style=MaterialTheme.typography.bodySmall,color=MaterialTheme.colorScheme.onSurfaceVariant)}
             }
         }
     }
-    if(full&&image!=null)Dialog(onDismissRequest={full=false}){Image(image,null,Modifier.fillMaxWidth().clip(RoundedCornerShape(18.dp)).clickable{full=false},contentScale=ContentScale.Fit)}
+    if(full&&image!=null)Dialog(onDismissRequest={full=false}){Image(image,null,Modifier.fillMaxWidth().clip(rounded(18.dp)).clickable{full=false},contentScale=ContentScale.Fit)}
 }
 
 /**

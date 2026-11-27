@@ -27,6 +27,7 @@ import androidx.compose.ui.unit.dp
 import az.healthchecker.domain.*
 import az.healthchecker.ui.*
 import kotlinx.coroutines.delay
+import az.healthchecker.ui.kit.TextButton
 
 /**
  * Protein: today against the goal, the last 7 or 30 days, the foods that gave the most, and a list of foods by protein

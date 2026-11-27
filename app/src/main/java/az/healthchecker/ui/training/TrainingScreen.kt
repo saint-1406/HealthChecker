@@ -19,6 +19,10 @@ import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import az.healthchecker.domain.*
 import az.healthchecker.ui.*
+import az.healthchecker.ui.kit.FilledTonalButton
+import az.healthchecker.ui.kit.OutlinedButton
+import az.healthchecker.ui.kit.Button
+import az.healthchecker.ui.theme.rounded
 
 /** Today's suggested session; the training tab and the workout screen share it, so both show the same set. */
 @Composable fun rememberTodayPlan(vm:AppViewModel,snapshot:UserSnapshot,date:String,variant:Int):Recommendation? {
@@ -46,7 +50,7 @@ import az.healthchecker.ui.*
     val trophies=remember(snapshot.workouts,date){day.workouts.map{it.exerciseId}.toSet().flatMap{id->recordsAtTheTime(snapshot.exerciseHistory(id)).entries}.associate{it.key to it.value}}
     LazyColumn(Modifier.fillMaxSize().testTag("trainingList"),contentPadding=PaddingValues(horizontal=16.dp,vertical=8.dp),verticalArrangement=Arrangement.spacedBy(8.dp)) {
         // The day in one slim card: burned energy on the left, "trained / rest day" chips on the right.
-        item{Surface(shape=RoundedCornerShape(20.dp),color=MaterialTheme.colorScheme.surface,modifier=Modifier.fillMaxWidth()) {
+        item{Surface(shape=rounded(20.dp),color=MaterialTheme.colorScheme.surface,modifier=Modifier.fillMaxWidth()) {
             Column(Modifier.padding(horizontal=16.dp,vertical=10.dp),verticalArrangement=Arrangement.spacedBy(4.dp)) {
                 Row(verticalAlignment=Alignment.CenterVertically) {
                     Column(Modifier.weight(1f)) {
@@ -69,7 +73,7 @@ import az.healthchecker.ui.*
         }}
         if(day.workouts.isNotEmpty()){
             item{Text(tr("Выполнено · ","Done · ")+count(day.workouts.size,"упражнение","упражнения","упражнений","exercise","exercises"),style=MaterialTheme.typography.titleSmall,fontWeight=FontWeight.SemiBold,modifier=Modifier.padding(top=6.dp))}
-            items(day.workouts,key={it.id}){w->Surface(shape=RoundedCornerShape(16.dp),color=MaterialTheme.colorScheme.surface,modifier=Modifier.fillMaxWidth()) {
+            items(day.workouts,key={it.id}){w->Surface(shape=rounded(16.dp),color=MaterialTheme.colorScheme.surface,modifier=Modifier.fillMaxWidth()) {
                 Row(Modifier.fillMaxWidth().clickable{edit(w)}.padding(start=14.dp,top=6.dp,bottom=6.dp),verticalAlignment=Alignment.CenterVertically){
                     Column(Modifier.weight(1f)){Text(vm.workoutName(w),style=MaterialTheme.typography.titleSmall,maxLines=1,overflow=TextOverflow.Ellipsis);Text(workoutLabel(w),style=MaterialTheme.typography.labelMedium,color=MaterialTheme.colorScheme.onSurfaceVariant,maxLines=1,overflow=TextOverflow.Ellipsis)
                         trophies[w.id]?.let{Text("🏆 "+tr("Рекорд: ","Record: ")+recordsText(w,it),style=MaterialTheme.typography.labelMedium,color=MaterialTheme.colorScheme.primary,fontWeight=FontWeight.Medium,modifier=Modifier.testTag("recordBadge"))}}

@@ -14,6 +14,8 @@ import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
 import az.healthchecker.domain.*
 import az.healthchecker.ui.*
+import az.healthchecker.ui.kit.OutlinedButton
+import az.healthchecker.ui.kit.Button
 
 @Composable fun EntryEditor(vm:AppViewModel,food:Food,old:DiaryEntry?,template:DiaryEntry?,id:String,date:String,back:()->Unit,addMore:()->Unit={},useMealDraft:Boolean=true,logged:(String)->Unit={back()}) {
     val busy by vm.busy.collectAsState()

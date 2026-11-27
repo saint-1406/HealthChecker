@@ -11,6 +11,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import az.healthchecker.data.LanguageStore
 import az.healthchecker.domain.tr
+import az.healthchecker.ui.kit.Button
 
 /** What VitaCore does with Health Connect data; Health Connect opens it from its permission screens. */
 class HealthPrivacyActivity:ComponentActivity() {

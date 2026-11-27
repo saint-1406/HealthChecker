@@ -23,6 +23,8 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import az.healthchecker.domain.*
 import az.healthchecker.ui.*
 import java.time.LocalDate
+import az.healthchecker.ui.kit.TextButton
+import az.healthchecker.ui.kit.Button
 
 fun stepsText(n:Int):String = String.format(Lang.locale,"%,d",n)
 /** "≈ 412 ккал · 7,5 км", or a hint when the profile lacks height and weight. */

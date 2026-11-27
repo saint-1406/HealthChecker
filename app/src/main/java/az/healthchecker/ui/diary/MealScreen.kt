@@ -20,6 +20,10 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import az.healthchecker.domain.*
 import az.healthchecker.ui.*
 import java.util.UUID
+import az.healthchecker.ui.kit.FilledTonalIconButton
+import az.healthchecker.ui.kit.TextButton
+import az.healthchecker.ui.kit.OutlinedButton
+import az.healthchecker.ui.kit.Button
 
 @Composable fun MealDraftCard(draft:MealDraft,open:()->Unit) {
     Panel(Modifier.clickable(onClick=open).testTag("mealDraftCard")) {

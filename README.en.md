@@ -15,6 +15,7 @@ VitaCore is a standalone Android app for a food diary and home workouts. Android
 
 Every APK in the releases contains the whole app. There is no need to install the base version or the updates in between.
 
+**1.27.0:** the "Arcade" layout in Appearance: straight edges, monospace figures, its own "Your day" with a pixel workout block, a segmented bar and quick actions, a diary by time of day and the current exercise marked in a workout; colours, mode and background stay yours. [Details](docs/releases/v1.27.0.md) (in Russian).
 **1.26.0:** a new Overview after the mockup: workout, food and water, weight (at the start / this month / all time), "Watch today" (steps with distance, average pulse, sleep, watch workouts), the last 7 days with the day's balance; narrow screens and large fonts. [Details](docs/releases/v1.26.0.md) (in Russian).
 **1.25.0:** three more workout video channels — Oliver Sjostrom, growingannanas and You1stLondon (1,181 videos, 1,488 in all), timed by the authors' lists of moves and by workout parts, and a channel filter. [Details](docs/releases/v1.25.0.md).
 **1.24.1:** OCTO octopus app icon (vector, with Android 13+ themed icons). [Details](docs/releases/v1.24.1.md) (in Russian).
@@ -121,13 +122,14 @@ When you have time, tap the photo: the top half of the screen is the picture (pi
 
 ## Look
 
-**Profile → Look and language → "Themes, colors and background"**:
+**Profile → Look and language → "Layout, themes, colours and background"**:
+- **interface layout** — "Standard" or "Arcade" (with small previews). Arcade changes how screens are built: straight edges, monospace labels and figures, thin frames, its own "Your day" (a workout block with a pixel athlete, a segmented calorie bar, an instrument row for the watch, quick actions "Day", "7 days", "+ Entry"), the diary by time of day and the current exercise marked. It applies at once and is independent of the mode, colour, background and holiday themes;
 - **mode** — follow the system, light or dark;
 - **interface color** — "Mint" (the original), "Ocean", "Lavender", "Berry", "Coral", "Amber", "Forest", "Graphite" or **your own color** with a hue slider. The whole palette is built from the color: buttons, switches, charts, screen and card backgrounds; text contrast is checked automatically (a test checks every palette and 24 hues against WCAG in light and dark mode);
 - **holiday themes** switch on by themselves: **Halloween** from 25 October to 7 November (pumpkin orange and purple, an almost black background at night), **New Year** from 26 December to 8 January (red and pine green on a snowy or night-blue background). Choosing another color during a holiday turns its theme off until the next holiday; a holiday theme can be tried on any day, and switching them on automatically can be turned off;
 - **decorations and animation**: falling snow and a blinking garland at New Year, a moon, bats, cobwebs and pumpkins at Halloween; they are pale, sit behind the cards and can be turned off;
 - **your own background** — any picture from the gallery behind every screen (kept only in the app, reduced to 1920 pixels), with "Dim the picture" and "Card density" sliders so the text stays readable;
-- "Restore the standard look".
+- "Restore the standard look" — the standard layout, Mint, holiday themes and decorations on, own background removed; the mode stays.
 
 The look is kept on the phone and is not in the backup.
 

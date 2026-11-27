@@ -14,6 +14,8 @@ import az.healthchecker.domain.*
 import java.time.Instant
 import java.time.ZoneId
 import java.time.format.DateTimeFormatter
+import az.healthchecker.ui.kit.TextButton
+import az.healthchecker.ui.kit.Button
 
 @Composable fun SaveStatus(vm:AppViewModel,openProfile:()->Unit) {
     val busy by vm.busy.collectAsStateWithLifecycle()

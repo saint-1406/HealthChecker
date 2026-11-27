@@ -15,6 +15,7 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import az.healthchecker.domain.*
 import az.healthchecker.ui.*
 import java.time.LocalDate
+import az.healthchecker.ui.kit.Button
 
 /** "≈ 2 550 ккал" — expenditure figures are rounded to 10 kcal: more digits would pretend a precision there is not. */
 fun kcal10(v:Double):String = number(Math.round(v/10.0)*10.0)+" "+KCAL

@@ -3,6 +3,7 @@ import android.content.Context
 import androidx.datastore.preferences.preferencesDataStore
 import androidx.datastore.preferences.core.*
 import az.healthchecker.domain.Appearance
+import az.healthchecker.domain.LAYOUTS
 import az.healthchecker.domain.VideoFile
 import az.healthchecker.domain.Quantity
 import az.healthchecker.domain.Measure
@@ -24,7 +25,7 @@ class SettingsRepository(context:Context) {
     private val backups=stringPreferencesKey("backupList")
     private val palette=stringPreferencesKey("palette");private val customHue=floatPreferencesKey("customHue");private val seasonal=booleanPreferencesKey("seasonal")
     private val seasonSkipped=stringPreferencesKey("seasonSkipped");private val background=longPreferencesKey("background");private val dim=floatPreferencesKey("backgroundDim")
-    private val cardAlpha=floatPreferencesKey("cardAlpha");private val decorations=booleanPreferencesKey("decorations")
+    private val cardAlpha=floatPreferencesKey("cardAlpha");private val decorations=booleanPreferencesKey("decorations");private val layout=stringPreferencesKey("layout")
     private val videoFiles=stringPreferencesKey("videoFiles")
     private val lastPortions=stringPreferencesKey("lastPortions")
     private val water= intPreferencesKey("waterMl")
@@ -33,7 +34,7 @@ class SettingsRepository(context:Context) {
     val settings:Flow<Settings> = store.data.map{
         val d=Appearance()
         Settings(Appearance(it[theme]?:d.mode,it[palette]?:d.palette,it[customHue]?:d.customHue,it[seasonal]?:d.seasonal,it[seasonSkipped]?:d.seasonSkipped,
-            it[background]?:d.background,it[dim]?:d.dim,it[cardAlpha]?:d.cardAlpha,it[decorations]?:d.decorations),
+            it[background]?:d.background,it[dim]?:d.dim,it[cardAlpha]?:d.cardAlpha,it[decorations]?:d.decorations,it[layout]?.takeIf{v->v in LAYOUTS}?:d.layout),
             it[folder]?:"",it[last]?:0,it[backups]?.split('\n')?.filter(String::isNotEmpty)?:(it[legacyBackups]?:emptySet()).toList(),
             it[videoFiles]?.let{s->runCatching{Json.decodeFromString<Map<String,VideoFile>>(s)}.getOrNull()}?:emptyMap(),
             lastPortions=it[lastPortions]?.let{s->runCatching{Json.decodeFromString<Map<String,Quantity>>(s)}.getOrNull()}?.filterValues(::validQuantity)?:emptyMap(),
@@ -63,7 +64,7 @@ class SettingsRepository(context:Context) {
     suspend fun theme(value:String){store.edit{it[theme]=value}}
     suspend fun appearance(a:Appearance){store.edit{
         it[theme]=a.mode;it[palette]=a.palette;it[customHue]=a.customHue;it[seasonal]=a.seasonal;it[seasonSkipped]=a.seasonSkipped
-        it[background]=a.background;it[dim]=a.dim;it[cardAlpha]=a.cardAlpha;it[decorations]=a.decorations
+        it[background]=a.background;it[dim]=a.dim;it[cardAlpha]=a.cardAlpha;it[decorations]=a.decorations;it[layout]=a.layout
     }}
     suspend fun folder(value:String){store.edit{if(it[folder]!=value){it[folder]=value;it.remove(backups);it.remove(legacyBackups);it.remove(last)}}}
     /** Links (or with null unlinks) the user's own file for a video; returns the link it replaced. */

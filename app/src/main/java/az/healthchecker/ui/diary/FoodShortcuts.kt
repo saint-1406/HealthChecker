@@ -15,6 +15,7 @@ import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import az.healthchecker.domain.*
 import az.healthchecker.ui.*
+import az.healthchecker.ui.kit.FilledTonalButton
 
 /** Horizontal shortcuts keep daily food entry close to the top even with a long diary. */
 @Composable fun FoodShortcuts(vm:AppViewModel,snapshot:UserSnapshot,date:String,repeat:(DiaryEntry)->Unit,select:(Food)->Unit,openMeals:()->Unit,openDraft:()->Unit) {

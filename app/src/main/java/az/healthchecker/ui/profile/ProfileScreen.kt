@@ -21,6 +21,10 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import az.healthchecker.domain.*
 import az.healthchecker.ui.*
 import java.time.*
+import az.healthchecker.ui.kit.TextButton
+import az.healthchecker.ui.kit.OutlinedButton
+import az.healthchecker.ui.kit.Button
+import az.healthchecker.ui.theme.rounded
 
 /** Sub-screens the profile opens; HealthApp shows each under this route. */
 object ProfileRoutes {
@@ -90,7 +94,7 @@ fun goalsLine(g:DailyGoals?):String = if(g==null||listOf(g.kcal,g.protein,g.fat,
         else FlowRow(horizontalArrangement=Arrangement.spacedBy(8.dp),verticalArrangement=Arrangement.spacedBy(8.dp)) {
             listOfNotNull(goals.kcal?.let{number(it) to KCAL},goals.protein?.let{"${number(it)} $G" to tr("белок","protein")},goals.fat?.let{"${number(it)} $G" to tr("жиры","fat")},
                 goals.carbs?.let{"${number(it)} $G" to tr("углеводы","carbs")},goals.waterMl?.let{"${number(it)} $ML" to tr("вода","water")}).forEach{(value,label)->
-                Surface(shape=RoundedCornerShape(14.dp),color=MaterialTheme.colorScheme.secondaryContainer){Column(Modifier.padding(horizontal=12.dp,vertical=8.dp)){
+                Surface(shape=rounded(14.dp),color=MaterialTheme.colorScheme.secondaryContainer){Column(Modifier.padding(horizontal=12.dp,vertical=8.dp)){
                     Text(value,style=MaterialTheme.typography.titleMedium,fontWeight=FontWeight.SemiBold);Text(label,style=MaterialTheme.typography.labelSmall,color=MaterialTheme.colorScheme.onSecondaryContainer)}}
             }
         }
@@ -99,7 +103,7 @@ fun goalsLine(g:DailyGoals?):String = if(g==null||listOf(g.kcal,g.protein,g.fat,
 
 @Composable private fun SetupCard(setup:ProgramSetup?,open:(String)->Unit) {
     val applied=setup?.appliedOn!=null
-    Surface(shape=RoundedCornerShape(24.dp),color=if(applied)MaterialTheme.colorScheme.surface else MaterialTheme.colorScheme.primaryContainer,modifier=Modifier.fillMaxWidth()) {
+    Surface(shape=rounded(24.dp),color=if(applied)MaterialTheme.colorScheme.surface else MaterialTheme.colorScheme.primaryContainer,modifier=Modifier.fillMaxWidth()) {
         Column(Modifier.padding(20.dp),verticalArrangement=Arrangement.spacedBy(10.dp)) {
             Row(verticalAlignment=Alignment.CenterVertically,horizontalArrangement=Arrangement.spacedBy(12.dp)){
                 Icon(Icons.Outlined.Tune,null,tint=MaterialTheme.colorScheme.primary)
@@ -120,7 +124,7 @@ fun goalsLine(g:DailyGoals?):String = if(g==null||listOf(g.kcal,g.protein,g.fat,
 @Composable private fun GroupLabel(text:String) = Text(text.uppercase(Lang.locale),style=MaterialTheme.typography.labelMedium,color=MaterialTheme.colorScheme.primary,fontWeight=FontWeight.Bold,modifier=Modifier.padding(start=8.dp,top=8.dp))
 
 @Composable fun ProfileRow(icon:ImageVector,title:String,subtitle:String,tag:String,badge:String?=null,warning:Boolean=false,onClick:()->Unit) {
-    Surface(onClick=onClick,shape=RoundedCornerShape(20.dp),color=MaterialTheme.colorScheme.surface,modifier=Modifier.fillMaxWidth().heightIn(min=64.dp).testTag(tag)) {
+    Surface(onClick=onClick,shape=rounded(20.dp),color=MaterialTheme.colorScheme.surface,modifier=Modifier.fillMaxWidth().heightIn(min=64.dp).testTag(tag)) {
         Row(Modifier.padding(horizontal=16.dp,vertical=12.dp),verticalAlignment=Alignment.CenterVertically,horizontalArrangement=Arrangement.spacedBy(14.dp)) {
             Icon(icon,null,tint=MaterialTheme.colorScheme.primary)
             Column(Modifier.weight(1f)){Text(title,style=MaterialTheme.typography.titleMedium);Text(subtitle,style=MaterialTheme.typography.bodySmall,color=if(warning)MaterialTheme.colorScheme.error else MaterialTheme.colorScheme.onSurfaceVariant)}

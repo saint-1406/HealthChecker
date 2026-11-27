@@ -20,6 +20,9 @@ import az.healthchecker.domain.*
 import az.healthchecker.ui.AppViewModel
 import az.healthchecker.ui.Panel
 import kotlinx.coroutines.CancellationException
+import az.healthchecker.ui.kit.TextButton
+import az.healthchecker.ui.kit.OutlinedButton
+import az.healthchecker.ui.kit.Button
 
 /** Opens a QR link in another app; this app itself has no internet access. */
 fun openQrLink(context:Context,url:String):String? = try {

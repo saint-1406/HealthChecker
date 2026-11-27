@@ -36,6 +36,7 @@ import androidx.compose.ui.unit.dp
 import az.healthchecker.domain.*
 import az.healthchecker.ui.*
 import kotlinx.coroutines.delay
+import az.healthchecker.ui.theme.rounded
 
 fun foodCategoryIcon(c:FoodCategory?):ImageVector = when(c) {
     FoodCategory.FAST_FOOD->Icons.Outlined.Fastfood;FoodCategory.DISHES->Icons.Outlined.RamenDining;FoodCategory.COFFEE->Icons.Outlined.LocalCafe
@@ -70,7 +71,7 @@ fun foodCategoryIcon(c:FoodCategory?):ImageVector = when(c) {
                 OutlinedTextField(query,{query=it.take(100)},placeholder={Text(tr("Название продукта","Food name"))},leadingIcon={Icon(Icons.Outlined.Search,null)},
                     trailingIcon=if(query.isNotEmpty())({IconButton(onClick={query=""}){Icon(Icons.Outlined.Close,tr("Очистить поиск","Clear search"))}})else null,
                     keyboardOptions=KeyboardOptions(imeAction=ImeAction.Search),keyboardActions=KeyboardActions(onSearch={keyboard?.hide();focus.clearFocus()}),
-                    singleLine=true,shape=RoundedCornerShape(28.dp),modifier=Modifier.weight(1f).testTag("foodSearch"))
+                    singleLine=true,shape=rounded(28.dp),modifier=Modifier.weight(1f).testTag("foodSearch"))
                 scan?.let{IconButton(onClick=it,modifier=Modifier.testTag("barcodeAction")){Icon(Icons.Outlined.QrCodeScanner,tr("Сканировать штрихкод","Scan a barcode"))}}
             }
             Spacer(Modifier.height(10.dp))
@@ -111,7 +112,7 @@ fun foodCategoryIcon(c:FoodCategory?):ImageVector = when(c) {
             val label=c?.let(::foodCategoryLabel)?:tr("Все категории","All categories")
             if(roomy)Column(Modifier.width(72.dp).clickable{choose(if(on)null else c)}.semantics(mergeDescendants=true){selected=on;role=Role.Tab}.testTag("category-${c?.id?:"all"}"),
                 horizontalAlignment=Alignment.CenterHorizontally,verticalArrangement=Arrangement.spacedBy(4.dp)) {
-                Surface(shape=RoundedCornerShape(18.dp),color=if(on)MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.surface,
+                Surface(shape=rounded(18.dp),color=if(on)MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.surface,
                     border=if(on)null else androidx.compose.foundation.BorderStroke(1.dp,MaterialTheme.colorScheme.outlineVariant),modifier=Modifier.size(56.dp)) {
                     Box(contentAlignment=Alignment.Center){Icon(c?.let(::foodCategoryIcon)?:Icons.Outlined.Apps,null,tint=if(on)MaterialTheme.colorScheme.onPrimary else MaterialTheme.colorScheme.primary)}
                 }
@@ -126,7 +127,7 @@ fun foodCategoryIcon(c:FoodCategory?):ImageVector = when(c) {
 
 /** One result: shelf icon, name, energy and macros per 100 g on one line, and a quiet line with the other name and notes. */
 @Composable private fun FoodRow(f:Food,favorite:Boolean,busy:Boolean,open:()->Unit,toggle:()->Unit,edit:(()->Unit)?) {
-    Surface(Modifier.fillMaxWidth().clickable(onClick=open),shape=RoundedCornerShape(16.dp),color=MaterialTheme.colorScheme.surface) {
+    Surface(Modifier.fillMaxWidth().clickable(onClick=open),shape=rounded(16.dp),color=MaterialTheme.colorScheme.surface) {
         Row(Modifier.padding(start=12.dp,top=8.dp,bottom=8.dp),verticalAlignment=Alignment.CenterVertically,horizontalArrangement=Arrangement.spacedBy(12.dp)) {
             Box(Modifier.size(36.dp).background(MaterialTheme.colorScheme.primary.copy(alpha=0.14f),CircleShape),contentAlignment=Alignment.Center) {
                 Icon(if(f.recipe!=null)Icons.Outlined.MenuBook else foodCategoryIcon(FoodCategory.of(f.category)),null,Modifier.size(20.dp),tint=MaterialTheme.colorScheme.primary)

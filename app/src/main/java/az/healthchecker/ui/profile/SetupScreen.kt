@@ -26,6 +26,10 @@ import kotlinx.serialization.decodeFromString
 import kotlinx.serialization.json.Json
 import java.time.DayOfWeek
 import java.time.format.TextStyle
+import az.healthchecker.ui.kit.TextButton
+import az.healthchecker.ui.kit.OutlinedButton
+import az.healthchecker.ui.kit.Button
+import az.healthchecker.ui.theme.rounded
 
 private val draftJson=Json{encodeDefaults=true}
 private const val STEPS=7
@@ -170,7 +174,7 @@ private fun weekdayName(d:Int):String = DayOfWeek.of(d).getDisplayName(TextStyle
 }
 
 @Composable private fun Warning(text:String,strong:Boolean=true) {
-    Surface(shape=RoundedCornerShape(16.dp),color=if(strong)MaterialTheme.colorScheme.errorContainer else MaterialTheme.colorScheme.surfaceVariant,modifier=Modifier.fillMaxWidth()){
+    Surface(shape=rounded(16.dp),color=if(strong)MaterialTheme.colorScheme.errorContainer else MaterialTheme.colorScheme.surfaceVariant,modifier=Modifier.fillMaxWidth()){
         Row(Modifier.padding(14.dp),horizontalArrangement=Arrangement.spacedBy(10.dp)){
             Icon(if(strong)Icons.Outlined.HealthAndSafety else Icons.Outlined.Info,null,tint=if(strong)MaterialTheme.colorScheme.onErrorContainer else MaterialTheme.colorScheme.onSurfaceVariant)
             Text(text,style=MaterialTheme.typography.bodySmall,color=if(strong)MaterialTheme.colorScheme.onErrorContainer else MaterialTheme.colorScheme.onSurfaceVariant)
@@ -190,7 +194,7 @@ private fun weekdayName(d:Int):String = DayOfWeek.of(d).getDisplayName(TextStyle
             Text(tr("Поддержание ≈ ","Maintenance ≈ ")+"${number(n.maintenance)} $KCAL · "+tr("базовый обмен ≈ ","basal rate ≈ ")+"${number(n.bmr)} $KCAL",style=MaterialTheme.typography.bodySmall,color=MaterialTheme.colorScheme.onSurfaceVariant)
             FlowRow(horizontalArrangement=Arrangement.spacedBy(8.dp)){
                 listOf(tr("Белок","Protein") to n.protein,tr("Жиры","Fat") to n.fat,tr("Углеводы","Carbs") to n.carbs).forEach{(label,v)->
-                    Surface(shape=RoundedCornerShape(14.dp),color=MaterialTheme.colorScheme.secondaryContainer){Column(Modifier.padding(horizontal=12.dp,vertical=8.dp)){Text("${number(v)} $G",style=MaterialTheme.typography.titleMedium);Text(label,style=MaterialTheme.typography.labelSmall)}}
+                    Surface(shape=rounded(14.dp),color=MaterialTheme.colorScheme.secondaryContainer){Column(Modifier.padding(horizontal=12.dp,vertical=8.dp)){Text("${number(v)} $G",style=MaterialTheme.typography.titleMedium);Text(label,style=MaterialTheme.typography.labelSmall)}}
                 }
             }
             n.weeklyChangeKg?.takeIf{kotlin.math.abs(it)>=0.05}?.let{Text(tr("Ожидаемо ","Expected ")+(if(it>0)"+" else "−")+number(kotlin.math.abs(it),2)+tr(" кг в неделю"," kg a week"),style=MaterialTheme.typography.bodySmall)}

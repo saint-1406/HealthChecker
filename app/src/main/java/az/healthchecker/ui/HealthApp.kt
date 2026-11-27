@@ -41,6 +41,8 @@ import az.healthchecker.update.UpdateViewModel
 import az.healthchecker.ui.update.UpdateBanner
 import az.healthchecker.ui.update.UpdateEffects
 import az.healthchecker.ui.update.UpdatePanel
+import az.healthchecker.ui.kit.TextButton
+import az.healthchecker.ui.theme.rounded
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable fun HealthApp(vm:AppViewModel=viewModel()) {
@@ -111,18 +113,23 @@ import az.healthchecker.ui.update.UpdatePanel
         AppBackdrop(picture,appearance.dim,appearance.decorationSeason(today),appearance.decorations)
         // A transparent container gives no content colour of its own, so text would fall back to black: name it.
         val tight=az.healthchecker.ui.dashboard.tightLayout()
+        val arcadeOn=appearance.arcade
+        val tabs=listOf(ArcadeTab(0,tr("Обзор","Overview"),Icons.Outlined.SpaceDashboard),ArcadeTab(1,tr("Дневник","Diary"),Icons.AutoMirrored.Outlined.MenuBook),ArcadeTab(2,tr("Тренировки","Training"),Icons.Outlined.FitnessCenter),ArcadeTab(4,tr("Находки","Findings"),Icons.Outlined.Explore),ArcadeTab(3,tr("Профиль","Profile"),Icons.Outlined.PersonOutline))
         Scaffold(containerColor=Color.Transparent,contentColor=MaterialTheme.colorScheme.onBackground,
-            bottomBar={if(ready && snapshot.onboarded && route=="main")NavigationBar(containerColor=MaterialTheme.colorScheme.surface){
+            bottomBar={if(ready && snapshot.onboarded && route=="main" && arcadeOn)ArcadeNavBar(tabs,tab,tight){tab=it}
+                else if(ready && snapshot.onboarded && route=="main")NavigationBar(containerColor=MaterialTheme.colorScheme.surface){
                 listOf(Triple(0,tr("Обзор","Overview"),Icons.Outlined.SpaceDashboard),Triple(1,tr("Дневник","Diary"),Icons.AutoMirrored.Outlined.MenuBook),Triple(2,tr("Тренировки","Training"),Icons.Outlined.FitnessCenter),Triple(4,tr("Находки","Findings"),Icons.Outlined.Explore),Triple(3,tr("Профиль","Profile"),Icons.Outlined.PersonOutline)).forEach{(id,label,icon)->NavigationBarItem(selected=tab==id,onClick={tab=id},icon={Icon(icon,label)},label={Text(label,maxLines=1,softWrap=false)},alwaysShowLabel=!tight)}
             }},
             // One compact row: the screen title, then the day switcher as a pill (◀ day ▶) and the calendar.
             // Little room per line: the title gets its own line above the day switcher.
-            topBar={if(ready && snapshot.onboarded && route=="main" && tab!=3 && tab!=4)Column(Modifier.statusBarsPadding().fillMaxWidth().padding(start=20.dp,end=8.dp,top=6.dp,bottom=2.dp)){
+            topBar={if(ready && snapshot.onboarded && route=="main" && arcadeOn)ArcadeTopBar(when(tab){0->null;1->tr("Дневник","Diary");2->tr("Тренировки","Training");4->tr("Находки","Findings");else->tr("Профиль","Profile")},
+                    if(tab==3||tab==4)null else date,{date=it}){calendar=true}
+                else if(ready && snapshot.onboarded && route=="main" && tab!=3 && tab!=4)Column(Modifier.statusBarsPadding().fillMaxWidth().padding(start=20.dp,end=8.dp,top=6.dp,bottom=2.dp)){
                 val title=@Composable{m:Modifier->Text(when(tab){0->tr("Ваш день","Your day");1->tr("Дневник питания","Food diary");else->tr("Тренировки","Training")},style=if(LocalDensity.current.fontScale>1.3f)MaterialTheme.typography.titleLarge else MaterialTheme.typography.headlineSmall,fontWeight=FontWeight.Bold,maxLines=1,overflow=androidx.compose.ui.text.style.TextOverflow.Ellipsis,modifier=m.testTag("screenTitle"))}
                 if(tight)title(Modifier)
                 Row(Modifier.fillMaxWidth(),verticalAlignment=Alignment.CenterVertically){
                 if(tight)Spacer(Modifier.weight(1f)) else title(Modifier.weight(1f))
-                Surface(shape=androidx.compose.foundation.shape.RoundedCornerShape(50),color=MaterialTheme.colorScheme.surface.copy(alpha=0.85f)) {
+                Surface(shape=rounded(50),color=MaterialTheme.colorScheme.surface.copy(alpha=0.85f)) {
                     Row(verticalAlignment=Alignment.CenterVertically){
                         IconButton(onClick={date=LocalDate.parse(date).minusDays(1).toString()},modifier=Modifier.size(36.dp)){Icon(Icons.Outlined.ChevronLeft,tr("Предыдущий день","Previous day"),Modifier.size(20.dp))}
                         Text(if(date==LocalDate.now().toString())tr("Сегодня","Today") else shortDayMonth(date),style=MaterialTheme.typography.labelLarge,fontWeight=FontWeight.SemiBold,maxLines=1,
@@ -197,7 +204,9 @@ import az.healthchecker.ui.update.UpdatePanel
                         if(food!=null)EntryEditor(vm,food,old,template,draftId,foodDate,{route=entryBack},{foodSearch("meal")}){day->date=day;route=entryBack}else TextButton(onClick={route=entryBack}){Text(tr("Продукт недоступен. Вернуться","The food is unavailable. Go back"))}
                     }
                     else -> when(tab) {
-                        0 -> DashboardScreen(vm,snapshot,date,backupError,{tab=1;foodSearch()},{vm.water(date)},::edit,{tab=3;route=ProfileRoutes.BACKUP},{tab=2},{route="steps"},{route="protein"},{tab=1},{route="meal"},{folderPicker.launch(null)},openExpenditure={tab=3;route=ProfileRoutes.ENERGY},openWatch={tab=3;route=ProfileRoutes.WATCH})
+                        0 -> if(arcadeOn)az.healthchecker.ui.dashboard.ArcadeDashboard(vm,snapshot,date,backupError,{tab=1;foodSearch()},{vm.water(date)},{tab=3;route=ProfileRoutes.BACKUP},{tab=2},{route="steps"},{route="protein"},{tab=1},{route="meal"},{folderPicker.launch(null)},
+                            {tab=3;route=ProfileRoutes.ENERGY},{tab=3;route=ProfileRoutes.WATCH}){leaveFor("exercise-search")}
+                        else DashboardScreen(vm,snapshot,date,backupError,{tab=1;foodSearch()},{vm.water(date)},::edit,{tab=3;route=ProfileRoutes.BACKUP},{tab=2},{route="steps"},{route="protein"},{tab=1},{route="meal"},{folderPicker.launch(null)},openExpenditure={tab=3;route=ProfileRoutes.ENERGY},openWatch={tab=3;route=ProfileRoutes.WATCH})
                         1 -> DiaryScreen(vm,snapshot,date,{foodSearch()},::edit,{e->add(e.foodId,e.id)},::editMedication,
                             openPhoto={photoName=it.fileName;route="photo"},selectFood={add(it.id)},openMeals={route="meals"},openDraft={route="meal"},openProfile={tab=3;route=ProfileRoutes.BACKUP},chooseFolder={folderPicker.launch(null)})
                         2 -> TrainingScreen(vm,snapshot,date,rememberTodayPlan(vm,snapshot,date,variant),{leaveFor("exercise-search")},{route="workout-now"},::editWorkout,{tab=3;route=ProfileRoutes.BODY},{logExercise(it,null)},{videoId=it;videoBack="main";route="video"},{route="videos"}){route="progress"}
@@ -207,7 +216,7 @@ import az.healthchecker.ui.update.UpdatePanel
                 }
                 if(busy)LinearProgressIndicator(Modifier.fillMaxWidth().align(Alignment.TopCenter))
               }
-              notice?.let{n->SwipeAway(n,{vm.dismissNotice()}){Snackbar(modifier=Modifier.padding(16.dp),action=if(n.undo)({TextButton(onClick={vm.undo()}){Text(tr("Отменить","Undo"))}})else null,dismissAction={IconButton(onClick={vm.dismissNotice()}){Icon(Icons.Outlined.Close,tr("Закрыть","Close"))}}){Text(n.text,maxLines=3)}}}
+              notice?.let{n->SwipeAway(n,{vm.dismissNotice()}){if(arcadeOn)ArcadeSnackbar(n.text,if(n.undo)({vm.undo()})else null){vm.dismissNotice()} else Snackbar(modifier=Modifier.padding(16.dp),action=if(n.undo)({TextButton(onClick={vm.undo()}){Text(tr("Отменить","Undo"))}})else null,dismissAction={IconButton(onClick={vm.dismissNotice()}){Icon(Icons.Outlined.Close,tr("Закрыть","Close"))}}){Text(n.text,maxLines=3)}}}
             }
         }
         if(error!=null)AlertDialog(onDismissRequest={vm.error.value=null},title={Text(tr("Не удалось выполнить действие","Something went wrong"))},text={Text(error!!)},confirmButton={TextButton(onClick={vm.error.value=null}){Text(tr("Понятно","OK"))}})

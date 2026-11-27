@@ -21,6 +21,9 @@ import java.time.Instant
 import java.time.LocalDate
 import java.time.ZoneOffset
 import java.util.UUID
+import az.healthchecker.ui.kit.TextButton
+import az.healthchecker.ui.kit.OutlinedButton
+import az.healthchecker.ui.kit.Button
 
 fun medKindLabel(k:MedKind):String = when(k){MedKind.MEDICINE->tr("Лекарство","Medicine");MedKind.VITAMIN->tr("Витамин","Vitamin");MedKind.SUPPLEMENT->tr("БАД","Supplement")}
 fun formLabel(f:MedForm):String = when(f){MedForm.TABLET->tr("Таблетки","Tablets");MedForm.CAPSULE->tr("Капсулы","Capsules");MedForm.DROPS->tr("Капли","Drops");MedForm.LIQUID->tr("Сироп, раствор","Syrup, solution");MedForm.POWDER->tr("Порошок","Powder");MedForm.SPRAY->tr("Спрей","Spray");MedForm.INJECTION->tr("Инъекции","Injections");MedForm.GUMMY->tr("Жевательные","Chewables");MedForm.OTHER->tr("Другое","Other")}

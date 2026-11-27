@@ -32,6 +32,9 @@ import com.journeyapps.barcodescanner.ScanContract
 import kotlinx.coroutines.*
 import kotlinx.serialization.json.Json
 import kotlinx.serialization.encodeToString
+import az.healthchecker.ui.kit.TextButton
+import az.healthchecker.ui.kit.OutlinedButton
+import az.healthchecker.ui.kit.Button
 
 private val labelStateSaver=Saver<LabelProduct?,String>(
     save={Json.encodeToString(it)},

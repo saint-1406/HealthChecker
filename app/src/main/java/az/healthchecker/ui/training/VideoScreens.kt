@@ -42,6 +42,12 @@ import az.healthchecker.domain.*
 import kotlin.math.roundToInt
 import az.healthchecker.ui.*
 import kotlinx.coroutines.delay
+import az.healthchecker.ui.kit.FilledIconButton
+import az.healthchecker.ui.kit.FilledTonalIconButton
+import az.healthchecker.ui.kit.TextButton
+import az.healthchecker.ui.kit.OutlinedButton
+import az.healthchecker.ui.kit.Button
+import az.healthchecker.ui.theme.rounded
 
 /** The workout videos: the built-in ones with their exercise timelines, then the user's own links and files. */
 @OptIn(ExperimentalLayoutApi::class)
@@ -110,7 +116,7 @@ import kotlinx.coroutines.delay
     val kcal=remember(v,weight,exercises){v.potentialKcal({vm.exercise(it)?.met},weight?:REFERENCE_WEIGHT_KG)}
     Panel(Modifier.clickable(onClick=open).testTag("videoCard")) {
         Row(horizontalArrangement=Arrangement.spacedBy(12.dp),verticalAlignment=Alignment.CenterVertically){
-            Box(Modifier.size(56.dp).clip(RoundedCornerShape(12.dp)).background(MaterialTheme.colorScheme.primaryContainer),contentAlignment=Alignment.Center){
+            Box(Modifier.size(56.dp).clip(rounded(12.dp)).background(MaterialTheme.colorScheme.primaryContainer),contentAlignment=Alignment.Center){
                 // The energy of the whole session takes the place of the play icon; videos without a timeline keep the icon.
                 if(kcal!=null)Column(horizontalAlignment=Alignment.CenterHorizontally,modifier=Modifier.testTag("videoKcal").semantics(mergeDescendants=true){}){
                     Text("≈${kcal.roundToInt()}",style=MaterialTheme.typography.titleMedium,fontWeight=FontWeight.Bold,color=MaterialTheme.colorScheme.onPrimaryContainer,maxLines=1)
@@ -338,7 +344,7 @@ private fun openYoutube(context:Context,youtubeId:String,second:Int):Boolean =
         itemsIndexed(video.segments){i,s->Column(verticalArrangement=Arrangement.spacedBy(8.dp)){
             if(s.displaySection.isNotBlank()&&(i==0||video.segments[i-1].section!=s.section))Text(s.displaySection.uppercase(Lang.locale),style=MaterialTheme.typography.labelLarge,color=MaterialTheme.colorScheme.primary,modifier=Modifier.padding(top=8.dp))
             val now=moment.current===s
-            Surface(shape=RoundedCornerShape(16.dp),color=if(now)MaterialTheme.colorScheme.primaryContainer else MaterialTheme.colorScheme.surface,modifier=Modifier.fillMaxWidth().clickable{seek(s.start)}.testTag("segment")){
+            Surface(shape=rounded(16.dp),color=if(now)MaterialTheme.colorScheme.primaryContainer else MaterialTheme.colorScheme.surface,modifier=Modifier.fillMaxWidth().clickable{seek(s.start)}.testTag("segment")){
                 Row(Modifier.padding(10.dp),horizontalArrangement=Arrangement.spacedBy(10.dp),verticalAlignment=Alignment.CenterVertically){
                     Text(formatVideoTime(s.start),style=MaterialTheme.typography.labelLarge,modifier=Modifier.width(44.dp))
                     ExerciseThumb(vm,s.exerciseId,44.dp)

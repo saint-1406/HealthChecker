@@ -36,6 +36,9 @@ import az.healthchecker.watch.WatchStatus
 import java.time.LocalDate
 import java.time.ZoneId
 import java.time.format.DateTimeFormatter
+import az.healthchecker.ui.kit.FilledTonalButton
+import az.healthchecker.ui.kit.Button
+import az.healthchecker.ui.theme.rounded
 
 /**
  * "Your day": the VitaCore workout, food and water, weight, the watch's day, then the last 7 days with the day's balance.
@@ -48,7 +51,7 @@ import java.time.format.DateTimeFormatter
     val photos by vm.photos.collectAsStateWithLifecycle()
     var details by rememberSaveable{mutableStateOf(false)}
     Column(Modifier.fillMaxSize().verticalScroll(rememberScrollState()).padding(horizontal=16.dp).padding(top=4.dp,bottom=20.dp).testTag("overviewList"),verticalArrangement=Arrangement.spacedBy(10.dp)) {
-        if(backupError!=null)Surface(shape=RoundedCornerShape(20.dp),color=MaterialTheme.colorScheme.errorContainer,contentColor=MaterialTheme.colorScheme.onErrorContainer,modifier=Modifier.fillMaxWidth().clickable(onClick=openProfile)){
+        if(backupError!=null)Surface(shape=rounded(20.dp),color=MaterialTheme.colorScheme.errorContainer,contentColor=MaterialTheme.colorScheme.onErrorContainer,modifier=Modifier.fillMaxWidth().clickable(onClick=openProfile)){
             Row(Modifier.padding(16.dp),verticalAlignment=Alignment.CenterVertically,horizontalArrangement=Arrangement.spacedBy(12.dp)){Icon(Icons.Outlined.SyncProblem,null);Column{Text(tr("Резервная копия не обновляется","The backup is not updating"),fontWeight=FontWeight.SemiBold);Text(tr("Откройте профиль, чтобы повторить или выбрать папку заново","Open the profile to retry or choose the folder again"),style=MaterialTheme.typography.bodySmall)}}
         }
         if(settings.overviewCards.training)ActivityCard(snapshot.training(date),openTraining)
@@ -74,8 +77,9 @@ import java.time.format.DateTimeFormatter
 /** The overview's card: the theme's surface, a hairline border, 16 dp inside. [accent] tints it with the main colour. */
 @Composable fun OverviewCard(modifier:Modifier=Modifier,accent:Boolean=false,content:@Composable ColumnScope.()->Unit) {
     val c=MaterialTheme.colorScheme
-    Surface(modifier.fillMaxWidth(),shape=RoundedCornerShape(20.dp),color=if(accent)c.primary.copy(alpha=0.14f).compositeOver(c.surface) else c.surface,
-        border=BorderStroke(1.dp,if(accent)c.primary.copy(alpha=0.45f) else c.outlineVariant.copy(alpha=0.45f))) {
+    val a=az.healthchecker.ui.theme.arcade
+    Surface(modifier.fillMaxWidth(),shape=rounded(20.dp),color=if(accent)c.primary.copy(alpha=0.14f).compositeOver(c.surface) else c.surface,
+        border=BorderStroke(1.dp,if(accent)c.primary.copy(alpha=0.45f) else c.outlineVariant.copy(alpha=if(a)1f else 0.45f))) {
         Column(Modifier.padding(16.dp),verticalArrangement=Arrangement.spacedBy(10.dp),content=content)
     }
 }
@@ -85,7 +89,7 @@ import java.time.format.DateTimeFormatter
         Text(title,style=MaterialTheme.typography.titleLarge,fontWeight=FontWeight.SemiBold,maxLines=2,overflow=TextOverflow.Ellipsis,modifier=Modifier.weight(1f,fill=false))
         if(chevron)Icon(Icons.Outlined.ChevronRight,null,modifier=Modifier.size(20.dp))
     }
-private val LARGE_TYPE=1.3f
+internal val LARGE_TYPE=1.3f
 /** True when the screen holds little text per line (a narrow phone, a large system font or both): rows then stack. */
 @Composable fun tightLayout():Boolean = androidx.compose.ui.platform.LocalConfiguration.current.screenWidthDp/LocalDensity.current.fontScale<300f
 
@@ -116,7 +120,7 @@ private val LARGE_TYPE=1.3f
 @Composable private fun NutritionCard(day:DayState,glassMl:Int,openDetails:()->Unit,add:()->Unit,water:()->Unit,openProtein:()->Unit) {
     val s=day.summary;val goals=day.goals
     OverviewCard(Modifier.testTag("nutritionCard")) {
-        Column(Modifier.fillMaxWidth().clip(RoundedCornerShape(12.dp)).clickable(onClick=openDetails).semantics{contentDescription=tr("Энергия за день: подробнее","Energy for the day: details")}.testTag("energyCard"),verticalArrangement=Arrangement.spacedBy(8.dp)) {
+        Column(Modifier.fillMaxWidth().clip(rounded(12.dp)).clickable(onClick=openDetails).semantics{contentDescription=tr("Энергия за день: подробнее","Energy for the day: details")}.testTag("energyCard"),verticalArrangement=Arrangement.spacedBy(8.dp)) {
             val kcal=@Composable{Text("${number(s.kcal.value)}${if(!s.kcal.complete)"+" else ""}"+(goals?.kcal?.let{" / ${number(it)}"}?:"")+" $KCAL",style=MaterialTheme.typography.titleMedium,fontWeight=FontWeight.SemiBold,modifier=Modifier.testTag("kcalLine"))}
             if(tightLayout()){CardTitle(Icons.Outlined.Restaurant,tr("Питание","Food"),chevron=true);kcal()}
             else Row(verticalAlignment=Alignment.CenterVertically) {
@@ -127,7 +131,7 @@ private val LARGE_TYPE=1.3f
                 strokeCap=androidx.compose.ui.graphics.StrokeCap.Round)
             if(goals?.kcal==null)Text(tr("Цель по калориям не задана — её можно задать в профиле","No calorie goal — set one in the profile"),style=MaterialTheme.typography.bodySmall,color=MaterialTheme.colorScheme.onSurfaceVariant)
         }
-        Row(Modifier.fillMaxWidth().clip(RoundedCornerShape(8.dp)).clickable(onClick=openProtein).testTag("proteinCard"),verticalAlignment=Alignment.CenterVertically) {
+        Row(Modifier.fillMaxWidth().clip(rounded(8.dp)).clickable(onClick=openProtein).testTag("proteinCard"),verticalAlignment=Alignment.CenterVertically) {
             Text(tr("Белок ","Protein ")+"${number(s.protein.value,1)}${if(!s.protein.complete)"+" else ""}"+(goals?.protein?.let{" "+tr("из","of")+" ${number(it)}"}?:"")+" $G",
                 style=MaterialTheme.typography.bodyMedium,color=MaterialTheme.colorScheme.onSurfaceVariant,modifier=Modifier.weight(1f))
             Icon(Icons.Outlined.ChevronRight,tr("Белок подробнее","Protein details"),tint=MaterialTheme.colorScheme.onSurfaceVariant,modifier=Modifier.size(18.dp))
@@ -184,7 +188,7 @@ private val LARGE_TYPE=1.3f
         }
         HorizontalDivider(color=MaterialTheme.colorScheme.outlineVariant.copy(alpha=0.5f))
         if(!connected) {
-            Row(Modifier.fillMaxWidth().clip(RoundedCornerShape(8.dp)).clickable(onClick=openWatch).testTag("connectWatch"),verticalAlignment=Alignment.CenterVertically,horizontalArrangement=Arrangement.spacedBy(10.dp)) {
+            Row(Modifier.fillMaxWidth().clip(rounded(8.dp)).clickable(onClick=openWatch).testTag("connectWatch"),verticalAlignment=Alignment.CenterVertically,horizontalArrangement=Arrangement.spacedBy(10.dp)) {
                 Icon(Icons.Outlined.WatchOff,null,tint=MaterialTheme.colorScheme.onSurfaceVariant)
                 Column(Modifier.weight(1f)){Text(tr("Часы не подключены","No watch connected"),style=MaterialTheme.typography.titleSmall)
                     Text(if(state.status==WatchStatus.UNSUPPORTED)tr("Health Connect на этом телефоне недоступен","Health Connect is not available on this phone") else tr("Пульс, сон и тренировки появятся после подключения Health Connect","Pulse, sleep and workouts appear once Health Connect is connected"),style=MaterialTheme.typography.bodySmall,color=MaterialTheme.colorScheme.onSurfaceVariant)}
@@ -207,7 +211,7 @@ private val LARGE_TYPE=1.3f
         }
     }
 }
-private fun stepSourceShort(s:StepSource):String = when(s){StepSource.MANUAL->tr("введено вручную","entered by hand");StepSource.WATCH->tr("с часов","from the watch");StepSource.PHONE->tr("телефон","phone");StepSource.NONE->tr("нет данных","no data")}
+internal fun stepSourceShort(s:StepSource):String = when(s){StepSource.MANUAL->tr("введено вручную","entered by hand");StepSource.WATCH->tr("с часов","from the watch");StepSource.PHONE->tr("телефон","phone");StepSource.NONE->tr("нет данных","no data")}
 @Composable private fun WatchMetric(icon:ImageVector,label:String,value:String,sub:String,modifier:Modifier) {
     Column(modifier,verticalArrangement=Arrangement.spacedBy(2.dp)) {
         Row(verticalAlignment=Alignment.CenterVertically,horizontalArrangement=Arrangement.spacedBy(6.dp)){Icon(icon,null,tint=MaterialTheme.colorScheme.primary,modifier=Modifier.size(18.dp));Text(label,style=MaterialTheme.typography.labelLarge,maxLines=1)}
@@ -235,7 +239,7 @@ private fun stepSourceShort(s:StepSource):String = when(s){StepSource.MANUAL->tr
             week.forEach{d->
                 val logged=isLogged(d);val kcal=d.summary.kcal.value
                 Column(Modifier.weight(1f).semantics{contentDescription="${d.date}: ${if(logged)number(kcal)+" "+KCAL else tr("нет записей","no entries")}"},horizontalAlignment=Alignment.CenterHorizontally,verticalArrangement=Arrangement.spacedBy(6.dp)) {
-                    val shape=RoundedCornerShape(topStart=6.dp,topEnd=6.dp,bottomStart=2.dp,bottomEnd=2.dp)
+                    val shape=rounded(topStart=6.dp,topEnd=6.dp,bottomStart=2.dp,bottomEnd=2.dp)
                     val bar=Modifier.fillMaxWidth(0.7f)
                     when {
                         !logged->Box(bar.height(10.dp).clip(shape).border(1.dp,c.outlineVariant,shape))
@@ -250,7 +254,7 @@ private fun stepSourceShort(s:StepSource):String = when(s){StepSource.MANUAL->tr
         Text((weeklyAverage(week)?.let{tr("В среднем ","Average ")+"${number(it)} $KCAL · "+count(counted.size,"день с данными","дня с данными","дней с данными","day with data","days with data")}?:tr("Пока нет данных для среднего","No data for an average yet"))+
             if(partial>0)tr(" · без $partial дн. с неизвестной калорийностью"," · excluding $partial days with unknown calories") else "",style=MaterialTheme.typography.bodySmall,color=c.onSurfaceVariant,modifier=Modifier.testTag("weekAverage"))
         HorizontalDivider(color=c.outlineVariant.copy(alpha=0.5f))
-        Column(Modifier.fillMaxWidth().clip(RoundedCornerShape(12.dp)).clickable(onClick=openDetails).testTag("balanceRow"),verticalArrangement=Arrangement.spacedBy(8.dp)) {
+        Column(Modifier.fillMaxWidth().clip(rounded(12.dp)).clickable(onClick=openDetails).testTag("balanceRow"),verticalArrangement=Arrangement.spacedBy(8.dp)) {
             Row(verticalAlignment=Alignment.CenterVertically){Text(tr("Баланс за день","Day balance"),style=MaterialTheme.typography.titleMedium,fontWeight=FontWeight.SemiBold);Icon(Icons.Outlined.ChevronRight,null,modifier=Modifier.size(20.dp))}
             val parts=listOf(tr("Жиры","Fat") to summary.fat,tr("Углеводы","Carbs") to summary.carbs,tr("Клетчатка","Fibre") to summary.fiber)
             if(tightLayout())parts.forEach{(label,t)->Row(Modifier.fillMaxWidth(),verticalAlignment=Alignment.CenterVertically){
@@ -264,17 +268,17 @@ private fun stepSourceShort(s:StepSource):String = when(s){StepSource.MANUAL->tr
     }
 }
 /** "21–27 нояб." within a month, "28 нояб. – 4 дек." across two. */
-private fun period(from:String,to:String):String {
+internal fun period(from:String,to:String):String {
     val a=LocalDate.parse(from);val b=LocalDate.parse(to)
     return if(a.month==b.month)"${a.dayOfMonth}–"+shortDate(to) else shortDate(from)+" – "+shortDate(to)
 }
 
 /** "12,5 г", with "+" when part of the day is unknown. */
-private fun total(t:NutrientTotal):String = "${number(t.value,1)}${if(!t.complete)"+" else ""} $G"
+internal fun total(t:NutrientTotal):String = "${number(t.value,1)}${if(!t.complete)"+" else ""} $G"
 
 /** Day totals of every nutrient and the same numbers for each entry separately. */
 @OptIn(ExperimentalMaterial3Api::class)
-@Composable private fun EnergySheet(vm:AppViewModel,day:DayState,close:()->Unit) {
+@Composable internal fun EnergySheet(vm:AppViewModel,day:DayState,close:()->Unit) {
     val s=day.summary;val goal=day.goals?.kcal
     ModalBottomSheet(onDismissRequest=close,sheetState=rememberModalBottomSheetState(skipPartiallyExpanded=true)) {
         Column(Modifier.verticalScroll(rememberScrollState()).padding(horizontal=20.dp).padding(bottom=28.dp).testTag("energySheet"),verticalArrangement=Arrangement.spacedBy(12.dp)) {
@@ -308,5 +312,5 @@ private fun total(t:NutrientTotal):String = "${number(t.value,1)}${if(!t.complet
     }
 }
 @Composable private fun Nutrient(title:String,t:NutrientTotal,modifier:Modifier) {
-    Surface(modifier,shape=RoundedCornerShape(16.dp),color=MaterialTheme.colorScheme.surfaceContainer){Column(Modifier.padding(14.dp)){Text(title,color=MaterialTheme.colorScheme.onSurfaceVariant,style=MaterialTheme.typography.bodyMedium);Text(total(t),style=MaterialTheme.typography.titleLarge,fontWeight=FontWeight.SemiBold)}}
+    Surface(modifier,shape=rounded(16.dp),color=MaterialTheme.colorScheme.surfaceContainer){Column(Modifier.padding(14.dp)){Text(title,color=MaterialTheme.colorScheme.onSurfaceVariant,style=MaterialTheme.typography.bodyMedium);Text(total(t),style=MaterialTheme.typography.titleLarge,fontWeight=FontWeight.SemiBold)}}
 }

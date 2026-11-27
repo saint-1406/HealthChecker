@@ -20,6 +20,7 @@ import androidx.compose.ui.unit.dp
 import az.healthchecker.domain.*
 import java.time.LocalDate
 import java.time.format.DateTimeFormatter
+import az.healthchecker.ui.theme.rounded
 // Editable form value: keeps full precision so re-saving an unchanged field does not round it.
 fun plain(value:Double):String = if(value%1.0==0.0&&value<1e15)value.toLong().toString() else value.toString().replace('.',if(Lang.en)'.' else ',')
 fun number(value:Double?,decimals:Int=0):String = value?.let{String.format(Lang.locale,"%.${decimals}f",it)}?:"—"
@@ -39,12 +40,20 @@ fun categoryLabel(c:ExerciseCategory):String = when(c){ExerciseCategory.WARMUP->
 fun levelLabel(level:Int):String = listOf(tr("Новичок","Beginner"),tr("Средний","Intermediate"),tr("Продвинутый","Advanced"))[level.coerceIn(1,3)-1]
 fun workoutLabel(w:WorkoutEntry):String = listOfNotNull(
     w.sets?.let{s->w.reps?.let{"$s × $it"}?:w.seconds?.let{"$s × $it ${tr("с","s")}"}},w.loadKg?.let{"${plain(it)} ${tr("кг","kg")}"},"${number(w.minutes)} ${tr("мин","min")}",w.kcal?.let{"≈ ${number(it)} $KCAL"}).joinToString(" · ")
+/** A section heading; in Arcade a monospace caps label, as section headers are there. */
 @Composable fun SectionTitle(title:String,subtitle:String?=null) {
-    Text(title,style=MaterialTheme.typography.headlineSmall,fontWeight=FontWeight.SemiBold)
+    if(az.healthchecker.ui.theme.arcade)ArcadeLabel(title)
+    else Text(title,style=MaterialTheme.typography.headlineSmall,fontWeight=FontWeight.SemiBold)
     subtitle?.let{Text(it,style=MaterialTheme.typography.bodyMedium,color=MaterialTheme.colorScheme.onSurfaceVariant)}
 }
+/** "ПИТАНИЕ", "ЧАСЫ СЕГОДНЯ": Arcade's section header — monospace, caps, bold. */
+@Composable fun ArcadeLabel(text:String,modifier:Modifier=Modifier,color:androidx.compose.ui.graphics.Color=MaterialTheme.colorScheme.onSurface) =
+    Text(text.uppercase(Lang.locale),style=MaterialTheme.typography.labelLarge,fontWeight=FontWeight.Bold,color=color,letterSpacing=androidx.compose.ui.unit.TextUnit(0.5f,androidx.compose.ui.unit.TextUnitType.Sp),modifier=modifier)
+/** A group of content: a rounded card, or in Arcade a straight frame with a thin outline and a flatter fill. */
 @Composable fun Panel(modifier:Modifier=Modifier,content:@Composable ColumnScope.()->Unit) {
-    Surface(modifier=modifier.fillMaxWidth(),shape=RoundedCornerShape(24.dp),color=MaterialTheme.colorScheme.surface) {Column(Modifier.padding(20.dp),verticalArrangement=Arrangement.spacedBy(12.dp),content=content)}
+    if(az.healthchecker.ui.theme.arcade)Surface(modifier=modifier.fillMaxWidth(),shape=androidx.compose.ui.graphics.RectangleShape,color=MaterialTheme.colorScheme.surface,
+        border=androidx.compose.foundation.BorderStroke(1.dp,MaterialTheme.colorScheme.outlineVariant)){Column(Modifier.padding(16.dp),verticalArrangement=Arrangement.spacedBy(10.dp),content=content)}
+    else Surface(modifier=modifier.fillMaxWidth(),shape=rounded(24.dp),color=MaterialTheme.colorScheme.surface) {Column(Modifier.padding(20.dp),verticalArrangement=Arrangement.spacedBy(12.dp),content=content)}
 }
 
 /** The "day | favorites" switch at the top of Diary and Training; [count] shows how many favorites there are. */
@@ -52,12 +61,16 @@ fun workoutLabel(w:WorkoutEntry):String = listOfNotNull(
 @Composable fun DayFavoritesTabs(favorites:Boolean,count:Int,dayLabel:String,onChange:(Boolean)->Unit) {
     // A slim two-way switch instead of a full-height tab row: the day's content starts right under it.
     SingleChoiceSegmentedButtonRow(Modifier.fillMaxWidth().padding(horizontal=16.dp,vertical=4.dp)) {
-        SegmentedButton(selected=!favorites,onClick={onChange(false)},shape=SegmentedButtonDefaults.itemShape(0,2),modifier=Modifier.height(38.dp).testTag("tabDay"),
+        SegmentedButton(selected=!favorites,onClick={onChange(false)},shape=segmentShape(0,2),modifier=Modifier.height(38.dp).testTag("tabDay"),
             icon={}){Text(dayLabel,style=MaterialTheme.typography.labelLarge)}
-        SegmentedButton(selected=favorites,onClick={onChange(true)},shape=SegmentedButtonDefaults.itemShape(1,2),modifier=Modifier.height(38.dp).testTag("tabFavorites"),
+        SegmentedButton(selected=favorites,onClick={onChange(true)},shape=segmentShape(1,2),modifier=Modifier.height(38.dp).testTag("tabFavorites"),
             icon={Icon(Icons.Outlined.Star,null,Modifier.size(16.dp))}){Text(tr("Избранное","Favorites")+if(count>0)" · $count" else "",style=MaterialTheme.typography.labelLarge,maxLines=1)}
     }
 }
+
+/** A segment of a segmented row: pill ends in the standard layout, straight in Arcade. */
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable fun segmentShape(index:Int,count:Int):androidx.compose.ui.graphics.Shape = if(az.healthchecker.ui.theme.arcade)androidx.compose.ui.graphics.RectangleShape else SegmentedButtonDefaults.itemShape(index,count)
 
 /** A star that adds to or removes from favorites; [name] goes into the spoken label. */
 @Composable fun FavoriteStar(on:Boolean,name:String,enabled:Boolean=true,toggle:()->Unit) {

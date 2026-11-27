@@ -24,6 +24,10 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import az.healthchecker.domain.*
 import az.healthchecker.ui.*
 import java.time.LocalDate
+import az.healthchecker.ui.kit.TextButton
+import az.healthchecker.ui.kit.OutlinedButton
+import az.healthchecker.ui.kit.Button
+import az.healthchecker.ui.theme.rounded
 
 /** Minimal outline pictures a dish can carry in the inventory; the key is stored in the recipe. */
 val DISH_ICONS:List<Triple<String,ImageVector,String>> get() = listOf(
@@ -58,7 +62,7 @@ fun dishIcon(key:String?):ImageVector = DISH_ICONS.find{it.first==key}?.second?:
 }
 
 @Composable private fun InventoryCell(icon:ImageVector,title:String,caption:String,modifier:Modifier,accent:Boolean=false,onClick:()->Unit) {
-    Surface(onClick=onClick,modifier=modifier.heightIn(min=118.dp).semantics{contentDescription=title},shape=RoundedCornerShape(18.dp),
+    Surface(onClick=onClick,modifier=modifier.heightIn(min=118.dp).semantics{contentDescription=title},shape=rounded(18.dp),
         color=if(accent)MaterialTheme.colorScheme.secondaryContainer else MaterialTheme.colorScheme.surfaceContainer) {
         Column(Modifier.padding(10.dp),horizontalAlignment=Alignment.CenterHorizontally,verticalArrangement=Arrangement.spacedBy(6.dp)){
             Icon(icon,null,Modifier.size(30.dp),tint=MaterialTheme.colorScheme.primary)
@@ -80,7 +84,7 @@ fun dishIcon(key:String?):ImageVector = DISH_ICONS.find{it.first==key}?.second?:
     ModalBottomSheet(onDismissRequest=close,sheetState=rememberModalBottomSheetState(skipPartiallyExpanded=true)) {
         Column(Modifier.verticalScroll(rememberScrollState()).imePadding().padding(horizontal=24.dp).padding(bottom=32.dp),verticalArrangement=Arrangement.spacedBy(14.dp)) {
             Row(verticalAlignment=Alignment.CenterVertically,horizontalArrangement=Arrangement.spacedBy(14.dp)){
-                Surface(shape=RoundedCornerShape(16.dp),color=MaterialTheme.colorScheme.secondaryContainer){Icon(dishIcon(recipe.icon),null,Modifier.padding(12.dp).size(32.dp),tint=MaterialTheme.colorScheme.primary)}
+                Surface(shape=rounded(16.dp),color=MaterialTheme.colorScheme.secondaryContainer){Icon(dishIcon(recipe.icon),null,Modifier.padding(12.dp).size(32.dp),tint=MaterialTheme.colorScheme.primary)}
                 Column(Modifier.weight(1f)){Text(dish.name,style=MaterialTheme.typography.headlineSmall,fontWeight=FontWeight.SemiBold);Text(tr("Своё блюдо · ","Your dish · ")+count(recipe.ingredients.size,"ингредиент","ингредиента","ингредиентов","ingredient","ingredients"),color=MaterialTheme.colorScheme.onSurfaceVariant)}
                 IconButton(onClick=edit){Icon(Icons.Outlined.Edit,tr("Изменить блюдо","Edit dish"))}
             }

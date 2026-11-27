@@ -2,6 +2,7 @@ package az.healthchecker.ui.watch
 import android.content.ActivityNotFoundException
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.compose.foundation.background
+import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -30,6 +31,10 @@ import java.time.Instant
 import java.time.LocalDate
 import java.time.ZoneId
 import java.time.format.DateTimeFormatter
+import az.healthchecker.ui.kit.TextButton
+import az.healthchecker.ui.kit.OutlinedButton
+import az.healthchecker.ui.kit.Button
+import az.healthchecker.ui.theme.rounded
 
 fun watchActivityLabel(a:WatchActivity):String = when(a) {
     WatchActivity.WALK->tr("Ходьба","Walking");WatchActivity.RUN->tr("Бег","Running");WatchActivity.BIKE->tr("Велосипед","Cycling");WatchActivity.SWIM->tr("Плавание","Swimming")
@@ -69,6 +74,13 @@ fun watchLine(state:az.healthchecker.ui.WatchState):String = when(state.status) 
                 Icon(if(connected)Icons.Outlined.Watch else Icons.Outlined.WatchOff,null,tint=if(connected)MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.onSurfaceVariant)
                 Text(watchLine(state),style=MaterialTheme.typography.titleMedium,modifier=Modifier.weight(1f).testTag("watchStatus"))
                 if(state.loading)CircularProgressIndicator(Modifier.size(20.dp),strokeWidth=2.dp)
+            }
+            // Arcade states the connection as a plain tag: connected, partly, syncing or off.
+            if(az.healthchecker.ui.theme.LocalArcade.current){
+                val (tag,on)=when{state.loading->tr("Синхронизация…","Syncing…") to true;state.status==WatchStatus.CONNECTED->tr("Подключено","Connected") to true
+                    state.status==WatchStatus.PARTIAL->tr("Подключено частично","Partly connected") to true;else->tr("Не подключено","Not connected") to false}
+                Text(tag.uppercase(Lang.locale),style=MaterialTheme.typography.labelMedium,fontWeight=FontWeight.Bold,color=if(on)MaterialTheme.colorScheme.onPrimary else MaterialTheme.colorScheme.onSurface,
+                    modifier=Modifier.then(if(on)Modifier.background(MaterialTheme.colorScheme.primary) else Modifier.border(1.dp,MaterialTheme.colorScheme.outline)).padding(horizontal=8.dp,vertical=3.dp).testTag("watchStateTag"))
             }
             when(state.status) {
                 WatchStatus.UNSUPPORTED->Text(tr("Health Connect работает на Android 9 и новее. На этом телефоне шаги считает сам телефон или вводятся вручную.","Health Connect needs Android 9 or newer. On this phone steps are counted by the phone or entered by hand."),style=MaterialTheme.typography.bodyMedium)
@@ -119,7 +131,7 @@ fun watchLine(state:az.healthchecker.ui.WatchState):String = when(state.status) 
             days.forEach{d->val s=data.steps[d]?:0
                 Column(Modifier.weight(1f).fillMaxHeight(),horizontalAlignment=Alignment.CenterHorizontally,verticalArrangement=Arrangement.Bottom) {
                     Text(if(s>=1000)number(s/1000.0,if(s<10000)1 else 0)+tr("к","k") else "$s",style=MaterialTheme.typography.labelSmall,maxLines=1)
-                    Box(Modifier.fillMaxWidth().fillMaxHeight(0.75f*s/max+0.02f).background(if(d==today.toString())MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.primaryContainer,RoundedCornerShape(topStart=6.dp,topEnd=6.dp)))
+                    Box(Modifier.fillMaxWidth().fillMaxHeight(0.75f*s/max+0.02f).background(if(d==today.toString())MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.primaryContainer,rounded(topStart=6.dp,topEnd=6.dp)))
                     Text(weekday(d),style=MaterialTheme.typography.labelSmall,textAlign=TextAlign.Center)
                 }
             }
@@ -128,7 +140,13 @@ fun watchLine(state:az.healthchecker.ui.WatchState):String = when(state.status) 
     }
     data.heartToday?.let{h->Panel(Modifier.testTag("watchHeart")) {
         Text(tr("Пульс сегодня","Pulse today"),style=MaterialTheme.typography.titleMedium)
-        Row(horizontalArrangement=Arrangement.spacedBy(16.dp)){listOf(tr("мин","min") to h.min,tr("средний","average") to h.avg,tr("макс","max") to h.max).forEach{(l,v)->Column{Text("$v",style=MaterialTheme.typography.headlineSmall,fontWeight=FontWeight.SemiBold);Text("$l, ${tr("уд/мин","bpm")}",style=MaterialTheme.typography.bodySmall,color=MaterialTheme.colorScheme.onSurfaceVariant)}}}
+        val readings=listOf(tr("мин","min") to h.min,tr("средний","average") to h.avg,tr("макс","max") to h.max)
+        // Arcade: an instrument row of three framed cells, the average in the pulse colour.
+        if(az.healthchecker.ui.theme.LocalArcade.current)Row(Modifier.fillMaxWidth().height(IntrinsicSize.Min).border(1.dp,MaterialTheme.colorScheme.outline)){readings.forEachIndexed{i,(l,v)->
+            if(i>0)VerticalDivider(color=MaterialTheme.colorScheme.outline)
+            Column(Modifier.weight(1f).padding(10.dp)){Text(l,style=MaterialTheme.typography.labelMedium,color=MaterialTheme.colorScheme.onSurfaceVariant);Text("$v",style=MaterialTheme.typography.headlineSmall,fontWeight=FontWeight.Bold,color=if(i==1)az.healthchecker.ui.theme.pulseColor else MaterialTheme.colorScheme.onSurface);Text(tr("уд/мин","bpm"),style=MaterialTheme.typography.bodySmall,color=MaterialTheme.colorScheme.onSurfaceVariant)}
+        }}
+        else Row(horizontalArrangement=Arrangement.spacedBy(16.dp)){readings.forEach{(l,v)->Column{Text("$v",style=MaterialTheme.typography.headlineSmall,fontWeight=FontWeight.SemiBold);Text("$l, ${tr("уд/мин","bpm")}",style=MaterialTheme.typography.bodySmall,color=MaterialTheme.colorScheme.onSurfaceVariant)}}}
         Text(data.heartSources.joinToString(", "),style=MaterialTheme.typography.bodySmall,color=MaterialTheme.colorScheme.onSurfaceVariant)
     }}
     Panel(Modifier.testTag("watchSleep")) {

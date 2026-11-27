@@ -51,5 +51,9 @@ fun colorSchemeFor(palette:String,customHue:Float,dark:Boolean):ColorScheme = pa
         var context=view.context;while(context is ContextWrapper&&context !is Activity)context=context.baseContext
         (context as? Activity)?.window?.let{WindowCompat.getInsetsController(it,view).apply{isAppearanceLightStatusBars=!dark;isAppearanceLightNavigationBars=!dark}}
     }
-    MaterialTheme(colorScheme=if(appearance.hasBackground)scheme.copy(surface=scheme.surface.copy(alpha=appearance.cardAlpha)) else scheme,content=content)
+    // The layout changes shapes and type only; the colours stay the user's in both layouts.
+    androidx.compose.runtime.CompositionLocalProvider(LocalArcade provides appearance.arcade) {
+        MaterialTheme(colorScheme=if(appearance.hasBackground)scheme.copy(surface=scheme.surface.copy(alpha=appearance.cardAlpha)) else scheme,
+            shapes=if(appearance.arcade)ArcadeShapes else MaterialTheme.shapes,typography=if(appearance.arcade)arcadeTypography() else MaterialTheme.typography,content=content)
+    }
 }

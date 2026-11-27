@@ -12,6 +12,8 @@ import androidx.compose.ui.unit.dp
 import az.healthchecker.domain.*
 import az.healthchecker.ui.*
 import java.util.UUID
+import az.healthchecker.ui.kit.TextButton
+import az.healthchecker.ui.kit.Button
 @Composable fun CustomFoodEditor(vm:AppViewModel,back:()->Unit) {
     var name by rememberSaveable{mutableStateOf("")};var kcal by rememberSaveable{mutableStateOf("")};var protein by rememberSaveable{mutableStateOf("")};var fat by rememberSaveable{mutableStateOf("")};var carbs by rememberSaveable{mutableStateOf("")};var fiber by rememberSaveable{mutableStateOf("")};var portion by rememberSaveable{mutableStateOf("")}
     val id=rememberSaveable{"custom:"+UUID.randomUUID()}

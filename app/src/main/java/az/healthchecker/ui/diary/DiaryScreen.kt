@@ -23,6 +23,10 @@ import az.healthchecker.ui.*
 import java.time.Instant
 import java.time.ZoneId
 import java.time.format.DateTimeFormatter
+import az.healthchecker.ui.kit.FilledTonalButton
+import az.healthchecker.ui.kit.OutlinedButton
+import az.healthchecker.ui.kit.Button
+import az.healthchecker.ui.theme.rounded
 
 @OptIn(ExperimentalLayoutApi::class)
 @Composable fun DiaryScreen(vm:AppViewModel,snapshot:UserSnapshot,date:String,add:()->Unit,edit:(DiaryEntry)->Unit,repeat:(DiaryEntry)->Unit,editMedication:(Medication?)->Unit,openPhoto:(InboxPhoto)->Unit,selectFood:(Food)->Unit,openMeals:()->Unit,openDraft:()->Unit,openProfile:()->Unit,chooseFolder:()->Unit) {
@@ -33,6 +37,7 @@ import java.time.format.DateTimeFormatter
     val draft by vm.mealDraft.collectAsStateWithLifecycle()
     val busy by vm.busy.collectAsStateWithLifecycle()
     val favoritesTab by vm.diaryFavorites.collectAsStateWithLifecycle()
+    val arcadeOn=az.healthchecker.ui.theme.LocalArcade.current
     Column(Modifier.fillMaxSize()) {
     DayFavoritesTabs(favoritesTab,snapshot.favoriteFoods.size,tr("День","Day")){vm.diaryFavorites.value=it}
     if(favoritesTab)LazyColumn(Modifier.fillMaxSize().testTag("favoriteFoodsList"),contentPadding=PaddingValues(20.dp),verticalArrangement=Arrangement.spacedBy(12.dp)){favoriteFoods(vm,snapshot,date,busy,selectFood)}
@@ -53,7 +58,12 @@ import java.time.format.DateTimeFormatter
         if(day.entries.isEmpty())item{Panel{Icon(Icons.Outlined.Restaurant,null,Modifier.size(32.dp),tint=MaterialTheme.colorScheme.primary);SectionTitle(tr("Пока ничего не записано","Nothing logged yet"),tr("Добавьте то, что съели. Мы посчитаем остальное.","Add what you ate. We'll count the rest."))}}
         // One slim row per entry: badge, name, "time · amount" and macros on one line, a thin energy split, then kcal,
         // the star and delete. Tapping the row edits it.
-        items(day.entries,key={it.id}) {entry->Surface(shape=RoundedCornerShape(16.dp),color=MaterialTheme.colorScheme.surface,modifier=Modifier.fillMaxWidth()) {
+        // Arcade: compact groups by part of the day — name and portion on the left, calories aligned on the right.
+        if(arcadeOn)mealGroups(day.entries).forEach{(slot,list)->
+            item(key="slot:"+slot.name){ArcadeMealHeader(slot,list)}
+            items(list,key={it.id}){entry->ArcadeEntryRow(vm,snapshot,entry,busy,edit)}
+        }
+        else items(day.entries,key={it.id}) {entry->Surface(shape=rounded(16.dp),color=MaterialTheme.colorScheme.surface,modifier=Modifier.fillMaxWidth()) {
             val name=vm.entryName(entry)
             Row(Modifier.fillMaxWidth().padding(start=10.dp,top=6.dp,bottom=6.dp),verticalAlignment=Alignment.CenterVertically) {
                 Row(Modifier.weight(1f).clickable{edit(entry)}.semantics(mergeDescendants=true){contentDescription=tr("Изменить запись: ","Edit entry: ")+name},verticalAlignment=Alignment.CenterVertically,horizontalArrangement=Arrangement.spacedBy(10.dp)) {
@@ -74,7 +84,7 @@ import java.time.format.DateTimeFormatter
                 IconButton(onClick={vm.delete(entry)}){Icon(Icons.Outlined.DeleteOutline,tr("Удалить ","Delete ")+name,Modifier.size(20.dp))}
             }
         }}
-        item{Surface(shape=RoundedCornerShape(16.dp),color=MaterialTheme.colorScheme.surface,modifier=Modifier.fillMaxWidth()){Row(Modifier.padding(end=12.dp),verticalAlignment=Alignment.CenterVertically){Checkbox(checked=day.completed,onCheckedChange={vm.completeDay(date,it)});Column{Text(tr("День заполнен","Day complete"),style=MaterialTheme.typography.titleSmall);Text(tr("Учитывать в средней статистике","Count it in the averages"),style=MaterialTheme.typography.labelSmall,color=MaterialTheme.colorScheme.onSurfaceVariant)}}}}
+        item{Surface(shape=rounded(16.dp),color=MaterialTheme.colorScheme.surface,modifier=Modifier.fillMaxWidth()){Row(Modifier.padding(end=12.dp),verticalAlignment=Alignment.CenterVertically){Checkbox(checked=day.completed,onCheckedChange={vm.completeDay(date,it)});Column{Text(tr("День заполнен","Day complete"),style=MaterialTheme.typography.titleSmall);Text(tr("Учитывать в средней статистике","Count it in the averages"),style=MaterialTheme.typography.labelSmall,color=MaterialTheme.colorScheme.onSurfaceVariant)}}}}
         if(medications.isNotEmpty())item{Row(verticalAlignment=Alignment.CenterVertically){
             Icon(Icons.Outlined.Medication,null,tint=MaterialTheme.colorScheme.primary);Spacer(Modifier.width(10.dp))
             Column(Modifier.weight(1f)){SectionTitle(tr("Лекарства и витамины","Medicines and vitamins"),if(medications.isEmpty())tr("Препараты с картой: дозировка, расписание, курс","Cards with dose, schedule and course") else tr("Отметьте приём, когда примете","Mark a dose when you take it"))}
@@ -82,6 +92,38 @@ import java.time.format.DateTimeFormatter
         items(medications,key={"med:"+it.medication.id}){m->MedicationRow(vm,m,date){editMedication(m.medication)}}
         item{OutlinedButton(onClick={editMedication(null)},modifier=Modifier.fillMaxWidth().testTag("addMedication")){Icon(Icons.Outlined.Add,null);Spacer(Modifier.width(8.dp));Text(tr("Добавить препарат","Add a medicine or vitamin"))}}
     }
+    }
+}
+
+fun mealSlotName(s:MealSlot):String = when(s){MealSlot.BREAKFAST->tr("Завтрак","Breakfast");MealSlot.LUNCH->tr("Обед","Lunch");MealSlot.DINNER->tr("Ужин","Dinner");MealSlot.LATE->tr("Поздний перекус","Late snack");MealSlot.WATER->tr("Вода","Water")}
+
+/** A group's header in Arcade: the part of the day in caps and its total on the right, over a hairline. */
+@Composable private fun ArcadeMealHeader(slot:MealSlot,list:List<DiaryEntry>) {
+    Column(Modifier.padding(top=10.dp).testTag("mealGroup-"+slot.name)) {
+        Row(verticalAlignment=Alignment.CenterVertically) {
+            ArcadeLabel(mealSlotName(slot),Modifier.weight(1f))
+            Text(if(slot==MealSlot.WATER)"${number(list.sumOf{it.waterMl})} $ML" else "${number(list.sumOf{it.nutrients.kcal?:0.0})} $KCAL",style=MaterialTheme.typography.labelLarge,fontWeight=FontWeight.Bold,color=MaterialTheme.colorScheme.primary)
+        }
+        HorizontalDivider(Modifier.padding(top=6.dp),color=MaterialTheme.colorScheme.outline)
+    }
+}
+
+/** A dense Arcade entry: name over "time · portion", the calories right-aligned, then the star and delete. */
+@Composable private fun ArcadeEntryRow(vm:AppViewModel,snapshot:UserSnapshot,entry:DiaryEntry,busy:Boolean,edit:(DiaryEntry)->Unit) {
+    val name=vm.entryName(entry)
+    Column {
+        Row(Modifier.fillMaxWidth().heightIn(min=48.dp),verticalAlignment=Alignment.CenterVertically) {
+            Row(Modifier.weight(1f).clickable{edit(entry)}.padding(vertical=6.dp).semantics(mergeDescendants=true){contentDescription=tr("Изменить запись: ","Edit entry: ")+name},verticalAlignment=Alignment.CenterVertically) {
+                Column(Modifier.weight(1f),verticalArrangement=Arrangement.spacedBy(1.dp)) {
+                    Text(name,style=MaterialTheme.typography.bodyLarge,fontWeight=FontWeight.SemiBold,maxLines=1,overflow=TextOverflow.Ellipsis)
+                    Text(entryTime(entry)+" · "+quantityLabel(entry.quantity,entry.grams),style=MaterialTheme.typography.bodySmall,color=MaterialTheme.colorScheme.onSurfaceVariant,maxLines=1,overflow=TextOverflow.Ellipsis)
+                }
+                Text(if(entry.waterMl>0)"${number(entry.waterMl)} $ML" else "${number(entry.nutrients.kcal)} $KCAL",style=MaterialTheme.typography.bodyMedium,fontWeight=FontWeight.Bold,maxLines=1,modifier=Modifier.padding(start=8.dp))
+            }
+            if(entry.waterMl==0.0&&vm.food(entry.foodId)!=null)FavoriteStar(entry.foodId in snapshot.favoriteFoods,name,!busy){vm.toggleFavorite(entry.foodId)}
+            IconButton(onClick={vm.delete(entry)}){Icon(Icons.Outlined.DeleteOutline,tr("Удалить ","Delete ")+name,Modifier.size(20.dp))}
+        }
+        HorizontalDivider(color=MaterialTheme.colorScheme.outlineVariant)
     }
 }
 

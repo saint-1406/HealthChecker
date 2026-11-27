@@ -20,6 +20,9 @@ import az.healthchecker.domain.*
 import az.healthchecker.reminders.Reminders
 import az.healthchecker.ui.*
 import java.time.LocalTime
+import az.healthchecker.ui.kit.TextButton
+import az.healthchecker.ui.kit.OutlinedButton
+import az.healthchecker.ui.kit.Button
 
 /** Profile row subtitle: which reminders are on. */
 @Composable fun reminderLine():String {

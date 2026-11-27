@@ -25,11 +25,15 @@ import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import az.healthchecker.domain.*
 import az.healthchecker.ui.*
+import androidx.compose.ui.text.withStyle
 import java.time.LocalDate
+import az.healthchecker.ui.kit.FilledTonalIconButton
+import az.healthchecker.ui.kit.TextButton
+import az.healthchecker.ui.kit.Button
 
-private fun kg(v:Double?,decimals:Int=1)="${number(v,decimals)} ${tr("кг","kg")}"
+internal fun kg(v:Double?,decimals:Int=1)="${number(v,decimals)} ${tr("кг","kg")}"
 /** "−0,6 кг" / "+0,4 kg" with the sign always shown. */
-private fun change(v:Double)=(if(v>0)"+" else if(v<0)"−" else "±")+kg(kotlin.math.abs(v))
+internal fun change(v:Double)=(if(v>0)"+" else if(v<0)"−" else "±")+kg(kotlin.math.abs(v))
 private fun trendText(t:Trend?)=when(t){Trend.DOWN->tr("снижается","going down");Trend.UP->tr("растёт","going up");Trend.STABLE->tr("стабилен","stable");null->""}
 
 /**
@@ -107,7 +111,7 @@ private fun trendText(t:Trend?)=when(t){Trend.DOWN->tr("снижается","goi
 }
 
 @OptIn(ExperimentalMaterial3Api::class)
-@Composable private fun WeightHistory(vm:AppViewModel,snapshot:UserSnapshot,date:String,stats:WeightStats,close:()->Unit,record:()->Unit) {
+@Composable internal fun WeightHistory(vm:AppViewModel,snapshot:UserSnapshot,date:String,stats:WeightStats,close:()->Unit,record:()->Unit) {
     val list=snapshot.weights.sortedByDescending{it.date}
     ModalBottomSheet(onDismissRequest=close,sheetState=rememberModalBottomSheetState(skipPartiallyExpanded=true)) {
         Column(Modifier.verticalScroll(rememberScrollState()).padding(horizontal=24.dp).padding(bottom=32.dp),verticalArrangement=Arrangement.spacedBy(12.dp)) {
@@ -123,6 +127,53 @@ private fun trendText(t:Trend?)=when(t){Trend.DOWN->tr("снижается","goi
                     IconButton(onClick={vm.deleteWeight(w)}){Icon(Icons.Outlined.DeleteOutline,tr("Удалить вес за ","Delete weight for ")+dayMonth(w.date))}
                 }
             }
+        }
+    }
+}
+
+/**
+ * Arcade's weight section: the latest weigh-in large with a small unit and "+", a compact bar chart of the recent
+ * weigh-ins (the latest in the accent colour), and the start, month and all-time figures underneath. Tap: the history.
+ */
+@Composable fun ArcadeWeight(vm:AppViewModel,snapshot:UserSnapshot,date:String,record:Boolean,setRecord:(Boolean)->Unit) {
+    val stats=weightStats(snapshot.weights,date,snapshot.profile?.initialWeight)
+    var history by rememberSaveable{mutableStateOf(false)}
+    val first=snapshot.weights.filter{it.date<=date}.minByOrNull{it.date}
+    val latest=stats.latest;val c=MaterialTheme.colorScheme
+    Column(Modifier.fillMaxWidth().clickable{history=true}.testTag("weightCard"),verticalArrangement=Arrangement.spacedBy(8.dp)) {
+        Row(verticalAlignment=Alignment.CenterVertically) {
+            ArcadeLabel(tr("Вес","Weight"),Modifier.weight(1f))
+            FilledTonalIconButton(onClick={setRecord(true)},modifier=Modifier.size(36.dp).testTag("recordWeight")){Icon(Icons.Outlined.Add,tr("Записать вес","Log weight"),Modifier.size(18.dp))}
+        }
+        if(latest==null)Text(tr("Взвешивайтесь утром и записывайте вес — здесь появится, снижается он или растёт","Weigh yourself in the morning and log it — the trend will appear here"),style=MaterialTheme.typography.bodySmall,color=c.onSurfaceVariant)
+        else {
+            Row(verticalAlignment=Alignment.Bottom) {
+                Text(androidx.compose.ui.text.buildAnnotatedString{append(number(latest.kg,1));withStyle(androidx.compose.ui.text.SpanStyle(fontSize=MaterialTheme.typography.bodyMedium.fontSize,fontWeight=FontWeight.Normal,color=c.onSurfaceVariant)){append(" "+tr("кг","kg"))}},
+                    style=MaterialTheme.typography.headlineLarge,fontWeight=FontWeight.Bold,modifier=Modifier.testTag("weightLatest"))
+                Spacer(Modifier.weight(1f))
+                if(stats.series.size>=2)WeightBars(stats.series.takeLast(16),Modifier.width(150.dp).height(40.dp))
+            }
+            if(latest.date!=date)Text(tr("последнее взвешивание ","last weigh-in ")+dayMonth(latest.date),style=MaterialTheme.typography.bodySmall,color=c.onSurfaceVariant)
+            val figures=listOf(Triple(tr("Старт","Start"),first?.let{kg(it.kg)}?:"—",false) to "weightStart",
+                Triple(tr("За месяц","This month"),stats.monthChange?.let(::change)?:"—",stats.monthChange!=null) to "weightMonth",
+                Triple(tr("За всё время","All time"),first?.let{change(latest.kg-it.kg)}?:"—",first!=null) to "weightAllTime")
+            if(tightLayout())figures.forEach{(f,tag)->Row(Modifier.fillMaxWidth()){Text(f.first,style=MaterialTheme.typography.bodySmall,color=c.onSurfaceVariant,modifier=Modifier.weight(1f));Text(f.second,style=MaterialTheme.typography.bodyMedium,fontWeight=FontWeight.Bold,modifier=Modifier.testTag(tag))}}
+            else Row(Modifier.fillMaxWidth()){figures.forEach{(f,tag)->Column(Modifier.weight(1f)){Text(f.first,style=MaterialTheme.typography.bodySmall,color=c.onSurfaceVariant,maxLines=1);Text(f.second,style=MaterialTheme.typography.bodyMedium,fontWeight=FontWeight.Bold,maxLines=1,modifier=Modifier.testTag(tag))}}}
+        }
+    }
+    if(record)WeightDialog(vm,date,stats.latest?.kg?:snapshot.profile?.currentWeight){setRecord(false)}
+    if(history)WeightHistory(vm,snapshot,date,stats,{history=false}){history=false;setRecord(true)}
+}
+
+/** The recent weigh-ins as square bars over a floor just under the lowest; the last one in the accent colour. */
+@Composable private fun WeightBars(points:List<WeightEntry>,modifier:Modifier) {
+    val c=MaterialTheme.colorScheme
+    val low=points.minOf{it.kg};val high=points.maxOf{it.kg};val range=(high-low).coerceAtLeast(0.5)
+    Canvas(modifier.semantics{contentDescription=tr("График веса: от ","Weight chart: from ")+kg(points.first().kg)+tr(" до "," to ")+kg(points.last().kg)}) {
+        val gap=2.dp.toPx();val w=(size.width-gap*(points.size-1))/points.size
+        points.forEachIndexed{i,p->
+            val h=size.height*(0.3f+0.7f*((p.kg-low)/range).toFloat())
+            drawRect(if(i==points.lastIndex)c.primary else c.primary.copy(alpha=0.45f),Offset(i*(w+gap),size.height-h),androidx.compose.ui.geometry.Size(w,h))
         }
     }
 }

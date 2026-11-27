@@ -31,9 +31,15 @@ fun seasonEnd(season:Season,date:LocalDate):LocalDate = when(season){
  * [decorations] (snow, bats).
  */
 data class Appearance(val mode:String="system",val palette:String="mint",val customHue:Float=200f,val seasonal:Boolean=true,val seasonSkipped:String="",
-    val background:Long=0,val dim:Float=0.55f,val cardAlpha:Float=0.9f,val decorations:Boolean=true) {
+    val background:Long=0,val dim:Float=0.55f,val cardAlpha:Float=0.9f,val decorations:Boolean=true,val layout:String=LAYOUT_STANDARD) {
     val hasBackground:Boolean get() = background>0
+    /** The "Arcade" layout: straight edges, monospace figures and its own overview and bars; colours stay the user's. */
+    val arcade:Boolean get() = layout==LAYOUT_ARCADE
 }
+/** Interface layouts: how screens are built, independent of the colours, the mode and the background. */
+const val LAYOUT_STANDARD="standard"
+const val LAYOUT_ARCADE="arcade"
+val LAYOUTS=listOf(LAYOUT_STANDARD,LAYOUT_ARCADE)
 
 /** The holiday whose theme is on today, if any. */
 fun Appearance.activeSeason(today:LocalDate):Season? = seasonOn(today)?.takeIf{seasonal&&seasonSkipped!=seasonKey(it,today)}

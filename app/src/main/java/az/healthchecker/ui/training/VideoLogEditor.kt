@@ -27,6 +27,10 @@ import az.healthchecker.domain.*
 import az.healthchecker.ui.KCAL
 import az.healthchecker.ui.number
 import kotlinx.serialization.json.Json
+import az.healthchecker.ui.kit.FilledTonalIconButton
+import az.healthchecker.ui.kit.TextButton
+import az.healthchecker.ui.kit.Button
+import az.healthchecker.ui.theme.rounded
 
 /** Keeps the items being checked through a rotation; null — the editor is closed. */
 val VideoLogSaver:Saver<List<VideoLogItem>?,String> = Saver(save={it?.let{list->Json.encodeToString(list)}},restore={Json.decodeFromString<List<VideoLogItem>>(it)})
@@ -70,7 +74,7 @@ val VideoLogSaver:Saver<List<VideoLogItem>?,String> = Saver(save={it?.let{list->
 }
 
 @Composable private fun VideoLogRow(index:Int,item:VideoLogItem,name:String,thumb:@Composable (String)->Unit,update:(VideoLogItem)->Unit) {
-    Surface(shape=RoundedCornerShape(16.dp),color=if(item.done)MaterialTheme.colorScheme.surfaceContainer else MaterialTheme.colorScheme.surface,
+    Surface(shape=rounded(16.dp),color=if(item.done)MaterialTheme.colorScheme.surfaceContainer else MaterialTheme.colorScheme.surface,
         tonalElevation=if(item.done)1.dp else 0.dp,modifier=Modifier.fillMaxWidth().testTag("videoLogItem_$index")){
         Column(Modifier.padding(horizontal=4.dp,vertical=6.dp)){
             Row(Modifier.fillMaxWidth().heightIn(min=48.dp).clickable{update(item.copy(done=!item.done))},verticalAlignment=Alignment.CenterVertically){

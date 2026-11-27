@@ -22,6 +22,9 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import java.time.*
 import java.time.format.DateTimeFormatter
+import az.healthchecker.ui.kit.TextButton
+import az.healthchecker.ui.kit.OutlinedButton
+import az.healthchecker.ui.kit.Button
 
 /** Profile → body: sex, age, height, weight and activity. Saving changes only these, never the goals. */
 @Composable fun BodyScreen(vm:AppViewModel,back:()->Unit) {
@@ -104,8 +107,8 @@ import java.time.format.DateTimeFormatter
     val settings by vm.settings.collectAsStateWithLifecycle()
     ProfilePage(tr("Оформление и язык","Appearance and language"),null,back,"lookScreen") {
         Panel {
-            SectionTitle(tr("Оформление","Appearance"),tr("Тема: ","Theme: ")+paletteName(settings.appearance.effectivePalette(LocalDate.now()))+" · "+when(settings.theme){"light"->tr("светлая","light");"dark"->tr("тёмная","dark");else->tr("как в системе","as the system")}+(if(settings.appearance.hasBackground)tr(" · свой фон"," · own background") else ""))
-            Button(onClick=openAppearance,modifier=Modifier.fillMaxWidth().testTag("openAppearance")){Icon(Icons.Outlined.Palette,null);Spacer(Modifier.width(8.dp));Text(tr("Темы, цвета и фон","Themes, colours and background"))}
+            SectionTitle(tr("Оформление","Appearance"),tr("Тема: ","Theme: ")+paletteName(settings.appearance.effectivePalette(LocalDate.now()))+" · "+when(settings.theme){"light"->tr("светлая","light");"dark"->tr("тёмная","dark");else->tr("как в системе","as the system")}+(if(settings.appearance.hasBackground)tr(" · свой фон"," · own background") else "")+" · "+tr("компоновка «","layout “")+layoutName(settings.appearance.layout)+tr("»","”"))
+            Button(onClick=openAppearance,modifier=Modifier.fillMaxWidth().testTag("openAppearance")){Icon(Icons.Outlined.Palette,null);Spacer(Modifier.width(8.dp));Text(tr("Компоновка, темы, цвета и фон","Layout, themes, colours and background"))}
         }
         Panel {
             SectionTitle(tr("Язык приложения","App language"))

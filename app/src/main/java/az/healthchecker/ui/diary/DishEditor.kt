@@ -20,6 +20,8 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import az.healthchecker.domain.*
 import az.healthchecker.ui.*
 import az.healthchecker.ui.inventory.DISH_ICONS
+import az.healthchecker.ui.kit.OutlinedButton
+import az.healthchecker.ui.kit.Button
 
 /** Dish builder: raw ingredients in, nutrition per 100 g of the finished dish out; saved as the user's own product. */
 @OptIn(ExperimentalLayoutApi::class)

@@ -26,6 +26,9 @@ import az.healthchecker.update.UpdateViewModel
 import java.time.Instant
 import java.time.ZoneId
 import java.time.format.DateTimeFormatter
+import az.healthchecker.ui.kit.TextButton
+import az.healthchecker.ui.kit.OutlinedButton
+import az.healthchecker.ui.kit.Button
 
 /** Always composed while the app is open: opens the screens the updater asks for and resumes it on coming back. */
 @Composable fun UpdateEffects(vm: UpdateViewModel, startupCheck: Boolean) {

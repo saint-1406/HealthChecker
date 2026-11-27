@@ -1,5 +1,8 @@
 package az.healthchecker.ui.training
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.border
+import androidx.compose.foundation.clickable
+import androidx.compose.foundation.background
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.material.icons.Icons
@@ -17,6 +20,12 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import az.healthchecker.domain.*
 import az.healthchecker.ui.*
 import kotlinx.coroutines.delay
+import az.healthchecker.ui.kit.FilledIconButton
+import az.healthchecker.ui.kit.FilledTonalIconButton
+import az.healthchecker.ui.kit.TextButton
+import az.healthchecker.ui.kit.FilledTonalButton
+import az.healthchecker.ui.kit.OutlinedButton
+import az.healthchecker.ui.kit.Button
 
 /**
  * "Workout now": today's suggested exercises one card each, with a picture of the movement, the full technique and
@@ -43,7 +52,8 @@ import kotlinx.coroutines.delay
             val done=plan.items.count{r->day.workouts.any{it.exerciseId==r.exercise.id}}
             item{Panel {
                 Text(tr("Выполнено ","Done ")+"$done "+tr("из","of")+" ${plan.items.size}",style=MaterialTheme.typography.titleMedium,fontWeight=FontWeight.SemiBold,modifier=Modifier.testTag("workoutProgress"))
-                LinearProgressIndicator(progress={if(plan.items.isEmpty())0f else done.toFloat()/plan.items.size},modifier=Modifier.fillMaxWidth())
+                if(az.healthchecker.ui.theme.LocalArcade.current)az.healthchecker.ui.dashboard.SegmentBar(if(plan.items.isEmpty())0f else done.toFloat()/plan.items.size,az.healthchecker.ui.theme.reducedMotion(),Modifier.fillMaxWidth().height(8.dp),segments=plan.items.size.coerceIn(1,24))
+                else LinearProgressIndicator(progress={if(plan.items.isEmpty())0f else done.toFloat()/plan.items.size},modifier=Modifier.fillMaxWidth())
                 val minutes=plan.items.sumOf{it.prescription.minutesFor(it.exercise)?:0.0}
                 val kcal=plan.items.sumOf{r->r.prescription.minutesFor(r.exercise)?.let{burnedKcal(r.exercise.met,weight,it)}?:0.0}
                 Text(listOfNotNull(tr("План","Plan")+" ≈ ${number(minutes)} ${tr("мин","min")}",if(weight!=null)"≈ ${number(kcal)} $KCAL" else null).joinToString(" · "),style=MaterialTheme.typography.bodyMedium)
@@ -52,8 +62,11 @@ import kotlinx.coroutines.delay
                 Text(if(plan.recovery)tr("Мышцы ещё восстанавливаются — лёгкий день","Muscles are still recovering — an easy day") else tr("Акцент: ","Focus: ")+plan.focus.distinct().joinToString(", "){muscleLabel(it).lowercase(Lang.locale)},style=MaterialTheme.typography.bodySmall,color=MaterialTheme.colorScheme.onSurfaceVariant)
                 Text("${if(prefs.dumbbells)tr("С гантелями и без","With and without dumbbells") else tr("Без инвентаря","No equipment")} · ${tr("уровень","level")}: ${levelLabel(prefs.level).lowercase(Lang.locale)}",style=MaterialTheme.typography.bodySmall,color=MaterialTheme.colorScheme.onSurfaceVariant)
             }}
+            // The first exercise not logged yet is the current one, the one after it comes next (marked in Arcade).
+            val current=plan.items.indexOfFirst{r->day.workouts.none{it.exerciseId==r.exercise.id}}
+            val upNext=plan.items.withIndex().firstOrNull{(i,r)->i>current&&day.workouts.none{it.exerciseId==r.exercise.id}}?.index?:-1
             itemsIndexed(plan.items,key={_,r->r.exercise.id}){i,r->
-                WorkoutCard(vm,i,plan.items.size,r,weight,day.workouts.firstOrNull{it.exerciseId==r.exercise.id},busy,
+                WorkoutCard(vm,i,plan.items.size,r,weight,day.workouts.firstOrNull{it.exerciseId==r.exercise.id},busy,stage=when(i){current->1;upNext->2;else->0},
                     log={if(r.prescription.minutesFor(r.exercise)!=null)vm.logPrescribed(r.exercise,r.prescription,date) else adjust(r.exercise,r.prescription)},
                     adjust={adjust(r.exercise,r.prescription)},edit=edit)
             }
@@ -74,9 +87,23 @@ fun roleLabel(r:RecommendedExercise):String = when(r.role){
 }
 
 @OptIn(ExperimentalLayoutApi::class)
-@Composable private fun WorkoutCard(vm:AppViewModel,index:Int,total:Int,r:RecommendedExercise,weight:Double?,logged:WorkoutEntry?,busy:Boolean,log:()->Unit,adjust:()->Unit,edit:(WorkoutEntry)->Unit) {
+@Composable private fun WorkoutCard(vm:AppViewModel,index:Int,total:Int,r:RecommendedExercise,weight:Double?,logged:WorkoutEntry?,busy:Boolean,stage:Int=0,log:()->Unit,adjust:()->Unit,edit:(WorkoutEntry)->Unit) {
     val e=r.exercise;val p=r.prescription
-    Panel(Modifier.testTag("workoutCard")) {
+    val arcadeOn=az.healthchecker.ui.theme.LocalArcade.current
+    // Arcade: a logged exercise folds into one dense line, so the current one stays near the top.
+    if(arcadeOn&&logged!=null){
+        Row(Modifier.fillMaxWidth().border(1.dp,MaterialTheme.colorScheme.outlineVariant).clickable{edit(logged)}.padding(horizontal=12.dp,vertical=10.dp).testTag("workoutCard"),verticalAlignment=Alignment.CenterVertically,horizontalArrangement=Arrangement.spacedBy(10.dp)){
+            Icon(Icons.Outlined.CheckCircle,tr("Записано","Logged"),Modifier.size(18.dp),tint=MaterialTheme.colorScheme.primary)
+            Column(Modifier.weight(1f)){Text(e.displayName,style=MaterialTheme.typography.bodyMedium,fontWeight=FontWeight.SemiBold,maxLines=1,overflow=androidx.compose.ui.text.style.TextOverflow.Ellipsis)
+                Text(workoutLabel(logged),style=MaterialTheme.typography.bodySmall,color=MaterialTheme.colorScheme.onSurfaceVariant,maxLines=1)}
+            Text("${index+1}/$total",style=MaterialTheme.typography.labelMedium,color=MaterialTheme.colorScheme.onSurfaceVariant)
+        }
+        return
+    }
+    Panel(Modifier.then(if(arcadeOn&&stage==1)Modifier.border(2.dp,MaterialTheme.colorScheme.primary) else Modifier).testTag("workoutCard")) {
+        if(arcadeOn&&stage>0)Text(if(stage==1)tr("СЕЙЧАС","NOW") else tr("ДАЛЕЕ","UP NEXT"),style=MaterialTheme.typography.labelLarge,fontWeight=FontWeight.Bold,
+            color=if(stage==1)MaterialTheme.colorScheme.onPrimary else MaterialTheme.colorScheme.primary,
+            modifier=Modifier.then(if(stage==1)Modifier.background(MaterialTheme.colorScheme.primary) else Modifier.border(1.dp,MaterialTheme.colorScheme.primary)).padding(horizontal=8.dp,vertical=2.dp).testTag(if(stage==1)"currentExercise" else "nextExercise"))
         Row(verticalAlignment=Alignment.CenterVertically){
             Text("${index+1}/$total · "+roleLabel(r),style=MaterialTheme.typography.labelMedium,color=MaterialTheme.colorScheme.primary,modifier=Modifier.weight(1f))
             if(logged!=null){Icon(Icons.Outlined.CheckCircle,null,Modifier.size(18.dp),tint=MaterialTheme.colorScheme.primary);Spacer(Modifier.width(4.dp));Text(tr("Записано","Logged"),style=MaterialTheme.typography.labelMedium,color=MaterialTheme.colorScheme.primary)}
@@ -121,7 +148,8 @@ fun roleLabel(r:RecommendedExercise):String = when(r.role){
 
 /** Bottom tool bar of the workout: rest/hold timer and the app's stopwatch. */
 @Composable private fun WorkoutTools(vm:AppViewModel) {
-    Surface(color=MaterialTheme.colorScheme.surfaceContainer,shadowElevation=8.dp,modifier=Modifier.fillMaxWidth()) {
+    val arcadeOn=az.healthchecker.ui.theme.LocalArcade.current
+    Surface(color=MaterialTheme.colorScheme.surfaceContainer,shadowElevation=if(arcadeOn)0.dp else 8.dp,border=if(arcadeOn)androidx.compose.foundation.BorderStroke(1.dp,MaterialTheme.colorScheme.outline) else null,modifier=Modifier.fillMaxWidth()) {
         Column(Modifier.padding(horizontal=16.dp,vertical=8.dp),verticalArrangement=Arrangement.spacedBy(4.dp)) {
             CountdownRow(vm)
             HorizontalDivider()

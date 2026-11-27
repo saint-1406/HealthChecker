@@ -46,6 +46,12 @@ import java.time.Instant
 import java.time.ZoneId
 import java.time.format.DateTimeFormatter
 import java.util.UUID
+import az.healthchecker.ui.kit.FilledTonalIconButton
+import az.healthchecker.ui.kit.TextButton
+import az.healthchecker.ui.kit.FilledTonalButton
+import az.healthchecker.ui.kit.OutlinedButton
+import az.healthchecker.ui.kit.Button
+import az.healthchecker.ui.theme.rounded
 
 /** "13:05, 24 Oct" of the moment a photo was taken. */
 fun photoTime(photo:InboxPhoto):String {
@@ -111,9 +117,9 @@ class PhotoCapture(val shoot:(PhotoKind)->Unit,val pick:()->Unit)
 
 @Composable private fun InboxThumb(vm:AppViewModel,photo:InboxPhoto,open:()->Unit) {
     val food=photo.kind==PhotoKind.FOOD
-    Box(Modifier.size(88.dp).clip(RoundedCornerShape(14.dp)).background(MaterialTheme.colorScheme.surfaceContainerHighest).clickable(onClick=open).testTag("inboxPhoto")) {
+    Box(Modifier.size(88.dp).clip(rounded(14.dp)).background(MaterialTheme.colorScheme.surfaceContainerHighest).clickable(onClick=open).testTag("inboxPhoto")) {
         rememberPicture(vm.photoFile(photo),photo.takenAt,88.dp)?.let{Image(it,(if(food)tr("Фото еды, ","Food photo, ") else tr("Фото лекарства, ","Medicine photo, "))+photoTime(photo),Modifier.fillMaxSize(),contentScale=ContentScale.Crop)}
-        Surface(shape=RoundedCornerShape(8.dp),color=MaterialTheme.colorScheme.surface.copy(alpha=0.88f),modifier=Modifier.align(Alignment.BottomStart).padding(4.dp)){
+        Surface(shape=rounded(8.dp),color=MaterialTheme.colorScheme.surface.copy(alpha=0.88f),modifier=Modifier.align(Alignment.BottomStart).padding(4.dp)){
             Row(Modifier.padding(horizontal=4.dp,vertical=2.dp),verticalAlignment=Alignment.CenterVertically){
                 Icon(if(food)Icons.Outlined.Restaurant else Icons.Outlined.Medication,null,Modifier.size(12.dp))
                 Spacer(Modifier.width(2.dp));Text(shortDate(photo.date(ZoneId.systemDefault())),style=MaterialTheme.typography.labelSmall)

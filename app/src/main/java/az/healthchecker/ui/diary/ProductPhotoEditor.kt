@@ -22,6 +22,8 @@ import az.healthchecker.domain.*
 import kotlinx.coroutines.*
 import java.io.File
 import java.util.Base64
+import az.healthchecker.ui.kit.TextButton
+import az.healthchecker.ui.kit.OutlinedButton
 
 @Composable fun ProductPhotoPreview(data:String?,modifier:Modifier=Modifier) {
     if(data==null)return

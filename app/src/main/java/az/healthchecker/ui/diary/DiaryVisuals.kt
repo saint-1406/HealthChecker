@@ -27,6 +27,7 @@ import az.healthchecker.ui.*
 import java.time.Instant
 import java.time.ZoneId
 import java.time.format.DateTimeFormatter
+import az.healthchecker.ui.theme.rounded
 
 /** One colour per macronutrient across the diary: protein the theme's main colour, fat its accent, carbohydrate amber. */
 data class MacroColors(val protein:Color,val fat:Color,val carbs:Color)
@@ -40,7 +41,7 @@ data class MacroColors(val protein:Color,val fat:Color,val carbs:Color)
     val c=macroColors();val track=MaterialTheme.colorScheme.surfaceVariant
     val parts=listOf((n.protein?:0.0)*4 to c.protein,(n.fat?:0.0)*9 to c.fat,(n.carbs?:0.0)*4 to c.carbs)
     val total=parts.sumOf{it.first}
-    Canvas(modifier.height(height).clip(RoundedCornerShape(height/2))) {
+    Canvas(modifier.height(height).clip(rounded(height/2))) {
         drawRect(track)
         if(total>0){var x=0f;parts.forEach{(kcal,color)->val w=(kcal/total).toFloat()*size.width;drawRect(color,topLeft=androidx.compose.ui.geometry.Offset(x,0f),size=androidx.compose.ui.geometry.Size(w,size.height));x+=w}}
     }
@@ -51,7 +52,17 @@ data class MacroColors(val protein:Color,val fat:Color,val carbs:Color)
     val s=day.summary;val goal=day.goals?.kcal;val c=macroColors()
     val ring=MaterialTheme.colorScheme.primary;val track=MaterialTheme.colorScheme.surfaceVariant
     // Same content as before with tighter padding: the day's total, ring, energy split, macros and fibre/water.
-    Surface(Modifier.fillMaxWidth().testTag("diarySummary"),shape=RoundedCornerShape(20.dp),color=MaterialTheme.colorScheme.surface) {Column(Modifier.padding(horizontal=16.dp,vertical=12.dp),verticalArrangement=Arrangement.spacedBy(8.dp)) {
+    Surface(Modifier.fillMaxWidth().testTag("diarySummary"),shape=rounded(20.dp),color=MaterialTheme.colorScheme.surface,border=if(az.healthchecker.ui.theme.LocalArcade.current)androidx.compose.foundation.BorderStroke(1.dp,MaterialTheme.colorScheme.outlineVariant) else null) {Column(Modifier.padding(horizontal=16.dp,vertical=12.dp),verticalArrangement=Arrangement.spacedBy(8.dp)) {
+        // Arcade speaks the overview's language: the total over the goal and the same segmented bar.
+        if(az.healthchecker.ui.theme.LocalArcade.current) {
+            Row(verticalAlignment=Alignment.Bottom) {
+                az.healthchecker.ui.ArcadeLabel(tr("За день","For the day"),Modifier.weight(1f))
+                Text("${number(s.kcal.value)}${if(!s.kcal.complete)"+" else ""}",style=MaterialTheme.typography.headlineMedium,fontWeight=FontWeight.Bold)
+                Text(goal?.let{" / ${number(it)} $KCAL"}?:" $KCAL",style=MaterialTheme.typography.bodyMedium,color=MaterialTheme.colorScheme.onSurfaceVariant)
+            }
+            az.healthchecker.ui.dashboard.SegmentBar(goal?.let{(s.kcal.value/it).toFloat()}?:0f,az.healthchecker.ui.theme.reducedMotion(),Modifier.fillMaxWidth().height(8.dp))
+            Text(goal?.let{g->if(s.kcal.value>g)tr("выше цели на ","above by ")+number(s.kcal.value-g)+" $KCAL" else tr("осталось ","left ")+number(g-s.kcal.value)+" $KCAL"}?:tr("Цель не задана","No goal set"),style=MaterialTheme.typography.bodySmall,color=MaterialTheme.colorScheme.onSurfaceVariant)
+        } else
         Row(verticalAlignment=Alignment.CenterVertically) {
             Column(Modifier.weight(1f)) {
                 Text(tr("ЗА ДЕНЬ","FOR THE DAY"),style=MaterialTheme.typography.labelMedium,color=MaterialTheme.colorScheme.primary)
@@ -82,7 +93,7 @@ data class MacroColors(val protein:Color,val fat:Color,val carbs:Color)
 
 /** Round badge before an entry: a drop for water, a plate for the user's dishes, otherwise the food's first letter. */
 @Composable fun EntryBadge(name:String,water:Boolean,dish:Boolean,size:androidx.compose.ui.unit.Dp=40.dp) {
-    Box(Modifier.size(size).clip(CircleShape).background(MaterialTheme.colorScheme.primaryContainer),contentAlignment=Alignment.Center) {
+    Box(Modifier.size(size).clip(if(az.healthchecker.ui.theme.LocalArcade.current)androidx.compose.ui.graphics.RectangleShape else CircleShape).background(MaterialTheme.colorScheme.primaryContainer),contentAlignment=Alignment.Center) {
         when {
             water->Icon(Icons.Outlined.WaterDrop,null,tint=MaterialTheme.colorScheme.onPrimaryContainer,modifier=Modifier.size(20.dp))
             dish->Icon(Icons.Outlined.RestaurantMenu,null,tint=MaterialTheme.colorScheme.onPrimaryContainer,modifier=Modifier.size(20.dp))
